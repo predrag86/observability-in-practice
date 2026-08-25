@@ -16,11 +16,23 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  anonymization:
+    name: Anonymization check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python3 scripts/check_anonymization.py
+
   build:
     name: mkdocs build --strict
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0   # git-revision-date-localized needs full history
 
       - uses: actions/setup-python@v6
         with:

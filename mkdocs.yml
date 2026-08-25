@@ -62,6 +62,9 @@ plugins:
           name: English
           build: true
           site_name: "Observability in Practice"
+  - git-revision-date-localized:
+      type: date
+      fallback_to_build_date: true
 
 nav:
   - Naslovna: index.md
