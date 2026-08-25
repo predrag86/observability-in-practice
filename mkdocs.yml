@@ -26,7 +26,6 @@ theme:
     - navigation.sections
     - navigation.expand
     - navigation.top
-    - navigation.indexes
     - search.highlight
     - search.suggest
     - content.code.copy
@@ -73,6 +72,13 @@ plugins:
           nav_translations:
             Naslovna: Home
             Uvod: Introduction
+            Deo I: Part I
+            Deo II: Part II
+            Deo III: Part III
+            Deo IV: Part IV
+            Deo V: Part V
+            Deo VI: Part VI
+            Deo VII: Part VII
             Dodaci: Appendices
   - git-revision-date-localized:
       type: date
@@ -81,12 +87,12 @@ plugins:
 nav:
   - Naslovna: index.md
   - Uvod: uvod.md
-  - "Deo I — Osnove":
+  - "Deo I":
       - deo-1-uvod.md
       - poglavlje-01-sta-je-observability.md
       - poglavlje-02-opentelemetry.md
       - poglavlje-03-izbor-platforme.md
-  - "Deo II — Arhitektura prikupljanja telemetrije":
+  - "Deo II":
       - deo-2-uvod.md
       - poglavlje-04-gateway.md
       - poglavlje-05-instrumentacija.md
@@ -94,19 +100,19 @@ nav:
       - poglavlje-07-pull-obrasci.md
       - poglavlje-08-frontend-rum.md
       - poglavlje-09-sinteticko-pracenje.md
-  - "Deo III — Obrada, kardinalnost i troškovi":
+  - "Deo III":
       - deo-3-uvod.md
       - poglavlje-10-anatomija-pipeline.md
       - poglavlje-11-kardinalnost-cena.md
       - poglavlje-12-sampling-trejsova.md
-  - "Deo IV — Alarmiranje, SLO i odgovor na incidente":
+  - "Deo IV":
       - deo-4-uvod.md
       - poglavlje-13-arhitektura-alarmiranja.md
       - poglavlje-14-kad-alarm-cuti.md
       - poglavlje-15-slo-budzet-greske.md
       - poglavlje-16-runbook-ovi.md
       - poglavlje-17-postmortem-kultura.md
-  - "Deo V — Observability po domenima":
+  - "Deo V":
       - deo-5-uvod.md
       - poglavlje-18-baze-podataka.md
       - poglavlje-19-samostalni-klaster.md
@@ -115,13 +121,13 @@ nav:
       - poglavlje-22-mreza-ravan-posmatranja.md
       - poglavlje-23-batch-etl-flota.md
       - poglavlje-24-snowflake-servis-koji-nije-nas.md
-  - "Deo VI — Upravljanje, usklađenost i zrelost":
+  - "Deo VI":
       - deo-6-uvod.md
       - poglavlje-25-privatnost-telemetriji.md
       - poglavlje-26-soc2-kontrola.md
       - poglavlje-27-prioritizacija.md
       - poglavlje-28-ai-asistirana-observability.md
-  - "Deo VII — Sazrevanje programa":
+  - "Deo VII":
       - deo-7-uvod.md
       - poglavlje-29-fazni-rollout.md
       - poglavlje-30-merenje-zrelosti.md
