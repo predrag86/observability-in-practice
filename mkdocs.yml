@@ -7,6 +7,7 @@ edit_uri: edit/main/docs/
 theme:
   name: material
   language: sr
+  custom_dir: overrides
   palette:
     - scheme: default
       primary: indigo
@@ -45,6 +46,9 @@ markdown_extensions:
   - attr_list
   - md_in_html
 
+hooks:
+  - hooks/latin_dates.py
+
 plugins:
   - search
   - i18n:
@@ -58,10 +62,14 @@ plugins:
           name: Srpski
           build: true
           site_name: "Observability u praksi"
+          theme:
+            language: custom
         - locale: en
           name: English
           build: true
           site_name: "Observability in Practice"
+          theme:
+            language: en
   - git-revision-date-localized:
       type: date
       fallback_to_build_date: true
