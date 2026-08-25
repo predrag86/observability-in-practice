@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>None./</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="None"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/"/>
+    </url>
+    <url>
+        <loc>Nonedeo-2-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-2-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-2-uvod/"/>
+    </url>
+    <url>
+        <loc>Nonedodatak-a-promql-logql-recepti/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedodatak-a-promql-logql-recepti/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/dodatak-a-promql-logql-recepti/"/>
+    </url>
+    <url>
+        <loc>Nonedodatak-b-recnik-pojmova/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedodatak-b-recnik-pojmova/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/dodatak-b-recnik-pojmova/"/>
+    </url>
+    <url>
+        <loc>Nonedodatak-c-checklist-onboarding/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedodatak-c-checklist-onboarding/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/dodatak-c-checklist-onboarding/"/>
+    </url>
+    <url>
+        <loc>Nonedodatak-d-sabloni/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedodatak-d-sabloni/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/dodatak-d-sabloni/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-01-sta-je-observability/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-01-sta-je-observability/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-01-sta-je-observability/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-02-opentelemetry/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-02-opentelemetry/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-02-opentelemetry/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-03-izbor-platforme/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-03-izbor-platforme/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-03-izbor-platforme/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-04-gateway/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-04-gateway/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-04-gateway/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-05-instrumentacija/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-05-instrumentacija/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-05-instrumentacija/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-06-sidecar/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-06-sidecar/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-06-sidecar/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-07-pull-obrasci/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-07-pull-obrasci/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-07-pull-obrasci/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-08-frontend-rum/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-08-frontend-rum/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-08-frontend-rum/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-09-sinteticko-pracenje/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-09-sinteticko-pracenje/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-09-sinteticko-pracenje/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-10-anatomija-pipeline/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-10-anatomija-pipeline/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-10-anatomija-pipeline/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-11-kardinalnost-cena/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-11-kardinalnost-cena/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-11-kardinalnost-cena/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-12-sampling-trejsova/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-12-sampling-trejsova/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-12-sampling-trejsova/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-13-arhitektura-alarmiranja/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-13-arhitektura-alarmiranja/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-13-arhitektura-alarmiranja/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-14-kad-alarm-cuti/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-14-kad-alarm-cuti/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-14-kad-alarm-cuti/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-15-slo-budzet-greske/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-15-slo-budzet-greske/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-15-slo-budzet-greske/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-16-runbook-ovi/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-16-runbook-ovi/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-16-runbook-ovi/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-17-postmortem-kultura/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-17-postmortem-kultura/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-17-postmortem-kultura/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-18-baze-podataka/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-18-baze-podataka/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-18-baze-podataka/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-19-samostalni-klaster/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-19-samostalni-klaster/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-19-samostalni-klaster/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-20-autentikacija-iam/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-20-autentikacija-iam/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-20-autentikacija-iam/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-21-hostovi-serveri/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-21-hostovi-serveri/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-21-hostovi-serveri/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-22-mreza-ravan-posmatranja/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-22-mreza-ravan-posmatranja/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-22-mreza-ravan-posmatranja/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-23-batch-etl-flota/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-23-batch-etl-flota/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-23-batch-etl-flota/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-24-snowflake-servis-koji-nije-nas/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-24-snowflake-servis-koji-nije-nas/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-24-snowflake-servis-koji-nije-nas/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-25-privatnost-telemetriji/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-25-privatnost-telemetriji/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-25-privatnost-telemetriji/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-26-soc2-kontrola/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-26-soc2-kontrola/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-26-soc2-kontrola/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-27-prioritizacija/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-27-prioritizacija/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-27-prioritizacija/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-28-ai-asistirana-observability/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-28-ai-asistirana-observability/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-28-ai-asistirana-observability/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-29-fazni-rollout/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-29-fazni-rollout/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-29-fazni-rollout/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-30-merenje-zrelosti/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-30-merenje-zrelosti/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-30-merenje-zrelosti/"/>
+    </url>
+    <url>
+        <loc>Nonepoglavlje-31-zakljucak/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-31-zakljucak/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-31-zakljucak/"/>
+    </url>
+    <url>
+        <loc>Noneuvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Noneuvod/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/uvod/"/>
+    </url>
+    <url>
+        <loc>Noneen/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="None"/>
+    </url>
+    <url>
+        <loc>Noneen/deo-2-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-2-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-2-uvod/"/>
+    </url>
+    <url>
+        <loc>Noneen/dodatak-a-promql-logql-recepti/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/dodatak-a-promql-logql-recepti/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedodatak-a-promql-logql-recepti/"/>
+    </url>
+    <url>
+        <loc>Noneen/dodatak-b-recnik-pojmova/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/dodatak-b-recnik-pojmova/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedodatak-b-recnik-pojmova/"/>
+    </url>
+    <url>
+        <loc>Noneen/dodatak-c-checklist-onboarding/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/dodatak-c-checklist-onboarding/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedodatak-c-checklist-onboarding/"/>
+    </url>
+    <url>
+        <loc>Noneen/dodatak-d-sabloni/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/dodatak-d-sabloni/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedodatak-d-sabloni/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-01-sta-je-observability/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-01-sta-je-observability/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-01-sta-je-observability/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-02-opentelemetry/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-02-opentelemetry/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-02-opentelemetry/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-03-izbor-platforme/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-03-izbor-platforme/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-03-izbor-platforme/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-04-gateway/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-04-gateway/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-04-gateway/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-05-instrumentacija/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-05-instrumentacija/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-05-instrumentacija/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-06-sidecar/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-06-sidecar/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-06-sidecar/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-07-pull-obrasci/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-07-pull-obrasci/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-07-pull-obrasci/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-08-frontend-rum/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-08-frontend-rum/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-08-frontend-rum/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-09-sinteticko-pracenje/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-09-sinteticko-pracenje/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-09-sinteticko-pracenje/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-10-anatomija-pipeline/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-10-anatomija-pipeline/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-10-anatomija-pipeline/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-11-kardinalnost-cena/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-11-kardinalnost-cena/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-11-kardinalnost-cena/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-12-sampling-trejsova/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-12-sampling-trejsova/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-12-sampling-trejsova/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-13-arhitektura-alarmiranja/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-13-arhitektura-alarmiranja/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-13-arhitektura-alarmiranja/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-14-kad-alarm-cuti/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-14-kad-alarm-cuti/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-14-kad-alarm-cuti/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-15-slo-budzet-greske/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-15-slo-budzet-greske/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-15-slo-budzet-greske/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-16-runbook-ovi/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-16-runbook-ovi/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-16-runbook-ovi/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-17-postmortem-kultura/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-17-postmortem-kultura/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-17-postmortem-kultura/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-18-baze-podataka/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-18-baze-podataka/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-18-baze-podataka/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-19-samostalni-klaster/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-19-samostalni-klaster/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-19-samostalni-klaster/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-20-autentikacija-iam/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-20-autentikacija-iam/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-20-autentikacija-iam/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-21-hostovi-serveri/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-21-hostovi-serveri/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-21-hostovi-serveri/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-22-mreza-ravan-posmatranja/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-22-mreza-ravan-posmatranja/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-22-mreza-ravan-posmatranja/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-23-batch-etl-flota/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-23-batch-etl-flota/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-23-batch-etl-flota/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-24-snowflake-servis-koji-nije-nas/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-24-snowflake-servis-koji-nije-nas/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-24-snowflake-servis-koji-nije-nas/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-25-privatnost-telemetriji/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-25-privatnost-telemetriji/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-25-privatnost-telemetriji/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-26-soc2-kontrola/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-26-soc2-kontrola/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-26-soc2-kontrola/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-27-prioritizacija/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-27-prioritizacija/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-27-prioritizacija/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-28-ai-asistirana-observability/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-28-ai-asistirana-observability/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-28-ai-asistirana-observability/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-29-fazni-rollout/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-29-fazni-rollout/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-29-fazni-rollout/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-30-merenje-zrelosti/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-30-merenje-zrelosti/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-30-merenje-zrelosti/"/>
+    </url>
+    <url>
+        <loc>Noneen/poglavlje-31-zakljucak/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/poglavlje-31-zakljucak/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonepoglavlje-31-zakljucak/"/>
+    </url>
+    <url>
+        <loc>Noneen/uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/uvod/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Noneuvod/"/>
+    </url>
+</urlset>

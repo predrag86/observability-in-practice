@@ -1,0 +1,2669 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="OpenTelemetry i Grafana LGTM stack — knjiga zasnovana na stvarnoj produkcionoj implementaciji">
+      
+      
+      
+      
+        <link rel="prev" href="../poglavlje-07-pull-obrasci/">
+      
+      
+        <link rel="next" href="../poglavlje-09-sinteticko-pracenje/">
+      
+      
+        
+          <link rel="alternate" href="../../poglavlje-08-frontend-rum/" hreflang="sr">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Poglavlje 8 — Frontend / RUM observability - Observability in Practice</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#poglavlje-8-frontend-rum-observability" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../" title="Observability in Practice" class="md-header__button md-logo" aria-label="Observability in Practice" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Observability in Practice
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Poglavlje 8 — Frontend / RUM observability
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Prebaci na tamni režim"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Prebaci na tamni režim" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Prebaci na svetli režim"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Prebaci na svetli režim" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../poglavlje-08-frontend-rum/" hreflang="sr" class="md-select__link">
+              Srpski
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/predrag86/observability-in-practice" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    observability-in-practice
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Naslovna
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../uvod/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Uvod
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../poglavlje-01-sta-je-observability/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deo I — Osnove
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../deo-2-uvod/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deo II — Arhitektura prikupljanja telemetrije
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../poglavlje-10-anatomija-pipeline/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deo III — Obrada, kardinalnost i troškovi
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../poglavlje-13-arhitektura-alarmiranja/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deo IV — Alarmiranje, SLO i odgovor na incidente
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../poglavlje-18-baze-podataka/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deo V — Observability po domenima
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../poglavlje-25-privatnost-telemetriji/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deo VI — Upravljanje, usklađenost i zrelost
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../poglavlje-29-fazni-rollout/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deo VII — Sazrevanje programa
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../dodatak-a-promql-logql-recepti/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Dodaci
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="Observability in Practice" class="md-nav__button md-logo" aria-label="Observability in Practice" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Observability in Practice
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/predrag86/observability-in-practice" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    observability-in-practice
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Naslovna
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uvod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uvod
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deo I — Osnove
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deo I — Osnove
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-01-sta-je-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 1 — Šta je observability, a šta je samo monitoring sa novim imenom
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-02-opentelemetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 2 — OpenTelemetry: mentalni model pre prve linije koda
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-03-izbor-platforme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 3 — Izbor platforme: zašto Grafana Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deo II — Arhitektura prikupljanja telemetrije
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deo II — Arhitektura prikupljanja telemetrije
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deo-2-uvod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deo 2 uvod
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-04-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-05-instrumentacija/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-06-sidecar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-07-pull-obrasci/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 7 — Kada ne možeš da instrumentiraš izvor: pull-obrasci
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 8 — Frontend / RUM observability
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 8 — Frontend / RUM observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#81-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Pitanje na koje ovo poglavlje odgovara
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#82-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Kako je to urađeno — praktičan pregled
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#83-analiticki-deo-zasto-direktna-veza-nije-kompromis-nego-zahtev-i-sta-znaci-kad-jedan-filter-nije-dovoljan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad "jedan filter" nije dovoljan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad &#34;jedan filter&#34; nije dovoljan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#zasto-zvanicna-arhitektura-rum-a-skoro-uvek-ide-direktno-u-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zašto zvanična arhitektura RUM-a skoro uvek ide direktno u cloud
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zasto-rum-naspram-sintetickog-pracenja-nisu-zamena-jedno-za-drugo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zašto RUM naspram sintetičkog praćenja nisu zamena jedno za drugo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lekcija-iz-pii-incidenta-zasto-dodao-sam-filter-retko-znaci-sve-je-pokriveno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lekcija iz PII incidenta: zašto "dodao sam filter" retko znači "sve je pokriveno"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#84-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Skupljena pravila iz ovog poglavlja
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#85-vezba-za-citaoca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 Vežba za čitaoca
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.5 Vežba za čitaoca">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Izvori korišćeni u analitičkom delu
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-09-sinteticko-pracenje/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 9 — Sintetičko (black-box) praćenje
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deo III — Obrada, kardinalnost i troškovi
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deo III — Obrada, kardinalnost i troškovi
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-10-anatomija-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-11-kardinalnost-cena/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 11 — Kardinalnost i cena: kako sistem prirodno naraste iznad budžeta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-12-sampling-trejsova/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deo IV — Alarmiranje, SLO i odgovor na incidente
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deo IV — Alarmiranje, SLO i odgovor na incidente
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-13-arhitektura-alarmiranja/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-14-kad-alarm-cuti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-15-slo-budzet-greske/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-16-runbook-ovi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 16 — Runbook-ovi: od alarma do rešenja
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-17-postmortem-kultura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 17 — Postmortem kultura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deo V — Observability po domenima
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deo V — Observability po domenima
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-18-baze-podataka/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 18 — Baze podataka (upravljane, tipa RDS/Aurora)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-19-samostalni-klaster/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 19 — Samostalno upravljani distribuirani sistemi (klaster tipa Dremio)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-20-autentikacija-iam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 20 — Autentikacija i IAM (sistem tipa Keycloak)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-21-hostovi-serveri/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 21 — Hostovi i serveri kao mašine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-22-mreza-ravan-posmatranja/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 22 — Mreža kao posebna ravan posmatranja
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-23-batch-etl-flota/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 23 — Batch/ETL flota zadataka
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-24-snowflake-servis-koji-nije-nas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 24 — Posmatranje servisa koji nije naš (tipa Snowflake)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deo VI — Upravljanje, usklađenost i zrelost
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deo VI — Upravljanje, usklađenost i zrelost
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-25-privatnost-telemetriji/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 25 — Privatnost u telemetriji
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-26-soc2-kontrola/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 26 — Observability kao kontrola usklađenosti (SOC 2 primer)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-27-prioritizacija/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 27 — Prioritizacija: cena, performanse, pouzdanost, bezbednost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-28-ai-asistirana-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 28 — AI-asistirana observability: agent koji čita telemetriju
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deo VII — Sazrevanje programa
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deo VII — Sazrevanje programa
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-29-fazni-rollout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 29 — Kako izgleda fazni rollout u realnom vremenu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-30-merenje-zrelosti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 30 — Merenje zrelosti sopstvenog programa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-31-zakljucak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 31 — Zaključak: skupljena pravila
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dodaci
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dodaci
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dodatak-a-promql-logql-recepti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dodatak A — PromQL/LogQL recepti
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dodatak-b-recnik-pojmova/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dodatak B — Rečnik pojmova
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dodatak-c-checklist-onboarding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dodatak C — Checklist za onboarding novog servisa na observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dodatak-d-sabloni/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dodatak D — Šablon runbook-a i šablon postmortema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#81-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Pitanje na koje ovo poglavlje odgovara
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#82-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Kako je to urađeno — praktičan pregled
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#83-analiticki-deo-zasto-direktna-veza-nije-kompromis-nego-zahtev-i-sta-znaci-kad-jedan-filter-nije-dovoljan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad "jedan filter" nije dovoljan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad &#34;jedan filter&#34; nije dovoljan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#zasto-zvanicna-arhitektura-rum-a-skoro-uvek-ide-direktno-u-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zašto zvanična arhitektura RUM-a skoro uvek ide direktno u cloud
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zasto-rum-naspram-sintetickog-pracenja-nisu-zamena-jedno-za-drugo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zašto RUM naspram sintetičkog praćenja nisu zamena jedno za drugo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lekcija-iz-pii-incidenta-zasto-dodao-sam-filter-retko-znaci-sve-je-pokriveno" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lekcija iz PII incidenta: zašto "dodao sam filter" retko znači "sve je pokriveno"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#84-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Skupljena pravila iz ovog poglavlja
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#85-vezba-za-citaoca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 Vežba za čitaoca
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.5 Vežba za čitaoca">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Izvori korišćeni u analitičkom delu
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-08-frontend-rum.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="poglavlje-8-frontend-rum-observability">Poglavlje 8 — Frontend / RUM observability</h1>
+<p>Ambasada u stranoj zemlji je, tehnički, teritorija matične države — ali ne
+funkcioniše kao njena unutrašnja pošta. Pismo poslato iz ambasade ne ide kroz
+lokalni poštanski sistem strane zemlje, jer ambasada tom sistemu ni ne
+pripada na isti način kao građanska pošta kod kuće; ono ide direktnom,
+diplomatskom linijom, jer je to jedini put koji ambasadi uopšte stoji na
+raspolaganju. I ambasada nema jedan kanal komunikacije, nego više — redovna
+prepiska ide jednim putem, hitni kurirski paketi drugim — a svaki od tih
+kanala mora <strong>posebno</strong> da bude proveren pre nego što nešto osetljivo prođe
+kroz njega, jer provera na jednom kanalu ne štiti automatski i drugi.</p>
+<p>Browser korisnika je, za sistem koji knjiga prati, u sličnoj poziciji.
+Fizički živi van interne mreže — ne može, i ne treba, da mu se dozvoli pristup
+internom gateway-u iz Poglavlja 4. Mora da ide sopstvenim, direktnim putem. I
+baš kao ambasada, ima više od jednog kanala kojim podaci putuju — što znači
+da zaštita mora biti primenjena na svakom kanalu posebno, ne jednom, na
+jednom mestu, i pretpostavljeno da to pokriva sve.</p>
+<h2 id="81-pitanje-na-koje-ovo-poglavlje-odgovara">8.1 Pitanje na koje ovo poglavlje odgovara</h2>
+<p>Sve dosadašnje poglavlje o prikupljanju telemetrije (Poglavlja 4-7)
+pretpostavlja da pošiljalac živi unutar mreže koju tim kontroliše — servis,
+batch zadatak, baza, čak i klaster. Browser korisnika krši tu pretpostavku na
+najosnovniji mogući način: <strong>fizički nikad neće imati pristup internoj
+infrastrukturi</strong>, bez obzira koliko dobro ta infrastruktura bude
+projektovana. Kako se onda prikuplja telemetrija sa mesta koje po definiciji
+ne možeš da uvučeš u sopstvenu mrežu — i šta to menja u odnosu na sve
+prethodno u knjizi?</p>
+<h2 id="82-kako-je-to-uraeno-praktican-pregled">8.2 Kako je to urađeno — praktičan pregled</h2>
+<p>Frontend telemetrija u implementaciji koju knjiga prati ide <strong>direktno</strong> ka
+hostovanom RUM kolektoru na strani Grafana Cloud-a — ne kroz interni gateway.
+Ovo je jedina kategorija pošiljaoca u celom sistemu koja gateway zaobilazi
+namerno, iz razloga eksplicitno pomenutog i u Poglavlju 4: gateway živi u
+privatnoj mreži, i browser korisnika joj fizički ne može pristupiti.</p>
+<p>Ono što se prikuplja:</p>
+<ul>
+<li><strong>Core Web Vitals</strong> — standardizovane metrike percepcije performansi
+  (vreme do prvog sadržajnog prikaza, stabilnost layout-a, odzivnost na
+  interakciju) koje sam browser meri i izlaže.</li>
+<li><strong>JavaScript greške</strong> — neuhvaćeni izuzeci, odbijeni promisi, sa stack
+  trag-om i informacijom o browseru/uređaju.</li>
+<li><strong>Trejsovi korisničke sesije</strong>, povezani sa backend trejsom preko <strong>istog
+  trace ID-ja</strong> — kad korisnik klikne dugme koje pokreće API poziv, RUM SDK
+  ubacuje trace-context header u taj poziv, tako da se ceo put (klik u
+  browseru → mrežni poziv → backend obrada → odgovor) pojavljuje kao jedan
+  kontinuiran trejs, čitljiv u istom Grafana Cloud interfejsu koji već
+  koristi backend telemetrija.</li>
+</ul>
+<p>Ova poslednja tačka — deljen trace ID kroz ceo put — je razlog zašto frontend
+poglavlje uopšte pripada ovoj knjizi, a ne posebnoj, izolovanoj temi: iako
+mehanizam transporta strukturno odstupa od svega drugog (direktno umesto kroz
+gateway), <em>semantika</em> ostaje ista OTel semantika iz Poglavlja 2. Isti trace
+ID, ista propagacija konteksta.</p>
+<p><img alt="Browser ide direktno ka hostovanom RUM kolektoru, zaobilazeći gateway; backend telemetrija i dalje ide kroz gateway. Dve odvojene PII zaštite (native signali naspram trejsova) su namerno naglašene — to je tačka incidenta iz ovog poglavlja." src="../../diagrams/ch8-rum.png" width="75%" /></p>
+<p><strong>Dve tačke za čišćenje PII, ne jedna.</strong> Ovo je najvrednija praktična lekcija
+poglavlja. RUM SDK ima jednu centralnu funkciju koja presreće sve "native"
+signale — logove, merenja, greške — i iz njih uklanja poznate osetljive
+vrednosti pre slanja (email adrese u porukama grešaka, ID-jevi sesije u
+URL-ovima). Ta funkcija radi tačno ono što se od nje očekuje. Problem: <strong>RUM
+trejsovi ne prolaze kroz tu istu funkciju.</strong> Trejsovi se generišu i šalju
+kroz zaseban deo SDK-a (instrumentacija automatskih fetch/XHR poziva), koji
+ima sopstveni, nezavisan put do mreže — i taj put tu istu centralnu funkciju
+jednostavno zaobilazi. Otkriveno je da su URL parametri sa identifikatorima
+korisnika, koji su uredno uklonjeni iz logova, i dalje završavali u atributima
+span-ova, jer je timski mentalni model bio "dodao sam filter za PII" umesto
+precizno "dodao sam filter za PII <strong>na ovom konkretnom putu podataka</strong>".
+Ispravka je zahtevala eksplicitnu, zasebnu redakciju na nivou span-processora,
+ne proširenje postojeće funkcije koja trejsove nikad nije ni videla.</p>
+<p>Ovako izgleda Core Web Vitals dashboard u praksi — tri percentila (p50/p75/p95)
+umesto jedne linije, jer prosek ili čak medijana lako sakriju baš onaj deo
+korisnika koji ima najgore iskustvo:</p>
+<p><img alt="LCP praćen po percentilima: p50 i p75 ostaju stabilni, ali p95 pokazuje jasnu regresiju jednog dana — signal koji bi prosek sakrio, jer pogađa samo deo saobraćaja (tipično jedan geografski region ili tip uređaja)." src="../../diagrams/dashboard-rum.png" width="95%" /></p>
+<h2 id="83-analiticki-deo-zasto-direktna-veza-nije-kompromis-nego-zahtev-i-sta-znaci-kad-jedan-filter-nije-dovoljan">8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad "jedan filter" nije dovoljan</h2>
+<h3 id="zasto-zvanicna-arhitektura-rum-a-skoro-uvek-ide-direktno-u-cloud">Zašto zvanična arhitektura RUM-a skoro uvek ide direktno u cloud</h3>
+<p>Nezavisni pregledi RUM arhitekture dosledno navode da browser telemetrija
+ide direktno ka hostovanom kolektoru, ne kroz internu infrastrukturu — iz
+prostog razloga što interna infrastruktura po definiciji nije dostupna sa
+javnog interneta na način koji bi browser mogao bezbedno da koristi.
+Otvaranje interne mreže ka javnom internetu samo da bi RUM SDK mogao da
+pošalje podatke kroz "isti gateway kao sve ostalo" bi značilo probijanje baš
+onog perimetra koji je Poglavlje 4 pažljivo zatvorilo — cena veća od koristi
+koju bi doslednost transportnog puta donela. Ovo je redak slučaj gde
+"industrijski standard" i implementacija koju knjiga prati <strong>nisu u
+tenziji</strong> — oba idu istim putem, iz istog razloga.</p>
+<h3 id="zasto-rum-naspram-sintetickog-pracenja-nisu-zamena-jedno-za-drugo">Zašto RUM naspram sintetičkog praćenja nisu zamena jedno za drugo</h3>
+<p>Nezavisna poređenja RUM-a i sintetičkog (black-box) praćenja — tema kojom se
+detaljno bavi Poglavlje 9 — ističu da RUM zavisi potpuno od stvarnog
+saobraćaja: signal postoji samo ako neko korisnik u tom trenutku koristi
+aplikaciju. To znači da RUM ima strukturnu slepu tačku u periodima niskog
+saobraćaja (noć, period pre lansiranja) — ako se aplikacija pokvari tačno
+tada, RUM to jednostavno neće registrovati na vreme, jer nema koga da
+registruje. Ova slepa tačka nije nedostatak RUM implementacije — ona je
+strukturno svojstvo pasivnog posmatranja stvarnih korisnika, i rešava se
+kombinovanjem sa aktivnim probama, ne popravkom RUM-a samog.</p>
+<h3 id="lekcija-iz-pii-incidenta-zasto-dodao-sam-filter-retko-znaci-sve-je-pokriveno">Lekcija iz PII incidenta: zašto "dodao sam filter" retko znači "sve je pokriveno"</h3>
+<p>Ovo je poglavlje u kome se najjasnije vidi princip koji se provlači kroz celu
+knjigu, prvi put eksplicitno imenovan u Poglavlju 1 na drugom primeru: sistem
+može da "radi ispravno" po svakoj proveri koju je neko sproveo, a ipak da
+propušta nešto što nijedna od tih provera nije ni gledala. PII filter za
+logove je bio testiran, radio je, prošao je code review — sve tačno kako
+treba. Ono što nije bilo eksplicitno provereno je pitanje "kroz koje <strong>sve</strong>
+puteve podataka ovaj SDK šalje nešto ka mreži" — a odgovor je bio dva puta,
+ne jedan, i drugi put niko nije aktivno tražio jer se prvi filter "osećao
+kao" kompletno rešenje.</p>
+<p>Kontrafaktički: da je tim od početka mapirao <strong>sve</strong> izlazne puteve RUM SDK-a
+pre nego što je napisao prvi filter (umesto da filter napiše za put koji je
+prvi pao na pamet — logove), ovaj incident se verovatno nikad ne bi ni
+dogodio. Cena tog mapiranja unapred je bila mala — par sati čitanja
+dokumentacije SDK-a. Cena otkrivanja posle činjenice bila je veća: revizija
+istorijskih podataka da se proceni koliko dugo je curenje trajalo, dodatna
+runda review-a za sličnu klasu bagova na drugim mestima u sistemu.</p>
+<p>Vratimo se na ambasadu s početka poglavlja. Ona nema jedan kanal komunikacije
+— ima više, i svaki mora biti proveren posebno, jer provera na jednom
+kanalu ne prelazi automatski na drugi. <strong>Kad štitiš osetljive podatke,
+pitanje nije "da li sam dodao filter" nego "da li sam nabrojao svaki put
+kojim podatak može da izađe, i da li svaki od njih ima sopstvenu,
+eksplicitnu proveru."</strong></p>
+<h2 id="84-skupljena-pravila-iz-ovog-poglavlja">8.4 Skupljena pravila iz ovog poglavlja</h2>
+<ul>
+<li>Browser telemetrija ide direktno ka hostovanom kolektoru — ne pokušavaj da
+  je forsiraš kroz internu infrastrukturu radi doslednosti transportnog
+  puta; to je pogrešna vrsta doslednosti.</li>
+<li>Zadrži isti trace ID i semantiku konteksta (OTel propagacija) čak i kad se
+  transportni mehanizam strukturno razlikuje od ostatka sistema — to je ono
+  što povezuje frontend i backend u jedan čitljiv trejs.</li>
+<li>Pre nego što napišeš PII filter, mapiraj <strong>sve</strong> izlazne puteve podataka iz
+  SDK-a ili biblioteke koju štitiš — logovi, merenja, greške i trejsovi retko
+  dele istu funkciju za obradu.</li>
+<li>RUM ne zamenjuje sintetičko praćenje niti obrnuto — RUM zavisi od
+  stvarnog saobraćaja i ima slepu tačku u periodima tišine; to nije bag,
+  to je razlog da postoji Poglavlje 9.</li>
+<li>Posle svakog "dodao sam filter za X", eksplicitno pitaj: kroz koje sve
+  puteve X uopšte može da izađe, i da li ih je filter zaista sve pokrio.</li>
+</ul>
+<h2 id="85-vezba-za-citaoca">8.5 Vežba za čitaoca</h2>
+<p>Uzmi bilo koju biblioteku ili SDK u svom sistemu koja šalje podatke ka
+spoljnom servisu (RUM, analytics, error tracking) i nabroj <strong>svaki</strong> tip
+signala koji ta biblioteka šalje (logovi, metrike, greške, trejsovi, session
+replay ako postoji). Za svaki tip, proveri nezavisno da li prolazi kroz isti
+filter za osetljive podatke kao i ostali, ili ima sopstveni, poseban put.
+Ako ne znaš odgovor sa sigurnošću za bar jedan tip signala — to je rupa koju
+ovo poglavlje traži da zatvoriš pre nego što je neko drugi otkrije umesto
+tebe.</p>
+<hr />
+<h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
+<ul>
+<li><a href="https://www.dash0.com/faq/what-is-real-user-monitoring">What Is Real User Monitoring (RUM)? — Dash0</a></li>
+<li><a href="https://www.rum-core-web-vitals.com/rum-architecture-tooling-self-hosting/opentelemetry-for-web-rum/">OpenTelemetry for Web RUM — RUM Architecture, Tooling &amp; Self-Hosting</a></li>
+<li><a href="https://clickhouse.com/resources/engineering/rum-vs-synthetic-monitoring">RUM vs synthetic monitoring: which do you need? — ClickHouse</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Rum-vs-Synthetic">Performance Monitoring: RUM vs. Synthetic Monitoring — MDN</a></li>
+<li><a href="https://oneuptime.com/product/rum">Real User Monitoring (RUM) — OneUptime</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.highlight", "search.suggest", "content.code.copy", "content.action.edit", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
