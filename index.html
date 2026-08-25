@@ -90,7 +90,9 @@
     
       
 
-<header class="md-header" data-md-component="header">
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Заглавље">
     <a href="." title="Observability u praksi" class="md-header__button md-logo" aria-label="Observability u praksi" data-md-component="logo">
       
@@ -233,14 +235,8 @@
     
   </nav>
   
-</header>
     
-    <div class="md-container" data-md-component="container">
       
-      
-        
-          
-            
 <nav class="md-tabs" aria-label="Табови" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
@@ -464,7 +460,13 @@
     </ul>
   </div>
 </nav>
-          
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
         
       
       <main class="md-main" data-md-component="main">
@@ -2327,35 +2329,35 @@ Cloud i da opravdaju trošak.</p>
 <td>Zašto ova knjiga, i po čemu se razlikuje</td>
 </tr>
 <tr>
-<td>Deo I</td>
+<td><a href="poglavlje-01-sta-je-observability/">Deo I</a></td>
 <td>Osnove — šta je observability, OpenTelemetry, izbor platforme</td>
 </tr>
 <tr>
-<td>Deo II</td>
+<td><a href="deo-2-uvod/">Deo II</a></td>
 <td>Arhitektura prikupljanja telemetrije — gateway, instrumentacija, sidecar</td>
 </tr>
 <tr>
-<td>Deo III</td>
+<td><a href="poglavlje-10-anatomija-pipeline/">Deo III</a></td>
 <td>Obrada, kardinalnost i troškovi</td>
 </tr>
 <tr>
-<td>Deo IV</td>
+<td><a href="poglavlje-13-arhitektura-alarmiranja/">Deo IV</a></td>
 <td>Alarmiranje, SLO i odgovor na incidente</td>
 </tr>
 <tr>
-<td>Deo V</td>
+<td><a href="poglavlje-18-baze-podataka/">Deo V</a></td>
 <td>Observability po domenima — baze, klasteri, mreža, batch/ETL, Snowflake</td>
 </tr>
 <tr>
-<td>Deo VI</td>
+<td><a href="poglavlje-25-privatnost-telemetriji/">Deo VI</a></td>
 <td>Upravljanje, usklađenost i zrelost</td>
 </tr>
 <tr>
-<td>Deo VII</td>
+<td><a href="poglavlje-29-fazni-rollout/">Deo VII</a></td>
 <td>Sazrevanje programa</td>
 </tr>
 <tr>
-<td>Dodaci</td>
+<td><a href="dodatak-a-promql-logql-recepti/">Dodaci</a></td>
 <td>PromQL/LogQL recepti, rečnik pojmova, checklist, šabloni</td>
 </tr>
 </tbody>
@@ -2421,7 +2423,7 @@ vežba za čitaoca.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.highlight", "search.suggest", "content.code.copy", "content.action.edit", "toc.follow"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0418\u0441\u043a\u043e\u043f\u0438\u0440\u0430\u043d\u043e \u0443 clipboard", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u0430\u0458 \u0443 clipboard", "search.result.more.one": "\u0458\u043e\u0448 1 \u043d\u0430 \u043e\u0432\u043e\u0458 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0438", "search.result.more.other": "\u0458\u043e\u0448 # \u043d\u0430 \u043e\u0432\u043e\u0458 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0438", "search.result.none": "\u041d\u0438\u0448\u0442\u0430 \u043d\u0438\u0458\u0435 \u043f\u0440\u043e\u043d\u0430\u0452\u0435\u043d\u043e", "search.result.one": "1 \u0440\u0435\u0437\u0443\u043b\u0442\u0430\u0442 \u043f\u0440\u0435\u0442\u0440\u0430\u0433\u0435", "search.result.other": "# \u0440\u0435\u0437\u0443\u043b\u0442\u0430\u0442\u0430 \u043f\u0440\u0435\u0442\u0440\u0430\u0433\u0435", "search.result.placeholder": "\u0423\u043d\u0435\u0441\u0438 \u043f\u043e\u0458\u0430\u043c \u043f\u0440\u0435\u0442\u0440\u0430\u0433\u0435", "search.result.term.missing": "\u041d\u0435\u0434\u043e\u0441\u0442\u0430\u0458\u0435", "select.version": "\u0418\u0437\u0430\u0431\u0435\u0440\u0438 \u0432\u0435\u0440\u0437\u0438\u0458\u0443"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "search.highlight", "search.suggest", "content.code.copy", "content.action.edit", "toc.follow"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0418\u0441\u043a\u043e\u043f\u0438\u0440\u0430\u043d\u043e \u0443 clipboard", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u0430\u0458 \u0443 clipboard", "search.result.more.one": "\u0458\u043e\u0448 1 \u043d\u0430 \u043e\u0432\u043e\u0458 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0438", "search.result.more.other": "\u0458\u043e\u0448 # \u043d\u0430 \u043e\u0432\u043e\u0458 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0438", "search.result.none": "\u041d\u0438\u0448\u0442\u0430 \u043d\u0438\u0458\u0435 \u043f\u0440\u043e\u043d\u0430\u0452\u0435\u043d\u043e", "search.result.one": "1 \u0440\u0435\u0437\u0443\u043b\u0442\u0430\u0442 \u043f\u0440\u0435\u0442\u0440\u0430\u0433\u0435", "search.result.other": "# \u0440\u0435\u0437\u0443\u043b\u0442\u0430\u0442\u0430 \u043f\u0440\u0435\u0442\u0440\u0430\u0433\u0435", "search.result.placeholder": "\u0423\u043d\u0435\u0441\u0438 \u043f\u043e\u0458\u0430\u043c \u043f\u0440\u0435\u0442\u0440\u0430\u0433\u0435", "search.result.term.missing": "\u041d\u0435\u0434\u043e\u0441\u0442\u0430\u0458\u0435", "select.version": "\u0418\u0437\u0430\u0431\u0435\u0440\u0438 \u0432\u0435\u0440\u0437\u0438\u0458\u0443"}, "version": null}</script>
     
     
       <script src="assets/javascripts/bundle.d7400e89.min.js"></script>
