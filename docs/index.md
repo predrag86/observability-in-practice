@@ -24,6 +24,11 @@ DevOps/SRE inženjerima, backend programerima koji uvode instrumentaciju u svoj
 servis, i tim lidovima koji treba da donesu odluku self-hosted naspram Grafana
 Cloud i da opravdaju trošak.
 
+Knjiga pretpostavlja osnovno radno poznavanje DevOps/SRE prakse (Linux,
+kontejneri, CI/CD, cloud infrastruktura) i uvodno poznavanje observability
+pojmova (metrike, logovi, trejsovi). Prethodno iskustvo sa OpenTelemetry-jem
+nije neophodno — objašnjava se od Poglavlja 2.
+
 ## Struktura
 
 | Deo | Tema |
