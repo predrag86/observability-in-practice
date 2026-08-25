@@ -8,11 +8,53 @@
         <xhtml:link rel="alternate" hreflang="en" href="Noneen/"/>
     </url>
     <url>
+        <loc>Nonedeo-1-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-1-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-1-uvod/"/>
+    </url>
+    <url>
         <loc>Nonedeo-2-uvod/</loc>
         <lastmod>2026-08-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-2-uvod/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-2-uvod/"/>
+    </url>
+    <url>
+        <loc>Nonedeo-3-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-3-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-3-uvod/"/>
+    </url>
+    <url>
+        <loc>Nonedeo-4-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-4-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-4-uvod/"/>
+    </url>
+    <url>
+        <loc>Nonedeo-5-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-5-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-5-uvod/"/>
+    </url>
+    <url>
+        <loc>Nonedeo-6-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-6-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-6-uvod/"/>
+    </url>
+    <url>
+        <loc>Nonedeo-7-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-7-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-7-uvod/"/>
     </url>
     <url>
         <loc>Nonedodatak-a-promql-logql-recepti/</loc>
@@ -274,11 +316,53 @@
         <xhtml:link rel="alternate" hreflang="sr" href="None"/>
     </url>
     <url>
+        <loc>Noneen/deo-1-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-1-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-1-uvod/"/>
+    </url>
+    <url>
         <loc>Noneen/deo-2-uvod/</loc>
         <lastmod>2026-08-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-2-uvod/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-2-uvod/"/>
+    </url>
+    <url>
+        <loc>Noneen/deo-3-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-3-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-3-uvod/"/>
+    </url>
+    <url>
+        <loc>Noneen/deo-4-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-4-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-4-uvod/"/>
+    </url>
+    <url>
+        <loc>Noneen/deo-5-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-5-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-5-uvod/"/>
+    </url>
+    <url>
+        <loc>Noneen/deo-6-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-6-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-6-uvod/"/>
+    </url>
+    <url>
+        <loc>Noneen/deo-7-uvod/</loc>
+        <lastmod>2026-08-25</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/deo-7-uvod/"/>
+        <xhtml:link rel="alternate" hreflang="sr" href="Nonedeo-7-uvod/"/>
     </url>
     <url>
         <loc>Noneen/dodatak-a-promql-logql-recepti/</loc>
