@@ -2,9 +2,12 @@
 # See: https://lychee.cli.rs/usage/config/
 
 # Be patient with slow sites and transient failures before reporting a broken link.
-timeout = 30
-retry_wait_time = 5
-max_retries = 3
+# (Bumped from 30s/3 retries after two separate CI runs saw transient network
+# errors -- timeout, then connection-reset -- against sites that load fine when
+# checked manually. Looks like runner-side flakiness, not dead links.)
+timeout = 45
+retry_wait_time = 8
+max_retries = 5
 
 # Some sites return 429 (rate limited) to automated checkers under normal load —
 # treat it as non-fatal rather than a broken link.
