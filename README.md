@@ -5,6 +5,9 @@ Grafana LGTM stack) na nivou cele firme, zasnovana na stvarnoj produkcionoj
 implementaciji. Sva imena firme, ljudi, interni domeni i ID-jevi resursa su
 uklonjeni ili generalizovani.
 
+[![Docs](https://github.com/predrag86/observability-in-practice/actions/workflows/docs.yml/badge.svg)](https://github.com/predrag86/observability-in-practice/actions/workflows/docs.yml)
+[![PR checks](https://github.com/predrag86/observability-in-practice/actions/workflows/pr-check.yml/badge.svg)](https://github.com/predrag86/observability-in-practice/actions/workflows/pr-check.yml)
+
 📖 Pročitaj na: **https://predrag86.github.io/observability-in-practice/**
 
 ## Struktura repozitorijuma
