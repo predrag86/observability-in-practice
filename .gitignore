@@ -440,3 +440,10 @@ _to_delete/
 
 # Node (lint tooling)
 node_modules/
+
+# Generated PDF booklets (built from docs/*.md via scripts/build_pdf.py --
+# regenerable, not a separate source of truth, so not committed). Anchored
+# to repo root so this doesn't also match scripts/pdf/ (the LaTeX preamble
+# source, which IS tracked).
+/pdf-build/
+/pdf/
