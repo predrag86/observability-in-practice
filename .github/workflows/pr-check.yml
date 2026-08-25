@@ -10,6 +10,9 @@ on:
       - package.json
       - .markdownlint-cli2.jsonc
       - lychee.toml
+      - scripts/**
+      - .gitignore
+      - README.md
       - .github/workflows/**
   workflow_dispatch:
 
