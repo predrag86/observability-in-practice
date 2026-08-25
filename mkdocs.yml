@@ -22,9 +22,8 @@ theme:
         icon: material/brightness-4
         name: Prebaci na svetli režim
   features:
-    - navigation.tabs
-    - navigation.tabs.sticky
     - navigation.sections
+    - navigation.expand
     - navigation.top
     - navigation.indexes
     - search.highlight
