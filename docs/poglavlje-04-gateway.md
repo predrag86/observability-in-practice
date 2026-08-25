@@ -1,6 +1,5 @@
 # Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
 
-
 Zamisli luku. Brodovi stižu sa svih strana sveta, svaki sa drugačijim tovarom,
 drugačijim papirima, drugačijim namerama. Kad bi svaki brod sam odlučivao gde
 da istovari robu i sam sebi izdavao dozvolu za ulazak, luka bi bila haos za

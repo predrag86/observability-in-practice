@@ -1,5 +1,4 @@
-\chapter*{Deo II --- Arhitektura prikupljanja telemetrije}
-\addcontentsline{toc}{chapter}{Deo II --- Arhitektura prikupljanja telemetrije}
+# Deo II — Arhitektura prikupljanja telemetrije
 
 ## Pre nego što krenemo: šta tačno posmatramo
 

@@ -195,7 +195,7 @@ prolaza (uzorkovanje, red za slanje koji je pun, greška izvoza) — proveri
 OTel metrika sa jedinicom u definiciji dobija CamelCase sufiks kad stigne
 u Prometheus/Mimir — jedinica postaje deo IMENA metrike, ne oznaka:
 
-```
+```text
 OTel:       container.memory.utilized   (jedinica: MiB)
 Prometheus: container_memory_utilized_MiB
 

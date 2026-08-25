@@ -434,3 +434,9 @@ site/
 
 # Local cleanup leftovers (not part of the site)
 _to_delete/
+
+# macOS
+.DS_Store
+
+# Node (lint tooling)
+node_modules/
