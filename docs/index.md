@@ -29,14 +29,14 @@ Cloud i da opravdaju trošak.
 | Deo | Tema |
 | --- | --- |
 | [Uvod](uvod.md) | Zašto ova knjiga, i po čemu se razlikuje |
-| Deo I | Osnove — šta je observability, OpenTelemetry, izbor platforme |
-| Deo II | Arhitektura prikupljanja telemetrije — gateway, instrumentacija, sidecar |
-| Deo III | Obrada, kardinalnost i troškovi |
-| Deo IV | Alarmiranje, SLO i odgovor na incidente |
-| Deo V | Observability po domenima — baze, klasteri, mreža, batch/ETL, Snowflake |
-| Deo VI | Upravljanje, usklađenost i zrelost |
-| Deo VII | Sazrevanje programa |
-| Dodaci | PromQL/LogQL recepti, rečnik pojmova, checklist, šabloni |
+| [Deo I](poglavlje-01-sta-je-observability.md) | Osnove — šta je observability, OpenTelemetry, izbor platforme |
+| [Deo II](deo-2-uvod.md) | Arhitektura prikupljanja telemetrije — gateway, instrumentacija, sidecar |
+| [Deo III](poglavlje-10-anatomija-pipeline.md) | Obrada, kardinalnost i troškovi |
+| [Deo IV](poglavlje-13-arhitektura-alarmiranja.md) | Alarmiranje, SLO i odgovor na incidente |
+| [Deo V](poglavlje-18-baze-podataka.md) | Observability po domenima — baze, klasteri, mreža, batch/ETL, Snowflake |
+| [Deo VI](poglavlje-25-privatnost-telemetriji.md) | Upravljanje, usklađenost i zrelost |
+| [Deo VII](poglavlje-29-fazni-rollout.md) | Sazrevanje programa |
+| [Dodaci](dodatak-a-promql-logql-recepti.md) | PromQL/LogQL recepti, rečnik pojmova, checklist, šabloni |
 
 Svako standardno poglavlje prati isti oblik: uvodna analogija iz stvarnog
 života, praktičan deo (kako je urađeno, sa dijagramom arhitekture i gde je

@@ -22,6 +22,7 @@ theme:
         name: Prebaci na svetli režim
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.top
     - navigation.indexes
