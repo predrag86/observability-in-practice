@@ -59,6 +59,16 @@ Grafana Cloud-a, konkurentskih SaaS platformi i self-hosted rešenja; to pitanje
 je toliko česta prva prepreka da mu je posvećeno celo sledeće poglavlje, pre
 nego što knjiga uopšte uđe u tehničke detalje.
 
+Knjiga pretpostavlja da čitalac već radi u DevOps/SRE ili srodnoj
+infrastrukturnoj ulozi i da mu pojmovi kao što su kontejneri, CI/CD, cloud
+provajder (AWS ili sličan) i osnovni Linux rad nisu strani. Poznavanje
+observability terminologije (metrike, logovi, trejsovi, dashboard, alarm) na
+uvodnom nivou je poželjno, ali nije preduslov — Poglavlje 1 gradi tu
+terminologiju od nule. Ono što knjiga NE uči jeste DevOps ili SRE od početka:
+ako su vam pojmovi poput CI/CD pipeline-a, kontejnerizacije ili
+infrastrukture kao koda potpuno novi, bolje je prvo krenuti od uvodnog
+DevOps/SRE materijala, pa se vratiti ovde.
+
 ## Kako je knjiga organizovana
 
 Svako poglavlje sledi isti obrazac, namerno ponovljen kroz celu knjigu da bi
