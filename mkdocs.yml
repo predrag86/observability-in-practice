@@ -1,0 +1,111 @@
+site_name: Observability u praksi
+site_description: OpenTelemetry i Grafana LGTM stack — knjiga zasnovana na stvarnoj produkcionoj implementaciji
+repo_url: https://github.com/predrag86/observability-in-practice
+repo_name: observability-in-practice
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: sr
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Prebaci na tamni režim
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Prebaci na svetli režim
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.action.edit
+    - toc.follow
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: sr
+          default: true
+          name: Srpski
+          build: true
+          site_name: "Observability u praksi"
+        - locale: en
+          name: English
+          build: true
+          site_name: "Observability in Practice"
+
+nav:
+  - Naslovna: index.md
+  - Uvod: uvod.md
+  - "Deo I — Osnove":
+      - poglavlje-01-sta-je-observability.md
+      - poglavlje-02-opentelemetry.md
+      - poglavlje-03-izbor-platforme.md
+  - "Deo II — Arhitektura prikupljanja telemetrije":
+      - deo-2-uvod.md
+      - poglavlje-04-gateway.md
+      - poglavlje-05-instrumentacija.md
+      - poglavlje-06-sidecar.md
+      - poglavlje-07-pull-obrasci.md
+      - poglavlje-08-frontend-rum.md
+      - poglavlje-09-sinteticko-pracenje.md
+  - "Deo III — Obrada, kardinalnost i troškovi":
+      - poglavlje-10-anatomija-pipeline.md
+      - poglavlje-11-kardinalnost-cena.md
+      - poglavlje-12-sampling-trejsova.md
+  - "Deo IV — Alarmiranje, SLO i odgovor na incidente":
+      - poglavlje-13-arhitektura-alarmiranja.md
+      - poglavlje-14-kad-alarm-cuti.md
+      - poglavlje-15-slo-budzet-greske.md
+      - poglavlje-16-runbook-ovi.md
+      - poglavlje-17-postmortem-kultura.md
+  - "Deo V — Observability po domenima":
+      - poglavlje-18-baze-podataka.md
+      - poglavlje-19-samostalni-klaster.md
+      - poglavlje-20-autentikacija-iam.md
+      - poglavlje-21-hostovi-serveri.md
+      - poglavlje-22-mreza-ravan-posmatranja.md
+      - poglavlje-23-batch-etl-flota.md
+      - poglavlje-24-snowflake-servis-koji-nije-nas.md
+  - "Deo VI — Upravljanje, usklađenost i zrelost":
+      - poglavlje-25-privatnost-telemetriji.md
+      - poglavlje-26-soc2-kontrola.md
+      - poglavlje-27-prioritizacija.md
+      - poglavlje-28-ai-asistirana-observability.md
+  - "Deo VII — Sazrevanje programa":
+      - poglavlje-29-fazni-rollout.md
+      - poglavlje-30-merenje-zrelosti.md
+      - poglavlje-31-zakljucak.md
+  - Dodaci:
+      - dodatak-a-promql-logql-recepti.md
+      - dodatak-b-recnik-pojmova.md
+      - dodatak-c-checklist-onboarding.md
+      - dodatak-d-sabloni.md

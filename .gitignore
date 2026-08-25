@@ -427,3 +427,10 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# MkDocs
+site/
+.venv/
+
+# Local cleanup leftovers (not part of the site)
+_to_delete/
