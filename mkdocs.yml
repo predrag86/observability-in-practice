@@ -69,6 +69,10 @@ plugins:
           site_name: "Observability in Practice"
           theme:
             language: en
+          nav_translations:
+            Naslovna: Home
+            Uvod: Introduction
+            Dodaci: Appendices
   - git-revision-date-localized:
       type: date
       fallback_to_build_date: true
