@@ -40,6 +40,7 @@ PARTS = [
         "out": "observability-uvod-do-poglavlja-3.pdf",
         "files": [
             "uvod.md",
+            "deo-1-uvod.md",
             "poglavlje-01-sta-je-observability.md",
             "poglavlje-02-opentelemetry.md",
             "poglavlje-03-izbor-platforme.md",
@@ -72,6 +73,7 @@ PARTS = [
         "key": "deo3",
         "out": "observability-deo3-poglavlja-10-12.pdf",
         "files": [
+            "deo-3-uvod.md",
             "poglavlje-10-anatomija-pipeline.md",
             "poglavlje-11-kardinalnost-cena.md",
             "poglavlje-12-sampling-trejsova.md",
@@ -86,6 +88,7 @@ PARTS = [
         "key": "deo4",
         "out": "observability-deo4-poglavlja-13-17.pdf",
         "files": [
+            "deo-4-uvod.md",
             "poglavlje-13-arhitektura-alarmiranja.md",
             "poglavlje-14-kad-alarm-cuti.md",
             "poglavlje-15-slo-budzet-greske.md",
@@ -102,6 +105,7 @@ PARTS = [
         "key": "deo5",
         "out": "observability-deo5-poglavlja-18-24.pdf",
         "files": [
+            "deo-5-uvod.md",
             "poglavlje-18-baze-podataka.md",
             "poglavlje-19-samostalni-klaster.md",
             "poglavlje-20-autentikacija-iam.md",
@@ -120,6 +124,7 @@ PARTS = [
         "key": "deo6",
         "out": "observability-deo6-poglavlja-25-28.pdf",
         "files": [
+            "deo-6-uvod.md",
             "poglavlje-25-privatnost-telemetriji.md",
             "poglavlje-26-soc2-kontrola.md",
             "poglavlje-27-prioritizacija.md",
@@ -135,6 +140,7 @@ PARTS = [
         "key": "deo7",
         "out": "observability-deo7-poglavlja-29-31.pdf",
         "files": [
+            "deo-7-uvod.md",
             "poglavlje-29-fazni-rollout.md",
             "poglavlje-30-merenje-zrelosti.md",
             "poglavlje-31-zakljucak.md",
