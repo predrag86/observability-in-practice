@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0   # full history lets mkdocs-material show last-updated dates
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
