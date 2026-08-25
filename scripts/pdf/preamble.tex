@@ -1,0 +1,66 @@
+% --- Book-like styling for the sample chapter PDF ---
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{needspace}
+\usepackage{caption}
+
+\captionsetup{font={small,it},labelfont={bf,it},labelsep=endash,justification=centering,skip=8pt}
+\renewcommand{\figurename}{Slika}
+
+\definecolor{inkcolor}{HTML}{2B2118}
+\definecolor{accentcolor}{HTML}{5B4636}
+\definecolor{rulecolor}{HTML}{C9BBA6}
+
+\color{inkcolor}
+
+% Chapter-like styling for top-level "#" headings (mapped to \chapter via
+% --top-level-division=chapter), numbering suppressed because the manual
+% numbers ("4.1", "4.2"...) already live in the heading text.
+\titleformat{\chapter}[display]
+  {\normalfont\filright}
+  {}
+  {0pt}
+  {\itshape\fontsize{30}{34}\selectfont\bfseries\color{inkcolor}}
+\titlespacing*{\chapter}{0pt}{10pt}{28pt}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{inkcolor}}
+  {}{0em}{}
+\titlespacing*{\section}{0pt}{28pt}{12pt}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\itshape\color{accentcolor}}
+  {}{0em}{}
+\titlespacing*{\subsection}{0pt}{20pt}{8pt}
+
+% Intro note rendered as a markdown blockquote -> style as a quiet aside
+\AtBeginEnvironment{quote}{%
+  \itshape\small\color{accentcolor}%
+  \leftskip=1.4em\rightskip=1.4em%
+}
+
+% Running headers, book-style
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\thepage}
+\fancyhead[RO]{\small\thepage}
+\fancyhead[RE]{\small\itshape Observability u praksi}
+\fancyhead[LO]{\small\itshape Dodaci A--D}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{rulecolor}\leaders\hrule height \headrulewidth\hfill}}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyhead[LE]{\small\thepage}
+  \fancyhead[RO]{\small\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{1.4em}
+
+% Nicer bullet lists
+\setlist[itemize]{leftmargin=1.6em, itemsep=4pt, topsep=6pt}
+\setlist[enumerate]{leftmargin=1.8em, itemsep=4pt, topsep=6pt}
