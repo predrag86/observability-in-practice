@@ -1,0 +1,25 @@
+version: 2
+updates:
+  # mkdocs-material, mkdocs-static-i18n, mkdocs-git-revision-date-localized-plugin
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "pip"
+
+  # markdownlint-cli2, mkdocs-material-linter (lint tooling only)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "npm"
+
+  # actions/checkout, actions/setup-python, lycheeverse/lychee-action, etc.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
