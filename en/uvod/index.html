@@ -29,7 +29,7 @@
     
     
       
-        <title>Uvod - Observability in Practice</title>
+        <title>Introduction - Observability in Practice</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#uvod" class="md-skip">
+        <a href="#introduction" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Uvod
+              Introduction
             
           </span>
         </div>
@@ -297,7 +297,7 @@
   <span class="md-ellipsis">
     
   
-    Naslovna
+    Home
   
 
     
@@ -333,7 +333,7 @@
   <span class="md-ellipsis">
     
   
-    Uvod
+    Introduction
   
 
     
@@ -351,7 +351,7 @@
   <span class="md-ellipsis">
     
   
-    Uvod
+    Introduction
   
 
     
@@ -377,10 +377,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#odakle-dolazi-materijal" class="md-nav__link">
+  <a href="#where-the-material-comes-from" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Odakle dolazi materijal
+        Where the material comes from
       
     </span>
   </a>
@@ -388,10 +388,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kome-je-ova-knjiga-namenjena" class="md-nav__link">
+  <a href="#who-this-book-is-for" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Kome je ova knjiga namenjena
+        Who this book is for
       
     </span>
   </a>
@@ -399,10 +399,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kako-je-knjiga-organizovana" class="md-nav__link">
+  <a href="#how-the-book-is-organized" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Kako je knjiga organizovana
+        How the book is organized
       
     </span>
   </a>
@@ -495,7 +495,7 @@
   <span class="md-ellipsis">
     
   
-    Deo I — Osnove
+    Part I — Fundamentals
   
 
     
@@ -523,7 +523,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 1 — Šta je observability, a šta je samo monitoring sa novim imenom
+    Chapter 1 — What observability is, and what's just monitoring with a new name
   
 
     
@@ -551,7 +551,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 2 — OpenTelemetry: mentalni model pre prve linije koda
+    Chapter 2 — OpenTelemetry: a mental model before the first line of code
   
 
     
@@ -579,7 +579,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 3 — Izbor platforme: zašto Grafana Cloud
+    Chapter 3 — Choosing a platform: why Grafana Cloud
   
 
     
@@ -2040,7 +2040,7 @@
   <span class="md-ellipsis">
     
   
-    Dodaci
+    Appendices
   
 
     
@@ -2056,7 +2056,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Dodaci
+    Appendices
   
 
           </label>
@@ -2208,10 +2208,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#odakle-dolazi-materijal" class="md-nav__link">
+  <a href="#where-the-material-comes-from" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Odakle dolazi materijal
+        Where the material comes from
       
     </span>
   </a>
@@ -2219,10 +2219,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kome-je-ova-knjiga-namenjena" class="md-nav__link">
+  <a href="#who-this-book-is-for" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Kome je ova knjiga namenjena
+        Who this book is for
       
     </span>
   </a>
@@ -2230,10 +2230,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kako-je-knjiga-organizovana" class="md-nav__link">
+  <a href="#how-the-book-is-organized" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Kako je knjiga organizovana
+        How the book is organized
       
     </span>
   </a>
@@ -2257,7 +2257,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/uvod.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/uvod.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2265,72 +2265,78 @@
   
 
 
-<h1 id="uvod">Uvod</h1>
-<p>Većina literature o observability-ju objašnjava koncepte — tri stuba (metrike,
-logovi, trejsovi), RED/USE metodologije, šta je OpenTelemetry. To je neophodno,
-ali nije dovoljno: pravi problemi počinju posle instalacije agenta, kada Mimir
-ne promoviše atribute u lejble koje očekuješ, kada kardinalnost pojede budžet
-za jedan vikend, kada alarm koji izgleda ispravno ćuti baš onda kada je
-najpotrebniji, ili kada moraš da objasniš auditoru zašto email korisnika
-završava u trejsu.</p>
-<p>Ova knjiga polazi od druge tačke: od stvarnog, višemesečnog uvođenja
-observability-ja <strong>na nivou cele firme</strong>, ne jednog demo-servisa u jednom
-repozitorijumu. Implementacija koju knjiga prati kao svoju centralnu studiju
-slučaja pokriva desetine backend i frontend aplikacija (APM — praćenje
-performansi aplikacija), mrežnu infrastrukturu, upravljane baze podataka,
-samostalno upravljan distribuirani compute klaster (tipa Dremio), autentikacioni
-sloj, i flotu batch/ETL zadataka koja se meri desetinama nezavisnih porodica
-poslova — sve na AWS-u.</p>
-<p>Poseban deo priče, dovoljno drugačiji da dobije sopstveno poglavlje, jeste
-onboardovanje servisa koji <strong>nije</strong> na AWS-u niti je hostovan interno: nezavisnog
-SaaS data-warehouse rešenja (tipa Snowflake). Taj servis nema host na koji se
-može instalirati agent, nema proces koji se može uputiti da izveze telemetriju,
-nema mrežu u koju infrastrukturni tim ima uvid — sve što se o njemu zna dolazi
-iz sistemskih pregleda koje sam servis dobrovoljno izlaže, upitanih spolja, na
-raspored, sa kašnjenjem koje je strukturno i ne može se ukinuti. Poglavlje 24 tu
-priču obrađuje u punoj dubini: kako se prikuplja telemetrija servisa nad kojim
-nemaš nikakvu operativnu kontrolu, i šta to menja u odnosu na sve ostalo u
-knjizi. Ta razlika — instrumentuješ ono što kontrolišeš, posmatraš spolja ono
-što ne kontrolišeš — provlači se kroz celu knjigu kao stalna tema, i vraća se
-više puta i pre Poglavlja 24 (kod baza, kod pull-obrazaca, kod sintetičkog
-praćenja).</p>
-<h2 id="odakle-dolazi-materijal">Odakle dolazi materijal</h2>
-<p>Svaki tehnički primer u ovoj knjizi — arhitektura, PromQL upit, konfiguracioni
-isečak, incident, odluka i njena analiza — potiče iz stvarne implementacije,
-dokumentovane onako kako je nastajala: sa greškama, ćorsokacima, revizijama i
-"zašto smo ovo prvo probali, pa odbacili" beleškama. Ništa u knjizi nije
-laboratorijski primer napravljen da lepo izgleda u knjizi; sve je prošlo kroz
-produkciju.</p>
-<p>Zbog toga je pre objavljivanja urađen jedan eksplicitan korak: <strong>uklanjanje
-svakog identifikujućeg detalja.</strong> Naziv firme, imena ljudi, interni domeni,
-ID-jevi AWS resursa, adrese, imena internih repozitorijuma i aplikacija — sve je
-ili uklonjeno ili zamenjeno generičkim, fiktivnim nazivima. Ono što ostaje su
-<strong>obrasci i odluke</strong>, ne to čiji su. Gde god je bilo moguće, zadržani su realni
-brojevi (cene, procenti, vremena) jer bez njih polovina lekcija u knjizi gubi
-smisao — ali nikad na način koji bi otkrio o kojoj se firmi radi.</p>
-<h2 id="kome-je-ova-knjiga-namenjena">Kome je ova knjiga namenjena</h2>
-<p>Pre svega DevOps/SRE inženjerima koji grade ili nasleđuju observability sistem
-i žele da vide kako on izgleda kad prestane da bude prototip. Zatim backend i
-frontend programerima koji uvode instrumentaciju u sopstveni servis i žele da
-znaju šta je zaista potrebno, a šta je kult-teretni ritual. I na kraju tim
-liderima koji treba da donesu — i da opravdaju pred budžetom — odluku između
-Grafana Cloud-a, konkurentskih SaaS platformi i self-hosted rešenja; to pitanje
-je toliko česta prva prepreka da mu je posvećeno celo sledeće poglavlje, pre
-nego što knjiga uopšte uđe u tehničke detalje.</p>
-<h2 id="kako-je-knjiga-organizovana">Kako je knjiga organizovana</h2>
-<p>Svako poglavlje sledi isti obrazac, namerno ponovljen kroz celu knjigu da bi
-čitanje postalo predvidljivo: otvara se jednom paralelom iz stvarnog života koja
-uvodi mehanizam o kome je reč, prelazi na <strong>praktičan deo</strong> — kako je tačno
-urađeno u implementaciji koju knjiga prati — pa na <strong>analitički deo</strong>, gde se to
-rešenje poredi sa onim što industrija naziva "standardnim", eksplicitno imenujući
-gde je implementacija odstupila i zašto, i šta bi se dogodilo da nije. Poglavlje
-se zatvara vraćanjem na uvodnu paralelu, kratkom listom pravila i vežbom koju
-čitalac može odmah da primeni na sopstveni sistem.</p>
-<p>Ovaj format nije stilska odluka radi razonode — on je odgovor na ono što čini
-većinu observability literature slabom: opisuje se <em>šta</em> je urađeno, retko <em>zašto
-baš tako</em>, a gotovo nikad <em>šta bi se pokvarilo da je urađeno drugačije</em>. Ova
-knjiga pokušava da svako poglavlje ostavi baš to poslednje pitanje odgovoreno.</p>
-<p>Krenimo.</p>
+<h1 id="introduction">Introduction</h1>
+<p>Most observability literature explains concepts — the three pillars
+(metrics, logs, traces), the RED/USE methodologies, what OpenTelemetry is.
+That's necessary, but not sufficient: the real problems start after the
+agent is installed — when Mimir doesn't promote the attribute you expected
+into a label, when cardinality eats a week's budget over a single weekend,
+when an alert that looks correct stays silent exactly when it's needed most,
+or when you have to explain to an auditor why a user's email address ended
+up in a trace.</p>
+<p>This book starts from that other point: from a real, multi-month rollout of
+observability <strong>company-wide</strong>, not one demo service in one repository. The
+implementation the book follows as its central case study covers dozens of
+backend and frontend applications (APM — application performance
+monitoring), network infrastructure, managed databases, a self-managed
+distributed compute cluster (Dremio-style), an authentication layer, and a
+fleet of batch/ETL jobs numbering in the dozens of independent job
+families — all on AWS.</p>
+<p>A particular part of the story, different enough to earn its own chapter, is
+onboarding a service that is <strong>not</strong> on AWS and not hosted internally: an
+independent SaaS data-warehouse offering (Snowflake-style). That service has
+no host you can install an agent on, no process you can direct to export
+telemetry, no network the infrastructure team has visibility into —
+everything known about it comes from the system views the service itself
+voluntarily exposes, polled from the outside, on a schedule, with a delay
+that's structural and can't be eliminated. Chapter 24 covers that story in
+full depth: how you collect telemetry for a service you have zero
+operational control over, and what that changes relative to everything else
+in the book. That distinction — instrument what you control, observe from
+the outside what you don't — runs through the whole book as a recurring
+theme, and comes back several times even before Chapter 24 (with databases,
+with pull-based patterns, with synthetic monitoring).</p>
+<h2 id="where-the-material-comes-from">Where the material comes from</h2>
+<p>Every technical example in this book — architecture, PromQL query,
+configuration snippet, incident, decision and its analysis — comes from a
+real implementation, documented the way it actually happened: with mistakes,
+dead ends, revisions, and "why we tried this first, then dropped it" notes.
+Nothing in the book is a lab example built to look good in a book; all of it
+went through production.</p>
+<p>Because of that, one explicit step was taken before publication: <strong>removing
+every identifying detail.</strong> The company name, people's names, internal
+domains, AWS resource IDs, addresses, names of internal repositories and
+applications — all of it was either removed or replaced with generic,
+fictional names. What remains are the <strong>patterns and decisions</strong>, not whose
+they were. Wherever possible, real numbers were kept (prices, percentages,
+timings), because without them half the lessons in the book lose their
+point — but never in a way that would reveal which company this is.</p>
+<h2 id="who-this-book-is-for">Who this book is for</h2>
+<p>First and foremost, DevOps/SRE engineers who are building or inheriting an
+observability system and want to see what it looks like once it stops being
+a prototype. Next, backend and frontend developers instrumenting their own
+service who want to know what's actually necessary versus what's cargo-cult
+ritual. And finally, team leads who need to make — and justify to a
+budget — the decision between Grafana Cloud, competing SaaS platforms, and a
+self-hosted setup; that question is such a common first obstacle that it gets
+an entire chapter of its own, before the book even gets into technical
+detail.</p>
+<h2 id="how-the-book-is-organized">How the book is organized</h2>
+<p>Every chapter follows the same pattern, deliberately repeated throughout the
+book so reading becomes predictable: it opens with a real-life parallel that
+introduces the mechanism in question, moves into a <strong>practical section</strong> —
+exactly how it was done in the implementation the book follows — then into
+an <strong>analytical section</strong>, where that solution is compared against what the
+industry calls "standard," explicitly naming where the implementation
+diverged and why, and what would have happened if it hadn't. The chapter
+closes by returning to the opening parallel, a short list of rules, and an
+exercise the reader can apply to their own system right away.</p>
+<p>This format isn't a stylistic choice made for variety's sake — it's a
+response to what makes most observability literature weak: it describes
+<em>what</em> was done, rarely <em>why exactly that way</em>, and almost never <em>what would
+have broken had it been done differently</em>. This book tries to leave every
+chapter with exactly that last question answered.</p>
+<p>Let's begin.</p>
 
 
 
@@ -2351,7 +2357,7 @@ knjiga pokušava da svako poglavlje ostavi baš to poslednje pitanje odgovoreno.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 25, 2026 19:17:37 UTC">August 25, 2026</span>
   </span>
 
     

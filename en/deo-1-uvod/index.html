@@ -29,7 +29,7 @@
     
     
       
-        <title>Deo I — Osnove - Observability in Practice</title>
+        <title>Part I — Fundamentals - Observability in Practice</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deo-i-osnove" class="md-skip">
+        <a href="#part-i-fundamentals" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Deo I — Osnove
+              Part I — Fundamentals
             
           </span>
         </div>
@@ -297,7 +297,7 @@
   <span class="md-ellipsis">
     
   
-    Naslovna
+    Home
   
 
     
@@ -324,7 +324,7 @@
   <span class="md-ellipsis">
     
   
-    Uvod
+    Introduction
   
 
     
@@ -424,7 +424,7 @@
   <span class="md-ellipsis">
     
   
-    Deo I — Osnove
+    Part I — Fundamentals
   
 
     
@@ -442,7 +442,7 @@
   <span class="md-ellipsis">
     
   
-    Deo I — Osnove
+    Part I — Fundamentals
   
 
     
@@ -468,10 +468,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pre-nego-sto-krenemo-tri-odluke-koje-se-donose-samo-jednom" class="md-nav__link">
+  <a href="#before-we-start-three-decisions-you-only-make-once" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre nego što krenemo: tri odluke koje se donose samo jednom
+        Before we start: three decisions you only make once
       
     </span>
   </a>
@@ -501,7 +501,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 1 — Šta je observability, a šta je samo monitoring sa novim imenom
+    Chapter 1 — What observability is, and what's just monitoring with a new name
   
 
     
@@ -529,7 +529,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 2 — OpenTelemetry: mentalni model pre prve linije koda
+    Chapter 2 — OpenTelemetry: a mental model before the first line of code
   
 
     
@@ -557,7 +557,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 3 — Izbor platforme: zašto Grafana Cloud
+    Chapter 3 — Choosing a platform: why Grafana Cloud
   
 
     
@@ -2018,7 +2018,7 @@
   <span class="md-ellipsis">
     
   
-    Dodaci
+    Appendices
   
 
     
@@ -2034,7 +2034,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Dodaci
+    Appendices
   
 
           </label>
@@ -2186,10 +2186,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pre-nego-sto-krenemo-tri-odluke-koje-se-donose-samo-jednom" class="md-nav__link">
+  <a href="#before-we-start-three-decisions-you-only-make-once" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre nego što krenemo: tri odluke koje se donose samo jednom
+        Before we start: three decisions you only make once
       
     </span>
   </a>
@@ -2213,7 +2213,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/deo-1-uvod.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/deo-1-uvod.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2221,36 +2221,37 @@
   
 
 
-<h1 id="deo-i-osnove">Deo I — Osnove</h1>
-<h2 id="pre-nego-sto-krenemo-tri-odluke-koje-se-donose-samo-jednom">Pre nego što krenemo: tri odluke koje se donose samo jednom</h2>
-<p>Uvod knjige je već postavio scenu — koji sistem knjiga prati, odakle
-dolazi materijal, kako je svako poglavlje strukturirano. Deo I je mesto
-gde ta priča prestaje da bude samo kontekst i postaje <strong>rečnik</strong>: tri
-poglavlja, tri odluke koje se u stvarnoj implementaciji donose tačno
-jednom, na samom početku, i posle toga ih sve ostalo u knjizi
-prećutno pretpostavlja kao rešene.</p>
-<p>Redosled nije proizvoljan:</p>
+<h1 id="part-i-fundamentals">Part I — Fundamentals</h1>
+<h2 id="before-we-start-three-decisions-you-only-make-once">Before we start: three decisions you only make once</h2>
+<p>The book's introduction has already set the scene — which system the book
+follows, where the material comes from, how every chapter is structured.
+Part I is where that story stops being just context and becomes
+<strong>vocabulary</strong>: three chapters, three decisions that in a real
+implementation get made exactly once, right at the start, and after that
+everything else in the book quietly assumes they've already been settled.</p>
+<p>The order isn't arbitrary:</p>
 <ul>
-<li><strong>Poglavlje 1</strong> postavlja pitanje pre bilo kog alata: šta uopšte znači
-  "observability" kad se razlikuje od monitoringa koji je postojao i pre
-  toga naziva — i zašto ta razlika nije kozmetička, nego menja šta se
-  gradi prvo.</li>
-<li><strong>Poglavlje 2</strong> uvodi OpenTelemetry ne kao biblioteku koju treba
-  instalirati, nego kao mentalni model — zajednički jezik kojim svaki
-  deo sistema, bez obzira ko ga je pisao, opisuje ono što meri. Bez ovog
-  poglavlja, poglavlje 3 nema o čemu da odlučuje.</li>
-<li><strong>Poglavlje 3</strong> je prvi put da knjiga stane na jedno tlo koje je čisto
-  poslovno, ne tehničko: gde telemetrija fizički živi, ko je operativno
-  drži i po kojoj ceni — pitanje koje mora doći poslednje u ovom delu,
-  jer se poređenje platformi ne može smisleno raditi dok se ne zna šta
-  se uopšte šalje (Poglavlje 2) i zašto to nešto vredi meriti (Poglavlje 1).</li>
+<li><strong>Chapter 1</strong> asks the question that comes before any tool: what does
+  "observability" actually mean once it's distinguished from the monitoring
+  that existed before that name — and why that distinction isn't cosmetic,
+  but changes what gets built first.</li>
+<li><strong>Chapter 2</strong> introduces OpenTelemetry not as a library to install, but as
+  a mental model — a shared language in which every part of the system,
+  regardless of who wrote it, describes what it measures. Without this
+  chapter, Chapter 3 has nothing to decide between.</li>
+<li><strong>Chapter 3</strong> is the first time the book stands on ground that's purely
+  business, not technical: where telemetry physically lives, who operates
+  it, and at what price — a question that has to come last in this part,
+  because comparing platforms can't be done meaningfully until you know
+  what's actually being sent (Chapter 2) and why it's worth measuring at all
+  (Chapter 1).</li>
 </ul>
-<p>Ovaj obrazac — prvo pojam, pa protokol, pa platforma — vredi zapamtiti,
-jer se knjiga na njega ne vraća eksplicitno, ali ga svaki naredni deo
-tiho koristi. Deo II, koji sledi, ne postavlja ponovo pitanje "šta je
-observability" niti "zašto OpenTelemetry" — pretpostavlja da su oba
-pitanja iza nas, i prelazi direktno na to kako se signal stvarno
-prikuplja iz svakog sloja sistema.</p>
+<p>This pattern — concept first, then protocol, then platform — is worth
+remembering, because the book never comes back to it explicitly, but every
+part that follows quietly relies on it. Part II, which comes next, doesn't
+re-ask "what is observability" or "why OpenTelemetry" — it assumes both
+questions are already behind us, and moves straight into how the signal is
+actually collected from every layer of the system.</p>
 
 
 
@@ -2271,7 +2272,7 @@ prikuplja iz svakog sloja sistema.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 16:55:25 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 25, 2026 19:17:37 UTC">August 25, 2026</span>
   </span>
 
     

@@ -29,7 +29,7 @@
     
     
       
-        <title>Poglavlje 2 — OpenTelemetry: mentalni model pre prve linije koda - Observability in Practice</title>
+        <title>Chapter 2 — OpenTelemetry: a mental model before the first line of code - Observability in Practice</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#poglavlje-2-opentelemetry-mentalni-model-pre-prve-linije-koda" class="md-skip">
+        <a href="#chapter-2-opentelemetry-a-mental-model-before-the-first-line-of-code" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Poglavlje 2 — OpenTelemetry: mentalni model pre prve linije koda
+              Chapter 2 — OpenTelemetry: a mental model before the first line of code
             
           </span>
         </div>
@@ -297,7 +297,7 @@
   <span class="md-ellipsis">
     
   
-    Naslovna
+    Home
   
 
     
@@ -324,7 +324,7 @@
   <span class="md-ellipsis">
     
   
-    Uvod
+    Introduction
   
 
     
@@ -415,7 +415,7 @@
   <span class="md-ellipsis">
     
   
-    Deo I — Osnove
+    Part I — Fundamentals
   
 
     
@@ -443,7 +443,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 1 — Šta je observability, a šta je samo monitoring sa novim imenom
+    Chapter 1 — What observability is, and what's just monitoring with a new name
   
 
     
@@ -480,7 +480,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 2 — OpenTelemetry: mentalni model pre prve linije koda
+    Chapter 2 — OpenTelemetry: a mental model before the first line of code
   
 
     
@@ -498,7 +498,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 2 — OpenTelemetry: mentalni model pre prve linije koda
+    Chapter 2 — OpenTelemetry: a mental model before the first line of code
   
 
     
@@ -524,10 +524,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#21-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#21-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.1 Pitanje na koje ovo poglavlje odgovara
+        2.1 The question this chapter answers
       
     </span>
   </a>
@@ -535,10 +535,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#22-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#22-how-it-was-actually-done-a-practical-walkthrough" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.2 Kako je to urađeno — praktičan pregled
+        2.2 How it was actually done — a practical walkthrough
       
     </span>
   </a>
@@ -546,22 +546,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#23-analiticki-deo-zasto-je-otlp-uopste-morao-da-postoji-i-sta-znace-semanticke-konvencije" class="md-nav__link">
+  <a href="#23-analytical-section-why-otlp-had-to-exist-at-all-and-what-semantic-conventions-actually-mean" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.3 Analitički deo — zašto je OTLP uopšte morao da postoji, i šta znače "semantičke konvencije"
+        2.3 Analytical section — why OTLP had to exist at all, and what "semantic conventions" actually mean
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2.3 Analitički deo — zašto je OTLP uopšte morao da postoji, i šta znače &#34;semantičke konvencije&#34;">
+    <nav class="md-nav" aria-label="2.3 Analytical section — why OTLP had to exist at all, and what &#34;semantic conventions&#34; actually mean">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#problem-koji-je-opentelemetry-resavao-nije-bio-nedostatak-alata-nego-njihova-nekompatibilnost" class="md-nav__link">
+  <a href="#the-problem-opentelemetry-solved-wasnt-a-lack-of-tools-but-their-incompatibility" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem koji je OpenTelemetry rešavao nije bio nedostatak alata, nego njihova nekompatibilnost
+        The problem OpenTelemetry solved wasn't a lack of tools, but their incompatibility
       
     </span>
   </a>
@@ -569,10 +569,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#semanticke-konvencije-recnik-ne-implementacija" class="md-nav__link">
+  <a href="#semantic-conventions-a-vocabulary-not-an-implementation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Semantičke konvencije: rečnik, ne implementacija
+        Semantic conventions: a vocabulary, not an implementation
       
     </span>
   </a>
@@ -580,10 +580,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zasto-ovo-opravdava-razlicit-pristup-po-jeziku-umesto-da-ga-cini-rizikom" class="md-nav__link">
+  <a href="#why-this-justifies-a-different-approach-per-language-instead-of-making-it-a-risk" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto ovo opravdava različit pristup po jeziku, umesto da ga čini rizikom
+        Why this justifies a different approach per language, instead of making it a risk
       
     </span>
   </a>
@@ -596,10 +596,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#24-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#24-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.4 Skupljena pravila iz ovog poglavlja
+        2.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -607,22 +607,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#25-vezba-za-citaoca" class="md-nav__link">
+  <a href="#25-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.5 Vežba za čitaoca
+        2.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="2.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -657,7 +657,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 3 — Izbor platforme: zašto Grafana Cloud
+    Chapter 3 — Choosing a platform: why Grafana Cloud
   
 
     
@@ -2118,7 +2118,7 @@
   <span class="md-ellipsis">
     
   
-    Dodaci
+    Appendices
   
 
     
@@ -2134,7 +2134,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Dodaci
+    Appendices
   
 
           </label>
@@ -2286,10 +2286,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#21-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#21-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.1 Pitanje na koje ovo poglavlje odgovara
+        2.1 The question this chapter answers
       
     </span>
   </a>
@@ -2297,10 +2297,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#22-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#22-how-it-was-actually-done-a-practical-walkthrough" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.2 Kako je to urađeno — praktičan pregled
+        2.2 How it was actually done — a practical walkthrough
       
     </span>
   </a>
@@ -2308,22 +2308,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#23-analiticki-deo-zasto-je-otlp-uopste-morao-da-postoji-i-sta-znace-semanticke-konvencije" class="md-nav__link">
+  <a href="#23-analytical-section-why-otlp-had-to-exist-at-all-and-what-semantic-conventions-actually-mean" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.3 Analitički deo — zašto je OTLP uopšte morao da postoji, i šta znače "semantičke konvencije"
+        2.3 Analytical section — why OTLP had to exist at all, and what "semantic conventions" actually mean
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2.3 Analitički deo — zašto je OTLP uopšte morao da postoji, i šta znače &#34;semantičke konvencije&#34;">
+    <nav class="md-nav" aria-label="2.3 Analytical section — why OTLP had to exist at all, and what &#34;semantic conventions&#34; actually mean">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#problem-koji-je-opentelemetry-resavao-nije-bio-nedostatak-alata-nego-njihova-nekompatibilnost" class="md-nav__link">
+  <a href="#the-problem-opentelemetry-solved-wasnt-a-lack-of-tools-but-their-incompatibility" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem koji je OpenTelemetry rešavao nije bio nedostatak alata, nego njihova nekompatibilnost
+        The problem OpenTelemetry solved wasn't a lack of tools, but their incompatibility
       
     </span>
   </a>
@@ -2331,10 +2331,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#semanticke-konvencije-recnik-ne-implementacija" class="md-nav__link">
+  <a href="#semantic-conventions-a-vocabulary-not-an-implementation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Semantičke konvencije: rečnik, ne implementacija
+        Semantic conventions: a vocabulary, not an implementation
       
     </span>
   </a>
@@ -2342,10 +2342,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zasto-ovo-opravdava-razlicit-pristup-po-jeziku-umesto-da-ga-cini-rizikom" class="md-nav__link">
+  <a href="#why-this-justifies-a-different-approach-per-language-instead-of-making-it-a-risk" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto ovo opravdava različit pristup po jeziku, umesto da ga čini rizikom
+        Why this justifies a different approach per language, instead of making it a risk
       
     </span>
   </a>
@@ -2358,10 +2358,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#24-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#24-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.4 Skupljena pravila iz ovog poglavlja
+        2.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -2369,22 +2369,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#25-vezba-za-citaoca" class="md-nav__link">
+  <a href="#25-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.5 Vežba za čitaoca
+        2.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="2.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -2413,7 +2413,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-02-opentelemetry.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-02-opentelemetry.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2421,173 +2421,188 @@
   
 
 
-<h1 id="poglavlje-2-opentelemetry-mentalni-model-pre-prve-linije-koda">Poglavlje 2 — OpenTelemetry: mentalni model pre prve linije koda</h1>
-<p>Pre standardizovanog brodskog kontejnera, transport robe je bio košmar
-kombinatorike. Svaka luka je imala sopstvenu opremu za utovar, svaki brod
-sopstveni raspored skladišta, svaka vrsta robe sopstveno pakovanje prilagođeno
-tom konkretnom putu. Prebacivanje tovara sa broda na voz, pa na kamion, značilo
-je da neko fizički prepakuje robu na svakoj tački prelaska — sporo, skupo, i
-puno prilika da se nešto izgubi ili ošteti na granici između dva sistema.</p>
-<p>Kontejner iz 1956. nije rešio problem tako što je izmislio bolji način
-pakovanja robe. Rešio je problem tako što je standardizovao <strong>granicu</strong>:
-tačne dimenzije, tačna mesta za kačenje, tačan način na koji se kontejner
-podiže i spušta. Šta je <em>unutra</em> — čaj, mašinski delovi, tekstil — ostaje
-potpuno nebitno za brod, dizalicu i voz. Oni ne znaju niti ih zanima sadržaj;
-znaju samo oblik granice.</p>
-<p>OpenTelemetry radi istu stvar za telemetriju. Ne propisuje kako aplikacija
-treba da bude napisana, niti insistira na jednom jeziku ili frejmvorku. Propisuje
-samo <strong>oblik granice</strong>: format u kome telemetrijski podatak putuje (OTLP),
-i rečnik imena kojim se ta granica opisuje (semantičke konvencije) — tako da
-kolektor, gateway i cloud platforma sa druge strane mogu da rade sa podatkom, a
-da nikad nisu morali da znaju u kom je jeziku pisana aplikacija koja ga je
-proizvela.</p>
-<h2 id="21-pitanje-na-koje-ovo-poglavlje-odgovara">2.1 Pitanje na koje ovo poglavlje odgovara</h2>
-<p>Pre nego što se napiše prva linija instrumentacije za bilo koju konkretnu
-aplikaciju, mora se odgovoriti na pitanje koje određuje sve što dolazi posle:
-<strong>šta tačno OpenTelemetry standardizuje, a šta namerno ostavlja otvoreno da ga
-svaki jezik i svaki tim reše na sebi svojstven način?</strong></p>
-<p>Ovo pitanje nije akademsko. Odgovor direktno objašnjava zašto ista
-organizacija, u istom sistemu, sasvim legitimno instrumentira Java servise na
-jedan način, a Python servise na potpuno drugačiji način — i zašto to <em>nije</em>
-nedoslednost, nego tačno onoliko slobode koliko OpenTelemetry namerno
-dozvoljava iznad zajedničke granice koju svi moraju da poštuju.</p>
-<h2 id="22-kako-je-to-uraeno-praktican-pregled">2.2 Kako je to urađeno — praktičan pregled</h2>
-<p>U implementaciji koju knjiga prati, dva jezika dominiraju portfoliom aplikacija
-— Java i Python — i instrumentacija je urađena na dva vidljivo različita
-načina, svesnom odlukom, ne slučajno.</p>
-<p><strong>Java servisi</strong> koriste <strong>auto-instrumentacioni agent</strong>
-(<code>opentelemetry-javaagent.jar</code>) koji se kači na JVM kroz <code>-javaagent</code> opciju
-pri pokretanju, bez ijedne izmene u izvornom kodu aplikacije. Agent u runtime-u
-prepoznaje poznate biblioteke (HTTP klijente, JDBC drajvere, poznate frejmvorke)
-i automatski ubacuje instrumentaciju u njih preko bytecode manipulacije. Za tim
-koji održava desetine Java servisa, ovo je bio odlučujući argument: nova
-aplikacija dobija tragove, metrike i propagaciju konteksta prvog dana, bez
-ijedne linije koda posvećene observability-ju, i bez rizika da neko zaboravi da
-je doda.</p>
-<p><strong>Python servisi</strong> idu drugim putem — <strong>SDK distribucija sa entrypoint
-shim-om</strong>. Ovde ne postoji ekvivalent Java agenta koji bi bio podjednako
-pouzdan preko cele Python ekosistema (Python-ova auto-instrumentacija
-funkcioniše kroz monkey-patching poznatih biblioteka pri startu procesa, što je
-strukturno krhkije nego JVM-ov bytecode-manipulacioni pristup, i osetljivije na
-verzije biblioteka). Umesto oslanjanja na tu krhkost, svaki Python servis ima
-eksplicitnu, malu inicijalizacionu tačku — entrypoint shim — koji se pokreće
-pre glavnog koda aplikacije, ručno postavlja OpenTelemetry SDK, provajdere i
-eksportere, i tek onda predaje kontrolu aplikaciji. Instrumentacija je i dalje
-uglavnom automatska za poznate biblioteke (kroz <code>opentelemetry-instrument</code>
-sloj), ali je <em>inicijalizacija</em> eksplicitna i vidljiva u repozitorijumu, umesto
-skrivena u startnom flagu.</p>
-<p>Ono što ostaje <strong>potpuno isto</strong> za oba jezika, i to je suština ovog poglavlja:</p>
+<h1 id="chapter-2-opentelemetry-a-mental-model-before-the-first-line-of-code">Chapter 2 — OpenTelemetry: a mental model before the first line of code</h1>
+<p>Before the standardized shipping container, freight transport was a
+combinatorial nightmare. Every port had its own loading equipment, every
+ship its own hold layout, every type of cargo its own packaging tailored to
+that specific route. Moving cargo from a ship to a train, then to a truck,
+meant someone physically repacking the goods at every handoff point — slow,
+expensive, and full of opportunities for something to be lost or damaged at
+the boundary between two systems.</p>
+<p>The 1956 container didn't solve the problem by inventing a better way to
+pack goods. It solved the problem by standardizing the <strong>boundary</strong>: exact
+dimensions, exact attachment points, an exact way the container gets lifted
+and set down. What's <em>inside</em> — tea, machine parts, textiles — becomes
+completely irrelevant to the ship, the crane, and the train. They don't know
+or care about the contents; they only know the shape of the boundary.</p>
+<p>OpenTelemetry does the same thing for telemetry. It doesn't dictate how an
+application should be written, and it doesn't insist on one language or
+framework. It only dictates <strong>the shape of the boundary</strong>: the format in
+which telemetry data travels (OTLP), and the vocabulary of names used to
+describe that boundary (semantic conventions) — so that the collector, the
+gateway, and the cloud platform on the other side can all work with the
+data without ever needing to know what language the application producing
+it was written in.</p>
+<h2 id="21-the-question-this-chapter-answers">2.1 The question this chapter answers</h2>
+<p>Before writing the first line of instrumentation for any specific
+application, you have to answer a question that determines everything that
+follows: <strong>what exactly does OpenTelemetry standardize, and what does it
+deliberately leave open for every language and every team to solve in its
+own way?</strong></p>
+<p>This question isn't academic. The answer directly explains why the same
+organization, within the same system, quite legitimately instruments its
+Java services one way and its Python services in a visibly different way —
+and why that's <em>not</em> inconsistency, but exactly the amount of freedom
+OpenTelemetry deliberately allows above the shared boundary everyone has to
+respect.</p>
+<h2 id="22-how-it-was-actually-done-a-practical-walkthrough">2.2 How it was actually done — a practical walkthrough</h2>
+<p>In the implementation this book follows, two languages dominate the
+application portfolio — Java and Python — and instrumentation was done in
+two visibly different ways, by a deliberate decision, not by accident.</p>
+<p><strong>Java services</strong> use an <strong>auto-instrumentation agent</strong>
+(<code>opentelemetry-javaagent.jar</code>) attached to the JVM via the <code>-javaagent</code>
+flag at startup, without a single change to the application's source code.
+At runtime, the agent recognizes known libraries (HTTP clients, JDBC
+drivers, well-known frameworks) and automatically injects instrumentation
+into them through bytecode manipulation. For a team maintaining dozens of
+Java services, this was the deciding argument: a new application gets
+traces, metrics, and context propagation on day one, without a single line
+of code dedicated to observability, and without the risk of someone
+forgetting to add it.</p>
+<p><strong>Python services</strong> take a different path — an <strong>SDK distribution with an
+entrypoint shim</strong>. There's no equivalent here of a Java agent that would be
+equally reliable across the whole Python ecosystem (Python's
+auto-instrumentation works through monkey-patching known libraries at
+process startup, which is structurally more fragile than the JVM's
+bytecode-manipulation approach, and more sensitive to library versions).
+Rather than relying on that fragility, every Python service has an
+explicit, small initialization point — an entrypoint shim — that runs before
+the application's main code, manually sets up the OpenTelemetry SDK,
+providers, and exporters, and only then hands control to the application.
+Instrumentation is still mostly automatic for known libraries (through the
+<code>opentelemetry-instrument</code> layer), but the <em>initialization</em> is explicit and
+visible in the repository, instead of hidden in a startup flag.</p>
+<p>What stays <strong>exactly the same</strong> for both languages — and this is the heart
+of this chapter — is:</p>
 <ul>
-<li>Format u kome oba tipa servisa šalju podatke dalje je <strong>OTLP</strong> (OpenTelemetry
-  Protocol) preko HTTP-a, ka istom gateway-u iz Poglavlja 4.</li>
-<li>Imena atributa koje oba jezika koriste za iste koncepte (HTTP metoda, status
-  kod, naziv baze, naziv servisa) dolaze iz <strong>istog rečnika</strong> — semantičkih
-  konvencija — tako da upit u Grafana Cloud-u koji filtrira po
-  <code>http.response.status_code</code> radi identično nad podacima iz Java i Python
-  servisa, bez ijedne posebne logike po jeziku.</li>
-<li>Oba tipa servisa postavljaju isti minimalan skup resurs-atributa pri startu
-  (naziv servisa, verzija, okruženje, instanca) — dogovor koji je nezavisan od
-  jezika i propisan je kroz zajedničku internu konvenciju obrađenu u Poglavlju
-  6.</li>
+<li>The format both types of services use to send data onward is <strong>OTLP</strong>
+  (OpenTelemetry Protocol) over HTTP, to the same gateway from Chapter 4.</li>
+<li>The attribute names both languages use for the same concepts (HTTP
+  method, status code, database name, service name) come from the <strong>same
+  vocabulary</strong> — semantic conventions — so that a query in Grafana Cloud
+  filtering on <code>http.response.status_code</code> works identically over data from
+  both Java and Python services, with no per-language special-casing.</li>
+<li>Both types of services set the same minimal set of resource attributes at
+  startup (service name, version, environment, instance) — an agreement
+  independent of language, laid out in the shared internal convention
+  covered in Chapter 6.</li>
 </ul>
-<p>Drugim rečima: <strong>kako</strong> se telemetrija proizvodi razlikuje se po jeziku i
-razlogu koji taj jezik nameće. <strong>Šta</strong> telemetrija znači, kad stigne na
-gateway, identično je bez obzira odakle je došla. To je tačno linija na kojoj
-kontejner iz uvoda ovog poglavlja razdvaja "šta je unutra" od "kako izgleda
-granica".</p>
-<h2 id="23-analiticki-deo-zasto-je-otlp-uopste-morao-da-postoji-i-sta-znace-semanticke-konvencije">2.3 Analitički deo — zašto je OTLP uopšte morao da postoji, i šta znače "semantičke konvencije"</h2>
-<h3 id="problem-koji-je-opentelemetry-resavao-nije-bio-nedostatak-alata-nego-njihova-nekompatibilnost">Problem koji je OpenTelemetry rešavao nije bio nedostatak alata, nego njihova nekompatibilnost</h3>
-<p>Pre OpenTelemetry-ja (nastalog spajanjem dva ranija projekta, OpenTracing i
-OpenCensus, 2019. godine), organizacija koja je htela metrike, logove i
-tragove birala je zaseban format i zaseban SDK za svaki od njih, često po
-dobavljaču: Zipkin format za tragove, StatsD za metrike, sopstveni log format
-za logove, svaki sa sopstvenim klijentskim bibliotekama po jeziku. Kad bi
-organizacija htela da promeni dobavljača posmatračke platforme, morala je da
-menja instrumentaciju u svakoj aplikaciji — jer je sam <strong>format podatka</strong> bio
-vezan za dobavljača, ne samo destinacija kojoj se šalje.</p>
-<p>OTLP rešava taj problem na isti način na koji standardni kontejner rešava
-problem transporta: definiše jedan protokol (Protocol Buffers preko gRPC-a ili
-HTTP-a) sa jasno definisanom šemom za sva tri tipa signala, nezavisan od bilo
-kog konkretnog dobavljača. Aplikacija govori OTLP; kolektor i gateway prevode
-OTLP u šta god konkretna cloud platforma očekuje sa svoje strane. Ovo je razlog
-zašto je promena dobavljača u sistemu koji knjiga prati (da je do nje ikad
-došlo) posao gateway sloja iz Poglavlja 4, ne posao ijedne pojedinačne
-aplikacije — tačno onako kako promena luke u koju brod pristaje ne zahteva da
-se roba u kontejneru prepakuje.</p>
-<h3 id="semanticke-konvencije-recnik-ne-implementacija">Semantičke konvencije: rečnik, ne implementacija</h3>
-<p>Semantičke konvencije su, po zvaničnoj OpenTelemetry dokumentaciji, dogovoren
-skup imena i tipova za atribute koji opisuju uobičajene koncepte — HTTP zahtev,
-baza podataka, sistem za razmenu poruka, resurs koji generiše telemetriju. Cilj
-nije da propišu <em>kako</em> se telemetrija generiše (to ostaje posao SDK-a i
-instrumentacione biblioteke za svaki jezik), nego da garantuju da, kad dva
-različita sistema oba emituju "HTTP status kod odgovora", koriste isto ime
-atributa (<code>http.response.status_code</code>) i isti tip vrednosti — tako da upit,
-dashboard ili alarm napisan protiv tog imena radi identično bez obzira odakle
-podatak dolazi.</p>
-<p>Ovo izgleda kao sitna administrativna pojedinost dok se ne suoči sa
-alternativom: sistem sa desetinama servisa u dva jezika, gde svaki tim
-samostalno bira imena atributa, neizbežno završava sa <code>status_code</code>,
-<code>statusCode</code>, <code>http_status</code> i <code>response_code</code> kao četiri različita imena za
-istu stvar u četiri različita servisa — što znači da svaki dashboard koji želi
-da prikaže grešku <em>preko svih servisa</em> mora ili da broji četiri puta, ili da
-neko ručno normalizuje podatak posle činjenice, obično upravo u trenutku kad je
-brzina najbitnija — usred incidenta.</p>
-<p><strong>Resursni atributi</strong> (koji opisuju <em>odakle</em> telemetrija dolazi — servis,
-verzija, okruženje, instanca — za razliku od atributa na pojedinačnom rasponu
-ili merenju, koji opisuju <em>šta se dogodilo</em>) igraju posebno bitnu ulogu iz
-zvanične dokumentacije: oni se prilažu jednom, pri inicijalizaciji SDK-a, i
-automatski prate svaki signal koji taj proces emituje otad — što ih čini
-prirodnim mestom da se reši baš problem iz prethodnog pasusa, jednom, na jednom
-mestu po servisu, umesto da se ponavlja u svakoj instrumentacionoj tački.</p>
-<h3 id="zasto-ovo-opravdava-razlicit-pristup-po-jeziku-umesto-da-ga-cini-rizikom">Zašto ovo opravdava različit pristup po jeziku, umesto da ga čini rizikom</h3>
-<p>Vredi eksplicitno primetiti šta bi se dogodilo da je odlučeno suprotno — da
-oba jezika moraju da koriste identičan mehanizam instrumentacije (recimo,
-oba prisiljena na eksplicitan SDK setup, ili oba prisiljena na
-auto-instrumentacioni agent bez obzira na zrelost te tehnike u datom jeziku).</p>
-<p>Da su Python servisi prisiljeni na potpuno automatski, "zero-code" pristup po
-ugledu na Java agent, tim bi nasledio krhkost koju Python-ov
-monkey-patching pristup ima u odnosu na Java-in bytecode pristup — tiha
-neuspešna instrumentacija kad se ažurira verzija biblioteke, bez jasnog
-signala da se to dogodilo, otkrivena tek kad neko primeti da nedostaju tragovi
-za servis koji je "trebalo" da bude instrumentiran. Obrnuto, da su Java servisi
-prisiljeni na eksplicitan SDK setup po ugledu na Python, tim bi žrtvovao baš
-onu prednost koja Java agent čini vrednim — trenutnu instrumentaciju nove
-aplikacije bez ijedne linije koda — bez ijedne realne koristi zauzvrat, jer Java
-agent nema onu strukturnu krhkost koju Python monkey-patching pristup ima.</p>
-<p>Poenta za čitaoca: OpenTelemetry namerno standardizuje granicu (OTLP,
-semantičke konvencije, resursni atributi), a namerno <em>ne</em> standardizuje
-mehanizam po jeziku — jer bi taj drugi izbor prisilio bar jedan jezik u
-implementacionu tehniku koja mu ne odgovara. Kada standard ostavlja nešto
-otvoreno, vredi proveriti da li je to prostor namerno ostavljen za lokalnu
-odluku, pre nego što se protumači kao nedostatak standarda.</p>
-<h2 id="24-skupljena-pravila-iz-ovog-poglavlja">2.4 Skupljena pravila iz ovog poglavlja</h2>
+<p>In other words: <strong>how</strong> telemetry is produced differs by language, for
+reasons that language imposes. <strong>What</strong> telemetry means, once it reaches the
+gateway, is identical regardless of where it came from. That's exactly the
+line at which this chapter's opening container analogy separates "what's
+inside" from "what the boundary looks like."</p>
+<h2 id="23-analytical-section-why-otlp-had-to-exist-at-all-and-what-semantic-conventions-actually-mean">2.3 Analytical section — why OTLP had to exist at all, and what "semantic conventions" actually mean</h2>
+<h3 id="the-problem-opentelemetry-solved-wasnt-a-lack-of-tools-but-their-incompatibility">The problem OpenTelemetry solved wasn't a lack of tools, but their incompatibility</h3>
+<p>Before OpenTelemetry (born from the 2019 merger of two earlier projects,
+OpenTracing and OpenCensus), an organization that wanted metrics, logs, and
+traces chose a separate format and a separate SDK for each, often per
+vendor: the Zipkin format for traces, StatsD for metrics, a proprietary log
+format for logs, each with its own client libraries per language. When an
+organization wanted to switch observability vendors, it had to change
+instrumentation in every application — because the <strong>data format itself</strong>
+was tied to the vendor, not just the destination it was sent to.</p>
+<p>OTLP solves that problem the same way the standard shipping container solves
+the transport problem: it defines one protocol (Protocol Buffers over gRPC
+or HTTP) with a clearly defined schema for all three signal types,
+independent of any specific vendor. The application speaks OTLP; the
+collector and gateway translate OTLP into whatever the specific cloud
+platform expects on its end. This is why switching vendors in the system
+this book follows (had that ever happened) would be the gateway layer's job
+from Chapter 4, not any individual application's job — exactly the way
+changing which port a ship docks at doesn't require the cargo inside the
+container to be repacked.</p>
+<h3 id="semantic-conventions-a-vocabulary-not-an-implementation">Semantic conventions: a vocabulary, not an implementation</h3>
+<p>Semantic conventions are, per the official OpenTelemetry documentation, an
+agreed-upon set of names and types for attributes that describe common
+concepts — an HTTP request, a database, a messaging system, a resource
+generating telemetry. The goal isn't to dictate <em>how</em> telemetry is
+generated (that remains the job of the SDK and the instrumentation library
+for each language), but to guarantee that when two different systems both
+emit "the HTTP response status code," they use the same attribute name
+(<code>http.response.status_code</code>) and the same value type — so that a query, a
+dashboard, or an alert written against that name works identically no
+matter where the data comes from.</p>
+<p>This looks like a minor administrative detail until you're faced with the
+alternative: a system with dozens of services across two languages, where
+every team independently chooses attribute names, inevitably ends up with
+<code>status_code</code>, <code>statusCode</code>, <code>http_status</code>, and <code>response_code</code> as four
+different names for the same thing across four different services — which
+means any dashboard that wants to show errors <em>across all services</em> either
+has to count four times, or someone has to normalize the data after the
+fact, usually right when speed matters most — during an incident.</p>
+<p><strong>Resource attributes</strong> (which describe <em>where</em> telemetry comes from —
+service, version, environment, instance — as opposed to attributes on an
+individual span or measurement, which describe <em>what happened</em>) play a
+particularly important role per the official documentation: they're
+attached once, at SDK initialization, and automatically accompany every
+signal that process emits from then on — which makes them the natural place
+to solve exactly the problem from the previous paragraph, once, in one place
+per service, instead of repeating it at every instrumentation point.</p>
+<h3 id="why-this-justifies-a-different-approach-per-language-instead-of-making-it-a-risk">Why this justifies a different approach per language, instead of making it a risk</h3>
+<p>It's worth explicitly noting what would have happened had the decision gone
+the other way — had both languages been required to use an identical
+instrumentation mechanism (say, both forced into explicit SDK setup, or both
+forced into an auto-instrumentation agent regardless of how mature that
+technique is in the given language).</p>
+<p>Had Python services been forced into a fully automatic, "zero-code"
+approach modeled on the Java agent, the team would have inherited the
+fragility Python's monkey-patching approach has relative to Java's bytecode
+approach — silently failed instrumentation when a library version gets
+updated, with no clear signal that it happened, discovered only when someone
+notices traces are missing for a service that was "supposed" to be
+instrumented. Conversely, had Java services been forced into explicit SDK
+setup modeled on Python, the team would have sacrificed exactly the
+advantage that makes the Java agent worthwhile — instant instrumentation of
+a new application with zero lines of code — for no real benefit in return,
+since the Java agent doesn't have the structural fragility the Python
+monkey-patching approach has.</p>
+<p>The point for the reader: OpenTelemetry deliberately standardizes the
+boundary (OTLP, semantic conventions, resource attributes), and deliberately
+does <em>not</em> standardize the mechanism per language — because that other
+choice would force at least one language into an implementation technique
+that doesn't suit it. When a standard leaves something open, it's worth
+checking whether that's space deliberately left for a local decision, before
+reading it as a gap in the standard.</p>
+<h2 id="24-rules-collected-from-this-chapter">2.4 Rules collected from this chapter</h2>
 <ul>
-<li>Odaberi mehanizam instrumentacije (auto-instrumentacioni agent naspram
-  eksplicitnog SDK setup-a) po zrelosti te tehnike u konkretnom jeziku, ne po
-  dosluednosti sa drugim jezicima u portfoliju.</li>
-<li>Nikad ne izmišljaj sopstveno ime atributa za koncept koji već ima ime u
-  semantičkim konvencijama — proveri prvo, čak i kad "izgleda" da tvoj slučaj
-  nije pokriven.</li>
-<li>Resursne atribute postavi jednom, na inicijalizaciji, i tretiraj ih kao
-  ugovor koji svaki servis u sistemu mora da poštuje identično — to je
-  najjeftinije mesto da se spreči četiri različita imena za istu stvar.</li>
-<li>OTLP je razlog zašto promena posmatračke platforme treba da bude posao
-  gateway sloja, ne posao svake pojedinačne aplikacije — proveri da li je
-  tvoj sistem stvarno tako organizovan, ili je ta pretpostavka samo
-  deklarativna.</li>
-<li>Kad standard ostavlja nešto otvoreno (kao mehanizam instrumentacije po
-  jeziku), pretpostavi da je to namerno, i traži razlog pre nego što
-  pokušaš da to "poravnaš" radi doslednosti.</li>
+<li>Choose the instrumentation mechanism (auto-instrumentation agent vs.
+  explicit SDK setup) based on how mature that technique is in the specific
+  language, not for consistency with other languages in the portfolio.</li>
+<li>Never invent your own attribute name for a concept that already has a
+  name in the semantic conventions — check first, even when your case
+  "looks" uncovered.</li>
+<li>Set resource attributes once, at initialization, and treat them as a
+  contract every service in the system must honor identically — that's the
+  cheapest place to prevent four different names for the same thing.</li>
+<li>OTLP is why switching observability platforms should be the gateway
+  layer's job, not every individual application's — check whether your
+  system is actually organized that way, or whether that's just a
+  declared assumption.</li>
+<li>When a standard leaves something open (like the instrumentation mechanism
+  per language), assume it's deliberate, and look for the reason before
+  trying to "align" it for the sake of consistency.</li>
 </ul>
-<h2 id="25-vezba-za-citaoca">2.5 Vežba za čitaoca</h2>
-<p>Uzmi dva servisa u svom sistemu pisana u različitim jezicima i uporedi kojim
-imenom svaki od njih beleži isti koncept — HTTP status kod, naziv baze kojoj se
-obraća, ili trajanje poziva. Ako se imena razlikuju, potraži odgovarajuće ime u
-zvaničnim semantičkim konvencijama i proveri da li bar jedan od dva servisa
-već odstupa od njih bez razloga — to je konkretan, malen popravak koji odmah
-plaća sledeći dashboard koji pokušaš da napraviš preko oba servisa.</p>
+<h2 id="25-exercise-for-the-reader">2.5 Exercise for the reader</h2>
+<p>Take two services in your system written in different languages and compare
+what name each uses for the same concept — HTTP status code, the name of
+the database it talks to, or call duration. If the names differ, look up the
+right name in the official semantic conventions and check whether at least
+one of the two services is already deviating from them for no reason —
+that's a concrete, small fix that immediately pays off the next dashboard
+you try to build across both services.</p>
 <hr />
-<h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
+<h3 id="sources-used-in-the-analytical-section">Sources used in the analytical section</h3>
 <ul>
 <li><a href="https://opentelemetry.io/docs/specs/otlp/">OpenTelemetry Protocol (OTLP) Specification</a></li>
 <li><a href="https://opentelemetry.io/docs/specs/semconv/">Semantic Conventions — OpenTelemetry</a></li>
@@ -2616,7 +2631,7 @@ plaća sledeći dashboard koji pokušaš da napraviš preko oba servisa.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 25, 2026 19:17:37 UTC">August 25, 2026</span>
   </span>
 
     
