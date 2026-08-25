@@ -186,6 +186,6 @@ zastarele podatke)? Ako postoji — to je tvoj kandidat za dodavanje atributa
 
 - [Observability - A 3-Year Retrospective — Honeycomb](https://www.honeycomb.io/blog/observability-a-3-year-retrospective)
 - [Monitoring and Observability — Honeycomb blog / docs](https://www.honeycomb.io/blog)
-- [The RED Method: How to Instrument Your Services — Grafana Labs](https://grafana.com/blog/2018/08/02/the-red-method-how-to-instrument-your-services-b/)
+- [The RED Method: How to Instrument Your Services — Grafana Labs](https://grafana.com/blog/the-red-method-how-to-instrument-your-services/)
 - [The Four Golden Signals — Google SRE Book](https://sre.google/sre-book/monitoring-distributed-systems/)
 - [The USE Method — Brendan Gregg](https://www.brendangregg.com/usemethod.html)

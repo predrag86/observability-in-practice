@@ -12,8 +12,15 @@ accept = ["200..=299", "429"]
 
 # mailto: links in the book (none expected, but harmless to allow) and
 # localhost references some snippets use as a generic placeholder.
+#
+# The three domains below return 200 to a normal browser but 403 to lychee's
+# bot user-agent (confirmed manually — not actually broken). Excluded rather
+# than retried, since retries won't change a bot-blocking policy.
 exclude = [
   "^mailto:",
   "^https?://localhost",
   "^https?://127\\.0\\.0\\.1",
+  "^https?://(www\\.)?trustradius\\.com/",
+  "^https?://docs\\.redhat\\.com/",
+  "^https?://developers\\.redhat\\.com/",
 ]
