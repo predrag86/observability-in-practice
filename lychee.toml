@@ -16,9 +16,14 @@ accept = ["200..=299", "429"]
 # mailto: links in the book (none expected, but harmless to allow) and
 # localhost references some snippets use as a generic placeholder.
 #
-# The three domains below return 200 to a normal browser but 403 to lychee's
-# bot user-agent (confirmed manually — not actually broken). Excluded rather
-# than retried, since retries won't change a bot-blocking policy.
+# The domains below return 200 to a normal browser but fail from lychee's CI
+# environment (bot-blocking or IP-range blocking, confirmed manually — not
+# actually broken). Excluded rather than retried, since retries don't help.
+#
+# airbyte.com failed 3 separate CI runs with 3 different network-level errors
+# (timeout, connection-reset, connection-failed) despite loading fine outside
+# CI, even after raising timeout/retries above — looks like it blocks the
+# GitHub Actions runner IP range outright, so retrying doesn't help here either.
 exclude = [
   "^mailto:",
   "^https?://localhost",
@@ -26,4 +31,5 @@ exclude = [
   "^https?://(www\\.)?trustradius\\.com/",
   "^https?://docs\\.redhat\\.com/",
   "^https?://developers\\.redhat\\.com/",
+  "^https?://(www\\.)?airbyte\\.com/",
 ]
