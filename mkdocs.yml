@@ -1,4 +1,5 @@
 site_name: Observability u praksi
+site_url: https://predrag86.github.io/observability-in-practice/
 site_description: OpenTelemetry i Grafana LGTM stack — knjiga zasnovana na stvarnoj produkcionoj implementaciji
 repo_url: https://github.com/predrag86/observability-in-practice
 repo_name: observability-in-practice
