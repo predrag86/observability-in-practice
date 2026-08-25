@@ -1,0 +1,12 @@
+{
+  "customRules": ["mkdocs-material-linter"],
+  "globs": ["docs/**/*.md"],
+  "config": {
+    // Long-form prose chapters are not wrapped at a fixed column —
+    // line length is not a meaningful signal here.
+    "MD013": false,
+    // We don't use Material's YAML front matter (description/tags/template)
+    // for this book — front matter is a stylistic choice, not a bug.
+    "material-meta-tags": false
+  }
+}

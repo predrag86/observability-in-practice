@@ -1,0 +1,9 @@
+{
+  "name": "observability-in-practice-docs",
+  "private": true,
+  "description": "Dev tooling for linting the book's Markdown content (not a published package).",
+  "devDependencies": {
+    "markdownlint-cli2": "^0.23.2",
+    "mkdocs-material-linter": "^1.5.3"
+  }
+}
