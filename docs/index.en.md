@@ -25,6 +25,11 @@ DevOps/SRE engineers, backend developers instrumenting their own service, and
 team leads who need to decide self-hosted vs. Grafana Cloud and justify the
 cost.
 
+The book assumes basic working knowledge of DevOps/SRE practice (Linux,
+containers, CI/CD, cloud infrastructure) and an introductory understanding of
+observability concepts (metrics, logs, traces). Prior experience with
+OpenTelemetry isn't necessary — it's explained starting in Chapter 2.
+
 ## Structure
 
 | Part | Topic |

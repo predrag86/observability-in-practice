@@ -63,6 +63,17 @@ self-hosted setup; that question is such a common first obstacle that it gets
 an entire chapter of its own, before the book even gets into technical
 detail.
 
+The book assumes the reader already works in a DevOps/SRE or related
+infrastructure role, and that concepts like containers, CI/CD, a cloud
+provider (AWS or similar), and basic Linux work aren't unfamiliar.
+Familiarity with observability terminology (metrics, logs, traces,
+dashboards, alerts) at an introductory level is helpful but not a
+prerequisite — Chapter 1 builds that terminology from scratch. What the book
+does not teach is DevOps or SRE from the ground up: if concepts like a
+CI/CD pipeline, containerization, or infrastructure as code are completely
+new to you, it is better to start with introductory DevOps/SRE material
+first, then come back here.
+
 ## How the book is organized
 
 Every chapter follows the same pattern, deliberately repeated throughout the
