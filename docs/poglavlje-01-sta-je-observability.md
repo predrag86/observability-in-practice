@@ -81,7 +81,7 @@ sličan pull-zadatak automatski beleži (veličina odgovora, broj zapisa, da li 
 odgovor prazan) — ne kao alarm, nego kao *dostupan kontekst* za sledeće pitanje
 koje još niko nije postavio. Taj princip — bogatiti podatke pre nego što znaš
 pitanje, umesto dodavati alarme posle svakog incidenta — provlači se kroz celu
-knjigu i vraća se eksplicitno u Poglavlju 6 (semantika atributa) i Poglavlju 12
+knjigu i vraća se eksplicitno u Poglavlju 5 (semantika atributa) i Poglavlju 12
 (sampling — jer trag mora i da preživi do trenutka kad neko poželi da ga
 pogleda).
 

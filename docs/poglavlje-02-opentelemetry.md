@@ -76,7 +76,7 @@ Ono što ostaje **potpuno isto** za oba jezika, i to je suština ovog poglavlja:
 - Oba tipa servisa postavljaju isti minimalan skup resurs-atributa pri startu
   (naziv servisa, verzija, okruženje, instanca) — dogovor koji je nezavisan od
   jezika i propisan je kroz zajedničku internu konvenciju obrađenu u Poglavlju
-  6.
+  5.
 
 Drugim rečima: **kako** se telemetrija proizvodi razlikuje se po jeziku i
 razlogu koji taj jezik nameće. **Šta** telemetrija znači, kad stigne na
