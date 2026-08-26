@@ -262,7 +262,7 @@ radi. Ako je odgovor na (3) "niko, dok neko ne primeti da nešto drugo ne
 
 ---
 
-### Izvori korišćeni u analitičkom delu (za proveru/citiranje u finalnoj verziji)
+### Izvori korišćeni u analitičkom delu
 
 - [Agent-to-gateway deployment pattern — OpenTelemetry](https://opentelemetry.io/docs/collector/deploy/other/agent-to-gateway/)
 - [Gateway deployment pattern — OpenTelemetry](https://opentelemetry.io/docs/collector/deploy/gateway/)
