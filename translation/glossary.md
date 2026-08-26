@@ -50,6 +50,10 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | usklađenost | compliance | |
 | zrelost (programa) | maturity | |
 | fazni rollout | phased rollout | |
+| bela kutija | white box | uparen termin sa "crna kutija" (black box), Poglavlje 18 |
+| izvršni čvor / koordinacioni čvor | executor node / coordinator node | standardna Dremio arhitektura, Poglavlje 19 |
+| ravan (posmatranja) | plane | u kontekstu "ravan posmatranja" → "observation plane" (Poglavlje 22); ne mešati sa "spoljašnja/unutrašnja ravan" iz Poglavlja 7, gde je "ravan" prevedeno kao "layer" u drugom kontekstu |
+| radna jedinica (generički termin za Snowflake warehouse) | compute unit | namerno generičan termin, Poglavlje 24 |
 | obrazac (arhitekturni) | pattern | npr. "gateway obrazac" → "gateway pattern", "agent-to-gateway obrazac" → "agent-to-gateway pattern" |
 | task definicija / task lifecycle (AWS ECS) | task definition / task lifecycle | ostaje kao standardan AWS ECS termin, ne prevodi se slobodno |
 | posmatrač (u smislu watcher procesa) | watcher | dosledno kroz Poglavlje 7 (doctor/pull-pattern analogija) |
@@ -86,6 +90,14 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | `poglavlje-15-slo-budzet-greske.md` | `poglavlje-15-slo-budzet-greske.en.md` |
 | `poglavlje-16-runbook-ovi.md` | `poglavlje-16-runbook-ovi.en.md` |
 | `poglavlje-17-postmortem-kultura.md` | `poglavlje-17-postmortem-kultura.en.md` |
+| `deo-5-uvod.md` | `deo-5-uvod.en.md` |
+| `poglavlje-18-baze-podataka.md` | `poglavlje-18-baze-podataka.en.md` |
+| `poglavlje-19-samostalni-klaster.md` | `poglavlje-19-samostalni-klaster.en.md` |
+| `poglavlje-20-autentikacija-iam.md` | `poglavlje-20-autentikacija-iam.en.md` |
+| `poglavlje-21-hostovi-serveri.md` | `poglavlje-21-hostovi-serveri.en.md` |
+| `poglavlje-22-mreza-ravan-posmatranja.md` | `poglavlje-22-mreza-ravan-posmatranja.en.md` |
+| `poglavlje-23-batch-etl-flota.md` | `poglavlje-23-batch-etl-flota.en.md` |
+| `poglavlje-24-snowflake-servis-koji-nije-nas.md` | `poglavlje-24-snowflake-servis-koji-nije-nas.en.md` |
 
 ## Stil
 
