@@ -76,6 +76,10 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | `poglavlje-07-pull-obrasci.md` | `poglavlje-07-pull-obrasci.en.md` |
 | `poglavlje-08-frontend-rum.md` | `poglavlje-08-frontend-rum.en.md` |
 | `poglavlje-09-sinteticko-pracenje.md` | `poglavlje-09-sinteticko-pracenje.en.md` |
+| `deo-3-uvod.md` | `deo-3-uvod.en.md` |
+| `poglavlje-10-anatomija-pipeline.md` | `poglavlje-10-anatomija-pipeline.en.md` |
+| `poglavlje-11-kardinalnost-cena.md` | `poglavlje-11-kardinalnost-cena.en.md` |
+| `poglavlje-12-sampling-trejsova.md` | `poglavlje-12-sampling-trejsova.en.md` |
 
 ## Stil
 
