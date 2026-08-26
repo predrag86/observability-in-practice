@@ -58,6 +58,8 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | izvedeni pseudonim / ključem-zaštićena heš funkcija | derived pseudonym / keyed hash function | Poglavlje 25, prati NIST/EDPB terminologiju |
 | NA MESTU / DELIMIČNO / PRAZNINA (tabela usklađenosti) | IN PLACE / PARTIAL / GAP | Poglavlje 26 |
 | časna pomena (backlog kategorija) | honorable mention | Poglavlje 27 |
+| bočni kolektor | sidecar collector | Poglavlje 29 |
+| estate (celokupan inventar komponenti programa) | estate | ostaje kao engleska pozajmljenica, već tako korišćena u originalu, Poglavlje 30 |
 | obrazac (arhitekturni) | pattern | npr. "gateway obrazac" → "gateway pattern", "agent-to-gateway obrazac" → "agent-to-gateway pattern" |
 | task definicija / task lifecycle (AWS ECS) | task definition / task lifecycle | ostaje kao standardan AWS ECS termin, ne prevodi se slobodno |
 | posmatrač (u smislu watcher procesa) | watcher | dosledno kroz Poglavlje 7 (doctor/pull-pattern analogija) |
@@ -107,6 +109,10 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | `poglavlje-26-soc2-kontrola.md` | `poglavlje-26-soc2-kontrola.en.md` |
 | `poglavlje-27-prioritizacija.md` | `poglavlje-27-prioritizacija.en.md` |
 | `poglavlje-28-ai-asistirana-observability.md` | `poglavlje-28-ai-asistirana-observability.en.md` |
+| `deo-7-uvod.md` | `deo-7-uvod.en.md` |
+| `poglavlje-29-fazni-rollout.md` | `poglavlje-29-fazni-rollout.en.md` |
+| `poglavlje-30-merenje-zrelosti.md` | `poglavlje-30-merenje-zrelosti.en.md` |
+| `poglavlje-31-zakljucak.md` | `poglavlje-31-zakljucak.en.md` |
 
 ## Stil
 
