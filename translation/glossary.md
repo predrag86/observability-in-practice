@@ -54,6 +54,10 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | izvršni čvor / koordinacioni čvor | executor node / coordinator node | standardna Dremio arhitektura, Poglavlje 19 |
 | ravan (posmatranja) | plane | u kontekstu "ravan posmatranja" → "observation plane" (Poglavlje 22); ne mešati sa "spoljašnja/unutrašnja ravan" iz Poglavlja 7, gde je "ravan" prevedeno kao "layer" u drugom kontekstu |
 | radna jedinica (generički termin za Snowflake warehouse) | compute unit | namerno generičan termin, Poglavlje 24 |
+| napad povezivanjem | linkage attack | standardan termin iz privacy-engineering literature, Poglavlje 25 |
+| izvedeni pseudonim / ključem-zaštićena heš funkcija | derived pseudonym / keyed hash function | Poglavlje 25, prati NIST/EDPB terminologiju |
+| NA MESTU / DELIMIČNO / PRAZNINA (tabela usklađenosti) | IN PLACE / PARTIAL / GAP | Poglavlje 26 |
+| časna pomena (backlog kategorija) | honorable mention | Poglavlje 27 |
 | obrazac (arhitekturni) | pattern | npr. "gateway obrazac" → "gateway pattern", "agent-to-gateway obrazac" → "agent-to-gateway pattern" |
 | task definicija / task lifecycle (AWS ECS) | task definition / task lifecycle | ostaje kao standardan AWS ECS termin, ne prevodi se slobodno |
 | posmatrač (u smislu watcher procesa) | watcher | dosledno kroz Poglavlje 7 (doctor/pull-pattern analogija) |
@@ -98,6 +102,11 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | `poglavlje-22-mreza-ravan-posmatranja.md` | `poglavlje-22-mreza-ravan-posmatranja.en.md` |
 | `poglavlje-23-batch-etl-flota.md` | `poglavlje-23-batch-etl-flota.en.md` |
 | `poglavlje-24-snowflake-servis-koji-nije-nas.md` | `poglavlje-24-snowflake-servis-koji-nije-nas.en.md` |
+| `deo-6-uvod.md` | `deo-6-uvod.en.md` |
+| `poglavlje-25-privatnost-telemetriji.md` | `poglavlje-25-privatnost-telemetriji.en.md` |
+| `poglavlje-26-soc2-kontrola.md` | `poglavlje-26-soc2-kontrola.en.md` |
+| `poglavlje-27-prioritizacija.md` | `poglavlje-27-prioritizacija.en.md` |
+| `poglavlje-28-ai-asistirana-observability.md` | `poglavlje-28-ai-asistirana-observability.en.md` |
 
 ## Stil
 
