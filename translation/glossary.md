@@ -113,6 +113,12 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | `poglavlje-29-fazni-rollout.md` | `poglavlje-29-fazni-rollout.en.md` |
 | `poglavlje-30-merenje-zrelosti.md` | `poglavlje-30-merenje-zrelosti.en.md` |
 | `poglavlje-31-zakljucak.md` | `poglavlje-31-zakljucak.en.md` |
+| `dodatak-a-promql-logql-recepti.md` | `dodatak-a-promql-logql-recepti.en.md` |
+| `dodatak-b-recnik-pojmova.md` | `dodatak-b-recnik-pojmova.en.md` |
+| `dodatak-c-checklist-onboarding.md` | `dodatak-c-checklist-onboarding.en.md` |
+| `dodatak-d-sabloni.md` | `dodatak-d-sabloni.en.md` |
+
+Ceo tekst knjige (Delovi I–VII i Dodaci A–D) je sada preveden na engleski.
 
 ## Stil
 
