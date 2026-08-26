@@ -1,35 +1,37 @@
 # observability-in-practice
 
-Knjiga koja opisuje implementaciju observability sistema (OpenTelemetry +
-Grafana LGTM stack) na nivou cele firme, zasnovana na stvarnoj produkcionoj
-implementaciji. Sva imena firme, ljudi, interni domeni i ID-jevi resursa su
-uklonjeni ili generalizovani.
+A book describing the implementation of an observability system (OpenTelemetry +
+Grafana LGTM stack) at the scale of an entire company, based on a real production
+implementation. All company names, people, internal domains, and resource IDs
+have been removed or generalized.
 
 [![Docs](https://github.com/predrag86/observability-in-practice/actions/workflows/docs.yml/badge.svg)](https://github.com/predrag86/observability-in-practice/actions/workflows/docs.yml)
 [![PR checks](https://github.com/predrag86/observability-in-practice/actions/workflows/pr-check.yml/badge.svg)](https://github.com/predrag86/observability-in-practice/actions/workflows/pr-check.yml)
 
-📖 Pročitaj na: **https://predrag86.github.io/observability-in-practice/**
+📖 Read it at: **https://predrag86.github.io/observability-in-practice/**
+🇬🇧 English edition: **https://predrag86.github.io/observability-in-practice/en/**
 
-## Struktura repozitorijuma
+## Repository structure
 
-- `docs/` — sadržaj knjige (Markdown), po poglavlju/dodatku. Slike i
-  dijagrami žive u `docs/diagrams/`. Ovo je jedini izvor istine za sadržaj —
-  i za sajt i za PDF-ove (vidi ispod).
-- `mkdocs.yml` — konfiguracija sajta (MkDocs + Material tema +
-  [mkdocs-static-i18n](https://ultrabug.github.io/mkdocs-static-i18n/) za
-  srpsku/englesku verziju).
-- `.github/workflows/docs.yml` — build i deploy na GitHub Pages pri svakom
-  push-u na `main`.
-- `scripts/build_pdf.py` — generiše PDF izdanja po delovima knjige direktno
-  iz `docs/*.md` (vidi "PDF izdanja" ispod).
+- `docs/` — the book's content (Markdown), by chapter/appendix. Images and
+  diagrams live in `docs/diagrams/`. This is the single source of truth for
+  content — for both the site and the PDFs (see below).
+- `mkdocs.yml` — site configuration (MkDocs + Material theme +
+  [mkdocs-static-i18n](https://ultrabug.github.io/mkdocs-static-i18n/) for the
+  Serbian/English versions).
+- `.github/workflows/docs.yml` — builds and deploys to GitHub Pages on every
+  push to `main`.
+- `scripts/build_pdf.py` — generates PDF editions by book part directly from
+  `docs/*.md` (see "PDF editions" below).
 
-## Jezici
+## Languages
 
-Srpska verzija je podrazumevana (`docs/*.md`). Engleski prevod se dodaje
-postepeno kao `docs/*.en.md` — dok prevod ne postoji za neku stranicu, sajt
-automatski prikazuje srpsku verziju (`fallback_to_default`).
+The Serbian version is the default (`docs/*.md`). The full English
+translation is available as `docs/*.en.md` — the site automatically falls
+back to the Serbian version for any page without a translation
+(`fallback_to_default`).
 
-## Lokalni development
+## Local development
 
 ```bash
 python3 -m venv .venv
@@ -38,15 +40,16 @@ pip install -r requirements-docs.txt
 mkdocs serve
 ```
 
-Sajt je dostupan na `http://127.0.0.1:8000/`.
+The site is available at `http://127.0.0.1:8000/`.
 
-## PDF izdanja
+## PDF editions
 
-PDF booklet-i po delovima knjige se generišu direktno iz `docs/*.md` preko
-`scripts/build_pdf.py` — nema odvojene, ručno održavane kopije sadržaja za
-PDF. Izmena u `docs/` automatski važi i za sledeći PDF build.
+PDF booklets by book part are generated directly from `docs/*.md` via
+`scripts/build_pdf.py` — there's no separate, manually maintained copy of the
+content for the PDFs. A change in `docs/` automatically applies to the next
+PDF build.
 
-Sistemski zahtevi (Debian/Ubuntu):
+System requirements (Debian/Ubuntu):
 
 ```bash
 apt-get install -y pandoc texlive-xetex texlive-latex-extra fonts-liberation
@@ -55,9 +58,9 @@ apt-get install -y pandoc texlive-xetex texlive-latex-extra fonts-liberation
 Build:
 
 ```bash
-python3 scripts/build_pdf.py            # svi delovi
-python3 scripts/build_pdf.py deo5 dodaci  # samo izabrani delovi
+python3 scripts/build_pdf.py              # all parts
+python3 scripts/build_pdf.py deo5 dodaci   # only selected parts
 ```
 
-Rezultat ide u `pdf/` (build međurezultati u `pdf-build/`) — oba su
-regenerabilni build artefakti i nisu u git-u (vidi `.gitignore`).
+Output goes to `pdf/` (build intermediates in `pdf-build/`) — both are
+regenerable build artifacts and are not in git (see `.gitignore`).
