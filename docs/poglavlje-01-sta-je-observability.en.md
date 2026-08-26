@@ -90,7 +90,7 @@ the set of attributes every similar pull-based job automatically records
 alert, but as *available context* for the next question nobody has asked
 yet. That principle — enrich the data before you know the question, instead
 of adding alerts after every incident — runs through the whole book and
-comes back explicitly in Chapter 6 (attribute semantics) and Chapter 12
+comes back explicitly in Chapter 5 (attribute semantics) and Chapter 12
 (sampling — because a trace also has to survive long enough for someone to
 want to look at it).
 

@@ -83,7 +83,7 @@ of this chapter — is:
 - Both types of services set the same minimal set of resource attributes at
   startup (service name, version, environment, instance) — an agreement
   independent of language, laid out in the shared internal convention
-  covered in Chapter 6.
+  covered in Chapter 5.
 
 In other words: **how** telemetry is produced differs by language, for
 reasons that language imposes. **What** telemetry means, once it reaches the
