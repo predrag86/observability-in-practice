@@ -50,6 +50,24 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | usklađenost | compliance | |
 | zrelost (programa) | maturity | |
 | fazni rollout | phased rollout | |
+| bela kutija | white box | uparen termin sa "crna kutija" (black box), Poglavlje 18 |
+| izvršni čvor / koordinacioni čvor | executor node / coordinator node | standardna Dremio arhitektura, Poglavlje 19 |
+| ravan (posmatranja) | plane | u kontekstu "ravan posmatranja" → "observation plane" (Poglavlje 22); ne mešati sa "spoljašnja/unutrašnja ravan" iz Poglavlja 7, gde je "ravan" prevedeno kao "layer" u drugom kontekstu |
+| radna jedinica (generički termin za Snowflake warehouse) | compute unit | namerno generičan termin, Poglavlje 24 |
+| napad povezivanjem | linkage attack | standardan termin iz privacy-engineering literature, Poglavlje 25 |
+| izvedeni pseudonim / ključem-zaštićena heš funkcija | derived pseudonym / keyed hash function | Poglavlje 25, prati NIST/EDPB terminologiju |
+| NA MESTU / DELIMIČNO / PRAZNINA (tabela usklađenosti) | IN PLACE / PARTIAL / GAP | Poglavlje 26 |
+| časna pomena (backlog kategorija) | honorable mention | Poglavlje 27 |
+| bočni kolektor | sidecar collector | Poglavlje 29 |
+| estate (celokupan inventar komponenti programa) | estate | ostaje kao engleska pozajmljenica, već tako korišćena u originalu, Poglavlje 30 |
+| obrazac (arhitekturni) | pattern | npr. "gateway obrazac" → "gateway pattern", "agent-to-gateway obrazac" → "agent-to-gateway pattern" |
+| task definicija / task lifecycle (AWS ECS) | task definition / task lifecycle | ostaje kao standardan AWS ECS termin, ne prevodi se slobodno |
+| posmatrač (u smislu watcher procesa) | watcher | dosledno kroz Poglavlje 7 (doctor/pull-pattern analogija) |
+| spoljašnja ravan / unutrašnja ravan | external layer / internal layer | u kontekstu pull-obrazaca (Poglavlje 7) |
+| RUM za siromašne | poor man's RUM | idiomatski prevod, Poglavlje 9 |
+| RUM | RUM | ne prevodi se |
+| PII | PII | ne prevodi se |
+| Core Web Vitals | Core Web Vitals | ne prevodi se |
 
 ## Nazivi delova/poglavlja (za buduće interne linkove)
 
@@ -61,6 +79,46 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | `poglavlje-01-sta-je-observability.md` | `poglavlje-01-sta-je-observability.en.md` |
 | `poglavlje-02-opentelemetry.md` | `poglavlje-02-opentelemetry.en.md` |
 | `poglavlje-03-izbor-platforme.md` | `poglavlje-03-izbor-platforme.en.md` |
+| `deo-2-uvod.md` | `deo-2-uvod.en.md` |
+| `poglavlje-04-gateway.md` | `poglavlje-04-gateway.en.md` |
+| `poglavlje-05-instrumentacija.md` | `poglavlje-05-instrumentacija.en.md` |
+| `poglavlje-06-sidecar.md` | `poglavlje-06-sidecar.en.md` |
+| `poglavlje-07-pull-obrasci.md` | `poglavlje-07-pull-obrasci.en.md` |
+| `poglavlje-08-frontend-rum.md` | `poglavlje-08-frontend-rum.en.md` |
+| `poglavlje-09-sinteticko-pracenje.md` | `poglavlje-09-sinteticko-pracenje.en.md` |
+| `deo-3-uvod.md` | `deo-3-uvod.en.md` |
+| `poglavlje-10-anatomija-pipeline.md` | `poglavlje-10-anatomija-pipeline.en.md` |
+| `poglavlje-11-kardinalnost-cena.md` | `poglavlje-11-kardinalnost-cena.en.md` |
+| `poglavlje-12-sampling-trejsova.md` | `poglavlje-12-sampling-trejsova.en.md` |
+| `deo-4-uvod.md` | `deo-4-uvod.en.md` |
+| `poglavlje-13-arhitektura-alarmiranja.md` | `poglavlje-13-arhitektura-alarmiranja.en.md` |
+| `poglavlje-14-kad-alarm-cuti.md` | `poglavlje-14-kad-alarm-cuti.en.md` |
+| `poglavlje-15-slo-budzet-greske.md` | `poglavlje-15-slo-budzet-greske.en.md` |
+| `poglavlje-16-runbook-ovi.md` | `poglavlje-16-runbook-ovi.en.md` |
+| `poglavlje-17-postmortem-kultura.md` | `poglavlje-17-postmortem-kultura.en.md` |
+| `deo-5-uvod.md` | `deo-5-uvod.en.md` |
+| `poglavlje-18-baze-podataka.md` | `poglavlje-18-baze-podataka.en.md` |
+| `poglavlje-19-samostalni-klaster.md` | `poglavlje-19-samostalni-klaster.en.md` |
+| `poglavlje-20-autentikacija-iam.md` | `poglavlje-20-autentikacija-iam.en.md` |
+| `poglavlje-21-hostovi-serveri.md` | `poglavlje-21-hostovi-serveri.en.md` |
+| `poglavlje-22-mreza-ravan-posmatranja.md` | `poglavlje-22-mreza-ravan-posmatranja.en.md` |
+| `poglavlje-23-batch-etl-flota.md` | `poglavlje-23-batch-etl-flota.en.md` |
+| `poglavlje-24-snowflake-servis-koji-nije-nas.md` | `poglavlje-24-snowflake-servis-koji-nije-nas.en.md` |
+| `deo-6-uvod.md` | `deo-6-uvod.en.md` |
+| `poglavlje-25-privatnost-telemetriji.md` | `poglavlje-25-privatnost-telemetriji.en.md` |
+| `poglavlje-26-soc2-kontrola.md` | `poglavlje-26-soc2-kontrola.en.md` |
+| `poglavlje-27-prioritizacija.md` | `poglavlje-27-prioritizacija.en.md` |
+| `poglavlje-28-ai-asistirana-observability.md` | `poglavlje-28-ai-asistirana-observability.en.md` |
+| `deo-7-uvod.md` | `deo-7-uvod.en.md` |
+| `poglavlje-29-fazni-rollout.md` | `poglavlje-29-fazni-rollout.en.md` |
+| `poglavlje-30-merenje-zrelosti.md` | `poglavlje-30-merenje-zrelosti.en.md` |
+| `poglavlje-31-zakljucak.md` | `poglavlje-31-zakljucak.en.md` |
+| `dodatak-a-promql-logql-recepti.md` | `dodatak-a-promql-logql-recepti.en.md` |
+| `dodatak-b-recnik-pojmova.md` | `dodatak-b-recnik-pojmova.en.md` |
+| `dodatak-c-checklist-onboarding.md` | `dodatak-c-checklist-onboarding.en.md` |
+| `dodatak-d-sabloni.md` | `dodatak-d-sabloni.en.md` |
+
+Ceo tekst knjige (Delovi I–VII i Dodaci A–D) je sada preveden na engleski.
 
 ## Stil
 
@@ -92,6 +150,10 @@ Svaki rekonstruisan dijagram dobija:
 Ovo je jedini način da se dijagram ponovo generiše ili izmeni bez ručnog
 crtanja od nule — vidi `scripts/diagrams/cost_crossover.py` kao prvi
 primer (Poglavlje 3, `cost-crossover.png`).
+
+Napomena: `overview.png` (koristi se u `deo-2-uvod.md`) još nema
+rekonstruisanu skriptu — engleski alt-tekst je preveden, ali sama slika je
+i dalje ista (srpska/generička) datoteka dok se dijagram ne rekonstruiše.
 
 ### Urađeni dijagrami
 
