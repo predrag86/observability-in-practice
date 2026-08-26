@@ -31,7 +31,7 @@
     
     
       
-        <title>Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap" - Observability in Practice</title>
+        <title>Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap" - Observability in Practice</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#poglavlje-14-kad-alarm-cuti-gating-dedup-i-tihi-gap" class="md-skip">
+        <a href="#chapter-14-when-the-alert-stays-silent-gating-dedup-and-the-silent-gap" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+              Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
             
           </span>
         </div>
@@ -580,7 +580,7 @@
   <span class="md-ellipsis">
     
   
-    Deo II — Arhitektura prikupljanja telemetrije
+    Part II — Telemetry-collection architecture
   
 
     
@@ -608,7 +608,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+    Chapter 4 — The gateway pattern: a central point for telemetry
   
 
     
@@ -636,7 +636,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+    Chapter 5 — Instrumenting the application: two strategies
   
 
     
@@ -664,7 +664,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+    Chapter 6 — Containerized/batch workloads: the sidecar pattern
   
 
     
@@ -692,7 +692,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 7 — Kada ne možeš da instrumentiraš izvor: pull-obrasci
+    Chapter 7 — When you can't instrument the source: pull-based patterns
   
 
     
@@ -720,7 +720,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 8 — Frontend / RUM observability
+    Chapter 8 — Frontend / RUM observability
   
 
     
@@ -748,7 +748,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 9 — Sintetičko (black-box) praćenje
+    Chapter 9 — Synthetic (Black-Box) Monitoring
   
 
     
@@ -837,7 +837,7 @@
   <span class="md-ellipsis">
     
   
-    Deo III — Obrada, kardinalnost i troškovi
+    Part III — Processing, cardinality, and cost
   
 
     
@@ -865,7 +865,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+    Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
   
 
     
@@ -893,7 +893,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 11 — Kardinalnost i cena: kako sistem prirodno naraste iznad budžeta
+    Chapter 11 — Cardinality and cost: how a system naturally outgrows its budget
   
 
     
@@ -921,7 +921,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+    Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
   
 
     
@@ -1010,7 +1010,7 @@
   <span class="md-ellipsis">
     
   
-    Deo IV — Alarmiranje, SLO i odgovor na incidente
+    Part IV — Alerting, SLOs, and incident response
   
 
     
@@ -1038,7 +1038,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+    Chapter 13 — Alerting architecture: two paths, one destination channel
   
 
     
@@ -1075,7 +1075,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+    Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
   
 
     
@@ -1093,7 +1093,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+    Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
   
 
     
@@ -1119,10 +1119,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#141-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#141-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14.1 Pitanje na koje ovo poglavlje odgovara
+        14.1 The question this chapter answers
       
     </span>
   </a>
@@ -1130,22 +1130,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#142-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#142-how-it-was-done-a-practical-walkthrough" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14.2 Kako je to urađeno — praktičan pregled
+        14.2 How it was done — a practical walkthrough
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="14.2 Kako je to urađeno — praktičan pregled">
+    <nav class="md-nav" aria-label="14.2 How it was done — a practical walkthrough">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#prva-studija-slucaja-mehanizam-projektovan-za-naleta-primenjen-na-curenje" class="md-nav__link">
+  <a href="#first-case-study-a-mechanism-designed-for-bursts-applied-to-a-leak" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prva studija slučaja: mehanizam projektovan za naleta, primenjen na curenje
+        First case study: a mechanism designed for bursts, applied to a leak
       
     </span>
   </a>
@@ -1153,10 +1153,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#druga-studija-slucaja-dva-upozorenja-koja-se-ne-zbrajaju-u-gresku" class="md-nav__link">
+  <a href="#second-case-study-two-warnings-that-dont-add-up-to-an-error" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Druga studija slučaja: dva upozorenja koja se ne zbrajaju u grešku
+        Second case study: two warnings that don't add up to an error
       
     </span>
   </a>
@@ -1164,10 +1164,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sta-je-popravljeno" class="md-nav__link">
+  <a href="#what-was-fixed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Šta je popravljeno
+        What was fixed
       
     </span>
   </a>
@@ -1180,22 +1180,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#143-analiticki-deo-zasto-ovo-retko-pise-iko-drugi" class="md-nav__link">
+  <a href="#143-analytical-section-why-almost-nobody-else-writes-about-this" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14.3 Analitički deo — zašto ovo retko piše iko drugi
+        14.3 Analytical section — why almost nobody else writes about this
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="14.3 Analitički deo — zašto ovo retko piše iko drugi">
+    <nav class="md-nav" aria-label="14.3 Analytical section — why almost nobody else writes about this">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#mehanizam-za-sprecavanje-spam-a-kodira-pretpostavku-o-obliku-greske" class="md-nav__link">
+  <a href="#an-anti-spam-mechanism-encodes-an-assumption-about-the-shape-of-failure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Mehanizam za sprečavanje spam-a kodira pretpostavku o obliku greške
+        An anti-spam mechanism encodes an assumption about the shape of failure
       
     </span>
   </a>
@@ -1203,10 +1203,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#dva-upozorenja-problem-nije-o-pragovima-o-agregaciji-znacenja" class="md-nav__link">
+  <a href="#the-two-warnings-problem-isnt-about-thresholds-its-about-aggregating-meaning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Dva upozorenja" problem nije o pragovima — o agregaciji značenja
+        The "two warnings" problem isn't about thresholds — it's about aggregating meaning
       
     </span>
   </a>
@@ -1214,10 +1214,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cena-da-se-nista-od-ovoga-nije-primetilo-kontrafakticki-scenario" class="md-nav__link">
+  <a href="#the-cost-of-none-of-this-being-noticed-a-counterfactual-scenario" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cena da se ništa od ovoga nije primetilo: kontrafaktički scenario
+        The cost of none of this being noticed: a counterfactual scenario
       
     </span>
   </a>
@@ -1230,10 +1230,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#144-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#144-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14.4 Skupljena pravila iz ovog poglavlja
+        14.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -1241,22 +1241,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#145-vezba-za-citaoca" class="md-nav__link">
+  <a href="#145-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14.5 Vežba za čitaoca
+        14.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="14.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="14.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -1291,7 +1291,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+    Chapter 15 — SLOs and error-budget-based alerts
   
 
     
@@ -1319,7 +1319,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 16 — Runbook-ovi: od alarma do rešenja
+    Chapter 16 — Runbooks: from alert to resolution
   
 
     
@@ -1347,7 +1347,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 17 — Postmortem kultura
+    Chapter 17 — Postmortem culture
   
 
     
@@ -1436,7 +1436,7 @@
   <span class="md-ellipsis">
     
   
-    Deo V — Domenske studije slučaja
+    Part V — Domain case studies
   
 
     
@@ -1464,7 +1464,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 18 — Baze podataka (upravljane, tipa RDS/Aurora)
+    Chapter 18 — Databases (managed, RDS/Aurora-type)
   
 
     
@@ -1492,7 +1492,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 19 — Samostalno upravljani distribuirani sistemi (klaster tipa Dremio)
+    Chapter 19 — Self-managed distributed systems (a Dremio-style cluster)
   
 
     
@@ -1520,7 +1520,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 20 — Autentikacija i IAM (sistem tipa Keycloak)
+    Chapter 20 — Authentication and IAM (a Keycloak-type system)
   
 
     
@@ -1548,7 +1548,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 21 — Hostovi i serveri kao mašine
+    Chapter 21 — Hosts and servers as machines
   
 
     
@@ -1576,7 +1576,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 22 — Mreža kao posebna ravan posmatranja
+    Chapter 22 — The network as its own observation plane
   
 
     
@@ -1604,7 +1604,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 23 — Batch/ETL flota zadataka
+    Chapter 23 — The batch/ETL job fleet
   
 
     
@@ -1632,7 +1632,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 24 — Posmatranje servisa koji nije naš (tipa Snowflake)
+    Chapter 24 — Observing a service that isn't ours (the Snowflake kind)
   
 
     
@@ -1721,7 +1721,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VI — Upravljanje, usklađenost i zrelost
+    Part VI — Governance, compliance, and maturity
   
 
     
@@ -1749,7 +1749,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 25 — Privatnost u telemetriji
+    Chapter 25 — Privacy in telemetry
   
 
     
@@ -1777,7 +1777,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 26 — Observability kao kontrola usklađenosti (SOC 2 primer)
+    Chapter 26 — Observability as a compliance control (a SOC 2 example)
   
 
     
@@ -1805,7 +1805,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 27 — Prioritizacija: cena, performanse, pouzdanost, bezbednost
+    Chapter 27 — Prioritization: cost, performance, reliability, security
   
 
     
@@ -1833,7 +1833,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 28 — AI-asistirana observability: agent koji čita telemetriju
+    Chapter 28 — AI-assisted observability: an agent that reads telemetry
   
 
     
@@ -1922,7 +1922,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VII — Sazrevanje programa
+    Part VII — The program matures
   
 
     
@@ -1950,7 +1950,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 29 — Kako izgleda fazni rollout u realnom vremenu
+    Chapter 29 — What a phased rollout looks like in real time
   
 
     
@@ -1978,7 +1978,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 30 — Merenje zrelosti sopstvenog programa
+    Chapter 30 — Measuring the maturity of your own program
   
 
     
@@ -2006,7 +2006,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 31 — Zaključak: skupljena pravila
+    Chapter 31 — Conclusion: rules collected
   
 
     
@@ -2095,7 +2095,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak A — PromQL/LogQL recepti
+    Appendix A — PromQL/LogQL recipes
   
 
     
@@ -2123,7 +2123,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak B — Rečnik pojmova
+    Appendix B — Glossary of terms
   
 
     
@@ -2151,7 +2151,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak C — Checklist za onboarding novog servisa na observability
+    Appendix C — Checklist for onboarding a new service onto observability
   
 
     
@@ -2179,7 +2179,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak D — Šablon runbook-a i šablon postmortema
+    Appendix D — Runbook template and postmortem template
   
 
     
@@ -2227,10 +2227,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#141-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#141-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14.1 Pitanje na koje ovo poglavlje odgovara
+        14.1 The question this chapter answers
       
     </span>
   </a>
@@ -2238,22 +2238,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#142-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#142-how-it-was-done-a-practical-walkthrough" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14.2 Kako je to urađeno — praktičan pregled
+        14.2 How it was done — a practical walkthrough
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="14.2 Kako je to urađeno — praktičan pregled">
+    <nav class="md-nav" aria-label="14.2 How it was done — a practical walkthrough">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#prva-studija-slucaja-mehanizam-projektovan-za-naleta-primenjen-na-curenje" class="md-nav__link">
+  <a href="#first-case-study-a-mechanism-designed-for-bursts-applied-to-a-leak" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prva studija slučaja: mehanizam projektovan za naleta, primenjen na curenje
+        First case study: a mechanism designed for bursts, applied to a leak
       
     </span>
   </a>
@@ -2261,10 +2261,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#druga-studija-slucaja-dva-upozorenja-koja-se-ne-zbrajaju-u-gresku" class="md-nav__link">
+  <a href="#second-case-study-two-warnings-that-dont-add-up-to-an-error" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Druga studija slučaja: dva upozorenja koja se ne zbrajaju u grešku
+        Second case study: two warnings that don't add up to an error
       
     </span>
   </a>
@@ -2272,10 +2272,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sta-je-popravljeno" class="md-nav__link">
+  <a href="#what-was-fixed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Šta je popravljeno
+        What was fixed
       
     </span>
   </a>
@@ -2288,22 +2288,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#143-analiticki-deo-zasto-ovo-retko-pise-iko-drugi" class="md-nav__link">
+  <a href="#143-analytical-section-why-almost-nobody-else-writes-about-this" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14.3 Analitički deo — zašto ovo retko piše iko drugi
+        14.3 Analytical section — why almost nobody else writes about this
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="14.3 Analitički deo — zašto ovo retko piše iko drugi">
+    <nav class="md-nav" aria-label="14.3 Analytical section — why almost nobody else writes about this">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#mehanizam-za-sprecavanje-spam-a-kodira-pretpostavku-o-obliku-greske" class="md-nav__link">
+  <a href="#an-anti-spam-mechanism-encodes-an-assumption-about-the-shape-of-failure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Mehanizam za sprečavanje spam-a kodira pretpostavku o obliku greške
+        An anti-spam mechanism encodes an assumption about the shape of failure
       
     </span>
   </a>
@@ -2311,10 +2311,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#dva-upozorenja-problem-nije-o-pragovima-o-agregaciji-znacenja" class="md-nav__link">
+  <a href="#the-two-warnings-problem-isnt-about-thresholds-its-about-aggregating-meaning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Dva upozorenja" problem nije o pragovima — o agregaciji značenja
+        The "two warnings" problem isn't about thresholds — it's about aggregating meaning
       
     </span>
   </a>
@@ -2322,10 +2322,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cena-da-se-nista-od-ovoga-nije-primetilo-kontrafakticki-scenario" class="md-nav__link">
+  <a href="#the-cost-of-none-of-this-being-noticed-a-counterfactual-scenario" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cena da se ništa od ovoga nije primetilo: kontrafaktički scenario
+        The cost of none of this being noticed: a counterfactual scenario
       
     </span>
   </a>
@@ -2338,10 +2338,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#144-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#144-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14.4 Skupljena pravila iz ovog poglavlja
+        14.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -2349,22 +2349,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#145-vezba-za-citaoca" class="md-nav__link">
+  <a href="#145-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        14.5 Vežba za čitaoca
+        14.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="14.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="14.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -2393,7 +2393,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-14-kad-alarm-cuti.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-14-kad-alarm-cuti.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2401,159 +2401,167 @@
   
 
 
-<h1 id="poglavlje-14-kad-alarm-cuti-gating-dedup-i-tihi-gap">Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"</h1>
-<p>Detektor dima u kuhinji je podešen da prepozna jednu vrstu opasnosti dobro:
-naglu, gustu koncentraciju dima — nešto gori brzo, senzor to vidi za
-sekunde. Taj isti detektor je, po svojoj prirodi, gotovo slep za sasvim
-drugu vrstu opasnosti: polako curenje ugljen-monoksida koje raste iz sata u
-sat, nikad ne pređe prag koji bi okinuo naglu reakciju, a ipak, posle
-dovoljno vremena, jednako opasno. Detektor nije pokvaren — radi tačno kako
-je projektovan. Problem je što je projektovan za jedan <strong>oblik</strong> opasnosti,
-a opasnost koja ga je zaista pogodila imala je sasvim drugi oblik.</p>
-<h2 id="141-pitanje-na-koje-ovo-poglavlje-odgovara">14.1 Pitanje na koje ovo poglavlje odgovara</h2>
-<p>Alarm koji je ispravno definisan, ispravno primenjen, i tehnički radi tačno
-onako kako je specificiran — može, u praksi, da nikad ne stigne do čoveka.
-Ovo poglavlje odgovara na pitanje kako se to dešava, i kroz dve stvarne
-studije slučaja pokazuje da je ovo možda i najvažnija, a najređe pisana tema
-u observability-ju: <strong>ne kvar alarma, nego njegova tiha, ispravna neaktivnost
-baš onda kad je najpotrebniji.</strong></p>
-<h2 id="142-kako-je-to-uraeno-praktican-pregled">14.2 Kako je to urađeno — praktičan pregled</h2>
-<h3 id="prva-studija-slucaja-mehanizam-projektovan-za-naleta-primenjen-na-curenje">Prva studija slučaja: mehanizam projektovan za naleta, primenjen na curenje</h3>
-<p>Flota zakazanih batch zadataka ima mehanizam protiv spam-a — ako isti
-zadatak počne da pada uzastopno, alarm se ne šalje na svaki pojedinačan pad,
-nego tek kad broj padova pređe prag unutar kratkog vremenskog prozora
-(tri pada u trideset minuta). Ideja iza ovoga je zdrava: nagli talas
-grešaka (na primer, deset padova za minut zbog jednog lošeg deploy-a) ne
-treba da preplavi kanal sa deset identičnih poruka.</p>
-<p>Problem se pojavio kod zadatka koji je padao <strong>jednom po pokretanju</strong>, na
-zakazanom rasporedu, otprilike jednom na sat. Taj obrazac nikad ne
-zadovoljava prag "tri u trideset minuta" — ne zato što je greška retka, nego
-zato što je <strong>raspoređena</strong>. Rezultat: mehanizam projektovan da spreči
-preplavljivanje kanala je, primenjen na ovaj obrazac, postao trajno,
-strukturno tih. Ne kašnjenje u alarmiranju — potpuno odsustvo alarmiranja,
-zauvek, bez obzira koliko dana zaredom zadatak nastavio da pada.</p>
-<p>Otkriveno je slučajno: neko je primetio da dashboard pokazuje neuspele
-pokrete zadatka koji nikad nisu stigli kao poruka u kanalu. Istraga je
-pokazala da je mehanizam za sprečavanje spam-a radio tačno kako je
-specificiran — beležio je svaki pad, ispravno brojao, i ispravno odlučivao
-da prag nije dostignut. Alarm je <strong>postojao</strong>, bio je <strong>ispravno definisan</strong>,
-i <strong>ipak</strong> nikad nije stigao do čoveka.</p>
-<p>Dublja lekcija iz istrage: pretpostavka "ako ne znamo kategoriju zadatka,
-podrazumevano ga tretiraj kao da treba alarm" je bila dokumentovana kao
-sigurnosna mreža — "nepoznato → podrazumevano šumno, ne tiho" (namerno
-zapisano kao princip). Ali ta pretpostavka je pisana <strong>pre</strong> nego što je
-mehanizam za sprečavanje spam-a uveden, i niko je nije ponovo pročitao posle
-te promene. Posle uvođenja praga, "podrazumevano šumno" je prestalo da znači
-"dobijamo obaveštenje" i počelo da znači "dobijamo obaveštenje samo ako
-padne tri puta u trideset minuta" — potpuno drugo obećanje, pod istim
-imenom.</p>
-<h3 id="druga-studija-slucaja-dva-upozorenja-koja-se-ne-zbrajaju-u-gresku">Druga studija slučaja: dva upozorenja koja se ne zbrajaju u grešku</h3>
-<p>Isti tip zadatka je, u odvojenom incidentu, bio prisilno gašen zbog
-nedostatka memorije <strong>devetnaest puta za sedamnaest sati</strong> — otprilike
-jednom na sat, opet raspoređeno, opet ispod praga mehanizma za sprečavanje
-spam-a. Jedina poruka koja je stigla do kanala u tom periodu bila je
-upozorenje o <strong>potrošnji memorije</strong> (ne o padu) — "60% zauzeća, pa 75%, pa
-90%" — nivo ozbiljnosti <strong>warning</strong>, ne <strong>error</strong>.</p>
-<p>Istraga je otkrila nešto suptilnije od proste tišine: <strong>dva odvojena
-upozorenja</strong> su radila, oba ispravno, oba istovremeno — jedno je pratilo
-zauzeće memorije i ispravno signaliziralo "opasno visoko"; drugo je pratilo
-učestalost padova i ispravno signaliziralo "ovaj zadatak pada čudno često".
-Nijedno pojedinačno nije bilo pogrešno. Ali nijedno od njih, niti oba
-zajedno, nisu se <strong>zbrojila</strong> u jasnu poruku "ovaj zadatak se gasi zbog
-nedostatka memorije, devetnaest puta, upravo sada" — poruku koja bi po svom
-sadržaju jasno zaslužila nivo <strong>error</strong>, ne dva paralelna <strong>warning</strong>-a.
-Čovek koji je čitao kanal je video dva upozorenja i pročitao ih kao "nešto
-niskog prioriteta se dešava" — tačno pogrešan zaključak za ono što se zaista
-dešavalo.</p>
-<p>Dodatno je otkriveno da je nivo ozbiljnosti samog upozorenja o memoriji
-zavisio od <strong>slučajnosti trenutka merenja</strong> — sistem uzima uzorak zauzeća na
-svakih dvadesetak sekundi, a da li će taj uzorak pasti iznad ili ispod
-kritičnog praga zavisi od toga gde tačno u vremenu uzorkovanje padne u
-odnosu na trenutak prisilnog gašenja. Isti tip pada je, u zavisnosti od
-trenutka uzorkovanja, mogao da proizvede ili "upozorenje" ili "kritično" —
-ozbiljnost poruke je bila <strong>kockanje na tajming uzorkovanja</strong>, ne svojstvo
-onoga što se zaista dogodilo.</p>
-<h3 id="sta-je-popravljeno">Šta je popravljeno</h3>
-<p>Popravka nije bila "spusti prag mehanizma za sprečavanje spam-a" — to bi
-lečilo simptom (premalo poruka) bez lečenja uzroka (mehanizam ne razlikuje
-oblik greške). Umesto toga, uveden je eksplicitan spisak <strong>razloga pada</strong>
-koji <strong>zaobilaze</strong> mehanizam za sprečavanje spam-a u potpunosti — pad zbog
-nedostatka memorije je jedan takav razlog, jer je determinističan i po
-prirodi sklon ponavljanju, za razliku od, recimo, prolaznog mrežnog
-zastoja, koji namerno <strong>ostaje</strong> pod mehanizmom, jer tu je privremena
-tišina zaista ispravan odgovor. Neuspeh se i dalje <strong>beleži</strong> bez izuzetka
-(brojač prozora ostaje tačan), samo se odluka o <strong>slanju</strong> menja za tu
-kategoriju razloga.</p>
-<p>Ovako izgleda prva studija slučaja izmerena — devetnaest padova raspoređenih
-kroz sedamnaest sati, svaki sam za sebe ispod praga mehanizma za
-sprečavanje spam-a, nijedan ikad poslat:</p>
-<p><img alt="Devetnaest padova raspoređenih kroz sedamnaest sati — svaki potisnut, nijedan poslat, jer nijedan par padova nije dovoljno blizu u vremenu da zadovolji prag &quot;tri u trideset minuta&quot;." src="../../diagrams/dashboard-suppression.png" width="95%" /></p>
-<h2 id="143-analiticki-deo-zasto-ovo-retko-pise-iko-drugi">14.3 Analitički deo — zašto ovo retko piše iko drugi</h2>
-<h3 id="mehanizam-za-sprecavanje-spam-a-kodira-pretpostavku-o-obliku-greske">Mehanizam za sprečavanje spam-a kodira pretpostavku o obliku greške</h3>
-<p>Vredi imenovati ono što obe studije slučaja zapravo pokazuju: svaki
-mehanizam koji potiskuje ponovljene alarme implicitno pretpostavlja <strong>kako</strong>
-greške dolaze — u naletima, retko, izolovano, ili raspoređeno. "Tri u
-trideset minuta" je razuman prag za nalet grešaka od lošeg deploy-a. Isti
-prag je, primenjen na posao koji radi jednom na sat i povremeno padne,
-matematički nemoguć da ikad zadovolji — ne zato što je slabo podešen, nego
-zato što meri pogrešnu osobinu za taj obrazac otkaza. Pre uvođenja bilo kog
-mehanizma za potiskivanje ponavljanja, vredi eksplicitno pobrojati koji
-postojeći signali <strong>nikad</strong> ne mogu zadovoljiti novi prag, ma koliko dugo
-otkaz trajao — to je provera koja se ovde preskočila i koja bi obe studije
-slučaja unapred otkrila.</p>
-<h3 id="dva-upozorenja-problem-nije-o-pragovima-o-agregaciji-znacenja">"Dva upozorenja" problem nije o pragovima — o agregaciji značenja</h3>
-<p>Druga studija slučaja pokazuje nešto što literatura o alarmiranju retko
-imenuje direktno: sistem može imati <strong>potpunu pokrivenost</strong> (svaki relevantan
-signal postoji i ispravno se okida) i <strong>i dalje ne preneti tačnu sliku</strong>
-čoveku koji čita rezultat, jer nijedan pojedinačan signal ne nosi kontekst
-koji bi objasnio da su druga dva signala <strong>isti događaj</strong>, gledan iz dva
-ugla. Pokrivenost nije isto što i obaveštenost. Kad dva nezavisna, ispravna
-upozorenja opisuju istu stvarnu situaciju, njihov zbir za čitaoca ne postaje
-automatski "ozbiljnije" — ostaje "dva niskoprioritetna signala", osim ako
-neko eksplicitno projektuje vezu između njih.</p>
-<h3 id="cena-da-se-nista-od-ovoga-nije-primetilo-kontrafakticki-scenario">Cena da se ništa od ovoga nije primetilo: kontrafaktički scenario</h3>
-<p>Vredi odigrati šta bi se dogodilo da mehanizam za sprečavanje spam-a nikad
-nije preispitan. Zadatak koji pada jednom na sat bi nastavio da pada,
-zauvek, bez ijedne poruke u kanalu — ne zato što niko ne bi mario, nego zato
-što niko ne bi <strong>znao</strong>. Razlika između "tiho jer je sve u redu" i "tiho jer
-mehanizam ne ume da vidi ovaj obrazac" je nevidljiva sa spoljašnje strane —
-oba izgledaju identično: prazan kanal. Upravo je to razlog zašto je ovaj
-gap pronađen slučajno, posmatranjem dashboard-a, ne alarmom koji bi
-sam sebe prijavio.</p>
-<p>Vratimo se na detektor dima s početka poglavlja. On nije neispravan — radi
-tačno kako je kalibrisan. Problem nastaje kad neko pretpostavi da je jedna
-kalibracija dovoljna za svaku vrstu opasnosti koju treba da uhvati. <strong>Alarm
-koji ćuti zato što mehanizam ispravno radi po pogrešnoj pretpostavci je
-opasniji od alarma koji je jednostavno pokvaren — jer pokvaren alarm bar
-izgleda sumnjivo, dok ispravan-ali-pogrešno-kalibrisan izgleda kao mir.</strong></p>
-<h2 id="144-skupljena-pravila-iz-ovog-poglavlja">14.4 Skupljena pravila iz ovog poglavlja</h2>
+<h1 id="chapter-14-when-the-alert-stays-silent-gating-dedup-and-the-silent-gap">Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"</h1>
+<p>A smoke detector in the kitchen is tuned to recognize one kind of danger
+well: a sudden, dense concentration of smoke — something burning fast,
+which the sensor catches within seconds. By its very nature, that same
+detector is nearly blind to an entirely different kind of danger: a slow
+carbon-monoxide leak that climbs hour by hour, never crossing the threshold
+that would trigger a sudden reaction, and yet, given enough time, just as
+dangerous. The detector isn't broken — it works exactly as designed. The
+problem is that it was designed for one <strong>shape</strong> of danger, and the danger
+that actually struck had an entirely different shape.</p>
+<h2 id="141-the-question-this-chapter-answers">14.1 The question this chapter answers</h2>
+<p>An alert that is correctly defined, correctly deployed, and technically
+works exactly as specified can, in practice, never reach a human being.
+This chapter answers the question of how that happens, and through two
+real case studies shows that this may be the most important, and
+least written-about, topic in observability: <strong>not the alert failing, but
+its quiet, correct inactivity at exactly the moment it's needed most.</strong></p>
+<h2 id="142-how-it-was-done-a-practical-walkthrough">14.2 How it was done — a practical walkthrough</h2>
+<h3 id="first-case-study-a-mechanism-designed-for-bursts-applied-to-a-leak">First case study: a mechanism designed for bursts, applied to a leak</h3>
+<p>The fleet of scheduled batch jobs has an anti-spam mechanism — if the same
+job starts failing repeatedly, an alert isn't sent for every individual
+failure, only once the number of failures crosses a threshold within a
+short time window (three failures in thirty minutes). The idea behind this
+is sound: a sudden burst of errors (say, ten failures in a minute from one
+bad deploy) shouldn't flood the channel with ten identical messages.</p>
+<p>The problem showed up with a job that failed <strong>once per run</strong>, on its
+scheduled cadence, roughly once an hour. That pattern never satisfies the
+"three in thirty minutes" threshold — not because the failure is rare, but
+because it's <strong>spread out</strong>. The result: a mechanism designed to prevent
+flooding the channel, applied to this pattern, became permanently,
+structurally silent. Not a delay in alerting — a complete absence of
+alerting, forever, no matter how many days in a row the job kept failing.</p>
+<p>It was discovered by accident: someone noticed that the dashboard showed
+failed job runs that had never arrived as a message in the channel. The
+investigation showed that the anti-spam mechanism was working exactly as
+specified — it recorded every failure, counted correctly, and correctly
+decided the threshold hadn't been reached. The alert <strong>existed</strong>, was
+<strong>correctly defined</strong>, and <strong>still</strong> never reached a human.</p>
+<p>The deeper lesson from the investigation: the assumption "if we don't know
+a job's category, default to treating it as if it needs an alert" had been
+documented as a safety net — "unknown → default to noisy, not silent"
+(deliberately written down as a principle). But that assumption was
+written <strong>before</strong> the anti-spam mechanism was introduced, and nobody
+re-read it after that change. Once the threshold was introduced, "default
+to noisy" stopped meaning "we get notified" and started meaning "we get
+notified only if it fails three times in thirty minutes" — a completely
+different promise, under the same name.</p>
+<h3 id="second-case-study-two-warnings-that-dont-add-up-to-an-error">Second case study: two warnings that don't add up to an error</h3>
+<p>The same type of job, in a separate incident, was forcibly killed for
+running out of memory <strong>nineteen times over seventeen hours</strong> — again
+roughly once an hour, again spread out, again under the anti-spam
+mechanism's threshold. The only message that reached the channel during
+that period was a warning about <strong>memory consumption</strong> (not about the
+failure) — "60% used, then 75%, then 90%" — at severity level <strong>warning</strong>,
+not <strong>error</strong>.</p>
+<p>The investigation uncovered something more subtle than plain silence:
+<strong>two separate warnings</strong> were operating, both correctly, both at the same
+time — one tracked memory usage and correctly signaled "dangerously high";
+the other tracked failure frequency and correctly signaled "this job is
+failing unusually often." Neither one, on its own, was wrong. But neither
+of them, nor the two together, <strong>added up</strong> to the clear message "this job
+is being killed for running out of memory, nineteen times, right now" — a
+message that, by its actual content, clearly deserved severity <strong>error</strong>,
+not two parallel <strong>warning</strong>s. The person reading the channel saw two
+warnings and read them as "something low-priority is happening" — exactly
+the wrong conclusion for what was actually happening.</p>
+<p>It further emerged that the severity level of the memory warning itself
+depended on the <strong>sheer chance of measurement timing</strong> — the system
+samples memory usage roughly every twenty seconds, and whether that sample
+lands above or below the critical threshold depends on exactly where in
+time the sampling falls relative to the moment of the forced kill. The
+same type of failure could, depending on sampling timing, produce either a
+"warning" or a "critical" — the message's severity was a <strong>gamble on
+sampling timing</strong>, not a property of what actually happened.</p>
+<h3 id="what-was-fixed">What was fixed</h3>
+<p>The fix wasn't "lower the anti-spam mechanism's threshold" — that would
+treat the symptom (too few messages) without treating the cause (the
+mechanism can't distinguish the shape of the failure). Instead, an
+explicit list of <strong>failure reasons</strong> was introduced that <strong>bypass</strong> the
+anti-spam mechanism entirely — an out-of-memory failure is one such
+reason, because it's deterministic and inherently prone to repeating,
+unlike, say, a transient network stall, which deliberately <strong>stays</strong> under
+the mechanism, because temporary silence really is the right response
+there. The failure is still <strong>recorded</strong> without exception (the window
+counter stays accurate) — only the decision about whether to <strong>send</strong>
+changes for that category of reason.</p>
+<p>Here is what the first case study looks like once measured — nineteen
+failures spread across seventeen hours, each one individually under the
+anti-spam mechanism's threshold, none of them ever sent:</p>
+<p><img alt="Nineteen failures spread across seventeen hours — each suppressed, none sent, because no pair of failures falls close enough together in time to satisfy the &quot;three in thirty minutes&quot; threshold." src="../../diagrams/dashboard-suppression.png" width="95%" /></p>
+<h2 id="143-analytical-section-why-almost-nobody-else-writes-about-this">14.3 Analytical section — why almost nobody else writes about this</h2>
+<h3 id="an-anti-spam-mechanism-encodes-an-assumption-about-the-shape-of-failure">An anti-spam mechanism encodes an assumption about the shape of failure</h3>
+<p>It's worth naming what both case studies actually demonstrate: every
+mechanism that suppresses repeated alerts implicitly assumes <strong>how</strong>
+failures arrive — in bursts, rarely, in isolation, or spread out. "Three
+in thirty minutes" is a reasonable threshold for a burst of errors from a
+bad deploy. The same threshold, applied to a job that runs once an hour
+and occasionally fails, is mathematically impossible to ever satisfy — not
+because it's poorly tuned, but because it measures the wrong property for
+that failure pattern. Before introducing any repeat-suppression mechanism,
+it's worth explicitly enumerating which existing signals can <strong>never</strong>
+satisfy the new threshold, no matter how long the failure persists — that's
+the check that was skipped here, and it would have uncovered both case
+studies in advance.</p>
+<h3 id="the-two-warnings-problem-isnt-about-thresholds-its-about-aggregating-meaning">The "two warnings" problem isn't about thresholds — it's about aggregating meaning</h3>
+<p>The second case study shows something the alerting literature rarely names
+directly: a system can have <strong>complete coverage</strong> (every relevant signal
+exists and correctly fires) and <strong>still fail to convey an accurate
+picture</strong> to the person reading the result, because no single signal
+carries the context that would explain that the other two signals are
+<strong>the same event</strong>, seen from two angles. Coverage isn't the same as being
+informed. When two independent, correct warnings describe the same real
+situation, their sum doesn't automatically become "more serious" for the
+reader — it stays "two low-priority signals," unless someone explicitly
+designs the connection between them.</p>
+<h3 id="the-cost-of-none-of-this-being-noticed-a-counterfactual-scenario">The cost of none of this being noticed: a counterfactual scenario</h3>
+<p>It's worth playing out what would have happened had the anti-spam
+mechanism never been reconsidered. A job failing once an hour would have
+kept failing, forever, without a single message in the channel — not
+because nobody would care, but because nobody would <strong>know</strong>. The
+difference between "silent because everything is fine" and "silent
+because the mechanism can't see this pattern" is invisible from the
+outside — both look identical: an empty channel. That's exactly why this
+gap was found by accident, by someone watching a dashboard, not by an
+alert reporting itself.</p>
+<p>Let's return to the smoke detector from the start of the chapter. It isn't
+defective — it works exactly as calibrated. The problem arises when
+someone assumes that one calibration is enough for every kind of danger it
+needs to catch. <strong>An alert that stays silent because the mechanism is
+correctly operating on a wrong assumption is more dangerous than an alert
+that's simply broken — because a broken alert at least looks suspicious,
+while correct-but-wrongly-calibrated looks like calm.</strong></p>
+<h2 id="144-rules-collected-from-this-chapter">14.4 Rules collected from this chapter</h2>
 <ul>
-<li>Pre uvođenja bilo kog mehanizma za potiskivanje ponovljenih alarma,
-  eksplicitno proveri koji postojeći, legitiman obrazac otkaza <strong>nikad</strong> ne
-  može zadovoljiti novi prag, ma koliko dugo trajao.</li>
-<li>Razlikuj razloge otkaza po prirodi (determinističan i sklon ponavljanju
-  naspram prolazan i samoizlečiv) i dozvoli prvoj kategoriji da zaobiđe
-  mehanizam za potiskivanje ponavljanja u potpunosti.</li>
-<li>Nikad ne menjaj <strong>da li se beleži</strong> neuspeh da bi promenio <strong>da li se
-  šalje</strong> poruka o njemu — brojač mora ostati tačan nezavisno od odluke o
-  obaveštavanju, inače se sledeći neuspeh pogrešno protumači kao izolovan.</li>
-<li>Postavi pitanje da li dva ili više odvojenih, ispravnih upozorenja mogu
-  opisivati <strong>isti</strong> stvaran događaj — ako mogu, dodaj eksplicitnu vezu koja
-  to čitaocu kaže, umesto da se osloniš da će sam sabrati.</li>
-<li>Kad god uvedeš mehanizam koji nešto potiskuje, izmeri njegov efekat odmah
-  posle uvođenja (koliko poruka je nestalo, i za koje porodice) — ne
-  pretpostavljaj da je pad broja poruka isto što i "sistem je postao
-  zdraviji".</li>
+<li>Before introducing any mechanism that suppresses repeated alerts,
+  explicitly check which existing, legitimate failure pattern can
+  <strong>never</strong> satisfy the new threshold, no matter how long it persists.</li>
+<li>Distinguish failure reasons by nature (deterministic and prone to
+  repeating versus transient and self-healing), and let the first category
+  bypass the repeat-suppression mechanism entirely.</li>
+<li>Never change <strong>whether a failure is recorded</strong> in order to change
+  <strong>whether a message about it is sent</strong> — the counter must stay accurate
+  independent of the notification decision, otherwise the next failure
+  gets misread as isolated.</li>
+<li>Ask whether two or more separate, correct warnings might describe the
+  <strong>same</strong> real event — if they might, add an explicit link that tells the
+  reader so, instead of relying on them to add it up themselves.</li>
+<li>Whenever you introduce a mechanism that suppresses something, measure
+  its effect immediately after introducing it (how many messages
+  disappeared, and for which families) — don't assume a drop in message
+  count means "the system got healthier."</li>
 </ul>
-<h2 id="145-vezba-za-citaoca">14.5 Vežba za čitaoca</h2>
-<p>Pronađi u svom sistemu bilo koji mehanizam koji potiskuje ponovljene
-alarme (dedup, rate-limit, prag broja ponavljanja). Zamisli grešku koja se
-dešava tačno jednom po svakom zakazanom pokretanju, zauvek — da li bi taj
-mehanizam ikad pustio poruku kroz sebe? Ako ne bi, to je tvoj kandidat za
-"tihi gap" koji čeka da ga neko slučajno primeti na dashboard-u, umesto da
-ga sistem sam prijavi.</p>
+<h2 id="145-exercise-for-the-reader">14.5 Exercise for the reader</h2>
+<p>Find any mechanism in your system that suppresses repeated alerts (dedup,
+rate-limit, repeat-count threshold). Imagine a failure that happens
+exactly once per every scheduled run, forever — would that mechanism ever
+let a message through? If not, that's your candidate for a "silent gap"
+waiting for someone to notice it by accident on a dashboard, instead of
+the system reporting it itself.</p>
 <hr />
-<h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
+<h3 id="sources-used-in-the-analytical-section">Sources used in the analytical section</h3>
 <ul>
 <li><a href="https://oneuptime.com/blog/post/2026-01-30-alert-routing/view">How to Implement Alert Routing — OneUptime</a></li>
 <li><a href="https://grafana.com/docs/grafana/latest/alerting/guides/best-practices/">Alerting best practices — Grafana documentation</a></li>
@@ -2580,7 +2588,7 @@ ga sistem sam prijavi.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:10:00 UTC">August 26, 2026</span>
   </span>
 
     

@@ -31,7 +31,7 @@
     
     
       
-        <title>Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka - Observability in Practice</title>
+        <title>Chapter 15 — SLOs and error-budget-based alerts - Observability in Practice</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#poglavlje-15-slo-i-alarmi-zasnovani-na-budzetu-gresaka" class="md-skip">
+        <a href="#chapter-15-slos-and-error-budget-based-alerts" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+              Chapter 15 — SLOs and error-budget-based alerts
             
           </span>
         </div>
@@ -580,7 +580,7 @@
   <span class="md-ellipsis">
     
   
-    Deo II — Arhitektura prikupljanja telemetrije
+    Part II — Telemetry-collection architecture
   
 
     
@@ -608,7 +608,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+    Chapter 4 — The gateway pattern: a central point for telemetry
   
 
     
@@ -636,7 +636,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+    Chapter 5 — Instrumenting the application: two strategies
   
 
     
@@ -664,7 +664,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+    Chapter 6 — Containerized/batch workloads: the sidecar pattern
   
 
     
@@ -692,7 +692,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 7 — Kada ne možeš da instrumentiraš izvor: pull-obrasci
+    Chapter 7 — When you can't instrument the source: pull-based patterns
   
 
     
@@ -720,7 +720,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 8 — Frontend / RUM observability
+    Chapter 8 — Frontend / RUM observability
   
 
     
@@ -748,7 +748,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 9 — Sintetičko (black-box) praćenje
+    Chapter 9 — Synthetic (Black-Box) Monitoring
   
 
     
@@ -837,7 +837,7 @@
   <span class="md-ellipsis">
     
   
-    Deo III — Obrada, kardinalnost i troškovi
+    Part III — Processing, cardinality, and cost
   
 
     
@@ -865,7 +865,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+    Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
   
 
     
@@ -893,7 +893,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 11 — Kardinalnost i cena: kako sistem prirodno naraste iznad budžeta
+    Chapter 11 — Cardinality and cost: how a system naturally outgrows its budget
   
 
     
@@ -921,7 +921,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+    Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
   
 
     
@@ -1010,7 +1010,7 @@
   <span class="md-ellipsis">
     
   
-    Deo IV — Alarmiranje, SLO i odgovor na incidente
+    Part IV — Alerting, SLOs, and incident response
   
 
     
@@ -1038,7 +1038,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+    Chapter 13 — Alerting architecture: two paths, one destination channel
   
 
     
@@ -1066,7 +1066,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+    Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
   
 
     
@@ -1103,7 +1103,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+    Chapter 15 — SLOs and error-budget-based alerts
   
 
     
@@ -1121,7 +1121,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+    Chapter 15 — SLOs and error-budget-based alerts
   
 
     
@@ -1147,10 +1147,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#151-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#151-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        15.1 Pitanje na koje ovo poglavlje odgovara
+        15.1 The question this chapter answers
       
     </span>
   </a>
@@ -1158,22 +1158,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#152-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#152-how-it-was-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        15.2 Kako je to urađeno — praktičan pregled
+        15.2 How it was done — a practical overview
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="15.2 Kako je to urađeno — praktičan pregled">
+    <nav class="md-nav" aria-label="15.2 How it was done — a practical overview">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#multi-window-burn-rate-alarmi-osnovna-mehanika" class="md-nav__link">
+  <a href="#multi-window-burn-rate-alerts-the-basic-mechanics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Multi-window burn-rate alarmi — osnovna mehanika
+        Multi-window burn-rate alerts — the basic mechanics
       
     </span>
   </a>
@@ -1181,10 +1181,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#studija-slucaja-kad-sli-sam-po-sebi-laze" class="md-nav__link">
+  <a href="#case-study-when-the-sli-itself-is-lying" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Studija slučaja: kad SLI sam po sebi laže
+        Case study: when the SLI itself is lying
       
     </span>
   </a>
@@ -1192,10 +1192,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#kako-je-reagovano-disciplina-ne-refleks" class="md-nav__link">
+  <a href="#how-the-team-responded-discipline-not-reflex" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Kako je reagovano — disciplina, ne refleks
+        How the team responded — discipline, not reflex
       
     </span>
   </a>
@@ -1208,22 +1208,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#153-analiticki-deo-zasto-multi-window-nije-proizvoljna-komplikacija" class="md-nav__link">
+  <a href="#153-analytical-section-why-multi-window-isnt-an-arbitrary-complication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        15.3 Analitički deo — zašto multi-window nije proizvoljna komplikacija
+        15.3 Analytical section — why multi-window isn't an arbitrary complication
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="15.3 Analitički deo — zašto multi-window nije proizvoljna komplikacija">
+    <nav class="md-nav" aria-label="15.3 Analytical section — why multi-window isn&#39;t an arbitrary complication">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zvanicna-preporuka-zasto-jedan-prag-nikad-nije-dovoljan" class="md-nav__link">
+  <a href="#the-official-recommendation-why-a-single-threshold-is-never-enough" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zvanična preporuka: zašto jedan prag nikad nije dovoljan
+        The official recommendation: why a single threshold is never enough
       
     </span>
   </a>
@@ -1231,10 +1231,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#implementacija-prati-recept-sa-jednim-specificnim-dodatkom" class="md-nav__link">
+  <a href="#the-implementation-follows-the-recipe-with-one-specific-addition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Implementacija prati recept, sa jednim specifičnim dodatkom
+        The implementation follows the recipe, with one specific addition
       
     </span>
   </a>
@@ -1242,10 +1242,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cena-da-je-prva-reakcija-bila-spustanje-praga-kontrafakticki-scenario" class="md-nav__link">
+  <a href="#the-cost-of-a-first-reaction-that-lowers-the-threshold-a-counterfactual-scenario" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cena da je prva reakcija bila spuštanje praga: kontrafaktički scenario
+        The cost of a first reaction that lowers the threshold: a counterfactual scenario
       
     </span>
   </a>
@@ -1258,10 +1258,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#154-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#154-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        15.4 Skupljena pravila iz ovog poglavlja
+        15.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -1269,22 +1269,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#155-vezba-za-citaoca" class="md-nav__link">
+  <a href="#155-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        15.5 Vežba za čitaoca
+        15.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="15.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="15.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -1319,7 +1319,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 16 — Runbook-ovi: od alarma do rešenja
+    Chapter 16 — Runbooks: from alert to resolution
   
 
     
@@ -1347,7 +1347,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 17 — Postmortem kultura
+    Chapter 17 — Postmortem culture
   
 
     
@@ -1436,7 +1436,7 @@
   <span class="md-ellipsis">
     
   
-    Deo V — Domenske studije slučaja
+    Part V — Domain case studies
   
 
     
@@ -1464,7 +1464,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 18 — Baze podataka (upravljane, tipa RDS/Aurora)
+    Chapter 18 — Databases (managed, RDS/Aurora-type)
   
 
     
@@ -1492,7 +1492,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 19 — Samostalno upravljani distribuirani sistemi (klaster tipa Dremio)
+    Chapter 19 — Self-managed distributed systems (a Dremio-style cluster)
   
 
     
@@ -1520,7 +1520,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 20 — Autentikacija i IAM (sistem tipa Keycloak)
+    Chapter 20 — Authentication and IAM (a Keycloak-type system)
   
 
     
@@ -1548,7 +1548,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 21 — Hostovi i serveri kao mašine
+    Chapter 21 — Hosts and servers as machines
   
 
     
@@ -1576,7 +1576,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 22 — Mreža kao posebna ravan posmatranja
+    Chapter 22 — The network as its own observation plane
   
 
     
@@ -1604,7 +1604,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 23 — Batch/ETL flota zadataka
+    Chapter 23 — The batch/ETL job fleet
   
 
     
@@ -1632,7 +1632,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 24 — Posmatranje servisa koji nije naš (tipa Snowflake)
+    Chapter 24 — Observing a service that isn't ours (the Snowflake kind)
   
 
     
@@ -1721,7 +1721,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VI — Upravljanje, usklađenost i zrelost
+    Part VI — Governance, compliance, and maturity
   
 
     
@@ -1749,7 +1749,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 25 — Privatnost u telemetriji
+    Chapter 25 — Privacy in telemetry
   
 
     
@@ -1777,7 +1777,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 26 — Observability kao kontrola usklađenosti (SOC 2 primer)
+    Chapter 26 — Observability as a compliance control (a SOC 2 example)
   
 
     
@@ -1805,7 +1805,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 27 — Prioritizacija: cena, performanse, pouzdanost, bezbednost
+    Chapter 27 — Prioritization: cost, performance, reliability, security
   
 
     
@@ -1833,7 +1833,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 28 — AI-asistirana observability: agent koji čita telemetriju
+    Chapter 28 — AI-assisted observability: an agent that reads telemetry
   
 
     
@@ -1922,7 +1922,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VII — Sazrevanje programa
+    Part VII — The program matures
   
 
     
@@ -1950,7 +1950,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 29 — Kako izgleda fazni rollout u realnom vremenu
+    Chapter 29 — What a phased rollout looks like in real time
   
 
     
@@ -1978,7 +1978,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 30 — Merenje zrelosti sopstvenog programa
+    Chapter 30 — Measuring the maturity of your own program
   
 
     
@@ -2006,7 +2006,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 31 — Zaključak: skupljena pravila
+    Chapter 31 — Conclusion: rules collected
   
 
     
@@ -2095,7 +2095,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak A — PromQL/LogQL recepti
+    Appendix A — PromQL/LogQL recipes
   
 
     
@@ -2123,7 +2123,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak B — Rečnik pojmova
+    Appendix B — Glossary of terms
   
 
     
@@ -2151,7 +2151,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak C — Checklist za onboarding novog servisa na observability
+    Appendix C — Checklist for onboarding a new service onto observability
   
 
     
@@ -2179,7 +2179,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak D — Šablon runbook-a i šablon postmortema
+    Appendix D — Runbook template and postmortem template
   
 
     
@@ -2227,10 +2227,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#151-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#151-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        15.1 Pitanje na koje ovo poglavlje odgovara
+        15.1 The question this chapter answers
       
     </span>
   </a>
@@ -2238,22 +2238,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#152-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#152-how-it-was-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        15.2 Kako je to urađeno — praktičan pregled
+        15.2 How it was done — a practical overview
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="15.2 Kako je to urađeno — praktičan pregled">
+    <nav class="md-nav" aria-label="15.2 How it was done — a practical overview">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#multi-window-burn-rate-alarmi-osnovna-mehanika" class="md-nav__link">
+  <a href="#multi-window-burn-rate-alerts-the-basic-mechanics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Multi-window burn-rate alarmi — osnovna mehanika
+        Multi-window burn-rate alerts — the basic mechanics
       
     </span>
   </a>
@@ -2261,10 +2261,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#studija-slucaja-kad-sli-sam-po-sebi-laze" class="md-nav__link">
+  <a href="#case-study-when-the-sli-itself-is-lying" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Studija slučaja: kad SLI sam po sebi laže
+        Case study: when the SLI itself is lying
       
     </span>
   </a>
@@ -2272,10 +2272,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#kako-je-reagovano-disciplina-ne-refleks" class="md-nav__link">
+  <a href="#how-the-team-responded-discipline-not-reflex" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Kako je reagovano — disciplina, ne refleks
+        How the team responded — discipline, not reflex
       
     </span>
   </a>
@@ -2288,22 +2288,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#153-analiticki-deo-zasto-multi-window-nije-proizvoljna-komplikacija" class="md-nav__link">
+  <a href="#153-analytical-section-why-multi-window-isnt-an-arbitrary-complication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        15.3 Analitički deo — zašto multi-window nije proizvoljna komplikacija
+        15.3 Analytical section — why multi-window isn't an arbitrary complication
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="15.3 Analitički deo — zašto multi-window nije proizvoljna komplikacija">
+    <nav class="md-nav" aria-label="15.3 Analytical section — why multi-window isn&#39;t an arbitrary complication">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zvanicna-preporuka-zasto-jedan-prag-nikad-nije-dovoljan" class="md-nav__link">
+  <a href="#the-official-recommendation-why-a-single-threshold-is-never-enough" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zvanična preporuka: zašto jedan prag nikad nije dovoljan
+        The official recommendation: why a single threshold is never enough
       
     </span>
   </a>
@@ -2311,10 +2311,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#implementacija-prati-recept-sa-jednim-specificnim-dodatkom" class="md-nav__link">
+  <a href="#the-implementation-follows-the-recipe-with-one-specific-addition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Implementacija prati recept, sa jednim specifičnim dodatkom
+        The implementation follows the recipe, with one specific addition
       
     </span>
   </a>
@@ -2322,10 +2322,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cena-da-je-prva-reakcija-bila-spustanje-praga-kontrafakticki-scenario" class="md-nav__link">
+  <a href="#the-cost-of-a-first-reaction-that-lowers-the-threshold-a-counterfactual-scenario" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cena da je prva reakcija bila spuštanje praga: kontrafaktički scenario
+        The cost of a first reaction that lowers the threshold: a counterfactual scenario
       
     </span>
   </a>
@@ -2338,10 +2338,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#154-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#154-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        15.4 Skupljena pravila iz ovog poglavlja
+        15.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -2349,22 +2349,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#155-vezba-za-citaoca" class="md-nav__link">
+  <a href="#155-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        15.5 Vežba za čitaoca
+        15.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="15.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="15.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -2393,7 +2393,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-15-slo-budzet-greske.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-15-slo-budzet-greske.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2401,158 +2401,177 @@
   
 
 
-<h1 id="poglavlje-15-slo-i-alarmi-zasnovani-na-budzetu-gresaka">Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka</h1>
-<p>Merač goriva u automobilu ne razlikuje dva potpuno različita scenarija koji
-oba izgledaju isto na tabli: gorivo koje curi kroz veliku rupu u rezervoaru i
-prazni ceo tank za sat vremena, i gorivo koje se troši normalnom, sporom
-brzinom i potraje nedelju dana. Oba scenarija u nekom trenutku pale isto
-"malo goriva" svetlo. Ali hitnost reakcije je potpuno različita — jedno je
-razlog da se odmah stane pored puta, drugo je razlog da se sutra svrati do
-pumpe. Merač koji samo gleda <strong>trenutni nivo</strong> ne može tu razliku da vidi;
-razliku vidi samo onaj ko posmatra <strong>brzinu</strong> kojom nivo pada.</p>
-<h2 id="151-pitanje-na-koje-ovo-poglavlje-odgovara">15.1 Pitanje na koje ovo poglavlje odgovara</h2>
-<p>Prag zasnovan na trenutnoj vrednosti ("stopa grešaka je iznad 1%") ne
-razlikuje naglo, ozbiljno pogoršanje od blagog, hroničnog curenja koje bi
-za mesec dana potrošilo isti budžet grešaka. Ovo poglavlje odgovara na
-pitanje kako se gradi alarm koji <strong>razlikuje</strong> ta dva scenarija — i, kroz
-stvarnu studiju slučaja, pokazuje šta se dešava kad ulazni signal za taj
-alarm sam po sebi nije ono što tvrdi da jeste.</p>
-<h2 id="152-kako-je-to-uraeno-praktican-pregled">15.2 Kako je to urađeno — praktičan pregled</h2>
-<h3 id="multi-window-burn-rate-alarmi-osnovna-mehanika">Multi-window burn-rate alarmi — osnovna mehanika</h3>
-<p>SLO (service-level objective) definiše koliki procenat zahteva sme da
-"promaši" u definisanom periodu, a da usluga i dalje broji kao "dovoljno
-dobra" — recimo, 99.9% dostupnosti mesečno znači budžet od 0.1% neuspešnih
-zahteva. <strong>Burn rate</strong> je brzina kojom se taj budžet troši u odnosu na
-normalnu, održivu brzinu: burn rate 1× znači "trošimo budžet tačno onom
-brzinom koja bi ga potrošila do kraja perioda, ni brže ni sporije"; burn
-rate 10× znači "trošimo ga deset puta brže — na ovoj brzini, budžet bi
-nestao za desetinu perioda".</p>
-<p>Implementacija koju knjiga prati koristi <strong>tri nivoa</strong> burn-rate alarma,
-svaki sa <strong>dva vremenska prozora</strong> istovremeno — dug prozor koji meri da li
-je budžet zaista značajno potrošen, i kratak prozor koji potvrđuje da se
-trošenje <strong>trenutno</strong> dešava, ne da se dogodilo pa prestalo:</p>
+<h1 id="chapter-15-slos-and-error-budget-based-alerts">Chapter 15 — SLOs and error-budget-based alerts</h1>
+<p>A car's fuel gauge doesn't distinguish between two entirely different
+scenarios that look identical on the dial: fuel leaking out through a large
+hole in the tank and draining the whole tank within an hour, and fuel being
+consumed at a normal, slow rate that lasts a week. Both scenarios eventually
+light up the same "low fuel" warning. But the urgency of the response is
+completely different — one is a reason to pull over immediately, the other
+is a reason to stop by the gas station tomorrow. A gauge that only looks at
+the <strong>current level</strong> can't see that difference; only someone watching the
+<strong>rate</strong> at which the level is dropping can see it.</p>
+<h2 id="151-the-question-this-chapter-answers">15.1 The question this chapter answers</h2>
+<p>A threshold based on a current value ("error rate is above 1%") doesn't
+distinguish a sudden, serious degradation from a mild, chronic leak that
+would consume the same error budget over the course of a month. This
+chapter answers the question of how to build an alert that
+<strong>distinguishes</strong> between those two scenarios — and, through a real case
+study, shows what happens when the input signal for that alert isn't,
+itself, what it claims to be.</p>
+<h2 id="152-how-it-was-done-a-practical-overview">15.2 How it was done — a practical overview</h2>
+<h3 id="multi-window-burn-rate-alerts-the-basic-mechanics">Multi-window burn-rate alerts — the basic mechanics</h3>
+<p>An SLO (service-level objective) defines what percentage of requests are
+allowed to "miss" within a defined period while the service still counts
+as "good enough" — for instance, 99.9% monthly availability means a budget
+of 0.1% failed requests. <strong>Burn rate</strong> is the speed at which that budget
+is being consumed relative to a normal, sustainable pace: a burn rate of
+1× means "we're spending the budget at exactly the rate that would
+exhaust it by the end of the period, no faster and no slower"; a burn rate
+of 10× means "we're spending it ten times faster — at this rate, the
+budget would run out in a tenth of the period."</p>
+<p>The implementation this book follows uses <strong>three tiers</strong> of burn-rate
+alert, each with <strong>two time windows</strong> at once — a long window that
+measures whether the budget has actually been significantly consumed, and
+a short window that confirms the consumption is happening <strong>right now</strong>,
+not that it happened and then stopped:</p>
 <ul>
-<li><strong>Brzo trošenje</strong> (page, hitno): dug prozor 1 sat, kratak prozor 5 minuta,
-  burn rate 14.4× — ozbiljan, tekući problem koji zaslužuje trenutnu pažnju.</li>
-<li><strong>Srednje trošenje</strong> (page): dug prozor 6 sati, kratak prozor 30 minuta,
+<li><strong>Fast burn</strong> (page, urgent): long window 1 hour, short window 5
+  minutes, burn rate 14.4× — a serious, ongoing problem that deserves
+  immediate attention.</li>
+<li><strong>Medium burn</strong> (page): long window 6 hours, short window 30 minutes,
   burn rate 6×.</li>
-<li><strong>Sporo trošenje</strong> (tiket, ne hitno): dug prozor 3 dana, kratak prozor 6
-  sati, burn rate 1× — hronično curenje koje zaslužuje pažnju, ali ne budi
-  nikoga usred noći.</li>
+<li><strong>Slow burn</strong> (ticket, not urgent): long window 3 days, short window 6
+  hours, burn rate 1× — a chronic leak that deserves attention, but
+  doesn't wake anyone in the middle of the night.</li>
 </ul>
-<p>Dva prozora rade zajedno namerno: sam dugi prozor bi, kad se problem reši,
-nastavio da pokazuje povišen burn rate satima posle stvarnog oporavka (jer
-prozor od 6 sati "pamti" grešku iz prethodnog sata), izazivajući alarm koji
-kasni u gašenju baš koliko i u paljenju. Kratak prozor rešava to — alarm se
-gasi čim kratak prozor pokaže da trošenje budžeta više nije aktivno, čak i
-dok dugi prozor još uvek "pamti" ranije trošenje.</p>
-<h3 id="studija-slucaja-kad-sli-sam-po-sebi-laze">Studija slučaja: kad SLI sam po sebi laže</h3>
-<p>Ovi alarmi su, u implementaciji koju knjiga prati, počeli da se okidaju
-ponavljano — srednji i spor nivo, više puta u toku dana. Prva pretpostavka
-bi bila da servis zaista degradira. <strong>Servis je bio potpuno zdrav.</strong>
-Autoritativan signal (broj stvarnih neuspešnih odgovora izmeren na nivou
-load balancer-a, van same aplikacije) pokazivao je svega <strong>sedam</strong> neuspešnih
-zahteva za dvadeset četiri sata — praktično 100% dostupnost. Sam SLI (signal
-na kome je alarm zasnovan), izveden iz histograma unutar aplikacije, tvrdio
-je nešto sasvim drugo: preko milion "neuspešnih" zahteva na jednom endpoint-u,
-i preko šesnaest miliona ukupnih zahteva na taj isti endpoint u istom
-periodu — brzina saobraćaja koja je fizički nemoguća za taj broj instanci.</p>
-<p><strong>Uzrok:</strong> servis se horizontalno auto-skalira, dodaje i uklanja instance
-tokom dana zbog rasporeda saobraćaja. Svaka instanca nosi sopstveni
-identifikator u svojoj seriji histograma. Upit koji sabira "porast" preko
-vremenskog prozora, primenjen preko <strong>svih</strong> serija odjednom, ekstrapolira
-svaku pojedinačnu seriju do ivica prozora — a kad desetine kratkotrajnih
-instanci nastaju i nestaju tokom dana, taj zbir ekstrapolacija <strong>masivno
-precenjuje</strong> stvaran broj. Potpis greške je bio nedvosmislen u samim
-podacima: broj grešaka po intervalu od pola sata je bio identičan, do
-poslednje cifre, <strong>dvanaest uzastopnih intervala zaredom</strong> — stvaran
-saobraćaj nikad ne proizvodi identičan broj dvanaest puta zaredom; to je
-artefakt ekstrapolacije, ne merenje.</p>
-<h3 id="kako-je-reagovano-disciplina-ne-refleks">Kako je reagovano — disciplina, ne refleks</h3>
-<p>Prva reakcija <strong>nije</strong> bila spustiti prag alarma da prestane da se oglašava
-— to bi sakrilo simptom bez razumevanja uzroka i ostavilo pokvaren signal da
-dalje živi neotkriven. Umesto toga: pravilo je <strong>pauzirano</strong> eksplicitno
-(ostaje vidljivo u konfiguraciji kao pauzirano, ne obrisano, i ne
-neprimećeno tiho), stvaran broj grešaka je potvrđen protiv nezavisnog,
-autoritativnog izvora (load balancer, ne sopstveni histogram aplikacije), i
-tek onda je odlučeno kako dalje: SLI treba <strong>ponovo izgraditi</strong> na signalu
-koji je otporan na promenljivost broja instanci — bilo korišćenjem istog
-autoritativnog spoljašnjeg brojača kao izvora, bilo agregiranjem histograma
-po stabilnoj labeli pre računanja umesto po nestabilnom identifikatoru
-instance.</p>
-<p>Ovako izgleda mehanika dva prozora zajedno tokom kratkotrajnog incidenta —
-kratak prozor skače odmah i pada odmah, dug prozor raste sporije i polako
-se "vraća", što je razlog zašto se alarm gasi brzo posle stvarnog oporavka
-umesto da satima kasni:</p>
-<p><img alt="Kratak prozor (5 min) trenutno reaguje i trenutno se gasi; dug prozor (1 h) sporije raste i sporije opada — kombinacija daje i brzo otkrivanje i brzo gašenje alarma." src="../../diagrams/dashboard-burnrate.png" width="95%" /></p>
-<h2 id="153-analiticki-deo-zasto-multi-window-nije-proizvoljna-komplikacija">15.3 Analitički deo — zašto multi-window nije proizvoljna komplikacija</h2>
-<h3 id="zvanicna-preporuka-zasto-jedan-prag-nikad-nije-dovoljan">Zvanična preporuka: zašto jedan prag nikad nije dovoljan</h3>
-<p>Zvanična SRE praksa eksplicitno objašnjava zašto jednostavan prag na jednom
-prozoru ne može istovremeno postići dobru preciznost, dobar recall, brzo
-otkrivanje <strong>i</strong> brzo gašenje alarma. Prozor od jednog sata otkriva ozbiljan
-ispad brzo, ali nastavlja da se oglašava sat vremena posle stvarnog
-oporavka — što zbunjuje i troši poverenje u alarm. Rešenje nije jedan
-"pravi" prozor, nego <strong>par</strong> prozora po nivou hitnosti, sa kratkim prozorom
-čija je preporučena dužina otprilike jedna dvanaestina dugog — dovoljno kratak
-da potvrdi da je trošenje budžeta <strong>trenutno</strong> aktivno, dovoljno dugačak da
-ne reaguje na šum od par sekundi.</p>
-<h3 id="implementacija-prati-recept-sa-jednim-specificnim-dodatkom">Implementacija prati recept, sa jednim specifičnim dodatkom</h3>
-<p>Tri nivoa (brzo/srednje/sporo) i njihovi pragovi prate zvaničan obrazac
-gotovo bukvalno — ovo je, slično Poglavlju 10, slučaj gde nema potrebe za
-izmišljenom pričom o odstupanju. Ono što recept retko eksplicitno pokriva je
-<strong>pitanje pouzdanosti samog SLI-ja</strong> — recept pretpostavlja da je brojanje
-uspeh/neuspeh signala pouzdano, i fokusira se na to kako reagovati na
-promenu tog broja. Implementacija koju knjiga prati je, kroz sopstveno
-iskustvo, dodala korak koji recept ne razrađuje: <strong>pre nego što se veruje
-ijednom pragu, proveri da li apsolutne brojke iza odnosa uopšte imaju
-smisla</strong> — šesnaest miliona zahteva na jedan endpoint za dan je brojka koju
-bi bilo ko sa poznavanjem kapaciteta sistema prepoznao kao nemoguću, da je
-neko pogledao pre nego što je poverovao izvedenom procentu.</p>
-<h3 id="cena-da-je-prva-reakcija-bila-spustanje-praga-kontrafakticki-scenario">Cena da je prva reakcija bila spuštanje praga: kontrafaktički scenario</h3>
-<p>Vredi konkretno odigrati alternativu. Da je tim, umesto pauziranja pravila i
-istrage uzroka, jednostavno podigao prag da alarm prestane da se oglašava
-(recimo, udvostručio granicu burn rate-a), rezultat bi izgledao kao rešen
-problem — kanal bi utihnuo. Ali stvaran, pokvaren SLI bi ostao netaknut, i
-sistem bi izgubio sposobnost da otkrije <strong>pravu</strong> degradaciju istog
-servisa, jer bi prag sada bio podešen da toleriše lažni šum umesto da meri
-stvarno stanje. Ovo je isti obrazac viđen već u Poglavlju 11 kod redukcije
-kardinalnosti primenjene na pogrešno mesto: mera koja izgleda kao rešenje,
-a zapravo uklanja sposobnost da se problem uopšte primeti kad se sledeći put
-zaista dogodi.</p>
-<p>Vratimo se na merač goriva s početka poglavlja. Svetlo "malo goriva" samo po
-sebi ne govori ništa o hitnosti — potrebno je znati <strong>brzinu</strong> pada da bi se
-znalo da li stati odmah ili sutra svratiti do pumpe. Ali čak i najbolji
-merač brzine pada je beskoristan ako je sam senzor nivoa goriva neispravan i
-javlja nemoguće brojke. <strong>Burn-rate alarm rešava pitanje hitnosti — ali
-rešava ga tek pošto je neko proverio da signal koji se meri zaista meri ono
-što tvrdi da meri.</strong></p>
-<h2 id="154-skupljena-pravila-iz-ovog-poglavlja">15.4 Skupljena pravila iz ovog poglavlja</h2>
+<p>The two windows work together deliberately: the long window alone would,
+once the problem is fixed, keep showing an elevated burn rate for hours
+after the actual recovery (because a 6-hour window "remembers" the error
+from the previous hour), producing an alert that's as slow to clear as it
+was to fire. The short window fixes that — the alert clears as soon as
+the short window shows that budget consumption is no longer active, even
+while the long window still "remembers" the earlier consumption.</p>
+<h3 id="case-study-when-the-sli-itself-is-lying">Case study: when the SLI itself is lying</h3>
+<p>In the implementation this book follows, these alerts started firing
+repeatedly — the medium and slow tiers, multiple times a day. The first
+assumption would be that the service was genuinely degrading. <strong>The
+service was completely healthy.</strong> The authoritative signal (the count of
+actual failed responses measured at the load balancer level, outside the
+application itself) showed only <strong>seven</strong> failed requests over
+twenty-four hours — practically 100% availability. The SLI itself (the
+signal the alert was based on), derived from a histogram inside the
+application, claimed something entirely different: over a million
+"failed" requests on a single endpoint, and over sixteen million total
+requests to that same endpoint in the same period — a traffic rate that
+was physically impossible for that number of instances.</p>
+<p><strong>The cause:</strong> the service auto-scales horizontally, adding and removing
+instances throughout the day according to traffic patterns. Each instance
+carries its own identifier in its histogram series. A query that sums
+"increase" over a time window, applied across <strong>all</strong> series at once,
+extrapolates each individual series to the edges of the window — and when
+dozens of short-lived instances appear and disappear over the course of a
+day, that sum of extrapolations <strong>massively overestimates</strong> the real
+count. The signature of the bug was unambiguous right in the data: the
+error count per half-hour interval was identical, down to the last digit,
+for <strong>twelve consecutive intervals in a row</strong> — real traffic never
+produces an identical count twelve times in a row; that's an artifact of
+extrapolation, not a measurement.</p>
+<h3 id="how-the-team-responded-discipline-not-reflex">How the team responded — discipline, not reflex</h3>
+<p>The first reaction <strong>was not</strong> to lower the alert threshold to make it
+stop firing — that would have hidden the symptom without understanding
+the cause, and left a broken signal alive and undetected. Instead: the
+rule was <strong>paused</strong> explicitly (it stays visible in the configuration as
+paused, not deleted, and not silently unnoticed), the real error count
+was verified against an independent, authoritative source (the load
+balancer, not the application's own histogram), and only then was it
+decided how to proceed: the SLI needed to be <strong>rebuilt</strong> on a signal
+resistant to fluctuations in instance count — either by using that same
+authoritative external counter as the source, or by aggregating the
+histogram on a stable label before computing, instead of on the unstable
+instance identifier.</p>
+<p>Here's what the mechanics of the two windows together look like during a
+short-lived incident — the short window spikes instantly and drops
+instantly, the long window rises more slowly and slowly "comes back
+down," which is why the alert clears quickly after a real recovery
+instead of lagging behind for hours:</p>
+<p><img alt="The short window (5 min) reacts instantly and clears instantly; the long window (1 h) rises more slowly and falls more slowly — the combination delivers both fast detection and fast alert clearing." src="../../diagrams/dashboard-burnrate.png" width="95%" /></p>
+<h2 id="153-analytical-section-why-multi-window-isnt-an-arbitrary-complication">15.3 Analytical section — why multi-window isn't an arbitrary complication</h2>
+<h3 id="the-official-recommendation-why-a-single-threshold-is-never-enough">The official recommendation: why a single threshold is never enough</h3>
+<p>Official SRE practice explicitly explains why a simple single-window
+threshold can't simultaneously achieve good precision, good recall, fast
+detection, <strong>and</strong> fast alert clearing. A one-hour window detects a
+serious outage quickly, but keeps firing for an hour after the actual
+recovery — which confuses people and erodes trust in the alert. The
+solution isn't one "correct" window, but a <strong>pair</strong> of windows per
+urgency tier, with the short window's recommended length at roughly
+one-twelfth of the long window — short enough to confirm that budget
+consumption is <strong>currently</strong> active, long enough not to react to a few
+seconds of noise.</p>
+<h3 id="the-implementation-follows-the-recipe-with-one-specific-addition">The implementation follows the recipe, with one specific addition</h3>
+<p>The three tiers (fast/medium/slow) and their thresholds follow the
+official pattern almost literally — this is, similarly to Chapter 10, a
+case where there's no need for an invented story of deviation. What the
+recipe rarely covers explicitly is <strong>the question of the SLI's own
+reliability</strong> — the recipe assumes that counting the success/failure
+signal is reliable, and focuses on how to react to changes in that count.
+The implementation this book follows, through its own experience, added a
+step the recipe doesn't spell out: <strong>before trusting any threshold, check
+whether the absolute numbers behind the ratio make sense at all</strong> —
+sixteen million requests to a single endpoint in a day is a number that
+anyone familiar with the system's capacity would recognize as impossible,
+had someone looked at it before believing the derived percentage.</p>
+<h3 id="the-cost-of-a-first-reaction-that-lowers-the-threshold-a-counterfactual-scenario">The cost of a first reaction that lowers the threshold: a counterfactual scenario</h3>
+<p>It's worth playing out the alternative concretely. Had the team, instead
+of pausing the rule and investigating the cause, simply raised the
+threshold to make the alert stop firing (say, doubled the burn-rate
+cutoff), the result would have looked like a solved problem — the channel
+would have gone quiet. But the actual, broken SLI would have stayed
+untouched, and the system would have lost the ability to detect <strong>real</strong>
+degradation of that same service, because the threshold would now be
+tuned to tolerate false noise instead of measuring the real state. This
+is the same pattern already seen in Chapter 11, with cardinality
+reduction applied in the wrong place: a measure that looks like a fix but
+actually removes the ability to notice the problem at all the next time
+it genuinely happens.</p>
+<p>Let's return to the fuel gauge from the start of the chapter. The "low
+fuel" light on its own says nothing about urgency — you need to know the
+<strong>rate</strong> of the drop to know whether to stop immediately or swing by the
+pump tomorrow. But even the best rate-of-drop gauge is useless if the
+fuel-level sensor itself is broken and reporting impossible numbers.
+<strong>A burn-rate alert solves the question of urgency — but it only solves
+it once someone has verified that the signal being measured actually
+measures what it claims to measure.</strong></p>
+<h2 id="154-rules-collected-from-this-chapter">15.4 Rules collected from this chapter</h2>
 <ul>
-<li>Koristi multi-window burn-rate alarme umesto jednog praga na jednom
-  prozoru — par dugog i kratkog prozora rešava i brzo otkrivanje i brzo
-  gašenje, što nijedan pojedinačan prozor ne može sam.</li>
-<li>Postavi kratak prozor na otprilike jednu dvanaestinu dugog — dovoljno
-  kratak da potvrdi trenutno trošenje budžeta, dovoljno dugačak da ne
-  reaguje na šum.</li>
-<li>Pre nego što poveruješ izvedenom procentu ili odnosu, proveri apsolutne
-  brojke iza njega protiv nezavisnog, autoritativnog izvora — odnos može
-  izgledati verovatno dok su oba njegova člana besmislena.</li>
-<li>Kad alarm počne da se oglašava neočekivano često, prva reakcija nije
-  spuštanje osetljivosti — prva reakcija je provera da li signal na kome je
-  alarm zasnovan zaista meri ono što tvrdi da meri.</li>
-<li>Izbegavaj rate/increase upite preko labela sa visokim obrtom (identifikator
-  instance koja se stalno menja) u SLI-ju — agregiraj ih na stabilnu labelu
-  pre računanja ili koristi recording rule otporan na taj obrt.</li>
+<li>Use multi-window burn-rate alerts instead of a single threshold on a
+  single window — a pair of long and short windows solves both fast
+  detection and fast clearing, which no single window can do on its own.</li>
+<li>Set the short window to roughly one-twelfth of the long window — short
+  enough to confirm current budget consumption, long enough not to react
+  to noise.</li>
+<li>Before you trust a derived percentage or ratio, check the absolute
+  numbers behind it against an independent, authoritative source — a
+  ratio can look plausible while both of its terms are nonsensical.</li>
+<li>When an alert starts firing unexpectedly often, the first reaction
+  isn't lowering its sensitivity — the first reaction is checking whether
+  the signal the alert is based on actually measures what it claims to
+  measure.</li>
+<li>Avoid rate/increase queries across high-churn labels (an instance
+  identifier that keeps changing) in an SLI — aggregate them onto a
+  stable label before computing, or use a recording rule that's resistant
+  to that churn.</li>
 </ul>
-<h2 id="155-vezba-za-citaoca">15.5 Vežba za čitaoca</h2>
-<p>Pronađi SLO alarm u svom sistemu i proveri: da li ima samo jedan prozor, ili
-par (dug + kratak)? Zatim uzmi apsolutne brojke iza njegovog trenutnog
-odnosa (brojilac i imenilac, ne sam procenat) i uporedi ih sa nezavisnim
-izvorom ako postoji. Da li se slažu? Ako nemaš nezavisan izvor za poređenje
-— to je praznina koju ovo poglavlje traži da primetiš pre nego što ti
-alarm jednog dana kaže nešto što nije istina.</p>
+<h2 id="155-exercise-for-the-reader">15.5 Exercise for the reader</h2>
+<p>Find an SLO alert in your own system and check: does it have only one
+window, or a pair (long + short)? Then take the absolute numbers behind
+its current ratio (numerator and denominator, not just the percentage)
+and compare them against an independent source, if one exists. Do they
+agree? If you don't have an independent source to compare against — that
+is the gap this chapter is asking you to notice, before your alert one
+day tells you something that isn't true.</p>
 <hr />
-<h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
+<h3 id="sources-used-in-the-analytical-section">Sources used in the analytical section</h3>
 <ul>
 <li><a href="https://sre.google/workbook/alerting-on-slos/">Alerting on SLOs — Google SRE Workbook</a></li>
 <li><a href="https://oneuptime.com/blog/post/2026-01-30-sre-burn-rate-alerts/view">How to Build Burn Rate Alerts — OneUptime</a></li>
@@ -2579,7 +2598,7 @@ alarm jednog dana kaže nešto što nije istina.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="26. avgust 2026. 16:25:19 UTC">26. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:10:00 UTC">August 26, 2026</span>
   </span>
 
     

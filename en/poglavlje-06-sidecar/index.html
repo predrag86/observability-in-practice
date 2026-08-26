@@ -31,7 +31,7 @@
     
     
       
-        <title>Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac - Observability in Practice</title>
+        <title>Chapter 6 — Containerized/batch workloads: the sidecar pattern - Observability in Practice</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#poglavlje-6-kontejnerskabatch-radna-opterecenja-sidecar-obrazac" class="md-skip">
+        <a href="#chapter-6-containerizedbatch-workloads-the-sidecar-pattern" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+              Chapter 6 — Containerized/batch workloads: the sidecar pattern
             
           </span>
         </div>
@@ -580,7 +580,7 @@
   <span class="md-ellipsis">
     
   
-    Deo II — Arhitektura prikupljanja telemetrije
+    Part II — Telemetry-collection architecture
   
 
     
@@ -608,7 +608,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+    Chapter 4 — The gateway pattern: a central point for telemetry
   
 
     
@@ -636,7 +636,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+    Chapter 5 — Instrumenting the application: two strategies
   
 
     
@@ -673,7 +673,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+    Chapter 6 — Containerized/batch workloads: the sidecar pattern
   
 
     
@@ -691,7 +691,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+    Chapter 6 — Containerized/batch workloads: the sidecar pattern
   
 
     
@@ -717,10 +717,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#61-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#61-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.1 Pitanje na koje ovo poglavlje odgovara
+        6.1 The question this chapter answers
       
     </span>
   </a>
@@ -728,10 +728,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#62-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#62-how-it-was-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.2 Kako je to urađeno — praktičan pregled
+        6.2 How it was done — a practical overview
       
     </span>
   </a>
@@ -739,22 +739,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#63-analiticki-deo-sidecar-naspram-agenta-i-granica-gde-sidecar-prestaje-da-se-isplati" class="md-nav__link">
+  <a href="#63-analytical-section-sidecar-versus-agent-and-the-boundary-where-sidecar-stops-paying-off" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.3 Analitički deo — sidecar naspram agenta, i granica gde sidecar prestaje da se isplati
+        6.3 Analytical section — sidecar versus agent, and the boundary where sidecar stops paying off
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6.3 Analitički deo — sidecar naspram agenta, i granica gde sidecar prestaje da se isplati">
+    <nav class="md-nav" aria-label="6.3 Analytical section — sidecar versus agent, and the boundary where sidecar stops paying off">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zasto-sidecar-a-ne-node-agent-za-ovu-klasu-opterecenja" class="md-nav__link">
+  <a href="#why-sidecar-not-node-agent-for-this-class-of-workload" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto sidecar, a ne node-agent, za ovu klasu opterećenja
+        Why sidecar, not node-agent, for this class of workload
       
     </span>
   </a>
@@ -762,10 +762,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#granica-gde-sidecar-prestaje-da-bude-dobar-izbor" class="md-nav__link">
+  <a href="#the-boundary-where-sidecar-stops-being-the-right-choice" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Granica gde sidecar prestaje da bude dobar izbor
+        The boundary where sidecar stops being the right choice
       
     </span>
   </a>
@@ -778,10 +778,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#64-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#64-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.4 Skupljena pravila iz ovog poglavlja
+        6.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -789,22 +789,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#65-vezba-za-citaoca" class="md-nav__link">
+  <a href="#65-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.5 Vežba za čitaoca
+        6.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="6.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -839,7 +839,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 7 — Kada ne možeš da instrumentiraš izvor: pull-obrasci
+    Chapter 7 — When you can't instrument the source: pull-based patterns
   
 
     
@@ -867,7 +867,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 8 — Frontend / RUM observability
+    Chapter 8 — Frontend / RUM observability
   
 
     
@@ -895,7 +895,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 9 — Sintetičko (black-box) praćenje
+    Chapter 9 — Synthetic (Black-Box) Monitoring
   
 
     
@@ -984,7 +984,7 @@
   <span class="md-ellipsis">
     
   
-    Deo III — Obrada, kardinalnost i troškovi
+    Part III — Processing, cardinality, and cost
   
 
     
@@ -1012,7 +1012,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+    Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
   
 
     
@@ -1040,7 +1040,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 11 — Kardinalnost i cena: kako sistem prirodno naraste iznad budžeta
+    Chapter 11 — Cardinality and cost: how a system naturally outgrows its budget
   
 
     
@@ -1068,7 +1068,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+    Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
   
 
     
@@ -1157,7 +1157,7 @@
   <span class="md-ellipsis">
     
   
-    Deo IV — Alarmiranje, SLO i odgovor na incidente
+    Part IV — Alerting, SLOs, and incident response
   
 
     
@@ -1185,7 +1185,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+    Chapter 13 — Alerting architecture: two paths, one destination channel
   
 
     
@@ -1213,7 +1213,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+    Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
   
 
     
@@ -1241,7 +1241,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+    Chapter 15 — SLOs and error-budget-based alerts
   
 
     
@@ -1269,7 +1269,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 16 — Runbook-ovi: od alarma do rešenja
+    Chapter 16 — Runbooks: from alert to resolution
   
 
     
@@ -1297,7 +1297,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 17 — Postmortem kultura
+    Chapter 17 — Postmortem culture
   
 
     
@@ -1386,7 +1386,7 @@
   <span class="md-ellipsis">
     
   
-    Deo V — Domenske studije slučaja
+    Part V — Domain case studies
   
 
     
@@ -1414,7 +1414,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 18 — Baze podataka (upravljane, tipa RDS/Aurora)
+    Chapter 18 — Databases (managed, RDS/Aurora-type)
   
 
     
@@ -1442,7 +1442,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 19 — Samostalno upravljani distribuirani sistemi (klaster tipa Dremio)
+    Chapter 19 — Self-managed distributed systems (a Dremio-style cluster)
   
 
     
@@ -1470,7 +1470,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 20 — Autentikacija i IAM (sistem tipa Keycloak)
+    Chapter 20 — Authentication and IAM (a Keycloak-type system)
   
 
     
@@ -1498,7 +1498,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 21 — Hostovi i serveri kao mašine
+    Chapter 21 — Hosts and servers as machines
   
 
     
@@ -1526,7 +1526,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 22 — Mreža kao posebna ravan posmatranja
+    Chapter 22 — The network as its own observation plane
   
 
     
@@ -1554,7 +1554,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 23 — Batch/ETL flota zadataka
+    Chapter 23 — The batch/ETL job fleet
   
 
     
@@ -1582,7 +1582,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 24 — Posmatranje servisa koji nije naš (tipa Snowflake)
+    Chapter 24 — Observing a service that isn't ours (the Snowflake kind)
   
 
     
@@ -1671,7 +1671,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VI — Upravljanje, usklađenost i zrelost
+    Part VI — Governance, compliance, and maturity
   
 
     
@@ -1699,7 +1699,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 25 — Privatnost u telemetriji
+    Chapter 25 — Privacy in telemetry
   
 
     
@@ -1727,7 +1727,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 26 — Observability kao kontrola usklađenosti (SOC 2 primer)
+    Chapter 26 — Observability as a compliance control (a SOC 2 example)
   
 
     
@@ -1755,7 +1755,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 27 — Prioritizacija: cena, performanse, pouzdanost, bezbednost
+    Chapter 27 — Prioritization: cost, performance, reliability, security
   
 
     
@@ -1783,7 +1783,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 28 — AI-asistirana observability: agent koji čita telemetriju
+    Chapter 28 — AI-assisted observability: an agent that reads telemetry
   
 
     
@@ -1872,7 +1872,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VII — Sazrevanje programa
+    Part VII — The program matures
   
 
     
@@ -1900,7 +1900,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 29 — Kako izgleda fazni rollout u realnom vremenu
+    Chapter 29 — What a phased rollout looks like in real time
   
 
     
@@ -1928,7 +1928,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 30 — Merenje zrelosti sopstvenog programa
+    Chapter 30 — Measuring the maturity of your own program
   
 
     
@@ -1956,7 +1956,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 31 — Zaključak: skupljena pravila
+    Chapter 31 — Conclusion: rules collected
   
 
     
@@ -2045,7 +2045,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak A — PromQL/LogQL recepti
+    Appendix A — PromQL/LogQL recipes
   
 
     
@@ -2073,7 +2073,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak B — Rečnik pojmova
+    Appendix B — Glossary of terms
   
 
     
@@ -2101,7 +2101,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak C — Checklist za onboarding novog servisa na observability
+    Appendix C — Checklist for onboarding a new service onto observability
   
 
     
@@ -2129,7 +2129,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak D — Šablon runbook-a i šablon postmortema
+    Appendix D — Runbook template and postmortem template
   
 
     
@@ -2177,10 +2177,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#61-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#61-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.1 Pitanje na koje ovo poglavlje odgovara
+        6.1 The question this chapter answers
       
     </span>
   </a>
@@ -2188,10 +2188,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#62-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#62-how-it-was-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.2 Kako je to urađeno — praktičan pregled
+        6.2 How it was done — a practical overview
       
     </span>
   </a>
@@ -2199,22 +2199,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#63-analiticki-deo-sidecar-naspram-agenta-i-granica-gde-sidecar-prestaje-da-se-isplati" class="md-nav__link">
+  <a href="#63-analytical-section-sidecar-versus-agent-and-the-boundary-where-sidecar-stops-paying-off" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.3 Analitički deo — sidecar naspram agenta, i granica gde sidecar prestaje da se isplati
+        6.3 Analytical section — sidecar versus agent, and the boundary where sidecar stops paying off
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6.3 Analitički deo — sidecar naspram agenta, i granica gde sidecar prestaje da se isplati">
+    <nav class="md-nav" aria-label="6.3 Analytical section — sidecar versus agent, and the boundary where sidecar stops paying off">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zasto-sidecar-a-ne-node-agent-za-ovu-klasu-opterecenja" class="md-nav__link">
+  <a href="#why-sidecar-not-node-agent-for-this-class-of-workload" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto sidecar, a ne node-agent, za ovu klasu opterećenja
+        Why sidecar, not node-agent, for this class of workload
       
     </span>
   </a>
@@ -2222,10 +2222,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#granica-gde-sidecar-prestaje-da-bude-dobar-izbor" class="md-nav__link">
+  <a href="#the-boundary-where-sidecar-stops-being-the-right-choice" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Granica gde sidecar prestaje da bude dobar izbor
+        The boundary where sidecar stops being the right choice
       
     </span>
   </a>
@@ -2238,10 +2238,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#64-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#64-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.4 Skupljena pravila iz ovog poglavlja
+        6.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -2249,22 +2249,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#65-vezba-za-citaoca" class="md-nav__link">
+  <a href="#65-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.5 Vežba za čitaoca
+        6.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="6.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -2293,7 +2293,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-06-sidecar.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-06-sidecar.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2301,154 +2301,166 @@
   
 
 
-<h1 id="poglavlje-6-kontejnerskabatch-radna-opterecenja-sidecar-obrazac">Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac</h1>
-<p>Na visokoj planini, penjač nikad ne ide sam — ide vezan konopcem za partnera.
-Taj partner se ne nalazi u baznom logoru čekajući da se neko vrati sa
-problemom; on se penje <em>sa</em> tobom, korak po korak, i kad ti siđeš sa planine,
-silazi i on, u isto vreme, istim tempom. Bazni logor, s druge strane, ima
-lekara koji čeka sve penjače podjednako — koristan, ali fizički ne može da te
-prati na liticu, i ne zna tačno gde si u trenutku kad ti zatreba pomoć.</p>
-<p>Kad je radno opterećenje kratkotrajno — pokrene se, uradi posao, nestane za
-par minuta — ono treba pratioca koji deli tačno njegov životni vek, ne
-stalnog čuvara koji čeka u bazi i nada se da će stići na vreme. To je razlika
-između sidecar-a i agenta, i to je pitanje na koje ovo poglavlje odgovara.</p>
-<h2 id="61-pitanje-na-koje-ovo-poglavlje-odgovara">6.1 Pitanje na koje ovo poglavlje odgovara</h2>
-<p>Poglavlje 4 je uvelo gateway kao centralnu tačku, a Poglavlje 2 auto- i
-ručnu instrumentaciju za dugotrajne servise. Ali šta se dešava kad pošiljalac
-telemetrije nije dugotrajan servis nego kratkotrajan batch zadatak — proces
-koji se rodi, odradi posao, i nestane za par minuta, možda i sekundi? Da li
-takav zadatak treba isti tretman kao dugotrajan servis (direktna veza ka
-gateway-u), ili mu treba nešto strukturno drugačije?</p>
-<p>Odgovor ovog poglavlja je: nešto strukturno drugačije — <strong>sidecar kolektor,
-upregnut uz svaki zadatak, koji deli tačno njegov životni vek.</strong> Razlog nije
-stilski nego životno-ciklusni, i vidi se najjasnije baš na onome što se
-dešava kad zadatak nestane.</p>
-<h2 id="62-kako-je-to-uraeno-praktican-pregled">6.2 Kako je to urađeno — praktičan pregled</h2>
-<p>Svaki batch/ETL zadatak u sistemu koji knjiga prati pokreće se kao AWS
-ECS/Fargate task definicija sa <strong>dva kontejnera</strong>: glavni kontejner koji radi
-posao, i sidecar kontejner — lagana OpenTelemetry Collector distribucija
-(ADOT — AWS Distro for OpenTelemetry) — koji prima telemetriju od glavnog
-kontejnera preko <code>localhost</code>, radi minimalnu obradu (batch, dodavanje
-resursnih atributa), i prosleđuje je ka centralnom gateway-u iz Poglavlja 4.</p>
-<p>Zadatak i njegov sidecar dele <strong>isti task lifecycle</strong>: pokreću se zajedno,
-gase se zajedno. Kad glavni kontejner završi posao, ECS task definicija je
-podešena da sidecar dobije kratak, ali eksplicitan prozor da isprazni (flush)
-sve što još drži u baferu pre nego što se ceo zadatak ugasi — bez tog
-prozora, poslednjih par sekundi telemetrije bi jednostavno nestalo zajedno sa
-kontejnerom koji ih je proizveo.</p>
-<p><img alt="Zadatak i sidecar dele isti ECS/Fargate task — pokreću se i gase zajedno; sidecar dobija kratak flush prozor pre gašenja da isprazni bafer ka centralnom gateway-u." src="../../diagrams/ch6-sidecar.png" width="85%" /></p>
-<p>Ovaj obrazac, uveden u produkciju posle prvobitnog pilot-a na dva zadatka
-(razrađeno u Poglavlju 29), otkrio je katalog stvarnih zamki koje nijedna
-"quickstart" dokumentacija ne pominje:</p>
+<h1 id="chapter-6-containerizedbatch-workloads-the-sidecar-pattern">Chapter 6 — Containerized/batch workloads: the sidecar pattern</h1>
+<p>On a high mountain, a climber never goes alone — they go roped to a partner.
+That partner isn't sitting at base camp waiting for someone to come back with
+a problem; they climb <em>with</em> you, step by step, and when you come down off
+the mountain, they come down too, at the same time, at the same pace. Base
+camp, on the other hand, has a doctor who waits for every climber equally —
+useful, but physically unable to follow you up the cliff face, and with no
+exact idea where you are the moment you need help.</p>
+<p>When a workload is short-lived — it starts, does its work, disappears within
+a few minutes — it needs a companion that shares exactly its own lifespan,
+not a permanent guardian waiting at base camp and hoping to arrive in time.
+That's the difference between a sidecar and an agent, and it's the question
+this chapter answers.</p>
+<h2 id="61-the-question-this-chapter-answers">6.1 The question this chapter answers</h2>
+<p>Chapter 4 introduced the gateway as a central point, and Chapter 2 covered
+auto- and manual instrumentation for long-running services. But what happens
+when the sender of telemetry isn't a long-running service but a short-lived
+batch job — a process that's born, does its work, and disappears within a
+few minutes, maybe even seconds? Does such a job need the same treatment as
+a long-running service (a direct connection to the gateway), or does it need
+something structurally different?</p>
+<p>This chapter's answer is: something structurally different — <strong>a sidecar
+collector, harnessed to each job, sharing exactly its lifespan.</strong> The reason
+isn't stylistic but lifecycle-driven, and it shows up most clearly in exactly
+what happens when the job disappears.</p>
+<h2 id="62-how-it-was-done-a-practical-overview">6.2 How it was done — a practical overview</h2>
+<p>Every batch/ETL job in the system this book follows runs as an AWS
+ECS/Fargate task definition with <strong>two containers</strong>: the main container that
+does the work, and a sidecar container — a lightweight OpenTelemetry
+Collector distribution (ADOT — AWS Distro for OpenTelemetry) — which receives
+telemetry from the main container over <code>localhost</code>, performs minimal
+processing (batching, adding resource attributes), and forwards it to the
+central gateway from Chapter 4.</p>
+<p>The job and its sidecar share the <strong>same task lifecycle</strong>: they start
+together, they shut down together. When the main container finishes its
+work, the ECS task definition is configured so the sidecar gets a short but
+explicit window to flush whatever it's still holding in its buffer before
+the whole task shuts down — without that window, the last few seconds of
+telemetry would simply vanish along with the container that produced them.</p>
+<p><img alt="The job and its sidecar share the same ECS/Fargate task — they start and shut down together; the sidecar gets a short flush window before shutdown to drain its buffer to the central gateway." src="../../diagrams/ch6-sidecar.png" width="85%" /></p>
+<p>This pattern, brought into production after an initial pilot on two jobs
+(covered in detail in Chapter 29), surfaced a catalog of real-world pitfalls
+that no "quickstart" documentation mentions:</p>
 <ul>
-<li><strong>Sidecar ne postavlja <code>service.name</code> sam od sebe.</strong> Za razliku od
-  dugotrajnog servisa gde SDK zna sopstveni naziv iz koda, sidecar kolektor
-  nema pojma koji je zadatak pokrenut pored njega — mora mu se eksplicitno
-  ubrizgati kroz promenljivu okruženja u task definiciji. Bez toga, deseci
-  različitih batch zadataka bi u cloud-u izgledali kao jedan neimenovani
-  izvor, i dashboard koji filtrira po nazivu zadatka jednostavno ne bi imao
-  šta da filtrira.</li>
-<li><strong>OTLP→Prometheus prevod dodaje sufikse jedinica koji nisu očigledni.</strong>
-  Metrika koja u kodu nosi ime <code>queue_depth</code> i jedinicu "items" stiže u
-  Mimir kao nešto poput <code>queue_depth_items_total</code> ili sa sličnim sufiksom u
-  zavisnosti od tipa — što znači da "očigledan" naziv metrike, onaj koji bi
-  neko intuitivno otkucao u upitu, prosto ne postoji. Svaki novi tim mora
-  prvo da otkrije stvarno ime, obično kroz <code>list_prometheus_metric_names</code>
-  ili sličan alat, pre nego što napiše prvi PromQL upit.</li>
-<li><strong>Mimir ne promoviše svaki resursni atribut u lejbl.</strong> Podrazumevano se
-  promovišu samo eksplicitno navedeni atributi — ako novi resursni atribut
-  nije dodat na tu listu, on stiže do Mimir-a, ali ostaje nevidljiv za
-  filtriranje po njemu. Praktičan trik za proveru da je signal uopšte prošao
-  kroz ceo pipeline (a ne samo da postoji na strani aplikacije): upit protiv
-  <code>target_info</code> metrike, koju kolektor generiše automatski iz resursnih
-  atributa i koja postoji nezavisno od toga da li je aplikacija poslala ijednu
-  sopstvenu metriku tog minuta.</li>
-<li><strong>Neke biblioteke emituju samo spanove, ne i metrike.</strong> Za takve
-  komponente, jedini operativni signal na nivou metrike su
-  <code>traces_spanmetrics_*</code> serije koje Tempo metrics-generator izvodi iz
-  samih trejsova (obrađeno detaljnije u Poglavlju 11) — bez razumevanja da
-  taj mehanizam postoji, tim bi zaključio da biblioteka "nema metrike", kad u
-  stvari ima, samo indirektno.</li>
+<li><strong>The sidecar doesn't set <code>service.name</code> on its own.</strong> Unlike a
+  long-running service, where the SDK knows its own name from the code, the
+  sidecar collector has no idea which job was launched alongside it — the
+  name has to be explicitly injected through an environment variable in the
+  task definition. Without that, dozens of different batch jobs would show
+  up in the cloud looking like a single unnamed source, and a dashboard
+  filtering by job name would simply have nothing to filter.</li>
+<li><strong>The OTLP→Prometheus translation adds unit suffixes that aren't
+  obvious.</strong> A metric that's called <code>queue_depth</code> in code, with unit
+  "items", arrives in Mimir as something like <code>queue_depth_items_total</code>, or
+  with a similar suffix depending on its type — which means the "obvious"
+  metric name, the one someone would intuitively type into a query, simply
+  doesn't exist. Every new team first has to discover the real name, usually
+  through <code>list_prometheus_metric_names</code> or a similar tool, before writing
+  its first PromQL query.</li>
+<li><strong>Mimir doesn't promote every resource attribute to a label.</strong> By
+  default, only explicitly listed attributes get promoted — if a new
+  resource attribute isn't added to that list, it still reaches Mimir, but
+  it stays invisible for filtering. A practical trick for checking that a
+  signal made it through the whole pipeline at all (not just that it exists
+  on the application side): query the <code>target_info</code> metric, which the
+  collector generates automatically from resource attributes and which
+  exists independent of whether the application sent a single metric of its
+  own that minute.</li>
+<li><strong>Some libraries emit only spans, not metrics.</strong> For such components, the
+  only operational signal at the metric level is the <code>traces_spanmetrics_*</code>
+  series that the Tempo metrics-generator derives from the traces
+  themselves (covered in more detail in Chapter 11) — without understanding
+  that this mechanism exists, a team would conclude the library "has no
+  metrics," when in fact it does, just indirectly.</li>
 </ul>
-<h2 id="63-analiticki-deo-sidecar-naspram-agenta-i-granica-gde-sidecar-prestaje-da-se-isplati">6.3 Analitički deo — sidecar naspram agenta, i granica gde sidecar prestaje da se isplati</h2>
-<h3 id="zasto-sidecar-a-ne-node-agent-za-ovu-klasu-opterecenja">Zašto sidecar, a ne node-agent, za ovu klasu opterećenja</h3>
-<p>Nezavisne analize ovog izbora (uključujući Last9-ovo poređenje sidecar vs.
-agent obrazaca) navode tačno onaj kriterijum koji je odlučio ovaj slučaj:
-sidecar daje <strong>snažnu izolaciju procesa</strong> i garantuje da se "aplikacija i
-sidecar gase zajedno" — kritično za batch opterećenje, gde zadatak nestaje
-za par minuta i gde bi orphan telemetrijski tok (podaci koji stignu posle
-nestanka zadatka koji ih je generisao, ili obrnuto, izgubljeni podaci jer je
-zadatak nestao pre nego što ih je sidecar stigao da pošalje) bio gori ishod
-od malo veće potrošnje resursa. Node-agent, s druge strane, ima <strong>nezavisan
-životni ciklus</strong> — ostaje aktivan i kad se zadaci na njemu menjaju — što je
-prednost za stabilne, dugotrajne servise (baš kao u agent-to-gateway obrascu
-iz Poglavlja 4, da je tamo bio primenjen), ali stvara neusklađenost tačno na
-granici koja ovde najviše boli: kratkotrajni zadaci nestaju, agent ostaje, i
-veza između "koji zadatak je proizveo koji podatak" postaje teža da se
-garantuje.</p>
-<p>Cena ovog izbora je realna i priznata u istoj analizi: sidecar znači veću
-potrošnju resursa po zadatku (svaki zadatak nosi sopstvenu kopiju kolektora),
-naspram jedne deljene instance agenta po čvoru. Za sistem koji knjiga prati,
-ta cena je prihvaćena svesno — broj istovremenih batch zadataka je dovoljno
-mali da dodatni CPU/memorija po zadatku ne predstavlja problem, dok bi
-alternativa (deljeni agent) uvela tačno onu vrstu orphan-podataka rizika koju
-sidecar eliminiše po definiciji.</p>
-<h3 id="granica-gde-sidecar-prestaje-da-bude-dobar-izbor">Granica gde sidecar prestaje da bude dobar izbor</h3>
-<p>Vredi eksplicitno pogledati kad ovaj obrazac <strong>prestaje</strong> da se isplati, jer
-to je podjednako vredna lekcija kao i sam izbor. AWS-ov sopstveni materijal o
-migraciji sa sidecar-a na centralizovani gateway obrazac (za telemetriju koja
-prelazi granice više AWS naloga) navodi tri konkretna razloga zašto sidecar
-po-zadatku prestaje da skalira: sidecar kolektor je linux-only slika, pa ne
-radi kao pratilac uz Windows/.NET Framework zadatke, koji onda ili ostaju
-neinstrumentirani ili nose kolektor koji ništa ne prikuplja; troškovi
-po-zadatka rastu linearno sa brojem zadataka, dok centralni gateway ima
-gotovo konstantnu cenu bez obzira na broj pošiljalaca; i konfiguracija
-"drifta" — svaka kopija sidecar-a menja se nezavisno, bez jedne centralne
-tačke za politiku prijema, tačno suprotno principu iz Poglavlja 4 ("jedno
-mesto gde se ista provera radi na isti način").</p>
-<p>Ovo nije kontradikcija sa odlukom u ovom poglavlju — to je granica primene.
-Implementacija koju knjiga prati radi na obimu (desetine, ne hiljade
-istovremenih batch zadataka, u jednom AWS nalogu) gde prednosti sidecar-a
-(izolacija životnog ciklusa) jasno nadmašuju njegove mane (potrošnja
-resursa, nedostatak centralne politike). Da je obim narastao za red veličine,
-ili da se batch flota proširila na više naloga, ista analiza koja je ovde
-opravdala sidecar bi opravdala prelazak na gateway obrazac za tu klasu
-opterećenja — što je tačno primer principa iz Poglavlja 4: svaka odluka o
-alatu se opravdava kroz kontekst, ne kroz apsolutnu ispravnost samog alata.</p>
-<p>Vratimo se na penjača i konopac. Partner koji se penje sa tobom ima smisla
-dok ste vas dvoje — dodaj još pedeset penjača na isti konopac, i sistem koji
-je savršeno radio za dvoje postaje neuporediv teret. Sidecar je pravi izbor
-za obim na kome ovaj sistem danas radi; <strong>prava veština nije u tome da se
-zapamti "sidecar je bolji od agenta", nego da se prepozna na kom obimu ta
-tvrdnja prestaje da važi.</strong></p>
-<h2 id="64-skupljena-pravila-iz-ovog-poglavlja">6.4 Skupljena pravila iz ovog poglavlja</h2>
+<h2 id="63-analytical-section-sidecar-versus-agent-and-the-boundary-where-sidecar-stops-paying-off">6.3 Analytical section — sidecar versus agent, and the boundary where sidecar stops paying off</h2>
+<h3 id="why-sidecar-not-node-agent-for-this-class-of-workload">Why sidecar, not node-agent, for this class of workload</h3>
+<p>Independent analyses of this choice (including Last9's comparison of
+sidecar vs. agent patterns) name exactly the criterion that decided this
+case: sidecar provides <strong>strong process isolation</strong> and guarantees that
+"the application and the sidecar shut down together" — critical for batch
+workloads, where a job disappears within a few minutes and where an orphaned
+telemetry flow (data that arrives after the job that generated it is gone,
+or, conversely, lost data because the job disappeared before the sidecar got
+around to sending it) would be a worse outcome than a somewhat higher
+resource footprint. The node-agent, on the other hand, has an <strong>independent
+lifecycle</strong> — it stays alive even as the jobs on it change — which is an
+advantage for stable, long-running services (exactly as in the
+agent-to-gateway pattern from Chapter 4, had it been applied here), but
+creates a mismatch precisely at the boundary that hurts most in this case:
+short-lived jobs disappear, the agent stays, and the link between "which job
+produced which piece of data" becomes harder to guarantee.</p>
+<p>The cost of this choice is real and acknowledged in the same analysis:
+sidecar means higher resource consumption per job (every job carries its own
+copy of the collector), versus a single shared agent instance per node. For
+the system this book follows, that cost was accepted knowingly — the number
+of concurrent batch jobs is small enough that the extra CPU/memory per job
+isn't a problem, while the alternative (a shared agent) would introduce
+exactly the kind of orphan-data risk that a sidecar eliminates by
+definition.</p>
+<h3 id="the-boundary-where-sidecar-stops-being-the-right-choice">The boundary where sidecar stops being the right choice</h3>
+<p>It's worth looking explicitly at when this pattern <strong>stops</strong> paying off,
+because that's just as valuable a lesson as the choice itself. AWS's own
+material on migrating from sidecar to a centralized gateway pattern (for
+telemetry that crosses multiple AWS account boundaries) names three concrete
+reasons why per-job sidecar stops scaling: the sidecar collector is a
+Linux-only image, so it can't ride along with Windows/.NET Framework jobs,
+which then either stay uninstrumented or carry a collector that collects
+nothing; per-job costs grow linearly with the number of jobs, while a
+central gateway has a near-constant cost regardless of the number of
+senders; and configuration "drift" — every copy of the sidecar changes
+independently, with no single central point for admission policy, exactly
+the opposite of the principle from Chapter 4 ("one place where the same
+check is done the same way").</p>
+<p>This isn't a contradiction of the decision made in this chapter — it's the
+boundary of its applicability. The implementation this book follows
+operates at a scale (tens, not thousands, of concurrent batch jobs, within a
+single AWS account) where the sidecar's advantages (lifecycle isolation)
+clearly outweigh its disadvantages (resource consumption, lack of central
+policy). Had the scale grown by an order of magnitude, or had the batch
+fleet expanded across multiple accounts, the same analysis that justified
+sidecar here would justify moving to a gateway pattern for that class of
+workload — which is exactly an instance of the principle from Chapter 4:
+every tooling decision is justified by context, not by the tool's absolute
+correctness.</p>
+<p>Back to the climber and the rope. A partner who climbs with you makes sense
+while it's just the two of you — add fifty more climbers to the same rope,
+and a system that worked perfectly for two becomes an unmanageable burden.
+Sidecar is the right choice at the scale this system operates on today;
+<strong>the real skill isn't remembering "sidecar is better than agent," but
+recognizing at what scale that claim stops holding.</strong></p>
+<h2 id="64-rules-collected-from-this-chapter">6.4 Rules collected from this chapter</h2>
 <ul>
-<li>Za kratkotrajna, efemerna radna opterećenja, prioritizuj obrazac koji deli
-  životni ciklus zadatka (sidecar) nad obrascem sa nezavisnim životnim
-  ciklusom (agent) — orphan telemetrija je gori ishod od veće potrošnje
-  resursa.</li>
-<li>Eksplicitno ubrizgaj <code>service.name</code> i druge identifikacione atribute u
-  sidecar preko env promenljivih — nikad ne pretpostavljaj da će ih sidecar
-  "sam znati".</li>
-<li>Pre nego što napišeš prvi PromQL upit protiv nove metrike, proveri stvarno
-  ime posle OTLP→Prometheus prevoda — sufiksi jedinica gotovo nikad nisu
-  intuitivni.</li>
-<li>Koristi <code>target_info</code> (ili ekvivalent) kao brz test da li signal uopšte
-  prolazi kroz ceo pipeline, nezavisno od toga da li aplikacija baš tog
-  trenutka šalje sopstvene metrike.</li>
-<li>Sidecar obrazac ima granicu skaliranja (linux-only, troškovi po-zadatku,
-  drift konfiguracije) — znaj unapred na kom obimu bi tvoj sistem prešao tu
-  granicu, umesto da to otkriješ kad već bude bolno.</li>
+<li>For short-lived, ephemeral workloads, prioritize the pattern that shares
+  the job's lifecycle (sidecar) over the pattern with an independent
+  lifecycle (agent) — orphan telemetry is a worse outcome than higher
+  resource consumption.</li>
+<li>Explicitly inject <code>service.name</code> and other identifying attributes into the
+  sidecar via env variables — never assume the sidecar will "just know"
+  them.</li>
+<li>Before writing your first PromQL query against a new metric, check its
+  real name after the OTLP→Prometheus translation — unit suffixes are
+  almost never intuitive.</li>
+<li>Use <code>target_info</code> (or its equivalent) as a quick test for whether a
+  signal is making it through the whole pipeline at all, independent of
+  whether the application happens to be sending its own metrics at that
+  exact moment.</li>
+<li>The sidecar pattern has a scaling boundary (Linux-only, per-job costs,
+  configuration drift) — know in advance at what scale your system would
+  cross that boundary, instead of discovering it once it's already painful.</li>
 </ul>
-<h2 id="65-vezba-za-citaoca">6.5 Vežba za čitaoca</h2>
-<p>Pronađi jedan kratkotrajan zadatak u svom sistemu (batch posao, cron, Lambda)
-koji trenutno šalje telemetriju direktno, bez ikakvog lokalnog pratioca.
-Postavi pitanje: šta se dešava sa poslednjih par sekundi telemetrije ako
-zadatak bude prekinut (timeout, OOM kill) pre nego što stigne da zatvori
-konekciju? Ako je odgovor "verovatno se izgubi" — to je tvoj kandidat za
-sidecar obrazac iz ovog poglavlja.</p>
+<h2 id="65-exercise-for-the-reader">6.5 Exercise for the reader</h2>
+<p>Find one short-lived job in your system (a batch job, a cron job, a Lambda)
+that currently sends telemetry directly, with no local companion at all. Ask
+the question: what happens to the last few seconds of telemetry if the job
+gets killed (timeout, OOM kill) before it manages to close the connection?
+If the answer is "it's probably lost" — that's your candidate for the
+sidecar pattern from this chapter.</p>
 <hr />
-<h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
+<h3 id="sources-used-in-the-analytical-section">Sources used in the analytical section</h3>
 <ul>
 <li><a href="https://last9.io/blog/opentelemetry-sidecar-vs-agent/">Sidecar or Agent for OpenTelemetry: How to Decide — Last9</a></li>
 <li><a href="https://aws.amazon.com/blogs/containers/centralize-cross-account-amazon-ecs-telemetry-with-an-adot-gateway/">Centralize cross-account Amazon ECS telemetry with an ADOT gateway — AWS</a></li>
@@ -2476,7 +2488,7 @@ sidecar obrazac iz ovog poglavlja.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:03:30 UTC">August 26, 2026</span>
   </span>
 
     

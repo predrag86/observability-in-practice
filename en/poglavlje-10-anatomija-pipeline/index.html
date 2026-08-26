@@ -31,7 +31,7 @@
     
     
       
-        <title>Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud - Observability in Practice</title>
+        <title>Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud - Observability in Practice</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#poglavlje-10-anatomija-pipeline-a-sta-se-radi-sa-signalom-pre-nego-sto-ode-u-cloud" class="md-skip">
+        <a href="#chapter-10-anatomy-of-the-pipeline-what-happens-to-the-signal-before-it-goes-to-the-cloud" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+              Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
             
           </span>
         </div>
@@ -580,7 +580,7 @@
   <span class="md-ellipsis">
     
   
-    Deo II — Arhitektura prikupljanja telemetrije
+    Part II — Telemetry-collection architecture
   
 
     
@@ -608,7 +608,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+    Chapter 4 — The gateway pattern: a central point for telemetry
   
 
     
@@ -636,7 +636,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+    Chapter 5 — Instrumenting the application: two strategies
   
 
     
@@ -664,7 +664,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+    Chapter 6 — Containerized/batch workloads: the sidecar pattern
   
 
     
@@ -692,7 +692,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 7 — Kada ne možeš da instrumentiraš izvor: pull-obrasci
+    Chapter 7 — When you can't instrument the source: pull-based patterns
   
 
     
@@ -720,7 +720,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 8 — Frontend / RUM observability
+    Chapter 8 — Frontend / RUM observability
   
 
     
@@ -748,7 +748,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 9 — Sintetičko (black-box) praćenje
+    Chapter 9 — Synthetic (Black-Box) Monitoring
   
 
     
@@ -837,7 +837,7 @@
   <span class="md-ellipsis">
     
   
-    Deo III — Obrada, kardinalnost i troškovi
+    Part III — Processing, cardinality, and cost
   
 
     
@@ -874,7 +874,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+    Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
   
 
     
@@ -892,7 +892,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+    Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
   
 
     
@@ -918,10 +918,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#101-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#101-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10.1 Pitanje na koje ovo poglavlje odgovara
+        10.1 The question this chapter answers
       
     </span>
   </a>
@@ -929,10 +929,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#102-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#102-how-its-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10.2 Kako je to urađeno — praktičan pregled
+        10.2 How it's done — a practical overview
       
     </span>
   </a>
@@ -940,22 +940,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#103-analiticki-deo-zasto-redosled-nije-stilska-odluka" class="md-nav__link">
+  <a href="#103-analytical-section-why-order-isnt-a-matter-of-style" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10.3 Analitički deo — zašto redosled nije stilska odluka
+        10.3 Analytical section — why order isn't a matter of style
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="10.3 Analitički deo — zašto redosled nije stilska odluka">
+    <nav class="md-nav" aria-label="10.3 Analytical section — why order isn&#39;t a matter of style">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zvanicna-preporuka-o-redosledu-procesora" class="md-nav__link">
+  <a href="#the-official-recommendation-on-processor-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zvanična preporuka o redosledu procesora
+        The official recommendation on processor order
       
     </span>
   </a>
@@ -963,10 +963,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#gde-implementacija-ipak-dodaje-nesto-sto-recept-ne-pominje-skopirana-redakcija" class="md-nav__link">
+  <a href="#where-the-implementation-does-add-something-the-recipe-doesnt-mention-scoped-redaction" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Gde implementacija ipak dodaje nešto što recept ne pominje: skopirana redakcija
+        Where the implementation does add something the recipe doesn't mention: scoped redaction
       
     </span>
   </a>
@@ -974,10 +974,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cena-da-je-redosled-bio-drugaciji-kontrafakticki-scenario" class="md-nav__link">
+  <a href="#the-cost-of-a-different-order-a-counterfactual-scenario" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cena da je redosled bio drugačiji: kontrafaktički scenario
+        The cost of a different order: a counterfactual scenario
       
     </span>
   </a>
@@ -990,10 +990,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#104-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#104-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10.4 Skupljena pravila iz ovog poglavlja
+        10.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -1001,22 +1001,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#105-vezba-za-citaoca" class="md-nav__link">
+  <a href="#105-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10.5 Vežba za čitaoca
+        10.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="10.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="10.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -1051,7 +1051,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 11 — Kardinalnost i cena: kako sistem prirodno naraste iznad budžeta
+    Chapter 11 — Cardinality and cost: how a system naturally outgrows its budget
   
 
     
@@ -1079,7 +1079,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+    Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
   
 
     
@@ -1168,7 +1168,7 @@
   <span class="md-ellipsis">
     
   
-    Deo IV — Alarmiranje, SLO i odgovor na incidente
+    Part IV — Alerting, SLOs, and incident response
   
 
     
@@ -1196,7 +1196,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+    Chapter 13 — Alerting architecture: two paths, one destination channel
   
 
     
@@ -1224,7 +1224,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+    Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
   
 
     
@@ -1252,7 +1252,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+    Chapter 15 — SLOs and error-budget-based alerts
   
 
     
@@ -1280,7 +1280,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 16 — Runbook-ovi: od alarma do rešenja
+    Chapter 16 — Runbooks: from alert to resolution
   
 
     
@@ -1308,7 +1308,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 17 — Postmortem kultura
+    Chapter 17 — Postmortem culture
   
 
     
@@ -1397,7 +1397,7 @@
   <span class="md-ellipsis">
     
   
-    Deo V — Domenske studije slučaja
+    Part V — Domain case studies
   
 
     
@@ -1425,7 +1425,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 18 — Baze podataka (upravljane, tipa RDS/Aurora)
+    Chapter 18 — Databases (managed, RDS/Aurora-type)
   
 
     
@@ -1453,7 +1453,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 19 — Samostalno upravljani distribuirani sistemi (klaster tipa Dremio)
+    Chapter 19 — Self-managed distributed systems (a Dremio-style cluster)
   
 
     
@@ -1481,7 +1481,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 20 — Autentikacija i IAM (sistem tipa Keycloak)
+    Chapter 20 — Authentication and IAM (a Keycloak-type system)
   
 
     
@@ -1509,7 +1509,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 21 — Hostovi i serveri kao mašine
+    Chapter 21 — Hosts and servers as machines
   
 
     
@@ -1537,7 +1537,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 22 — Mreža kao posebna ravan posmatranja
+    Chapter 22 — The network as its own observation plane
   
 
     
@@ -1565,7 +1565,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 23 — Batch/ETL flota zadataka
+    Chapter 23 — The batch/ETL job fleet
   
 
     
@@ -1593,7 +1593,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 24 — Posmatranje servisa koji nije naš (tipa Snowflake)
+    Chapter 24 — Observing a service that isn't ours (the Snowflake kind)
   
 
     
@@ -1682,7 +1682,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VI — Upravljanje, usklađenost i zrelost
+    Part VI — Governance, compliance, and maturity
   
 
     
@@ -1710,7 +1710,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 25 — Privatnost u telemetriji
+    Chapter 25 — Privacy in telemetry
   
 
     
@@ -1738,7 +1738,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 26 — Observability kao kontrola usklađenosti (SOC 2 primer)
+    Chapter 26 — Observability as a compliance control (a SOC 2 example)
   
 
     
@@ -1766,7 +1766,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 27 — Prioritizacija: cena, performanse, pouzdanost, bezbednost
+    Chapter 27 — Prioritization: cost, performance, reliability, security
   
 
     
@@ -1794,7 +1794,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 28 — AI-asistirana observability: agent koji čita telemetriju
+    Chapter 28 — AI-assisted observability: an agent that reads telemetry
   
 
     
@@ -1883,7 +1883,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VII — Sazrevanje programa
+    Part VII — The program matures
   
 
     
@@ -1911,7 +1911,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 29 — Kako izgleda fazni rollout u realnom vremenu
+    Chapter 29 — What a phased rollout looks like in real time
   
 
     
@@ -1939,7 +1939,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 30 — Merenje zrelosti sopstvenog programa
+    Chapter 30 — Measuring the maturity of your own program
   
 
     
@@ -1967,7 +1967,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 31 — Zaključak: skupljena pravila
+    Chapter 31 — Conclusion: rules collected
   
 
     
@@ -2056,7 +2056,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak A — PromQL/LogQL recepti
+    Appendix A — PromQL/LogQL recipes
   
 
     
@@ -2084,7 +2084,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak B — Rečnik pojmova
+    Appendix B — Glossary of terms
   
 
     
@@ -2112,7 +2112,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak C — Checklist za onboarding novog servisa na observability
+    Appendix C — Checklist for onboarding a new service onto observability
   
 
     
@@ -2140,7 +2140,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak D — Šablon runbook-a i šablon postmortema
+    Appendix D — Runbook template and postmortem template
   
 
     
@@ -2188,10 +2188,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#101-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#101-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10.1 Pitanje na koje ovo poglavlje odgovara
+        10.1 The question this chapter answers
       
     </span>
   </a>
@@ -2199,10 +2199,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#102-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#102-how-its-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10.2 Kako je to urađeno — praktičan pregled
+        10.2 How it's done — a practical overview
       
     </span>
   </a>
@@ -2210,22 +2210,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#103-analiticki-deo-zasto-redosled-nije-stilska-odluka" class="md-nav__link">
+  <a href="#103-analytical-section-why-order-isnt-a-matter-of-style" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10.3 Analitički deo — zašto redosled nije stilska odluka
+        10.3 Analytical section — why order isn't a matter of style
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="10.3 Analitički deo — zašto redosled nije stilska odluka">
+    <nav class="md-nav" aria-label="10.3 Analytical section — why order isn&#39;t a matter of style">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zvanicna-preporuka-o-redosledu-procesora" class="md-nav__link">
+  <a href="#the-official-recommendation-on-processor-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zvanična preporuka o redosledu procesora
+        The official recommendation on processor order
       
     </span>
   </a>
@@ -2233,10 +2233,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#gde-implementacija-ipak-dodaje-nesto-sto-recept-ne-pominje-skopirana-redakcija" class="md-nav__link">
+  <a href="#where-the-implementation-does-add-something-the-recipe-doesnt-mention-scoped-redaction" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Gde implementacija ipak dodaje nešto što recept ne pominje: skopirana redakcija
+        Where the implementation does add something the recipe doesn't mention: scoped redaction
       
     </span>
   </a>
@@ -2244,10 +2244,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cena-da-je-redosled-bio-drugaciji-kontrafakticki-scenario" class="md-nav__link">
+  <a href="#the-cost-of-a-different-order-a-counterfactual-scenario" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cena da je redosled bio drugačiji: kontrafaktički scenario
+        The cost of a different order: a counterfactual scenario
       
     </span>
   </a>
@@ -2260,10 +2260,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#104-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#104-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10.4 Skupljena pravila iz ovog poglavlja
+        10.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -2271,22 +2271,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#105-vezba-za-citaoca" class="md-nav__link">
+  <a href="#105-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10.5 Vežba za čitaoca
+        10.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="10.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="10.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -2315,7 +2315,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-10-anatomija-pipeline.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-10-anatomija-pipeline.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2323,151 +2323,161 @@
   
 
 
-<h1 id="poglavlje-10-anatomija-pipeline-a-sta-se-radi-sa-signalom-pre-nego-sto-ode-u-cloud">Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud</h1>
-<p>Postrojenje za prečišćavanje vode ne pretvara mutnu reku u pijaću vodu jednim
-korakom. Voda prolazi kroz niz stanica, svaka sa tačno jednim zadatkom, tačno
-tim redom: prvo grubo sito koje uklanja granje i krupan otpad, pre nego što
-bilo šta drugo dobije priliku da se zapuši; zatim taložnik gde sediment
-prirodno padne na dno; tek onda hemijska obrada koja cilja specifične
-zagađivače; na kraju filter koji uklanja i ono što je ostalo, i tek tada voda
-ide u rezervoar. Redosled nije proizvoljan — grubo sito mora biti prvo, jer bi
-bez njega svaka naredna stanica bila zatrpana granjem koje nije trebalo da
-prođe ni prvi korak.</p>
-<p>Telemetrijski pipeline unutar gateway-a radi po istoj logici: signal prolazi
-kroz niz stanica, svaka sa tačno jednim zadatkom, tačno tim redosledom, i
-redosled je isto toliko namerni izbor koliko i svaka pojedinačna stanica.</p>
-<h2 id="101-pitanje-na-koje-ovo-poglavlje-odgovara">10.1 Pitanje na koje ovo poglavlje odgovara</h2>
-<p>Poglavlje 4 je pokazalo <em>da</em> gateway radi obradu pre nego što telemetriju
-pusti dalje. Ovo poglavlje odgovara na pitanje koje Poglavlje 4 namerno nije
-razrađivalo: <strong>šta se tačno dešava unutar gateway-a, korak po korak, i zašto
-baš tim redosledom?</strong> Ovo nije kozmetičko pitanje — pogrešan redosled dve
-inače ispravne stanice može da poništi svrhu obe, kao što bi hemijska obrada
-pre grubog sita samo zapušila hemijsku stanicu granjem.</p>
-<h2 id="102-kako-je-to-uraeno-praktican-pregled">10.2 Kako je to urađeno — praktičan pregled</h2>
-<p>Pipeline unutar gateway-a iz implementacije koju knjiga prati ima šest
-stanica, uvek tim redosledom:</p>
-<p><img alt="Anatomija pipeline-a: šest stanica, uvek istim redosledom." src="../../diagrams/ch10-pipeline.png" width="98%" /></p>
-<p><strong>1. <code>memory_limiter</code> — uvek prvo.</strong> Prati potrošnju memorije samog gateway
-procesa u kratkim intervalima. Kad potrošnja pređe meki prag, počinje da
-odbija nove podatke nazad ka pošiljaocu (umesto da ih tiho baci) — tako da
-pošiljalac dobije signal da uspori ili ponovi kasnije. Kad se pređe tvrdi
-prag, gateway prisilno pokreće garbage collection. Mora biti prva stanica u
-lancu iz jednog razloga: ako bi bilo koja stanica iza nje već potrošila
-memoriju obrađujući podatak, backpressure bi stigao prekasno da nešto
-spreči.</p>
-<p><strong>2. <code>filter</code> — odbaci šum pre nego što bilo šta drugo troši rad na njega.</strong>
-Ovde se odbacuju health-check pozivi (interni load balanser proverava
-gateway svake par sekundi — taj saobraćaj nema analitičku vrednost i samo
-troši budžet) i log linije ispod INFO nivoa. Odbačeno ovde nikad ne stigne do
-skupljih stanica dalje u lancu.</p>
-<p><strong>3. <code>transform</code> — redakcija i normalizacija, oboje skopirano na pravi deo
-flote.</strong> Dva odvojena zadatka žive u ovoj stanici:</p>
+<h1 id="chapter-10-anatomy-of-the-pipeline-what-happens-to-the-signal-before-it-goes-to-the-cloud">Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud</h1>
+<p>A water treatment plant doesn't turn murky river water into drinking water in
+one step. The water passes through a series of stations, each with exactly
+one job, in exactly this order: first a coarse screen that removes branches
+and large debris, before anything else gets a chance to clog; then a
+sedimentation basin where sediment naturally settles to the bottom; only then
+chemical treatment targeting specific contaminants; finally a filter that
+removes whatever is left, and only then does the water go to the reservoir.
+The order isn't arbitrary — the coarse screen has to come first, because
+without it every station after it would be choked with branches that should
+never have made it past the first step.</p>
+<p>The telemetry pipeline inside the gateway works on the same logic: the signal
+passes through a series of stations, each with exactly one job, in exactly
+this order, and the order is just as deliberate a choice as any individual
+station.</p>
+<h2 id="101-the-question-this-chapter-answers">10.1 The question this chapter answers</h2>
+<p>Chapter 4 showed <em>that</em> the gateway does processing before it passes
+telemetry onward. This chapter answers the question Chapter 4 deliberately
+left unelaborated: <strong>what exactly happens inside the gateway, step by step,
+and why in this particular order?</strong> This isn't a cosmetic question — the
+wrong order between two otherwise-correct stations can cancel out the purpose
+of both, the same way chemical treatment before the coarse screen would just
+clog the chemical station with branches.</p>
+<h2 id="102-how-its-done-a-practical-overview">10.2 How it's done — a practical overview</h2>
+<p>The pipeline inside the gateway, in the implementation this book follows,
+has six stations, always in this order:</p>
+<p><img alt="Anatomy of the pipeline: six stations, always in the same order." src="../../diagrams/ch10-pipeline.png" width="98%" /></p>
+<p><strong>1. <code>memory_limiter</code> — always first.</strong> Tracks the memory consumption of the
+gateway process itself, at short intervals. When consumption crosses a soft
+threshold, it starts rejecting new data back toward the sender (instead of
+silently dropping it) — so the sender gets a signal to slow down or retry
+later. When a hard threshold is crossed, the gateway forces a garbage
+collection. It has to be the first station in the chain for one reason: if
+any station downstream of it had already spent memory processing a record,
+the backpressure would arrive too late to prevent anything.</p>
+<p><strong>2. <code>filter</code> — discard noise before anything else spends work on it.</strong> This
+is where health-check calls are dropped (an internal load balancer pings the
+gateway every couple of seconds — that traffic has no analytical value and
+just consumes budget) along with log lines below INFO level. Whatever is
+dropped here never reaches the more expensive stations further down the
+chain.</p>
+<p><strong>3. <code>transform</code> — redaction and normalization, both scoped to the right
+part of the fleet.</strong> Two separate jobs live in this station:</p>
 <ul>
-<li><strong>Redakcija osetljivih atributa</strong> (SQL tekst, connection stringovi) —
-  primenjena samo na delove flote gde debug vrednost punog SQL teksta nije
-  potrebna. Za deo flote gde je pun SQL tekst i dalje neophodan za dijagnozu
-  (obrađeno u Poglavlju 18), redakcija se namerno <strong>ne</strong> primenjuje —
-  odluka doneta eksplicitno, po timu/servisu, ne globalno.</li>
-<li><strong>Normalizacija naziva spanova</strong> — span koji bi inače nosio promenljiv
-  datum ili ID u svom imenu (npr. <code>process-report-2026-08-21</code>) se
-  normalizuje na stabilan obrazac (<code>process-report</code>) pre nego što ide dalje.
-  Bez ovog koraka, svaki novi dan bi doslovno značio novu vremensku seriju
-  po imenu span-a — eksplozija kardinalnosti koja se vidi tek kad račun
-  stigne (razrađeno u Poglavlju 11).</li>
+<li><strong>Redaction of sensitive attributes</strong> (SQL text, connection strings) —
+  applied only to the parts of the fleet where the debugging value of the
+  full SQL text isn't needed. For the part of the fleet where the full SQL
+  text is still necessary for diagnosis (covered in Chapter 18), redaction
+  is deliberately <strong>not</strong> applied — a decision made explicitly, per
+  team/service, not globally.</li>
+<li><strong>Normalization of span names</strong> — a span that would otherwise carry a
+  variable date or ID in its name (e.g. <code>process-report-2026-08-21</code>) is
+  normalized to a stable pattern (<code>process-report</code>) before moving on.
+  Without this step, every new day would literally mean a new time series
+  keyed by span name — a cardinality explosion that only becomes visible
+  once the bill arrives (covered in Chapter 11).</li>
 </ul>
-<p><strong>4. <code>resourcedetection</code> — popuni, ne prepiši.</strong> Dodaje zajedničke cloud
-atribute (region, nalog, tip infrastrukture) <strong>samo tamo gde nedostaju</strong> —
-ako je pošiljalac već poslao sopstvenu vrednost, ona se ne dira. Ovo je
-namerna odluka: pošiljalac uvek zna više o sebi nego što gateway može da
-pogodi iz konteksta u kome prima podatak.</p>
-<p><strong>5. <code>batch</code> — grupiši pre slanja.</strong> Umesto da svaki pojedinačan zapis ide
-kao zaseban HTTP poziv ka cloud platformi, ova stanica ih grupiše u veće
-pakete — drastično manje mrežnih poziva, drastično manji overhead po
-zapisu.</p>
-<p>Jedna zamka otkrivena u produkciji, van ovog uobičajenog toka: <strong>ograničenje
-veličine pojedinačne log poruke.</strong> Jedna aplikacija je jednom prilikom
-poslala log red od nekoliko megabajta (serializovan stack trace sa punim
-sadržajem neuspešnog batch upisa) — bez gornje granice, ta jedna poruka je
-zauzela dovoljno resursa u <code>batch</code> stanici da je usporila i na kraju oborila
-obradu za ceo prozor, uključujući hiljade drugih, potpuno normalnih poruka
-koje su čekale u istom paketu. Posle ovog incidenta, eksplicitna gornja
-granica veličine po poruci je dodata u <code>filter</code> stanicu — predaleko niz
-lanac je bilo prekasno.</p>
-<h2 id="103-analiticki-deo-zasto-redosled-nije-stilska-odluka">10.3 Analitički deo — zašto redosled nije stilska odluka</h2>
-<h3 id="zvanicna-preporuka-o-redosledu-procesora">Zvanična preporuka o redosledu procesora</h3>
-<p>Zvanična OpenTelemetry Collector dokumentacija eksplicitno preporučuje da
-<code>memory_limiter</code> bude <strong>prva</strong> stanica u svakom pipeline-u, iz tačno istog
-razloga primenjenog ovde: da bi backpressure mogao da stigne do prijemnika
-pre nego što išta nizvodno potroši memoriju na podatak koji će ionako biti
-odbačen. Nezavisna poređenja (Dash0, OneUptime) dodaju drugu polovinu iste
-preporuke: skupe transformacione stanice (kao redakcija ili normalizacija)
-treba da dođu <strong>posle</strong> jeftinih filtracionih stanica — obrađivati podatak
-koji će sledeći korak ionako baciti je čist gubitak rada.</p>
-<p>Implementacija koju knjiga prati sledi ovaj redosled tačno — što je, za
-razliku od nekih ranijih poglavlja, slučaj gde nema odstupanja od
-"udžbeničkog" recepta. Vredi eksplicitno reći i to: <strong>ne mora svako
-poglavlje da priča priču o odstupanju.</strong> Ponekad je standardni recept
-standardni upravo zato što rešava realan, opšti problem na najbolji
-raspoloživ način, i signal zrelosti je prepoznati kada je to slučaj — ne
-izmišljati razlog za odstupanje samo da bi poglavlje imalo dramatičniju
-priču.</p>
-<h3 id="gde-implementacija-ipak-dodaje-nesto-sto-recept-ne-pominje-skopirana-redakcija">Gde implementacija ipak dodaje nešto što recept ne pominje: skopirana redakcija</h3>
-<p>Zvanični recepti za redakciju osetljivih podataka gotovo uvek pretpostavljaju
-<strong>globalnu</strong> politiku — jedno pravilo, primenjeno na sav saobraćaj koji
-prolazi kroz pipeline. To je razumna podrazumevana pretpostavka za većinu
-sistema. Implementacija koju knjiga prati je svesno odstupila od te
-pretpostavke, jer globalna redakcija SQL teksta bi rešila jedan problem
-(izlaganje osetljivih upita) tako što bi stvorila drugi, podjednako realan
-(deo tima koji dijagnostikuje probleme baš preko punog SQL teksta bi
-izgubio tačno onaj podatak koji mu je posao). Rešenje nije bilo "redakcija
-da ili ne" kao binarna odluka za ceo sistem, nego eksplicitno skopirana
-politika po delu flote — administrativno malo skuplje za održavanje
-(dve grane u konfiguraciji umesto jedne), ali izbegava razmenu jedne štete
-za drugu.</p>
-<h3 id="cena-da-je-redosled-bio-drugaciji-kontrafakticki-scenario">Cena da je redosled bio drugačiji: kontrafaktički scenario</h3>
-<p>Vredi konkretno odigrati šta bi se dogodilo da je <code>batch</code> stanica došla
-<strong>pre</strong> <code>memory_limiter</code>-a, umesto posle. Batch stanica po svojoj prirodi
-drži podatke u baferu duže nego bilo koja druga stanica — čeka da se
-nakupi dovoljno zapisa ili prođe dovoljno vremena pre nego što pošalje paket
-dalje. Da taj bafer dolazi pre provere memorije, gateway bi mogao da
-nagomila veliku količinu podataka u batch baferu tačno u trenutku pritiska
-kad bi memory_limiter najviše hteo da uspori priliv — brana bi postojala,
-ali bi štitila prazan deo cevi, dok bi pravi pritisak već bio nizvodno od
-nje, van njenog domašaja. Ovo je isti obrazac viđen i u drugim poglavljima
-knjige: zaštitni mehanizam koji tehnički postoji, ali je postavljen na
-pogrešno mesto u toku, pruža lažan osećaj sigurnosti bez stvarne zaštite.</p>
-<p>Vratimo se na postrojenje za vodu s početka poglavlja. Grubo sito nije prva
-stanica zato što je najvažnija — hemijska obrada koja cilja specifične
-zagađivače je, po mnogo merila, suptilnija i vrednija stanica. Grubo sito je
-prvo zato što bi, da nije, sve stanice iza njega radile posao za koji nisu
-projektovane. <strong>Redosled u pipeline-u nije lista prioriteta — to je lanac
-pretpostavki, gde svaka naredna stanica pretpostavlja da je prethodna već
-odradila svoj deo.</strong> Kad se ta pretpostavka pokvari, cena se ne vidi na
-stanici koja je pomerena, nego na svakoj stanici posle nje.</p>
-<h2 id="104-skupljena-pravila-iz-ovog-poglavlja">10.4 Skupljena pravila iz ovog poglavlja</h2>
+<p><strong>4. <code>resourcedetection</code> — fill in, don't overwrite.</strong> Adds common cloud
+attributes (region, account, infrastructure type) <strong>only where they're
+missing</strong> — if the sender has already sent its own value, it's left alone.
+This is a deliberate decision: the sender always knows more about itself
+than the gateway can guess from the context in which it receives the data.</p>
+<p><strong>5. <code>batch</code> — group before sending.</strong> Instead of each individual record
+going out as a separate HTTP call to the cloud platform, this station groups
+them into larger packages — drastically fewer network calls, drastically
+less overhead per record.</p>
+<p>One trap discovered in production, outside this usual flow: <strong>a size limit
+on individual log messages.</strong> One application, on one occasion, sent a log
+line several megabytes in size (a serialized stack trace with the full
+content of a failed batch write) — with no upper bound, that single message
+consumed enough resources in the <code>batch</code> station to slow down, and
+eventually bring down, processing for the entire window, including thousands
+of other, completely normal messages waiting in the same package. After this
+incident, an explicit upper bound on per-message size was added to the
+<code>filter</code> station — too far down the chain was too late.</p>
+<h2 id="103-analytical-section-why-order-isnt-a-matter-of-style">10.3 Analytical section — why order isn't a matter of style</h2>
+<h3 id="the-official-recommendation-on-processor-order">The official recommendation on processor order</h3>
+<p>The official OpenTelemetry Collector documentation explicitly recommends
+that <code>memory_limiter</code> be the <strong>first</strong> station in every pipeline, for
+exactly the same reason applied here: so that backpressure can reach the
+receiver before anything downstream spends memory on a record that's going
+to be dropped anyway. Independent comparisons (Dash0, OneUptime) add the
+other half of the same recommendation: expensive transformation stations
+(like redaction or normalization) should come <strong>after</strong> cheap filtering
+stations — processing a record that the next step is going to throw away
+anyway is pure wasted work.</p>
+<p>The implementation this book follows follows this order exactly — which is,
+unlike some earlier chapters, a case with no deviation from the "textbook"
+recipe. It's worth saying explicitly: <strong>not every chapter has to tell a
+story about deviation.</strong> Sometimes the standard recipe is standard precisely
+because it solves a real, general problem in the best available way, and the
+sign of maturity is recognizing when that's the case — not inventing a
+reason to deviate just so the chapter has a more dramatic story.</p>
+<h3 id="where-the-implementation-does-add-something-the-recipe-doesnt-mention-scoped-redaction">Where the implementation does add something the recipe doesn't mention: scoped redaction</h3>
+<p>Official recipes for redacting sensitive data almost always assume a
+<strong>global</strong> policy — one rule, applied to all traffic passing through the
+pipeline. That's a reasonable default assumption for most systems. The
+implementation this book follows deliberately departed from that assumption,
+because a global redaction of SQL text would solve one problem (exposure of
+sensitive queries) by creating another, equally real one (the part of the
+team that diagnoses problems precisely through the full SQL text would lose
+exactly the data that is their job to have). The solution wasn't "redaction,
+yes or no" as a binary decision for the whole system, but an explicitly
+scoped policy per part of the fleet — administratively a bit more expensive
+to maintain (two branches in the configuration instead of one), but it
+avoids trading one form of harm for another.</p>
+<h3 id="the-cost-of-a-different-order-a-counterfactual-scenario">The cost of a different order: a counterfactual scenario</h3>
+<p>It's worth playing out concretely what would happen if the <code>batch</code> station
+came <strong>before</strong> <code>memory_limiter</code>, instead of after it. The batch station, by
+its nature, holds data in a buffer longer than any other station — it waits
+for enough records to accumulate, or enough time to pass, before sending a
+package onward. If that buffer came before the memory check, the gateway
+could accumulate a large volume of data in the batch buffer at precisely the
+moment of pressure when <code>memory_limiter</code> would most want to slow the
+inflow — the dam would exist, but it would be guarding an empty stretch of
+pipe, while the real pressure would already be downstream of it, out of its
+reach. This is the same pattern seen elsewhere in this book: a protective
+mechanism that technically exists, but is placed at the wrong point in the
+flow, provides a false sense of safety with no actual protection.</p>
+<p>Let's return to the water treatment plant from the start of the chapter. The
+coarse screen isn't the first station because it's the most important one —
+the chemical treatment targeting specific contaminants is, by many measures,
+a subtler and more valuable station. The coarse screen is first because, if
+it weren't, every station after it would be doing work it wasn't designed to
+do. <strong>Order in a pipeline isn't a list of priorities — it's a chain of
+assumptions, where each subsequent station assumes the previous one has
+already done its part.</strong> When that assumption breaks, the cost doesn't show
+up at the station that got moved — it shows up at every station after it.</p>
+<h2 id="104-rules-collected-from-this-chapter">10.4 Rules collected from this chapter</h2>
 <ul>
-<li><code>memory_limiter</code> (ili ekvivalent) uvek prvi u lancu — backpressure koji
-  stigne prekasno je isto što i backpressure koji ne postoji.</li>
-<li>Filtriraj šum pre nego što uradiš bilo šta skuplje sa podatkom — svaka
-  stanica koja obrađuje podatak koji će sledeća stanica baciti je čist
-  gubitak.</li>
-<li>Ne primenjuj globalnu politiku redakcije/transformacije ako različiti
-  delovi flote imaju različite, legitimne potrebe — eksplicitno skopiraj
-  politiku, čak i po cenu malo veće konfiguracije.</li>
-<li>Postavi gornju granicu veličine po pojedinačnom zapisu što ranije u lancu
-  — jedan preveliki zapis ne sme moći da povuče hiljadu ispravnih sa sobom.</li>
-<li>Ne izmišljaj priču o odstupanju od standarda tamo gde standard već rešava
-  problem dobro — prepoznaj kad je "sledi recept" ispravan odgovor.</li>
+<li><code>memory_limiter</code> (or its equivalent) always first in the chain —
+  backpressure that arrives too late is the same as backpressure that
+  doesn't exist.</li>
+<li>Filter out noise before doing anything more expensive with a record —
+  every station that processes a record the next station is going to drop
+  is pure waste.</li>
+<li>Don't apply a global redaction/transformation policy when different parts
+  of the fleet have different, legitimate needs — explicitly scope the
+  policy, even at the cost of somewhat more configuration.</li>
+<li>Set an upper bound on the size of an individual record as early as
+  possible in the chain — one oversized record must not be able to drag a
+  thousand valid ones down with it.</li>
+<li>Don't invent a story about deviating from the standard where the standard
+  already solves the problem well — recognize when "follow the recipe" is
+  the right answer.</li>
 </ul>
-<h2 id="105-vezba-za-citaoca">10.5 Vežba za čitaoca</h2>
-<p>Nacrtaj redosled stanica u sopstvenom telemetrijskom pipeline-u (ili,
-ako ga nemaš eksplicitno nacrtanog, pretpostavljeni redosled kojim se
-podatak zapravo obrađuje). Za svaki par uzastopnih stanica, postavi pitanje:
-da li prethodna stanica garantuje pretpostavku na koju se naredna oslanja?
-Ako bilo koji par ne prođe taj test — to je tvoj kandidat za preuređenje pre
-nego što ga proizvodni saobraćaj otkrije umesto tebe.</p>
+<h2 id="105-exercise-for-the-reader">10.5 Exercise for the reader</h2>
+<p>Sketch out the order of stations in your own telemetry pipeline (or, if you
+don't have one explicitly drawn, the assumed order in which the data is
+actually processed). For every pair of consecutive stations, ask: does the
+earlier station guarantee the assumption the next one relies on? If any pair
+fails that test — that's your candidate for reordering, before production
+traffic discovers it instead of you.</p>
 <hr />
-<h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
+<h3 id="sources-used-in-the-analytical-section">Sources used in the analytical section</h3>
 <ul>
 <li><a href="https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/memorylimiterprocessor/README.md">Memory Limiter Processor — OpenTelemetry Collector</a></li>
 <li><a href="https://www.dash0.com/guides/opentelemetry-memory-limiter-processor">Mastering the OpenTelemetry Memory Limiter Processor — Dash0</a></li>
@@ -2495,7 +2505,7 @@ nego što ga proizvodni saobraćaj otkrije umesto tebe.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="26. avgust 2026. 16:22:58 UTC">26. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:06:19 UTC">August 26, 2026</span>
   </span>
 
     

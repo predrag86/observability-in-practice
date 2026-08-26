@@ -31,7 +31,7 @@
     
     
       
-        <title>Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal - Observability in Practice</title>
+        <title>Chapter 13 — Alerting architecture: two paths, one destination channel - Observability in Practice</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#poglavlje-13-arhitektura-alarmiranja-dva-puta-jedan-odredisni-kanal" class="md-skip">
+        <a href="#chapter-13-alerting-architecture-two-paths-one-destination-channel" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+              Chapter 13 — Alerting architecture: two paths, one destination channel
             
           </span>
         </div>
@@ -580,7 +580,7 @@
   <span class="md-ellipsis">
     
   
-    Deo II — Arhitektura prikupljanja telemetrije
+    Part II — Telemetry-collection architecture
   
 
     
@@ -608,7 +608,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+    Chapter 4 — The gateway pattern: a central point for telemetry
   
 
     
@@ -636,7 +636,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+    Chapter 5 — Instrumenting the application: two strategies
   
 
     
@@ -664,7 +664,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+    Chapter 6 — Containerized/batch workloads: the sidecar pattern
   
 
     
@@ -692,7 +692,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 7 — Kada ne možeš da instrumentiraš izvor: pull-obrasci
+    Chapter 7 — When you can't instrument the source: pull-based patterns
   
 
     
@@ -720,7 +720,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 8 — Frontend / RUM observability
+    Chapter 8 — Frontend / RUM observability
   
 
     
@@ -748,7 +748,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 9 — Sintetičko (black-box) praćenje
+    Chapter 9 — Synthetic (Black-Box) Monitoring
   
 
     
@@ -837,7 +837,7 @@
   <span class="md-ellipsis">
     
   
-    Deo III — Obrada, kardinalnost i troškovi
+    Part III — Processing, cardinality, and cost
   
 
     
@@ -865,7 +865,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+    Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
   
 
     
@@ -893,7 +893,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 11 — Kardinalnost i cena: kako sistem prirodno naraste iznad budžeta
+    Chapter 11 — Cardinality and cost: how a system naturally outgrows its budget
   
 
     
@@ -921,7 +921,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+    Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
   
 
     
@@ -1010,7 +1010,7 @@
   <span class="md-ellipsis">
     
   
-    Deo IV — Alarmiranje, SLO i odgovor na incidente
+    Part IV — Alerting, SLOs, and incident response
   
 
     
@@ -1047,7 +1047,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+    Chapter 13 — Alerting architecture: two paths, one destination channel
   
 
     
@@ -1065,7 +1065,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+    Chapter 13 — Alerting architecture: two paths, one destination channel
   
 
     
@@ -1091,10 +1091,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#131-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#131-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.1 Pitanje na koje ovo poglavlje odgovara
+        13.1 The question this chapter answers
       
     </span>
   </a>
@@ -1102,22 +1102,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#132-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#132-how-its-actually-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.2 Kako je to urađeno — praktičan pregled
+        13.2 How it's actually done — a practical overview
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13.2 Kako je to urađeno — praktičan pregled">
+    <nav class="md-nav" aria-label="13.2 How it&#39;s actually done — a practical overview">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#raspodela-po-domenu-vlasnik-signala-vlasnik-kanala" class="md-nav__link">
+  <a href="#distribution-by-domain-the-owner-of-the-signal-is-the-owner-of-the-channel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Raspodela po domenu — "vlasnik signala = vlasnik kanala"
+        Distribution by domain — "the owner of the signal is the owner of the channel"
       
     </span>
   </a>
@@ -1125,10 +1125,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fallback-lanac-alarm-se-nikad-ne-gubi" class="md-nav__link">
+  <a href="#the-fallback-chain-an-alert-is-never-lost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fallback lanac — alarm se nikad ne gubi
+        The fallback chain — an alert is never lost
       
     </span>
   </a>
@@ -1141,22 +1141,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#133-analiticki-deo-zasto-se-ne-stapaju-u-jedan-mehanizam" class="md-nav__link">
+  <a href="#133-analytical-section-why-they-dont-merge-into-one-mechanism" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.3 Analitički deo — zašto se ne stapaju u jedan mehanizam
+        13.3 Analytical section — why they don't merge into one mechanism
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13.3 Analitički deo — zašto se ne stapaju u jedan mehanizam">
+    <nav class="md-nav" aria-label="13.3 Analytical section — why they don&#39;t merge into one mechanism">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zvanicna-preporuka-rutiranje-po-vlasnistvu-ne-po-tehnologiji" class="md-nav__link">
+  <a href="#the-official-recommendation-route-by-ownership-not-by-technology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zvanična preporuka: rutiranje po vlasništvu, ne po tehnologiji
+        The official recommendation: route by ownership, not by technology
       
     </span>
   </a>
@@ -1164,10 +1164,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zasto-ne-postoji-jedan-univerzalan-cevovod" class="md-nav__link">
+  <a href="#why-there-isnt-one-universal-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto ne postoji jedan univerzalan cevovod
+        Why there isn't one universal pipeline
       
     </span>
   </a>
@@ -1175,10 +1175,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cena-da-je-postojao-samo-jedan-put-kontrafakticki-scenario" class="md-nav__link">
+  <a href="#the-cost-of-a-single-path-a-counterfactual-scenario" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cena da je postojao samo jedan put: kontrafaktički scenario
+        The cost of a single path: a counterfactual scenario
       
     </span>
   </a>
@@ -1191,10 +1191,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#134-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#134-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.4 Skupljena pravila iz ovog poglavlja
+        13.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -1202,22 +1202,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#135-vezba-za-citaoca" class="md-nav__link">
+  <a href="#135-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.5 Vežba za čitaoca
+        13.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="13.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -1252,7 +1252,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+    Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
   
 
     
@@ -1280,7 +1280,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+    Chapter 15 — SLOs and error-budget-based alerts
   
 
     
@@ -1308,7 +1308,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 16 — Runbook-ovi: od alarma do rešenja
+    Chapter 16 — Runbooks: from alert to resolution
   
 
     
@@ -1336,7 +1336,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 17 — Postmortem kultura
+    Chapter 17 — Postmortem culture
   
 
     
@@ -1425,7 +1425,7 @@
   <span class="md-ellipsis">
     
   
-    Deo V — Domenske studije slučaja
+    Part V — Domain case studies
   
 
     
@@ -1453,7 +1453,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 18 — Baze podataka (upravljane, tipa RDS/Aurora)
+    Chapter 18 — Databases (managed, RDS/Aurora-type)
   
 
     
@@ -1481,7 +1481,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 19 — Samostalno upravljani distribuirani sistemi (klaster tipa Dremio)
+    Chapter 19 — Self-managed distributed systems (a Dremio-style cluster)
   
 
     
@@ -1509,7 +1509,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 20 — Autentikacija i IAM (sistem tipa Keycloak)
+    Chapter 20 — Authentication and IAM (a Keycloak-type system)
   
 
     
@@ -1537,7 +1537,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 21 — Hostovi i serveri kao mašine
+    Chapter 21 — Hosts and servers as machines
   
 
     
@@ -1565,7 +1565,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 22 — Mreža kao posebna ravan posmatranja
+    Chapter 22 — The network as its own observation plane
   
 
     
@@ -1593,7 +1593,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 23 — Batch/ETL flota zadataka
+    Chapter 23 — The batch/ETL job fleet
   
 
     
@@ -1621,7 +1621,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 24 — Posmatranje servisa koji nije naš (tipa Snowflake)
+    Chapter 24 — Observing a service that isn't ours (the Snowflake kind)
   
 
     
@@ -1710,7 +1710,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VI — Upravljanje, usklađenost i zrelost
+    Part VI — Governance, compliance, and maturity
   
 
     
@@ -1738,7 +1738,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 25 — Privatnost u telemetriji
+    Chapter 25 — Privacy in telemetry
   
 
     
@@ -1766,7 +1766,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 26 — Observability kao kontrola usklađenosti (SOC 2 primer)
+    Chapter 26 — Observability as a compliance control (a SOC 2 example)
   
 
     
@@ -1794,7 +1794,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 27 — Prioritizacija: cena, performanse, pouzdanost, bezbednost
+    Chapter 27 — Prioritization: cost, performance, reliability, security
   
 
     
@@ -1822,7 +1822,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 28 — AI-asistirana observability: agent koji čita telemetriju
+    Chapter 28 — AI-assisted observability: an agent that reads telemetry
   
 
     
@@ -1911,7 +1911,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VII — Sazrevanje programa
+    Part VII — The program matures
   
 
     
@@ -1939,7 +1939,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 29 — Kako izgleda fazni rollout u realnom vremenu
+    Chapter 29 — What a phased rollout looks like in real time
   
 
     
@@ -1967,7 +1967,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 30 — Merenje zrelosti sopstvenog programa
+    Chapter 30 — Measuring the maturity of your own program
   
 
     
@@ -1995,7 +1995,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 31 — Zaključak: skupljena pravila
+    Chapter 31 — Conclusion: rules collected
   
 
     
@@ -2084,7 +2084,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak A — PromQL/LogQL recepti
+    Appendix A — PromQL/LogQL recipes
   
 
     
@@ -2112,7 +2112,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak B — Rečnik pojmova
+    Appendix B — Glossary of terms
   
 
     
@@ -2140,7 +2140,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak C — Checklist za onboarding novog servisa na observability
+    Appendix C — Checklist for onboarding a new service onto observability
   
 
     
@@ -2168,7 +2168,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak D — Šablon runbook-a i šablon postmortema
+    Appendix D — Runbook template and postmortem template
   
 
     
@@ -2216,10 +2216,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#131-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#131-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.1 Pitanje na koje ovo poglavlje odgovara
+        13.1 The question this chapter answers
       
     </span>
   </a>
@@ -2227,22 +2227,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#132-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#132-how-its-actually-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.2 Kako je to urađeno — praktičan pregled
+        13.2 How it's actually done — a practical overview
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13.2 Kako je to urađeno — praktičan pregled">
+    <nav class="md-nav" aria-label="13.2 How it&#39;s actually done — a practical overview">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#raspodela-po-domenu-vlasnik-signala-vlasnik-kanala" class="md-nav__link">
+  <a href="#distribution-by-domain-the-owner-of-the-signal-is-the-owner-of-the-channel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Raspodela po domenu — "vlasnik signala = vlasnik kanala"
+        Distribution by domain — "the owner of the signal is the owner of the channel"
       
     </span>
   </a>
@@ -2250,10 +2250,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fallback-lanac-alarm-se-nikad-ne-gubi" class="md-nav__link">
+  <a href="#the-fallback-chain-an-alert-is-never-lost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fallback lanac — alarm se nikad ne gubi
+        The fallback chain — an alert is never lost
       
     </span>
   </a>
@@ -2266,22 +2266,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#133-analiticki-deo-zasto-se-ne-stapaju-u-jedan-mehanizam" class="md-nav__link">
+  <a href="#133-analytical-section-why-they-dont-merge-into-one-mechanism" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.3 Analitički deo — zašto se ne stapaju u jedan mehanizam
+        13.3 Analytical section — why they don't merge into one mechanism
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13.3 Analitički deo — zašto se ne stapaju u jedan mehanizam">
+    <nav class="md-nav" aria-label="13.3 Analytical section — why they don&#39;t merge into one mechanism">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zvanicna-preporuka-rutiranje-po-vlasnistvu-ne-po-tehnologiji" class="md-nav__link">
+  <a href="#the-official-recommendation-route-by-ownership-not-by-technology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zvanična preporuka: rutiranje po vlasništvu, ne po tehnologiji
+        The official recommendation: route by ownership, not by technology
       
     </span>
   </a>
@@ -2289,10 +2289,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zasto-ne-postoji-jedan-univerzalan-cevovod" class="md-nav__link">
+  <a href="#why-there-isnt-one-universal-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto ne postoji jedan univerzalan cevovod
+        Why there isn't one universal pipeline
       
     </span>
   </a>
@@ -2300,10 +2300,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cena-da-je-postojao-samo-jedan-put-kontrafakticki-scenario" class="md-nav__link">
+  <a href="#the-cost-of-a-single-path-a-counterfactual-scenario" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cena da je postojao samo jedan put: kontrafaktički scenario
+        The cost of a single path: a counterfactual scenario
       
     </span>
   </a>
@@ -2316,10 +2316,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#134-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#134-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.4 Skupljena pravila iz ovog poglavlja
+        13.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -2327,22 +2327,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#135-vezba-za-citaoca" class="md-nav__link">
+  <a href="#135-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.5 Vežba za čitaoca
+        13.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="13.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -2371,7 +2371,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-13-arhitektura-alarmiranja.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-13-arhitektura-alarmiranja.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2379,140 +2379,155 @@
   
 
 
-<h1 id="poglavlje-13-arhitektura-alarmiranja-dva-puta-jedan-odredisni-kanal">Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal</h1>
-<p>Dispečerski centar hitne službe prima poziv na dva potpuno različita načina.
-Građanin diže telefon i bira broj — ljudski glas, opisuje šta vidi, često
-nesiguran u detalje. U isto vreme, senzor dima u zgradi na drugom kraju grada
-sam, automatski, šalje signal čim registruje čađ iznad praga — bez ijedne
-reči, bez čoveka koji bira broj. Ova dva signala ne dele ništa u tehničkom
-smislu — jedan je ljudski govor preko telefonske mreže, drugi je mašinski
-signal preko posvećene linije — a ipak oba završavaju na istom pultu, kod
-istog dispečera, jer dispečeru u tom trenutku nije bitno <strong>kako</strong> je signal
-stigao, nego <strong>da je</strong> stigao. Da je neko pokušao da natera senzor dima da
-"zove telefonom" radi doslednosti, samo bi dodao kašnjenje i tačku otkaza
-tamo gde nije trebalo da postoji.</p>
-<h2 id="131-pitanje-na-koje-ovo-poglavlje-odgovara">13.1 Pitanje na koje ovo poglavlje odgovara</h2>
-<p>Sistem koji knjiga prati ima alarme koji stižu iz dva suštinski različita
-izvora — direktni događaji infrastrukture (da li je kontejnerski zadatak
-umro) i signali izvedeni iz telemetrije (PromQL upit nad metrikama koje
-gateway iz Poglavlja 4 prikuplja) — a oba na kraju stižu u iste Slack kanale.
-Ovo poglavlje odgovara na pitanje zašto se ta dva puta namerno <strong>ne</strong> stapaju
-u jedan zajednički mehanizam, i kako se, unutar tog dvostrukog puta, alarmi
-dalje raspoređuju po timovima koji ih treba da vide.</p>
-<h2 id="132-kako-je-to-uraeno-praktican-pregled">13.2 Kako je to urađeno — praktičan pregled</h2>
-<p><strong>Put A — direktni infrastrukturni događaji.</strong> Kada kontejnerski zadatak u
-flotu za obradu podataka promeni stanje (zaustavi se, padne, ne uspe da se
-pokrene), cloud platforma emituje događaj u realnom vremenu — nema
-posrednika, nema metrike koja se prvo mora izračunati. Taj događaj direktno
-pokreće funkciju koja klasifikuje ozbiljnost, proverava da li je isti obrazac
-već nedavno prijavljen (da ne bi doslovno isti pad izazvao deset poruka), i
-šalje formatiranu poruku sa direktnim linkovima ka relevantnim dashboard-ima.</p>
-<p><strong>Put B — signali izvedeni iz telemetrije.</strong> Aplikacije šalju svoje metrike i
-trejsove kroz gateway iz Poglavlja 4, koji ih prosleđuje do cloud
-observability platforme. Tamo, PromQL upit periodično proverava da li neki
-uslov važi (na primer, da li je stopa grešaka prešla prag), i ako važi,
-platforma sama šalje alarm ka istom odredištu.</p>
-<p>Oba puta na kraju stižu u iste Slack kanale — ali <strong>ne kroz isti mehanizam</strong>.
-Ovo je namerna arhitekturna odluka, ne istorijski nusprodukt: signal iz Puta
-A prirodno živi u infrastrukturnim događajima (nema smisla prvo pretvarati
-događaj u metriku samo da bi prošao kroz isti cevovod kao Put B), a signal iz
-Puta B prirodno živi u telemetriji (nema smisla izvlačiti ga iz platforme
-nazad u infrastrukturni sloj). Svaki put prati signal odakle prirodno živi,
-bez nepotrebnog cross-cloud skoka.</p>
-<h3 id="raspodela-po-domenu-vlasnik-signala-vlasnik-kanala">Raspodela po domenu — "vlasnik signala = vlasnik kanala"</h3>
-<p>Alarmi se dalje dele po domenu na koji se odnose, ne po tome kojim putem su
-stigli. Backend servis ima svoj kanal, baza podataka svoj, auth sloj
-(Keycloak-tipa identity provider) svoj, batch/ETL flota svoj, mrežni sloj
-svoj, serverska flota svoj. Princip je jednostavan: tim koji poseduje
-konkretan segment sistema treba da vidi baš njegove alarme, ne da ih
-pretražuje unutar zajedničkog, preplavljenog kanala. Signal sa Puta A
-(infrastrukturni pad zadatka) i signal sa Puta B (telemetrijski izveden
-alarm) za <strong>isti</strong> domen završavaju u <strong>istom</strong> namenskom kanalu — razlika u
-putu je nevidljiva timu koji čita alarm, i tako treba da bude.</p>
-<h3 id="fallback-lanac-alarm-se-nikad-ne-gubi">Fallback lanac — alarm se nikad ne gubi</h3>
-<p>Svaki namenski kanal je zapravo posebna Slack integracija (webhook), i
-mehanizam koji bira koju integraciju koristiti radi po principu <strong>unazad
-odstupanje</strong>: prvo pokušaj namenski webhook za taj domen; ako nije podešen
-(prazna vrednost), padni nazad na sledeći širi kanal; ako ni taj nije
-podešen, padni na opšti, uvek-postojeći kanal. Ovo znači da uvođenje novog
-domena (novog namenskog kanala) nikad ne rizikuje da alarm potpuno nestane
-ako neko zaboravi da popuni konfiguraciju za taj kanal na vreme — alarm samo
-sleže jedan nivo šire, nikad se ne gubi u tišini. Ova odluka je posebno
-vredna zato što je suprotstavljena intuitivnom refleksu "podrazumevana ruta
-je mesto gde idu alarmi koje ne želimo da vidimo" — ovde je podrazumevana
-ruta stvaran, gledan kanal, ne kanta za otpatke.</p>
-<p><img alt="Dva nezavisna puta konvergiraju na rutiranje po vlasništvu nad domenom, sa eksplicitnim fallback lancem ka opštem, uvek gledanom kanalu kad namenski webhook nije podešen." src="../../diagrams/ch13-dual-path.png" width="95%" /></p>
-<h2 id="133-analiticki-deo-zasto-se-ne-stapaju-u-jedan-mehanizam">13.3 Analitički deo — zašto se ne stapaju u jedan mehanizam</h2>
-<h3 id="zvanicna-preporuka-rutiranje-po-vlasnistvu-ne-po-tehnologiji">Zvanična preporuka: rutiranje po vlasništvu, ne po tehnologiji</h3>
-<p>Nezavisan pregled prakse rutiranja alarma dosledno preporučuje dvoslojni
-pristup: grubo rutiranje na nivou alatke za alarmiranje (koja platforma,
-koji tim), i fino rutiranje unutar toga (ozbiljnost, konkretna eskalacija).
-Redosled pravila treba da ide od najspecifičnijeg ka najopštijem, sa
-podrazumevanom rutom koja <strong>nikad</strong> ne sme biti tretirana kao "mesto gde
-idu alarmi koje ignorišemo" — tačno princip primenjen u fallback lancu
-opisanom iznad. Isti materijal preporučuje redovno merenje kolika
-procentualno alarma zaista pogađa namensku rutu naspram podrazumevane —
-cilj od 95%+ pokrivenosti namenskim rutama otkriva rupe u konfiguraciji pre
-nego što ih neko otkrije uživo, u trenutku incidenta.</p>
-<h3 id="zasto-ne-postoji-jedan-univerzalan-cevovod">Zašto ne postoji jedan univerzalan cevovod</h3>
-<p>Uobičajen nagon je forsirati sve kroz jednu platformu radi doslednosti —
-"sve treba da ide kroz observability platformu, zbog jednog mesta istine".
-Implementacija koju knjiga prati je eksplicitno odbacila taj nagon iz tri
-razloga: prvo, stanje infrastrukturnog zadatka prirodno živi u
-infrastrukturnim događajima, ne u metrici — forsiranje bi značilo ili
-objavljivanje tih događaja kao log linija ili sintetizovanje metrike samo da
-bi prošla kroz isti cevovod, dodatni skok bez koristi. Drugo, webhook URL-ovi
-bi morali ili biti konfigurisani na oba mesta (dupliranje, dva mesta koja
-mogu da se raziđu) ili bi jedno moralo da poziva drugo cross-cloud
-(dodatna operativna složenost i dodatna tačka otkaza). Treće, format poruke
-sa Puta A (bogat, sa specifičnom logikom po tipu zadatka i direktnim
-linkovima) je teško izraziti kroz šablone za alarmiranje observability
-platforme, koji su projektovani za drugu vrstu poruke.</p>
-<h3 id="cena-da-je-postojao-samo-jedan-put-kontrafakticki-scenario">Cena da je postojao samo jedan put: kontrafaktički scenario</h3>
-<p>Vredi konkretno odigrati alternativu u kojoj bi infrastrukturni događaji bili
-prisiljeni kroz observability platformu radi "jednog mesta istine". Svaki
-pad zadatka bi prvo morao biti pretvoren u log liniju ili sintetičku
-metriku, zatim čekati sledeći ciklus evaluacije PromQL upita (kašnjenje koje
-direktan događaj nikad ne bi imao), a sam webhook bi morao biti konfigurisan
-na strani cloud platforme umesto u infrastrukturnom nalogu — što znači da bi
-kvar cloud platforme (tačno onaj scenario koji Poglavlje 4 već pominje kao
-razlog za nezavisnost) mogao da obori <strong>oba</strong> puta odjednom, umesto da Put A
-ostane nezavisan i nastavi da radi dok se Put B oporavlja. Doslednost
-transportnog mehanizma bi bila kupljena po ceni upravo one nezavisnosti koja
-čini sistem otporan.</p>
-<p>Vratimo se na dispečerski centar s početka poglavlja. Dispečer ne insistira
-da senzor dima "zove telefonom" da bi oba poziva izgledala isto na papiru —
-insistira samo da oba, ma kojim putem stigla, završe na istom pultu, kod
-prave jedinice, i da nijedan poziv ne nestane u tišini ako je linija za
-određenu jedinicu zauzeta. <strong>Dosledan izgled odredišta ne zahteva dosledan
-put do njega — zahteva samo da nijedan put ne otkaže na način koji povlači
-drugi sa sobom.</strong></p>
-<h2 id="134-skupljena-pravila-iz-ovog-poglavlja">13.4 Skupljena pravila iz ovog poglavlja</h2>
+<h1 id="chapter-13-alerting-architecture-two-paths-one-destination-channel">Chapter 13 — Alerting architecture: two paths, one destination channel</h1>
+<p>An emergency dispatch center receives calls in two entirely different ways.
+A citizen picks up the phone and dials — a human voice, describing what they
+see, often unsure of the details. At the same time, a smoke detector in a
+building on the other side of town sends a signal on its own, automatically,
+the moment it registers smoke above a threshold — no words, no person
+dialing a number. These two signals share nothing technically — one is human
+speech over a telephone network, the other is a machine signal over a
+dedicated line — and yet both end up at the same console, with the same
+dispatcher, because at that moment the dispatcher doesn't care <strong>how</strong> the
+signal arrived, only <strong>that</strong> it arrived. If someone tried to make the smoke
+detector "call by phone" for the sake of consistency, all they would add is
+latency and a point of failure where none needed to exist.</p>
+<h2 id="131-the-question-this-chapter-answers">13.1 The question this chapter answers</h2>
+<p>The system this book follows has alerts that arrive from two fundamentally
+different sources — direct infrastructure events (did a container task die)
+and signals derived from telemetry (a PromQL query over the metrics that the
+gateway from Chapter 4 collects) — and both ultimately land in the same
+Slack channels. This chapter answers the question of why those two paths
+are deliberately <strong>not</strong> merged into one shared mechanism, and how, within
+that dual path, alerts are then distributed to the teams that need to see
+them.</p>
+<h2 id="132-how-its-actually-done-a-practical-overview">13.2 How it's actually done — a practical overview</h2>
+<p><strong>Path A — direct infrastructure events.</strong> When a container task in the data
+processing fleet changes state (stops, crashes, fails to start), the cloud
+platform emits an event in real time — no intermediary, no metric that has
+to be computed first. That event directly triggers a function that
+classifies severity, checks whether the same pattern has already been
+reported recently (so a single, identical crash doesn't produce ten
+messages), and sends a formatted message with direct links to the relevant
+dashboards.</p>
+<p><strong>Path B — signals derived from telemetry.</strong> Applications send their metrics
+and traces through the gateway from Chapter 4, which forwards them to the
+cloud observability platform. There, a PromQL query periodically checks
+whether some condition holds (for example, whether the error rate has
+crossed a threshold), and if it does, the platform itself sends an alert to
+the same destination.</p>
+<p>Both paths ultimately land in the same Slack channels — but <strong>not through
+the same mechanism</strong>. This is a deliberate architectural decision, not a
+historical byproduct: the signal from Path A naturally lives in
+infrastructure events (there's no point converting an event into a metric
+just so it can pass through the same pipeline as Path B), and the signal
+from Path B naturally lives in telemetry (there's no point pulling it out of
+the platform back into the infrastructure layer). Each path follows the
+signal to wherever it naturally lives, without an unnecessary cross-cloud
+hop.</p>
+<h3 id="distribution-by-domain-the-owner-of-the-signal-is-the-owner-of-the-channel">Distribution by domain — "the owner of the signal is the owner of the channel"</h3>
+<p>Alerts are then split by the domain they concern, not by which path they
+arrived through. The backend service has its own channel, the database its
+own, the auth layer (a Keycloak-type identity provider) its own, the
+batch/ETL fleet its own, the network layer its own, the server fleet its
+own. The principle is simple: the team that owns a given segment of the
+system should see exactly its own alerts, not have to search for them
+inside one shared, flooded channel. A signal from Path A (an infrastructure
+task crash) and a signal from Path B (a telemetry-derived alert) for the
+<strong>same</strong> domain end up in the <strong>same</strong> dedicated channel — the difference in
+path is invisible to the team reading the alert, and that's how it should
+be.</p>
+<h3 id="the-fallback-chain-an-alert-is-never-lost">The fallback chain — an alert is never lost</h3>
+<p>Each dedicated channel is actually a separate Slack integration (webhook),
+and the mechanism that picks which integration to use works on a principle
+of <strong>backward fallback</strong>: first try the dedicated webhook for that domain;
+if it isn't configured (empty value), fall back to the next, broader
+channel; if that one isn't configured either, fall back to the general,
+always-present channel. This means introducing a new domain (a new
+dedicated channel) never risks an alert vanishing entirely if someone
+forgets to fill in the configuration for that channel in time — the alert
+just settles one level wider, never disappearing into silence. This
+decision is especially valuable because it runs counter to the intuitive
+reflex that "the default route is where alerts we don't want to see go" —
+here, the default route is a real, watched channel, not a wastebasket.</p>
+<p><img alt="Two independent paths converge on routing by domain ownership, with an explicit fallback chain toward the general, always-watched channel when a dedicated webhook isn't configured." src="../../diagrams/ch13-dual-path.png" width="95%" /></p>
+<h2 id="133-analytical-section-why-they-dont-merge-into-one-mechanism">13.3 Analytical section — why they don't merge into one mechanism</h2>
+<h3 id="the-official-recommendation-route-by-ownership-not-by-technology">The official recommendation: route by ownership, not by technology</h3>
+<p>An independent review of alert routing practice consistently recommends a
+two-layer approach: coarse routing at the level of the alerting tool (which
+platform, which team), and fine routing within that (severity, specific
+escalation). Rule order should go from most specific to most general, with
+a default route that must <strong>never</strong> be treated as "the place where alerts
+we ignore go" — exactly the principle applied in the fallback chain
+described above. The same material recommends regularly measuring what
+percentage of alerts actually hits a dedicated route versus the default one
+— a target of 95%+ coverage by dedicated routes surfaces configuration gaps
+before someone discovers them live, in the middle of an incident.</p>
+<h3 id="why-there-isnt-one-universal-pipeline">Why there isn't one universal pipeline</h3>
+<p>The common impulse is to force everything through a single platform for the
+sake of consistency — "everything should go through the observability
+platform, for one source of truth." The implementation this book follows
+explicitly rejected that impulse for three reasons: first, the state of an
+infrastructure task naturally lives in infrastructure events, not in a
+metric — forcing it through would mean either publishing those events as log
+lines or synthesizing a metric purely so it could pass through the same
+pipeline as Path B, an extra hop with no benefit. Second, the webhook URLs
+would have to be either configured in both places (duplication, two places
+that can drift apart) or one would have to call the other cross-cloud
+(additional operational complexity and an additional point of failure).
+Third, the message format from Path A (rich, with logic specific to the task
+type and direct links) is hard to express through the observability
+platform's alerting templates, which are designed for a different kind of
+message.</p>
+<h3 id="the-cost-of-a-single-path-a-counterfactual-scenario">The cost of a single path: a counterfactual scenario</h3>
+<p>It's worth playing out the alternative concretely, in which infrastructure
+events were forced through the observability platform for the sake of "one
+source of truth." Every task crash would first have to be turned into a log
+line or a synthetic metric, then wait for the next PromQL evaluation cycle
+(latency a direct event would never have had), and the webhook itself would
+have to be configured on the cloud platform's side instead of in the
+infrastructure account — which means an outage of the cloud platform (the
+exact scenario Chapter 4 already cites as a reason for independence) could
+take down <strong>both</strong> paths at once, instead of Path A staying independent and
+continuing to work while Path B recovers. Consistency of the transport
+mechanism would be bought at the price of exactly the independence that
+makes the system resilient.</p>
+<p>Return to the dispatch center from the start of this chapter. The dispatcher
+doesn't insist that the smoke detector "call by phone" so both calls look
+the same on paper — it only insists that both, whichever path they arrive
+by, end up at the same console, at the right unit, and that neither call
+disappears into silence if the line for a given unit is busy. <strong>A
+consistent appearance at the destination doesn't require a consistent path
+to it — it only requires that no path fail in a way that drags the other
+one down with it.</strong></p>
+<h2 id="134-rules-collected-from-this-chapter">13.4 Rules collected from this chapter</h2>
 <ul>
-<li>Ne forsiraj signal kroz tuđi transportni mehanizam radi doslednosti —
-  neka svaki signal ide putem gde prirodno živi (infrastrukturni događaj kroz
-  infrastrukturni put, telemetrijski signal kroz telemetrijski put).</li>
-<li>Rutiraj alarme po vlasništvu nad domenom (ko poseduje taj deo sistema), ne
-  po tome kojim tehničkim putem su stigli — vlasnik signala treba da bude
-  vlasnik kanala.</li>
-<li>Nikad ne tretiraj podrazumevanu/opštu rutu kao mesto za alarme koje
-  ignorišeš — ona mora biti stvaran, gledan kanal, jer je to mesto gde
-  sleže sve što još nema namensku rutu.</li>
-<li>Ugradi eksplicitan fallback lanac (namenski → širi → opšti kanal) tako da
-  nepopunjena konfiguracija za novi domen preusmeri alarm umesto da ga
-  izgubi.</li>
-<li>Meri redovno koliki procenat alarma zaista pogađa namensku rutu — pad tog
-  procenta je rani signal da je neki domen prerastao svoju trenutnu
-  konfiguraciju.</li>
+<li>Don't force a signal through someone else's transport mechanism for the
+  sake of consistency — let each signal travel the path where it naturally
+  lives (an infrastructure event through the infrastructure path, a
+  telemetry signal through the telemetry path).</li>
+<li>Route alerts by domain ownership (who owns that part of the system), not
+  by which technical path they arrived through — the owner of the signal
+  should be the owner of the channel.</li>
+<li>Never treat the default/general route as a place for alerts you ignore —
+  it must be a real, watched channel, because it's where everything that
+  doesn't yet have a dedicated route settles.</li>
+<li>Build in an explicit fallback chain (dedicated → broader → general
+  channel) so that missing configuration for a new domain redirects the
+  alert instead of losing it.</li>
+<li>Regularly measure what percentage of alerts actually hits a dedicated
+  route — a drop in that percentage is an early signal that some domain has
+  outgrown its current configuration.</li>
 </ul>
-<h2 id="135-vezba-za-citaoca">13.5 Vežba za čitaoca</h2>
-<p>Pronađi u svom sistemu bar dva alarma koja stižu potpuno različitim
-tehničkim putevima (jedan direktan događaj, jedan izveden iz upita nad
-metrikama). Da li oba završavaju u istom, ili bar predvidljivo povezanim
-odredištima? Ako namenska konfiguracija za jedan od njih nedostaje, gde
-tačno taj alarm završava — u nekom stvarno gledanom kanalu, ili tiho nigde?</p>
+<h2 id="135-exercise-for-the-reader">13.5 Exercise for the reader</h2>
+<p>Find at least two alerts in your system that arrive through completely
+different technical paths (one a direct event, one derived from a query
+over metrics). Do both end up at the same, or at least predictably
+connected, destinations? If dedicated configuration is missing for one of
+them, where exactly does that alert end up — in some actually watched
+channel, or quietly nowhere?</p>
 <hr />
-<h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
+<h3 id="sources-used-in-the-analytical-section">Sources used in the analytical section</h3>
 <ul>
 <li><a href="https://grafana.com/docs/grafana-cloud/alerting-and-irm/irm/guides/best-practices/routing/">Best practices for alert routing — Grafana Cloud documentation</a></li>
 <li><a href="https://grafana.com/docs/grafana/latest/alerting/guides/best-practices/">Alerting best practices — Grafana documentation</a></li>
@@ -2539,7 +2554,7 @@ tačno taj alarm završava — u nekom stvarno gledanom kanalu, ili tiho nigde?<
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="26. avgust 2026. 16:25:19 UTC">26. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:10:00 UTC">August 26, 2026</span>
   </span>
 
     

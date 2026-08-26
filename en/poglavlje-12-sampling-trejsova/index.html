@@ -31,7 +31,7 @@
     
     
       
-        <title>Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side - Observability in Practice</title>
+        <title>Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side - Observability in Practice</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#poglavlje-12-sampling-trejsova-server-side-adaptivni-sampling-naspram-collector-side" class="md-skip">
+        <a href="#chapter-12-trace-sampling-server-side-adaptive-sampling-versus-collector-side" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+              Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
             
           </span>
         </div>
@@ -580,7 +580,7 @@
   <span class="md-ellipsis">
     
   
-    Deo II — Arhitektura prikupljanja telemetrije
+    Part II — Telemetry-collection architecture
   
 
     
@@ -608,7 +608,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+    Chapter 4 — The gateway pattern: a central point for telemetry
   
 
     
@@ -636,7 +636,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+    Chapter 5 — Instrumenting the application: two strategies
   
 
     
@@ -664,7 +664,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+    Chapter 6 — Containerized/batch workloads: the sidecar pattern
   
 
     
@@ -692,7 +692,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 7 — Kada ne možeš da instrumentiraš izvor: pull-obrasci
+    Chapter 7 — When you can't instrument the source: pull-based patterns
   
 
     
@@ -720,7 +720,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 8 — Frontend / RUM observability
+    Chapter 8 — Frontend / RUM observability
   
 
     
@@ -748,7 +748,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 9 — Sintetičko (black-box) praćenje
+    Chapter 9 — Synthetic (Black-Box) Monitoring
   
 
     
@@ -837,7 +837,7 @@
   <span class="md-ellipsis">
     
   
-    Deo III — Obrada, kardinalnost i troškovi
+    Part III — Processing, cardinality, and cost
   
 
     
@@ -865,7 +865,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+    Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
   
 
     
@@ -893,7 +893,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 11 — Kardinalnost i cena: kako sistem prirodno naraste iznad budžeta
+    Chapter 11 — Cardinality and cost: how a system naturally outgrows its budget
   
 
     
@@ -930,7 +930,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+    Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
   
 
     
@@ -948,7 +948,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+    Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
   
 
     
@@ -974,10 +974,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#121-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#121-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.1 Pitanje na koje ovo poglavlje odgovara
+        12.1 The question this chapter answers
       
     </span>
   </a>
@@ -985,22 +985,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#122-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#122-how-its-actually-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.2 Kako je to urađeno — praktičan pregled
+        12.2 How it's actually done — a practical overview
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="12.2 Kako je to urađeno — praktičan pregled">
+    <nav class="md-nav" aria-label="12.2 How it&#39;s actually done — a practical overview">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#kako-se-pravila-zapravo-evaluiraju-i-zasto-je-ovo-iznenaenje" class="md-nav__link">
+  <a href="#how-the-rules-are-actually-evaluated-and-why-its-surprising" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Kako se pravila zapravo evaluiraju — i zašto je ovo iznenađenje
+        How the rules are actually evaluated — and why it's surprising
       
     </span>
   </a>
@@ -1008,10 +1008,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zamka-merenja-dve-stvari-koje-izgledaju-kao-ista-brojka-a-nisu" class="md-nav__link">
+  <a href="#a-measurement-trap-two-things-that-look-like-the-same-number-and-arent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zamka merenja: dve stvari koje izgledaju kao ista brojka, a nisu
+        A measurement trap: two things that look like the same number, and aren't
       
     </span>
   </a>
@@ -1019,10 +1019,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#trejs-koji-je-odbacen-nije-trajno-izgubljen-ali-skoro" class="md-nav__link">
+  <a href="#a-dropped-trace-isnt-permanently-lost-but-almost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Trejs koji je odbačen nije trajno izgubljen — ali skoro
+        A dropped trace isn't permanently lost — but almost
       
     </span>
   </a>
@@ -1030,10 +1030,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#slucaj-neslaganja-kad-brojka-ne-odgovara-ocekivanju" class="md-nav__link">
+  <a href="#a-case-of-mismatch-when-the-number-doesnt-match-the-expectation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Slučaj neslaganja: kad brojka ne odgovara očekivanju
+        A case of mismatch: when the number doesn't match the expectation
       
     </span>
   </a>
@@ -1046,22 +1046,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#123-analiticki-deo-zasto-server-side-umesto-collector-side" class="md-nav__link">
+  <a href="#123-analytical-section-why-server-side-instead-of-collector-side" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.3 Analitički deo — zašto server-side umesto collector-side
+        12.3 Analytical section — why server-side instead of collector-side
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="12.3 Analitički deo — zašto server-side umesto collector-side">
+    <nav class="md-nav" aria-label="12.3 Analytical section — why server-side instead of collector-side">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zvanicna-razlika-gde-se-donosi-odluka-i-sta-to-znaci-za-tacnost" class="md-nav__link">
+  <a href="#the-official-distinction-where-the-decision-is-made-and-what-that-means-for-accuracy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zvanična razlika: gde se donosi odluka i šta to znači za tačnost
+        The official distinction: where the decision is made, and what that means for accuracy
       
     </span>
   </a>
@@ -1069,10 +1069,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zasto-ne-na-nivou-gateway-a-cena-koju-bi-self-managed-tail-sampling-nosio" class="md-nav__link">
+  <a href="#why-not-at-the-gateway-level-the-cost-a-self-managed-tail-sampling-would-carry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto ne na nivou gateway-a — cena koju bi self-managed tail sampling nosio
+        Why not at the gateway level — the cost a self-managed tail sampling would carry
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cena-da-je-odluka-o-zadrzavanju-bila-trenutna-bez-punog-uvida-kontrafakticki-scenario" class="md-nav__link">
+  <a href="#the-cost-of-an-instant-retention-decision-without-full-insight-a-counterfactual-scenario" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cena da je odluka o zadržavanju bila trenutna, bez punog uvida: kontrafaktički scenario
+        The cost of an instant retention decision, without full insight: a counterfactual scenario
       
     </span>
   </a>
@@ -1096,10 +1096,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#124-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#124-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.4 Skupljena pravila iz ovog poglavlja
+        12.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -1107,22 +1107,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#125-vezba-za-citaoca" class="md-nav__link">
+  <a href="#125-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.5 Vežba za čitaoca
+        12.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="12.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="12.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -1218,7 +1218,7 @@
   <span class="md-ellipsis">
     
   
-    Deo IV — Alarmiranje, SLO i odgovor na incidente
+    Part IV — Alerting, SLOs, and incident response
   
 
     
@@ -1246,7 +1246,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+    Chapter 13 — Alerting architecture: two paths, one destination channel
   
 
     
@@ -1274,7 +1274,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+    Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
   
 
     
@@ -1302,7 +1302,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+    Chapter 15 — SLOs and error-budget-based alerts
   
 
     
@@ -1330,7 +1330,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 16 — Runbook-ovi: od alarma do rešenja
+    Chapter 16 — Runbooks: from alert to resolution
   
 
     
@@ -1358,7 +1358,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 17 — Postmortem kultura
+    Chapter 17 — Postmortem culture
   
 
     
@@ -1447,7 +1447,7 @@
   <span class="md-ellipsis">
     
   
-    Deo V — Domenske studije slučaja
+    Part V — Domain case studies
   
 
     
@@ -1475,7 +1475,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 18 — Baze podataka (upravljane, tipa RDS/Aurora)
+    Chapter 18 — Databases (managed, RDS/Aurora-type)
   
 
     
@@ -1503,7 +1503,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 19 — Samostalno upravljani distribuirani sistemi (klaster tipa Dremio)
+    Chapter 19 — Self-managed distributed systems (a Dremio-style cluster)
   
 
     
@@ -1531,7 +1531,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 20 — Autentikacija i IAM (sistem tipa Keycloak)
+    Chapter 20 — Authentication and IAM (a Keycloak-type system)
   
 
     
@@ -1559,7 +1559,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 21 — Hostovi i serveri kao mašine
+    Chapter 21 — Hosts and servers as machines
   
 
     
@@ -1587,7 +1587,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 22 — Mreža kao posebna ravan posmatranja
+    Chapter 22 — The network as its own observation plane
   
 
     
@@ -1615,7 +1615,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 23 — Batch/ETL flota zadataka
+    Chapter 23 — The batch/ETL job fleet
   
 
     
@@ -1643,7 +1643,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 24 — Posmatranje servisa koji nije naš (tipa Snowflake)
+    Chapter 24 — Observing a service that isn't ours (the Snowflake kind)
   
 
     
@@ -1732,7 +1732,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VI — Upravljanje, usklađenost i zrelost
+    Part VI — Governance, compliance, and maturity
   
 
     
@@ -1760,7 +1760,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 25 — Privatnost u telemetriji
+    Chapter 25 — Privacy in telemetry
   
 
     
@@ -1788,7 +1788,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 26 — Observability kao kontrola usklađenosti (SOC 2 primer)
+    Chapter 26 — Observability as a compliance control (a SOC 2 example)
   
 
     
@@ -1816,7 +1816,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 27 — Prioritizacija: cena, performanse, pouzdanost, bezbednost
+    Chapter 27 — Prioritization: cost, performance, reliability, security
   
 
     
@@ -1844,7 +1844,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 28 — AI-asistirana observability: agent koji čita telemetriju
+    Chapter 28 — AI-assisted observability: an agent that reads telemetry
   
 
     
@@ -1933,7 +1933,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VII — Sazrevanje programa
+    Part VII — The program matures
   
 
     
@@ -1961,7 +1961,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 29 — Kako izgleda fazni rollout u realnom vremenu
+    Chapter 29 — What a phased rollout looks like in real time
   
 
     
@@ -1989,7 +1989,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 30 — Merenje zrelosti sopstvenog programa
+    Chapter 30 — Measuring the maturity of your own program
   
 
     
@@ -2017,7 +2017,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 31 — Zaključak: skupljena pravila
+    Chapter 31 — Conclusion: rules collected
   
 
     
@@ -2106,7 +2106,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak A — PromQL/LogQL recepti
+    Appendix A — PromQL/LogQL recipes
   
 
     
@@ -2134,7 +2134,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak B — Rečnik pojmova
+    Appendix B — Glossary of terms
   
 
     
@@ -2162,7 +2162,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak C — Checklist za onboarding novog servisa na observability
+    Appendix C — Checklist for onboarding a new service onto observability
   
 
     
@@ -2190,7 +2190,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak D — Šablon runbook-a i šablon postmortema
+    Appendix D — Runbook template and postmortem template
   
 
     
@@ -2238,10 +2238,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#121-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#121-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.1 Pitanje na koje ovo poglavlje odgovara
+        12.1 The question this chapter answers
       
     </span>
   </a>
@@ -2249,22 +2249,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#122-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#122-how-its-actually-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.2 Kako je to urađeno — praktičan pregled
+        12.2 How it's actually done — a practical overview
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="12.2 Kako je to urađeno — praktičan pregled">
+    <nav class="md-nav" aria-label="12.2 How it&#39;s actually done — a practical overview">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#kako-se-pravila-zapravo-evaluiraju-i-zasto-je-ovo-iznenaenje" class="md-nav__link">
+  <a href="#how-the-rules-are-actually-evaluated-and-why-its-surprising" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Kako se pravila zapravo evaluiraju — i zašto je ovo iznenađenje
+        How the rules are actually evaluated — and why it's surprising
       
     </span>
   </a>
@@ -2272,10 +2272,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zamka-merenja-dve-stvari-koje-izgledaju-kao-ista-brojka-a-nisu" class="md-nav__link">
+  <a href="#a-measurement-trap-two-things-that-look-like-the-same-number-and-arent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zamka merenja: dve stvari koje izgledaju kao ista brojka, a nisu
+        A measurement trap: two things that look like the same number, and aren't
       
     </span>
   </a>
@@ -2283,10 +2283,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#trejs-koji-je-odbacen-nije-trajno-izgubljen-ali-skoro" class="md-nav__link">
+  <a href="#a-dropped-trace-isnt-permanently-lost-but-almost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Trejs koji je odbačen nije trajno izgubljen — ali skoro
+        A dropped trace isn't permanently lost — but almost
       
     </span>
   </a>
@@ -2294,10 +2294,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#slucaj-neslaganja-kad-brojka-ne-odgovara-ocekivanju" class="md-nav__link">
+  <a href="#a-case-of-mismatch-when-the-number-doesnt-match-the-expectation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Slučaj neslaganja: kad brojka ne odgovara očekivanju
+        A case of mismatch: when the number doesn't match the expectation
       
     </span>
   </a>
@@ -2310,22 +2310,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#123-analiticki-deo-zasto-server-side-umesto-collector-side" class="md-nav__link">
+  <a href="#123-analytical-section-why-server-side-instead-of-collector-side" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.3 Analitički deo — zašto server-side umesto collector-side
+        12.3 Analytical section — why server-side instead of collector-side
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="12.3 Analitički deo — zašto server-side umesto collector-side">
+    <nav class="md-nav" aria-label="12.3 Analytical section — why server-side instead of collector-side">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zvanicna-razlika-gde-se-donosi-odluka-i-sta-to-znaci-za-tacnost" class="md-nav__link">
+  <a href="#the-official-distinction-where-the-decision-is-made-and-what-that-means-for-accuracy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zvanična razlika: gde se donosi odluka i šta to znači za tačnost
+        The official distinction: where the decision is made, and what that means for accuracy
       
     </span>
   </a>
@@ -2333,10 +2333,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zasto-ne-na-nivou-gateway-a-cena-koju-bi-self-managed-tail-sampling-nosio" class="md-nav__link">
+  <a href="#why-not-at-the-gateway-level-the-cost-a-self-managed-tail-sampling-would-carry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto ne na nivou gateway-a — cena koju bi self-managed tail sampling nosio
+        Why not at the gateway level — the cost a self-managed tail sampling would carry
       
     </span>
   </a>
@@ -2344,10 +2344,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cena-da-je-odluka-o-zadrzavanju-bila-trenutna-bez-punog-uvida-kontrafakticki-scenario" class="md-nav__link">
+  <a href="#the-cost-of-an-instant-retention-decision-without-full-insight-a-counterfactual-scenario" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cena da je odluka o zadržavanju bila trenutna, bez punog uvida: kontrafaktički scenario
+        The cost of an instant retention decision, without full insight: a counterfactual scenario
       
     </span>
   </a>
@@ -2360,10 +2360,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#124-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#124-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.4 Skupljena pravila iz ovog poglavlja
+        12.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -2371,22 +2371,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#125-vezba-za-citaoca" class="md-nav__link">
+  <a href="#125-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.5 Vežba za čitaoca
+        12.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="12.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="12.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -2415,7 +2415,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-12-sampling-trejsova.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-12-sampling-trejsova.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2423,190 +2423,203 @@
   
 
 
-<h1 id="poglavlje-12-sampling-trejsova-server-side-adaptivni-sampling-naspram-collector-side">Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side</h1>
-<p>Aerodromska bezbednosna kontrola ne pregleda svakog putnika sa istom pažnjom.
-Većina prođe kroz standardan skener i ide dalje za nekoliko sekundi. Neki —
-nasumično izabrani, ili zato što je nešto na skeneru zatraženo dodatnu pažnju,
-ili zato što obrazac ponašanja odstupa od uobičajenog — dobijaju dodatni,
-temeljniji pregled. Odluka o tome ko dobija dodatnu pažnju se ne donosi na
-ulazu u aerodrom, pre nego što iko uopšte prođe kroz bilo šta — donosi se <strong>na
-samom skeneru</strong>, sa punim uvidom u ono što je upravo izmereno. Da se odluka
-donosila unapred, na kapiji, pre bilo kakvog merenja, ne bi bilo osnove za
-nju — birala bi se nasumično ili bi se pregledao baš svako, što od bezbednosne
-kontrole pravi usko grlo koje niko ne bi mogao da izdrži.</p>
-<p>Sampling trejsova stoji pred istim izborom: da li odluku "da li ovaj trejs
-vredi zadržati" doneti rano, pre nego što je trejs uopšte sakupljen u
-celosti — ili kasno, posle punog uvida u ono što se zapravo dogodilo.</p>
-<h2 id="121-pitanje-na-koje-ovo-poglavlje-odgovara">12.1 Pitanje na koje ovo poglavlje odgovara</h2>
-<p>Svaki zahtev u sistemu generiše trejs. Zadržati baš svaki, zauvek, po punoj
-ceni skladištenja, nije održivo ni za jedan sistem realne veličine — pitanje
-nije <em>da li</em> se sampluje, nego <strong>gde</strong> se odluka donosi i <strong>na osnovu čega</strong>.
-Ovo poglavlje odgovara na pitanje zašto je implementacija koju knjiga prati
-odabrala da tu odluku prepusti platformi, posle punog sakupljanja trejsa,
-umesto da je donese sama, rano, na nivou gateway-a iz Poglavlja 4.</p>
-<h2 id="122-kako-je-to-uraeno-praktican-pregled">12.2 Kako je to urađeno — praktičan pregled</h2>
-<p>Sampling trejsova u implementaciji koju knjiga prati je <strong>server-side i
-adaptivan</strong> — radi ga sama cloud observability platforma, ne gateway. Gateway
-prosleđuje <strong>sve</strong> trejsove dalje, bez sopstvene sampling logike; odluka o
-tome šta se zadržava se donosi tek na platformi, pošto je platforma već
-primila kompletan trejs.</p>
-<p>Osnovna, podrazumevana stopa je probabilistička — trenutno <strong>10% baznog
-uzorkovanja</strong> (spušteno sa 25% u ranijoj fazi, kad je iskustvo pokazalo da
-25% nosi više troška nego analitičke vrednosti za ovaj obim saobraćaja). Ali
-platforma ne primenjuje samo tu bazu — dodaje slojeve pravila koja
-<strong>garantovano zadržavaju</strong> određene kategorije trejsova nezavisno od bazne
-stope:</p>
+<h1 id="chapter-12-trace-sampling-server-side-adaptive-sampling-versus-collector-side">Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side</h1>
+<p>Airport security screening doesn't examine every passenger with the same
+attention. Most pass through a standard scanner and move on within seconds.
+Some — chosen at random, or because something on the scanner flagged for
+extra attention, or because a pattern of behavior deviates from the usual —
+get an additional, more thorough inspection. The decision about who gets
+that extra attention isn't made at the entrance to the airport, before
+anyone has passed through anything — it's made <strong>at the scanner itself</strong>,
+with full insight into what was just measured. If the decision were made in
+advance, at the gate, before any measurement at all, there would be no basis
+for it — it would either be chosen at random or applied to literally
+everyone, which turns security screening into a bottleneck nobody could
+withstand.</p>
+<p>Trace sampling faces the same choice: whether to make the decision "is this
+trace worth keeping" early, before the trace has even been fully collected —
+or late, after full insight into what actually happened.</p>
+<h2 id="121-the-question-this-chapter-answers">12.1 The question this chapter answers</h2>
+<p>Every request in the system generates a trace. Keeping literally every one,
+forever, at full storage cost, isn't sustainable for any system of real
+size — the question isn't <em>whether</em> sampling happens, but <strong>where</strong> the
+decision is made and <strong>on what basis</strong>. This chapter answers the question of
+why the implementation the book follows chose to leave that decision to the
+platform, after the trace has been fully collected, instead of making it
+itself, early, at the gateway level from Chapter 4.</p>
+<h2 id="122-how-its-actually-done-a-practical-overview">12.2 How it's actually done — a practical overview</h2>
+<p>Trace sampling in the implementation the book follows is <strong>server-side and
+adaptive</strong> — done by the cloud observability platform itself, not the
+gateway. The gateway forwards <strong>all</strong> traces onward, with no sampling logic
+of its own; the decision about what gets kept is made only at the platform,
+after the platform has already received the complete trace.</p>
+<p>The base, default rate is probabilistic — currently <strong>10% base sampling</strong>
+(lowered from 25% in an earlier phase, once experience showed that 25% was
+carrying more cost than analytical value for this volume of traffic). But
+the platform doesn't just apply that base rate — it layers on rules that
+<strong>guarantee retention</strong> for certain categories of traces regardless of the
+base rate:</p>
 <ul>
-<li><strong>Trejsovi sa greškom</strong> — status kod koji ukazuje na neuspeh se zadržava
-  gotovo uvek, jer je upravo to najvredniji materijal za dijagnozu.</li>
-<li><strong>Spori trejsovi</strong> — latencija iznad definisanog praga se zadržava, jer
-  performansni problemi retko ostave trag ijednim drugim putem osim kroz sam
-  trejs.</li>
-<li><strong>Anomalije</strong> — platforma koristi model zasnovan na mašinskom učenju da
-  prepozna trejsove koji strukturno odstupaju od uobičajenog obrasca za taj
-  servis, čak i kad nemaju eksplicitnu grešku ili visoku latenciju.</li>
+<li><strong>Traces with an error</strong> — a status code indicating failure is retained
+  almost always, since that's precisely the most valuable material for
+  diagnosis.</li>
+<li><strong>Slow traces</strong> — latency above a defined threshold is retained, since
+  performance problems rarely leave a trace anywhere except in the trace
+  itself.</li>
+<li><strong>Anomalies</strong> — the platform uses a machine-learning-based model to
+  recognize traces that structurally deviate from the usual pattern for that
+  service, even when they have no explicit error or high latency.</li>
 </ul>
-<p><img alt="Odluka o zadržavanju trejsa: drop politike su apsolutan veto i evaluiraju se prve; keep politike rade po OR logici sa efektivno nasumičnim redosledom; tek ako nijedna ne odluči, na red dolazi bazna probabilistička stopa." src="../../diagrams/ch12-sampling-policy.png" width="88%" /></p>
-<h3 id="kako-se-pravila-zapravo-evaluiraju-i-zasto-je-ovo-iznenaenje">Kako se pravila zapravo evaluiraju — i zašto je ovo iznenađenje</h3>
-<p>Vredi biti precizan oko mehanike, jer intuitivan mentalni model ("pravila se
-proveravaju redom, prvo koje odluči pobeđuje") je samo delimično tačan, i
-razlika je bitna za bilo koga ko pokušava da predvidi ponašanje unapred:</p>
+<p><img alt="Trace retention decision: drop policies act as an absolute veto and are evaluated first; keep policies operate on OR logic with an effectively random order; only if none decides does the base probabilistic rate come into play." src="../../diagrams/ch12-sampling-policy.png" width="88%" /></p>
+<h3 id="how-the-rules-are-actually-evaluated-and-why-its-surprising">How the rules are actually evaluated — and why it's surprising</h3>
+<p>It's worth being precise about the mechanics, because the intuitive mental
+model ("rules are checked in order, the first one to decide wins") is only
+partly true, and the difference matters for anyone trying to predict
+behavior in advance:</p>
 <ul>
-<li><strong>Politike odbacivanja (drop) su apsolutan veto.</strong> Ako trejs zadovoljava
-  bilo koju drop politiku, odbacuje se odmah, čak i ako istovremeno
-  zadovoljava jednu ili više keep politika.</li>
-<li><strong>Politike zadržavanja (keep) rade po OR logici.</strong> Trejs se zadržava ako
-  zadovolji <strong>bilo koju</strong> keep politiku — ne mora sve.</li>
-<li><strong>Redosled evaluacije unutar keep politika je efektivno nasumičan</strong> — ne
-  poklapa se ni sa redosledom u konfiguraciji ni sa redosledom u interfejsu.
-  Jedini deo redosleda koji je garantovan: drop politike se uvek evaluiraju
-  prve, upravo zato što imaju veto moć.</li>
+<li><strong>Drop policies are an absolute veto.</strong> If a trace satisfies any drop
+  policy, it's dropped immediately, even if it simultaneously satisfies one
+  or more keep policies.</li>
+<li><strong>Keep policies operate on OR logic.</strong> A trace is retained if it satisfies
+  <strong>any</strong> keep policy — not all of them.</li>
+<li><strong>The evaluation order within keep policies is effectively random</strong> — it
+  matches neither the order in the configuration nor the order in the
+  interface. The one part of the order that is guaranteed: drop policies are
+  always evaluated first, precisely because they carry veto power.</li>
 </ul>
-<p>Ovo znači da "šta se dešava kad trejs zadovolji dve keep politike istovremeno"
-nema jednoznačan odgovor unapred — obe bi ga zadržale, tako da ishod ne
-zavisi od toga koja se prva proveri (obe daju isti ishod: zadrži). Gde ovo
-<strong>jeste</strong> bitno je pri debagovanju "zašto ova politika deluje neaktivno" —
-odgovor je često da neka druga politika već donosi odluku pre nje, ne da je
-ta konkretna politika loše podešena.</p>
-<p>Metrike generisane iz trejsova (spanmetrics, pomenute u Poglavlju 11) se
-računaju <strong>iz sirovih podataka trejsa, pre bilo kakvog downsampling-a</strong> — što
-znači da dashboard koji prati stopu grešaka ili latenciju ostaje tačan i
-statistički pouzdan i kada je 90% trejsova odbačeno posle merenja, jer merenje
-za metrike nije zavisilo od toga koji je trejs na kraju zadržan za pojedinačnu
-inspekciju.</p>
-<h3 id="zamka-merenja-dve-stvari-koje-izgledaju-kao-ista-brojka-a-nisu">Zamka merenja: dve stvari koje izgledaju kao ista brojka, a nisu</h3>
-<p>Dva merenja u ovom delu sistema izgledaju međusobno zamenljiva, a nisu:</p>
+<p>This means "what happens when a trace satisfies two keep policies at once"
+has no unambiguous answer in advance — both would retain it, so the outcome
+doesn't depend on which one is checked first (both produce the same result:
+keep). Where this <strong>does</strong> matter is when debugging "why does this policy
+seem to have no effect" — the answer is often that some other policy is
+already making the decision before it gets to that one, not that the policy
+in question is misconfigured.</p>
+<p>Metrics generated from traces (spanmetrics, mentioned in Chapter 11) are
+computed <strong>from the raw trace data, before any downsampling</strong> — which means
+a dashboard tracking error rate or latency remains accurate and
+statistically reliable even when 90% of traces are dropped after
+measurement, because the measurement behind the metrics never depended on
+which trace ultimately got kept for individual inspection.</p>
+<h3 id="a-measurement-trap-two-things-that-look-like-the-same-number-and-arent">A measurement trap: two things that look like the same number, and aren't</h3>
+<p>Two measurements in this part of the system look interchangeable, and
+aren't:</p>
 <ul>
-<li><code>traces_spanmetrics_size_total</code> <strong>potcenjuje stvaran obim</strong> za otprilike
-  2,2 puta — meri veličinu na osnovu spanmetrics generatora, ne stvarnog
-  OTLP payload-a koji fizički napušta sistem.</li>
-<li>Zato što se spanmetrics generišu <strong>pre</strong> downsampling-a (tačka iznad),
-  <code>traces_spanmetrics_*</code> porodica <strong>ne može uopšte da izmeri koliko je
-  downsampling zapravo uštedeo</strong> — ona strukturno ne vidi razliku pre/posle,
-  jer je računata pre te tačke u toku. Za stvarnu uštedu treba čitati
-  metriku koja meri odbačene bajtove nakon primene adaptivnih politika, ne
-  spanmetrics porodicu.</li>
+<li><code>traces_spanmetrics_size_total</code> <strong>understates the actual volume</strong> by
+  roughly 2.2 times — it measures size based on the spanmetrics generator,
+  not the actual OTLP payload that physically leaves the system.</li>
+<li>Because spanmetrics are generated <strong>before</strong> downsampling (the point
+  above), the <code>traces_spanmetrics_*</code> family <strong>cannot measure how much
+  downsampling actually saved at all</strong> — it structurally cannot see a
+  before/after difference, since it's computed before that point in the
+  pipeline. To see the actual savings, read the metric that measures
+  dropped bytes after the adaptive policies are applied, not the
+  spanmetrics family.</li>
 </ul>
-<h3 id="trejs-koji-je-odbacen-nije-trajno-izgubljen-ali-skoro">Trejs koji je odbačen nije trajno izgubljen — ali skoro</h3>
-<p>Odbačen trejs nije obrisan istog trenutka — dostupan je <strong>po trace ID-ju,
-tačno 24 sata</strong>, posle čega nestaje trajno. Van tog prozora, i van pretrage
-po tačnom ID-ju, odbačen trejs se ne pojavljuje nigde: ne u TraceQL pretrazi,
-ne u service graph vizualizaciji, ne u agregacijama. Ovo najviše pogađa
-istraživački rad — inženjer koji pokušava da rekonstruiše "šta se tačno
-dogodilo prošle srede" na trejsu koji je tada odbačen, jednostavno nema
-pristup, čak i ako zna okvirno vreme.</p>
-<h3 id="slucaj-neslaganja-kad-brojka-ne-odgovara-ocekivanju">Slučaj neslaganja: kad brojka ne odgovara očekivanju</h3>
-<p>U jednom periodu, izmerena stopa zadržavanja trejsova nije odgovarala
-očekivanju izračunatom iz konfigurisanih politika — stvaran procenat
-zadržanih trejsova je bio primetno drugačiji od onoga što bi kombinacija
-bazne stope i keep pravila trebalo da proizvede. Prva reakcija tima <strong>nije</strong>
-bila da odmah promeni baznu stopu ili doda novo pravilo da nadoknadi razliku
-— to bi rešilo simptom bez razumevanja uzroka, i moglo bi da sakrije stvaran
-problem umesto da ga otkrije. Umesto toga, neslaganje je prijavljeno
-dobavljaču platforme, uz konkretne brojke, i <strong>ništa nije menjano</strong> dok
-mehanizam iza razlike nije razjašnjen. Disciplina ovde nije bila u tome šta
-je urađeno, nego u tome šta <strong>nije</strong> urađeno — refleksivna reakcija na
-brojku koja ne odgovara očekivanju.</p>
-<p>Ovako je izgledao period neslaganja opisan iznad — izmerena stopa zadržavanja
-je počela da odstupa od očekivane vrednosti izračunate iz konfigurisanih
-politika, i vraćena je na očekivani nivo tek pošto je dobavljač objasnio
-mehanizam, ne pošto je neko promenio konfiguraciju:</p>
-<p><img alt="Stopa zadržavanja trejsova, očekivano naspram izmerenog: desetodnevni period neslaganja je prijavljen dobavljaču i konfiguracija namerno nije menjana dok mehanizam nije razjašnjen." src="../../diagrams/dashboard-sampling.png" width="95%" /></p>
-<h2 id="123-analiticki-deo-zasto-server-side-umesto-collector-side">12.3 Analitički deo — zašto server-side umesto collector-side</h2>
-<h3 id="zvanicna-razlika-gde-se-donosi-odluka-i-sta-to-znaci-za-tacnost">Zvanična razlika: gde se donosi odluka i šta to znači za tačnost</h3>
-<p>Nezavisan pregled sampling strategija u OpenTelemetry ekosistemu razlikuje
-dva osnovna pristupa: <strong>head sampling</strong> (odluka se donosi rano, često na
-nivou pojedinačnog spana, pre nego što je poznato kako će se trejs završiti)
-i <strong>tail sampling</strong> (odluka se donosi tek pošto je kompletan trejs
-sakupljen, sa punim uvidom u to da li je trejs imao grešku, koliko je trajao,
-da li je odstupao od obrasca). Head sampling je jeftiniji za implementaciju i
-zahteva manje resursa na strani kolektora, ali strukturno ne može da
-garantuje "zadrži svaki trejs sa greškom" — u trenutku kad se odluka donosi,
-greška možda još nije ni nastala.</p>
-<p>Adaptivni sampling koji koristi platforma u implementaciji koju knjiga prati
-je oblik tail sampling-a, sa dodatom adaptivnom komponentom (ML-zasnovano
-prepoznavanje anomalija, dinamičko podešavanje baznog procenta). Ovo je,
-zvanično, tačno ona kategorija problema za koju tail sampling postoji: sistem
-gde su retki, ali kritični trejsovi (greške, anomalije) tačno oni koje head
-sampling najlakše promaši, jer njihova "vrednost" nije poznata u trenutku
-kad head sampling mora da odluči.</p>
-<h3 id="zasto-ne-na-nivou-gateway-a-cena-koju-bi-self-managed-tail-sampling-nosio">Zašto ne na nivou gateway-a — cena koju bi self-managed tail sampling nosio</h3>
-<p>Implementacija je razmatrala i eksplicitno odbacila alternativu:
-samostalno-upravljan tail sampling procesor na samom gateway-u, umesto
-oslanjanja na platformu. Ova opcija je evaluirana i odbačena iz dva razloga.
-Prvo, tail sampling zahteva da kolektor <strong>drži kompletan trejs u memoriji</strong>
-dok se ne donese odluka — što za gateway koji već servisira desetine
-pošiljalaca odjednom (Poglavlje 4) predstavlja ozbiljan memorijski pritisak,
-tačno onaj tip pritiska koji <code>memory_limiter</code> iz Poglavlja 10 postoji da
-ublaži, ne da apsorbuje dodatni izvor. Drugo, i važnije: samostalno upravljan
-tail sampling procesor bi degradirao dashboard-e i alarm (konkretno, alarm
-koji čita <code>traces_spanmetrics_*</code> metrike) koji zavise od punog, nesamplovanog
-toka trejsova pre nego što bilo šta bude odbačeno — prebacivanje odluke uzvodno
-bi značilo da ti dashboard-i i taj alarm više ne vide ono što tvrde da vide.</p>
-<h3 id="cena-da-je-odluka-o-zadrzavanju-bila-trenutna-bez-punog-uvida-kontrafakticki-scenario">Cena da je odluka o zadržavanju bila trenutna, bez punog uvida: kontrafaktički scenario</h3>
-<p>Vredi konkretno odigrati head sampling alternativu na istom sistemu. Recimo
-da gateway donosi odluku "zadrži ili odbaci" na nivou pojedinačnog spana, u
-trenutku kad ga primi — pre nego što je poznato da li će taj isti trejs,
-nekoliko koraka kasnije, završiti greškom. Sistem bi morao ili da zadrži
-mnogo veći procenat "za svaki slučaj" (poskupljujući trošak koji je cela
-priča o sampling-u trebalo da smanji), ili da prihvati da će sistematski
-promašivati baš one trejsove koji najviše vrede — one sa greškom koja
-nastaje kasno u lancu poziva. Ovo nije hipotetička mana — to je strukturna
-osobina head sampling-a, ne slučajna greška u implementaciji.</p>
-<p>Vratimo se na aerodromsku kontrolu s početka poglavlja. Da se odluka o
-dodatnom pregledu donosila na kapiji, pre nego što je iko prošao kroz
-skener, ne bi postojala nikakva informacija na osnovu koje bi se ta odluka
-razlikovala od nasumičnog izbora. Odluka vredi tačno onoliko koliko i uvid
-koji je prethodi. <strong>Sampling koji se dešava pre nego što je poznato šta se
-zapravo dogodilo je nagađanje sa dodatnim korakom; sampling koji se dešava
-posle punog uvida je odluka.</strong></p>
-<h2 id="124-skupljena-pravila-iz-ovog-poglavlja">12.4 Skupljena pravila iz ovog poglavlja</h2>
+<h3 id="a-dropped-trace-isnt-permanently-lost-but-almost">A dropped trace isn't permanently lost — but almost</h3>
+<p>A dropped trace isn't deleted the instant it's dropped — it's available <strong>by
+trace ID, for exactly 24 hours</strong>, after which it's gone for good. Outside
+that window, and outside a search by exact ID, a dropped trace doesn't
+appear anywhere: not in a TraceQL search, not in the service graph
+visualization, not in aggregations. This hits investigative work hardest —
+an engineer trying to reconstruct "what exactly happened last Wednesday" on
+a trace that was dropped at the time simply has no access, even knowing
+roughly when it happened.</p>
+<h3 id="a-case-of-mismatch-when-the-number-doesnt-match-the-expectation">A case of mismatch: when the number doesn't match the expectation</h3>
+<p>During one period, the measured trace retention rate didn't match the
+expectation calculated from the configured policies — the actual percentage
+of retained traces was noticeably different from what the combination of
+the base rate and the keep rules should have produced. The team's first
+reaction <strong>was not</strong> to immediately change the base rate or add a new rule
+to compensate for the difference — that would have fixed the symptom
+without understanding the cause, and could have hidden the real problem
+instead of surfacing it. Instead, the mismatch was reported to the platform
+vendor, with concrete numbers attached, and <strong>nothing was changed</strong> until
+the mechanism behind the discrepancy was clarified. The discipline here
+wasn't in what was done, but in what <strong>wasn't</strong> done — the reflexive
+reaction to a number that doesn't match expectations.</p>
+<p>Here's what the mismatch period described above looked like — the measured
+retention rate began to drift from the expected value calculated from the
+configured policies, and it returned to the expected level only after the
+vendor explained the mechanism, not after anyone changed the configuration:</p>
+<p><img alt="Trace retention rate, expected versus measured: a ten-day mismatch period was reported to the vendor, and the configuration was deliberately left unchanged until the mechanism was clarified." src="../../diagrams/dashboard-sampling.png" width="95%" /></p>
+<h2 id="123-analytical-section-why-server-side-instead-of-collector-side">12.3 Analytical section — why server-side instead of collector-side</h2>
+<h3 id="the-official-distinction-where-the-decision-is-made-and-what-that-means-for-accuracy">The official distinction: where the decision is made, and what that means for accuracy</h3>
+<p>An independent survey of sampling strategies in the OpenTelemetry ecosystem
+distinguishes two basic approaches: <strong>head sampling</strong> (the decision is made
+early, often at the level of an individual span, before it's known how the
+trace will end) and <strong>tail sampling</strong> (the decision is made only after the
+complete trace has been collected, with full insight into whether the trace
+had an error, how long it took, whether it deviated from the pattern). Head
+sampling is cheaper to implement and requires fewer resources on the
+collector side, but structurally it cannot guarantee "keep every trace with
+an error" — at the moment the decision is made, the error may not even have
+happened yet.</p>
+<p>The adaptive sampling used by the platform in the implementation the book
+follows is a form of tail sampling, with an adaptive component added on top
+(ML-based anomaly detection, dynamic adjustment of the base percentage).
+This is, officially, exactly the category of problem tail sampling exists
+for: a system where rare but critical traces (errors, anomalies) are
+precisely the ones head sampling is most likely to miss, because their
+"value" isn't known at the moment head sampling has to decide.</p>
+<h3 id="why-not-at-the-gateway-level-the-cost-a-self-managed-tail-sampling-would-carry">Why not at the gateway level — the cost a self-managed tail sampling would carry</h3>
+<p>The implementation considered, and explicitly rejected, an alternative:
+a self-managed tail sampling processor at the gateway itself, instead of
+relying on the platform. This option was evaluated and rejected for two
+reasons. First, tail sampling requires the collector to <strong>hold the complete
+trace in memory</strong> until the decision is made — which, for a gateway already
+servicing dozens of senders at once (Chapter 4), represents serious memory
+pressure, exactly the kind of pressure the <code>memory_limiter</code> from Chapter 10
+exists to relieve, not to absorb as an additional source. Second, and more
+importantly: a self-managed tail sampling processor would degrade the
+dashboards and the alert (specifically, the alert that reads
+<code>traces_spanmetrics_*</code> metrics) that depend on the full, unsampled flow of
+traces before anything is dropped — moving the decision upstream would mean
+those dashboards and that alert no longer see what they claim to see.</p>
+<h3 id="the-cost-of-an-instant-retention-decision-without-full-insight-a-counterfactual-scenario">The cost of an instant retention decision, without full insight: a counterfactual scenario</h3>
+<p>It's worth playing out the head sampling alternative concretely on the same
+system. Suppose the gateway makes the "keep or drop" decision at the level
+of an individual span, the moment it receives it — before it's known whether
+that same trace, several steps later, will end in an error. The system would
+then have to either keep a much larger percentage "just in case" (driving up
+the very cost the whole sampling story was supposed to reduce), or accept
+that it will systematically miss exactly the traces that matter most — the
+ones with an error that occurs late in the call chain. This isn't a
+hypothetical flaw — it's a structural property of head sampling, not an
+accidental implementation mistake.</p>
+<p>Let's return to the airport security screening from the start of the
+chapter. If the decision about additional screening were made at the gate,
+before anyone had passed through the scanner, there would be no information
+on which that decision could differ from a random choice. A decision is
+worth exactly as much as the insight that precedes it. <strong>Sampling that
+happens before it's known what actually occurred is a guess with an extra
+step; sampling that happens after full insight is a decision.</strong></p>
+<h2 id="124-rules-collected-from-this-chapter">12.4 Rules collected from this chapter</h2>
 <ul>
-<li>Kad god je moguće, donesi sampling odluku posle punog sakupljanja trejsa
-  (tail sampling), ne pre — greške i anomalije su retko poznate u trenutku
-  kad head sampling mora da odluči.</li>
-<li>Zapamti da su politike odbacivanja apsolutan veto, a politike zadržavanja
-  rade po OR logici sa efektivno nasumičnim redosledom evaluacije — ne
-  oslanjaj se na to da će konfiguracioni redosled predvideti ishod.</li>
-<li>Meri metrike izvedene iz trejsova (spanmetrics) sa razumevanjem da su
-  računate <strong>pre</strong> downsampling-a — one ne mogu da izmere uštedu koju
-  downsampling donosi, samo brojke pre te tačke.</li>
-<li>Kad izmerena brojka ne odgovara očekivanju, prijavi neslaganje i sačekaj
-  razumevanje mehanizma pre nego što promeniš konfiguraciju da bi brojka
-  "izgledala ispravno".</li>
-<li>Odbačen trejs nije trajno nedostupan odmah, ali prozor je kratak (tipično
-  merljiv u satima, ne danima) — ne oslanjaj se na mogućnost da ćeš mu se
-  vratiti kasnije ako ga odmah ne pogledaš.</li>
+<li>Whenever possible, make the sampling decision after the trace has been
+  fully collected (tail sampling), not before — errors and anomalies are
+  rarely known at the moment head sampling has to decide.</li>
+<li>Remember that drop policies are an absolute veto, while keep policies
+  operate on OR logic with an effectively random evaluation order — don't
+  rely on configuration order to predict the outcome.</li>
+<li>Measure trace-derived metrics (spanmetrics) with the understanding that
+  they're computed <strong>before</strong> downsampling — they cannot measure the
+  savings downsampling produces, only the numbers before that point.</li>
+<li>When a measured number doesn't match expectations, report the mismatch
+  and wait for the mechanism to be understood before changing the
+  configuration just to make the number "look right."</li>
+<li>A dropped trace isn't permanently unavailable immediately, but the window
+  is short (typically measured in hours, not days) — don't count on being
+  able to go back to it later if you don't look right away.</li>
 </ul>
-<h2 id="125-vezba-za-citaoca">12.5 Vežba za čitaoca</h2>
-<p>Pronađi gde se u tvom sistemu donosi odluka o sampling-u trejsova — na nivou
-pojedinačnog spana pri kreiranju (head), ili tek posle sakupljanja celog
-trejsa (tail). Ako je head sampling, zamisli konkretan trejs koji ima grešku
-tek na svom poslednjem koraku — da li bi ga tvoja sadašnja konfiguracija
-zadržala, ili bi odluka već bila doneta pre nego što je greška uopšte
-postojala?</p>
+<h2 id="125-exercise-for-the-reader">12.5 Exercise for the reader</h2>
+<p>Find out where in your system the trace sampling decision is made — at the
+level of an individual span at creation time (head), or only after the
+entire trace has been collected (tail). If it's head sampling, imagine a
+concrete trace that has an error only on its very last step — would your
+current configuration retain it, or would the decision already have been
+made before the error even existed?</p>
 <hr />
-<h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
+<h3 id="sources-used-in-the-analytical-section">Sources used in the analytical section</h3>
 <ul>
 <li><a href="https://grafana.com/docs/grafana-cloud/adaptive-telemetry/adaptive-traces/guides/example-policies/">How policies are evaluated — Adaptive Traces, Grafana Cloud documentation</a></li>
 <li><a href="https://grafana.com/docs/grafana-cloud/adaptive-telemetry/adaptive-traces/introduction/">Introduction to Adaptive Traces — Grafana Cloud documentation</a></li>
@@ -2634,7 +2647,7 @@ postojala?</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:06:19 UTC">August 26, 2026</span>
   </span>
 
     

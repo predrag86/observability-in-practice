@@ -31,7 +31,7 @@
     
     
       
-        <title>Poglavlje 8 — Frontend / RUM observability - Observability in Practice</title>
+        <title>Chapter 8 — Frontend / RUM observability - Observability in Practice</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#poglavlje-8-frontend-rum-observability" class="md-skip">
+        <a href="#chapter-8-frontend-rum-observability" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Poglavlje 8 — Frontend / RUM observability
+              Chapter 8 — Frontend / RUM observability
             
           </span>
         </div>
@@ -580,7 +580,7 @@
   <span class="md-ellipsis">
     
   
-    Deo II — Arhitektura prikupljanja telemetrije
+    Part II — Telemetry-collection architecture
   
 
     
@@ -608,7 +608,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+    Chapter 4 — The gateway pattern: a central point for telemetry
   
 
     
@@ -636,7 +636,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+    Chapter 5 — Instrumenting the application: two strategies
   
 
     
@@ -664,7 +664,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+    Chapter 6 — Containerized/batch workloads: the sidecar pattern
   
 
     
@@ -692,7 +692,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 7 — Kada ne možeš da instrumentiraš izvor: pull-obrasci
+    Chapter 7 — When you can't instrument the source: pull-based patterns
   
 
     
@@ -729,7 +729,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 8 — Frontend / RUM observability
+    Chapter 8 — Frontend / RUM observability
   
 
     
@@ -747,7 +747,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 8 — Frontend / RUM observability
+    Chapter 8 — Frontend / RUM observability
   
 
     
@@ -773,10 +773,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#81-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#81-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8.1 Pitanje na koje ovo poglavlje odgovara
+        8.1 The question this chapter answers
       
     </span>
   </a>
@@ -784,10 +784,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#82-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#82-how-it-was-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8.2 Kako je to urađeno — praktičan pregled
+        8.2 How it was done — a practical overview
       
     </span>
   </a>
@@ -795,22 +795,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#83-analiticki-deo-zasto-direktna-veza-nije-kompromis-nego-zahtev-i-sta-znaci-kad-jedan-filter-nije-dovoljan" class="md-nav__link">
+  <a href="#83-analytical-section-why-a-direct-connection-isnt-a-compromise-but-a-requirement-and-what-it-means-when-one-filter-isnt-enough" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad "jedan filter" nije dovoljan
+        8.3 Analytical section — why a direct connection isn't a compromise but a requirement, and what it means when "one filter" isn't enough
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad &#34;jedan filter&#34; nije dovoljan">
+    <nav class="md-nav" aria-label="8.3 Analytical section — why a direct connection isn&#39;t a compromise but a requirement, and what it means when &#34;one filter&#34; isn&#39;t enough">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zasto-zvanicna-arhitektura-rum-a-skoro-uvek-ide-direktno-u-cloud" class="md-nav__link">
+  <a href="#why-the-standard-rum-architecture-almost-always-goes-directly-to-the-cloud" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto zvanična arhitektura RUM-a skoro uvek ide direktno u cloud
+        Why the standard RUM architecture almost always goes directly to the cloud
       
     </span>
   </a>
@@ -818,10 +818,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zasto-rum-naspram-sintetickog-pracenja-nisu-zamena-jedno-za-drugo" class="md-nav__link">
+  <a href="#why-rum-and-synthetic-monitoring-arent-substitutes-for-each-other" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto RUM naspram sintetičkog praćenja nisu zamena jedno za drugo
+        Why RUM and synthetic monitoring aren't substitutes for each other
       
     </span>
   </a>
@@ -829,10 +829,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#lekcija-iz-pii-incidenta-zasto-dodao-sam-filter-retko-znaci-sve-je-pokriveno" class="md-nav__link">
+  <a href="#the-lesson-from-the-pii-incident-why-i-added-a-filter-rarely-means-everything-is-covered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Lekcija iz PII incidenta: zašto "dodao sam filter" retko znači "sve je pokriveno"
+        The lesson from the PII incident: why "I added a filter" rarely means "everything is covered"
       
     </span>
   </a>
@@ -845,10 +845,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#84-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#84-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8.4 Skupljena pravila iz ovog poglavlja
+        8.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -856,22 +856,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#85-vezba-za-citaoca" class="md-nav__link">
+  <a href="#85-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8.5 Vežba za čitaoca
+        8.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="8.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -906,7 +906,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 9 — Sintetičko (black-box) praćenje
+    Chapter 9 — Synthetic (Black-Box) Monitoring
   
 
     
@@ -995,7 +995,7 @@
   <span class="md-ellipsis">
     
   
-    Deo III — Obrada, kardinalnost i troškovi
+    Part III — Processing, cardinality, and cost
   
 
     
@@ -1023,7 +1023,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+    Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
   
 
     
@@ -1051,7 +1051,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 11 — Kardinalnost i cena: kako sistem prirodno naraste iznad budžeta
+    Chapter 11 — Cardinality and cost: how a system naturally outgrows its budget
   
 
     
@@ -1079,7 +1079,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+    Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
   
 
     
@@ -1168,7 +1168,7 @@
   <span class="md-ellipsis">
     
   
-    Deo IV — Alarmiranje, SLO i odgovor na incidente
+    Part IV — Alerting, SLOs, and incident response
   
 
     
@@ -1196,7 +1196,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+    Chapter 13 — Alerting architecture: two paths, one destination channel
   
 
     
@@ -1224,7 +1224,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+    Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
   
 
     
@@ -1252,7 +1252,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+    Chapter 15 — SLOs and error-budget-based alerts
   
 
     
@@ -1280,7 +1280,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 16 — Runbook-ovi: od alarma do rešenja
+    Chapter 16 — Runbooks: from alert to resolution
   
 
     
@@ -1308,7 +1308,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 17 — Postmortem kultura
+    Chapter 17 — Postmortem culture
   
 
     
@@ -1397,7 +1397,7 @@
   <span class="md-ellipsis">
     
   
-    Deo V — Domenske studije slučaja
+    Part V — Domain case studies
   
 
     
@@ -1425,7 +1425,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 18 — Baze podataka (upravljane, tipa RDS/Aurora)
+    Chapter 18 — Databases (managed, RDS/Aurora-type)
   
 
     
@@ -1453,7 +1453,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 19 — Samostalno upravljani distribuirani sistemi (klaster tipa Dremio)
+    Chapter 19 — Self-managed distributed systems (a Dremio-style cluster)
   
 
     
@@ -1481,7 +1481,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 20 — Autentikacija i IAM (sistem tipa Keycloak)
+    Chapter 20 — Authentication and IAM (a Keycloak-type system)
   
 
     
@@ -1509,7 +1509,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 21 — Hostovi i serveri kao mašine
+    Chapter 21 — Hosts and servers as machines
   
 
     
@@ -1537,7 +1537,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 22 — Mreža kao posebna ravan posmatranja
+    Chapter 22 — The network as its own observation plane
   
 
     
@@ -1565,7 +1565,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 23 — Batch/ETL flota zadataka
+    Chapter 23 — The batch/ETL job fleet
   
 
     
@@ -1593,7 +1593,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 24 — Posmatranje servisa koji nije naš (tipa Snowflake)
+    Chapter 24 — Observing a service that isn't ours (the Snowflake kind)
   
 
     
@@ -1682,7 +1682,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VI — Upravljanje, usklađenost i zrelost
+    Part VI — Governance, compliance, and maturity
   
 
     
@@ -1710,7 +1710,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 25 — Privatnost u telemetriji
+    Chapter 25 — Privacy in telemetry
   
 
     
@@ -1738,7 +1738,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 26 — Observability kao kontrola usklađenosti (SOC 2 primer)
+    Chapter 26 — Observability as a compliance control (a SOC 2 example)
   
 
     
@@ -1766,7 +1766,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 27 — Prioritizacija: cena, performanse, pouzdanost, bezbednost
+    Chapter 27 — Prioritization: cost, performance, reliability, security
   
 
     
@@ -1794,7 +1794,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 28 — AI-asistirana observability: agent koji čita telemetriju
+    Chapter 28 — AI-assisted observability: an agent that reads telemetry
   
 
     
@@ -1883,7 +1883,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VII — Sazrevanje programa
+    Part VII — The program matures
   
 
     
@@ -1911,7 +1911,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 29 — Kako izgleda fazni rollout u realnom vremenu
+    Chapter 29 — What a phased rollout looks like in real time
   
 
     
@@ -1939,7 +1939,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 30 — Merenje zrelosti sopstvenog programa
+    Chapter 30 — Measuring the maturity of your own program
   
 
     
@@ -1967,7 +1967,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 31 — Zaključak: skupljena pravila
+    Chapter 31 — Conclusion: rules collected
   
 
     
@@ -2056,7 +2056,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak A — PromQL/LogQL recepti
+    Appendix A — PromQL/LogQL recipes
   
 
     
@@ -2084,7 +2084,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak B — Rečnik pojmova
+    Appendix B — Glossary of terms
   
 
     
@@ -2112,7 +2112,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak C — Checklist za onboarding novog servisa na observability
+    Appendix C — Checklist for onboarding a new service onto observability
   
 
     
@@ -2140,7 +2140,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak D — Šablon runbook-a i šablon postmortema
+    Appendix D — Runbook template and postmortem template
   
 
     
@@ -2188,10 +2188,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#81-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#81-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8.1 Pitanje na koje ovo poglavlje odgovara
+        8.1 The question this chapter answers
       
     </span>
   </a>
@@ -2199,10 +2199,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#82-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#82-how-it-was-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8.2 Kako je to urađeno — praktičan pregled
+        8.2 How it was done — a practical overview
       
     </span>
   </a>
@@ -2210,22 +2210,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#83-analiticki-deo-zasto-direktna-veza-nije-kompromis-nego-zahtev-i-sta-znaci-kad-jedan-filter-nije-dovoljan" class="md-nav__link">
+  <a href="#83-analytical-section-why-a-direct-connection-isnt-a-compromise-but-a-requirement-and-what-it-means-when-one-filter-isnt-enough" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad "jedan filter" nije dovoljan
+        8.3 Analytical section — why a direct connection isn't a compromise but a requirement, and what it means when "one filter" isn't enough
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad &#34;jedan filter&#34; nije dovoljan">
+    <nav class="md-nav" aria-label="8.3 Analytical section — why a direct connection isn&#39;t a compromise but a requirement, and what it means when &#34;one filter&#34; isn&#39;t enough">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#zasto-zvanicna-arhitektura-rum-a-skoro-uvek-ide-direktno-u-cloud" class="md-nav__link">
+  <a href="#why-the-standard-rum-architecture-almost-always-goes-directly-to-the-cloud" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto zvanična arhitektura RUM-a skoro uvek ide direktno u cloud
+        Why the standard RUM architecture almost always goes directly to the cloud
       
     </span>
   </a>
@@ -2233,10 +2233,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zasto-rum-naspram-sintetickog-pracenja-nisu-zamena-jedno-za-drugo" class="md-nav__link">
+  <a href="#why-rum-and-synthetic-monitoring-arent-substitutes-for-each-other" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto RUM naspram sintetičkog praćenja nisu zamena jedno za drugo
+        Why RUM and synthetic monitoring aren't substitutes for each other
       
     </span>
   </a>
@@ -2244,10 +2244,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#lekcija-iz-pii-incidenta-zasto-dodao-sam-filter-retko-znaci-sve-je-pokriveno" class="md-nav__link">
+  <a href="#the-lesson-from-the-pii-incident-why-i-added-a-filter-rarely-means-everything-is-covered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Lekcija iz PII incidenta: zašto "dodao sam filter" retko znači "sve je pokriveno"
+        The lesson from the PII incident: why "I added a filter" rarely means "everything is covered"
       
     </span>
   </a>
@@ -2260,10 +2260,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#84-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#84-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8.4 Skupljena pravila iz ovog poglavlja
+        8.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -2271,22 +2271,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#85-vezba-za-citaoca" class="md-nav__link">
+  <a href="#85-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8.5 Vežba za čitaoca
+        8.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="8.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -2315,7 +2315,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-08-frontend-rum.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-08-frontend-rum.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2323,148 +2323,161 @@
   
 
 
-<h1 id="poglavlje-8-frontend-rum-observability">Poglavlje 8 — Frontend / RUM observability</h1>
-<p>Ambasada u stranoj zemlji je, tehnički, teritorija matične države — ali ne
-funkcioniše kao njena unutrašnja pošta. Pismo poslato iz ambasade ne ide kroz
-lokalni poštanski sistem strane zemlje, jer ambasada tom sistemu ni ne
-pripada na isti način kao građanska pošta kod kuće; ono ide direktnom,
-diplomatskom linijom, jer je to jedini put koji ambasadi uopšte stoji na
-raspolaganju. I ambasada nema jedan kanal komunikacije, nego više — redovna
-prepiska ide jednim putem, hitni kurirski paketi drugim — a svaki od tih
-kanala mora <strong>posebno</strong> da bude proveren pre nego što nešto osetljivo prođe
-kroz njega, jer provera na jednom kanalu ne štiti automatski i drugi.</p>
-<p>Browser korisnika je, za sistem koji knjiga prati, u sličnoj poziciji.
-Fizički živi van interne mreže — ne može, i ne treba, da mu se dozvoli pristup
-internom gateway-u iz Poglavlja 4. Mora da ide sopstvenim, direktnim putem. I
-baš kao ambasada, ima više od jednog kanala kojim podaci putuju — što znači
-da zaštita mora biti primenjena na svakom kanalu posebno, ne jednom, na
-jednom mestu, i pretpostavljeno da to pokriva sve.</p>
-<h2 id="81-pitanje-na-koje-ovo-poglavlje-odgovara">8.1 Pitanje na koje ovo poglavlje odgovara</h2>
-<p>Sve dosadašnje poglavlje o prikupljanju telemetrije (Poglavlja 4-7)
-pretpostavlja da pošiljalac živi unutar mreže koju tim kontroliše — servis,
-batch zadatak, baza, čak i klaster. Browser korisnika krši tu pretpostavku na
-najosnovniji mogući način: <strong>fizički nikad neće imati pristup internoj
-infrastrukturi</strong>, bez obzira koliko dobro ta infrastruktura bude
-projektovana. Kako se onda prikuplja telemetrija sa mesta koje po definiciji
-ne možeš da uvučeš u sopstvenu mrežu — i šta to menja u odnosu na sve
-prethodno u knjizi?</p>
-<h2 id="82-kako-je-to-uraeno-praktican-pregled">8.2 Kako je to urađeno — praktičan pregled</h2>
-<p>Frontend telemetrija u implementaciji koju knjiga prati ide <strong>direktno</strong> ka
-hostovanom RUM kolektoru na strani Grafana Cloud-a — ne kroz interni gateway.
-Ovo je jedina kategorija pošiljaoca u celom sistemu koja gateway zaobilazi
-namerno, iz razloga eksplicitno pomenutog i u Poglavlju 4: gateway živi u
-privatnoj mreži, i browser korisnika joj fizički ne može pristupiti.</p>
-<p>Ono što se prikuplja:</p>
+<h1 id="chapter-8-frontend-rum-observability">Chapter 8 — Frontend / RUM observability</h1>
+<p>An embassy in a foreign country is, technically, the territory of the home
+state — but it doesn't function as that state's domestic postal system. A
+letter sent from the embassy doesn't travel through the host country's local
+postal system, because the embassy doesn't belong to that system the way a
+citizen's mailbox back home does; it travels by a direct, diplomatic line,
+because that's the only route the embassy has available to it at all. And the
+embassy doesn't have a single communication channel — it has several: routine
+correspondence goes one way, urgent courier packages another — and each of
+those channels has to be checked <strong>separately</strong> before anything sensitive
+passes through it, because a check on one channel doesn't automatically
+protect the other.</p>
+<p>The user's browser, for the system this book follows, is in a similar
+position. It physically lives outside the internal network — it cannot, and
+should not, be granted access to the internal gateway from Chapter 4. It has
+to travel its own, direct route. And just like the embassy, it has more than
+one channel through which data travels — which means protection has to be
+applied to each channel separately, not once, in one place, on the assumption
+that this covers everything.</p>
+<h2 id="81-the-question-this-chapter-answers">8.1 The question this chapter answers</h2>
+<p>Every chapter on telemetry collection so far (Chapters 4-7) assumes that the
+sender lives inside a network the team controls — a service, a batch job, a
+database, even a cluster. The user's browser breaks that assumption in the
+most fundamental way possible: <strong>it will physically never have access to the
+internal infrastructure</strong>, no matter how well that infrastructure is
+designed. So how do you collect telemetry from a place that, by definition,
+you cannot pull into your own network — and what does that change relative to
+everything so far in this book?</p>
+<h2 id="82-how-it-was-done-a-practical-overview">8.2 How it was done — a practical overview</h2>
+<p>Frontend telemetry in the implementation this book follows goes <strong>directly</strong>
+to a hosted RUM collector on Grafana Cloud's side — not through the internal
+gateway. This is the only category of sender in the entire system that
+bypasses the gateway deliberately, for a reason explicitly mentioned back in
+Chapter 4: the gateway lives on the private network, and the user's browser
+physically cannot reach it.</p>
+<p>What gets collected:</p>
 <ul>
-<li><strong>Core Web Vitals</strong> — standardizovane metrike percepcije performansi
-  (vreme do prvog sadržajnog prikaza, stabilnost layout-a, odzivnost na
-  interakciju) koje sam browser meri i izlaže.</li>
-<li><strong>JavaScript greške</strong> — neuhvaćeni izuzeci, odbijeni promisi, sa stack
-  trag-om i informacijom o browseru/uređaju.</li>
-<li><strong>Trejsovi korisničke sesije</strong>, povezani sa backend trejsom preko <strong>istog
-  trace ID-ja</strong> — kad korisnik klikne dugme koje pokreće API poziv, RUM SDK
-  ubacuje trace-context header u taj poziv, tako da se ceo put (klik u
-  browseru → mrežni poziv → backend obrada → odgovor) pojavljuje kao jedan
-  kontinuiran trejs, čitljiv u istom Grafana Cloud interfejsu koji već
-  koristi backend telemetrija.</li>
+<li><strong>Core Web Vitals</strong> — standardized metrics of perceived performance (time
+  to first contentful paint, layout stability, responsiveness to
+  interaction) that the browser itself measures and exposes.</li>
+<li><strong>JavaScript errors</strong> — uncaught exceptions, rejected promises, with a
+  stack trace and information about the browser/device.</li>
+<li><strong>User session traces</strong>, linked to the backend trace through the <strong>same
+  trace ID</strong> — when the user clicks a button that triggers an API call, the
+  RUM SDK injects a trace-context header into that call, so that the entire
+  path (browser click → network call → backend processing → response)
+  appears as one continuous trace, readable in the same Grafana Cloud
+  interface that backend telemetry already uses.</li>
 </ul>
-<p>Ova poslednja tačka — deljen trace ID kroz ceo put — je razlog zašto frontend
-poglavlje uopšte pripada ovoj knjizi, a ne posebnoj, izolovanoj temi: iako
-mehanizam transporta strukturno odstupa od svega drugog (direktno umesto kroz
-gateway), <em>semantika</em> ostaje ista OTel semantika iz Poglavlja 2. Isti trace
-ID, ista propagacija konteksta.</p>
-<p><img alt="Browser ide direktno ka hostovanom RUM kolektoru, zaobilazeći gateway; backend telemetrija i dalje ide kroz gateway. Dve odvojene PII zaštite (native signali naspram trejsova) su namerno naglašene — to je tačka incidenta iz ovog poglavlja." src="../../diagrams/ch8-rum.png" width="75%" /></p>
-<p><strong>Dve tačke za čišćenje PII, ne jedna.</strong> Ovo je najvrednija praktična lekcija
-poglavlja. RUM SDK ima jednu centralnu funkciju koja presreće sve "native"
-signale — logove, merenja, greške — i iz njih uklanja poznate osetljive
-vrednosti pre slanja (email adrese u porukama grešaka, ID-jevi sesije u
-URL-ovima). Ta funkcija radi tačno ono što se od nje očekuje. Problem: <strong>RUM
-trejsovi ne prolaze kroz tu istu funkciju.</strong> Trejsovi se generišu i šalju
-kroz zaseban deo SDK-a (instrumentacija automatskih fetch/XHR poziva), koji
-ima sopstveni, nezavisan put do mreže — i taj put tu istu centralnu funkciju
-jednostavno zaobilazi. Otkriveno je da su URL parametri sa identifikatorima
-korisnika, koji su uredno uklonjeni iz logova, i dalje završavali u atributima
-span-ova, jer je timski mentalni model bio "dodao sam filter za PII" umesto
-precizno "dodao sam filter za PII <strong>na ovom konkretnom putu podataka</strong>".
-Ispravka je zahtevala eksplicitnu, zasebnu redakciju na nivou span-processora,
-ne proširenje postojeće funkcije koja trejsove nikad nije ni videla.</p>
-<p>Ovako izgleda Core Web Vitals dashboard u praksi — tri percentila (p50/p75/p95)
-umesto jedne linije, jer prosek ili čak medijana lako sakriju baš onaj deo
-korisnika koji ima najgore iskustvo:</p>
-<p><img alt="LCP praćen po percentilima: p50 i p75 ostaju stabilni, ali p95 pokazuje jasnu regresiju jednog dana — signal koji bi prosek sakrio, jer pogađa samo deo saobraćaja (tipično jedan geografski region ili tip uređaja)." src="../../diagrams/dashboard-rum.png" width="95%" /></p>
-<h2 id="83-analiticki-deo-zasto-direktna-veza-nije-kompromis-nego-zahtev-i-sta-znaci-kad-jedan-filter-nije-dovoljan">8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad "jedan filter" nije dovoljan</h2>
-<h3 id="zasto-zvanicna-arhitektura-rum-a-skoro-uvek-ide-direktno-u-cloud">Zašto zvanična arhitektura RUM-a skoro uvek ide direktno u cloud</h3>
-<p>Nezavisni pregledi RUM arhitekture dosledno navode da browser telemetrija
-ide direktno ka hostovanom kolektoru, ne kroz internu infrastrukturu — iz
-prostog razloga što interna infrastruktura po definiciji nije dostupna sa
-javnog interneta na način koji bi browser mogao bezbedno da koristi.
-Otvaranje interne mreže ka javnom internetu samo da bi RUM SDK mogao da
-pošalje podatke kroz "isti gateway kao sve ostalo" bi značilo probijanje baš
-onog perimetra koji je Poglavlje 4 pažljivo zatvorilo — cena veća od koristi
-koju bi doslednost transportnog puta donela. Ovo je redak slučaj gde
-"industrijski standard" i implementacija koju knjiga prati <strong>nisu u
-tenziji</strong> — oba idu istim putem, iz istog razloga.</p>
-<h3 id="zasto-rum-naspram-sintetickog-pracenja-nisu-zamena-jedno-za-drugo">Zašto RUM naspram sintetičkog praćenja nisu zamena jedno za drugo</h3>
-<p>Nezavisna poređenja RUM-a i sintetičkog (black-box) praćenja — tema kojom se
-detaljno bavi Poglavlje 9 — ističu da RUM zavisi potpuno od stvarnog
-saobraćaja: signal postoji samo ako neko korisnik u tom trenutku koristi
-aplikaciju. To znači da RUM ima strukturnu slepu tačku u periodima niskog
-saobraćaja (noć, period pre lansiranja) — ako se aplikacija pokvari tačno
-tada, RUM to jednostavno neće registrovati na vreme, jer nema koga da
-registruje. Ova slepa tačka nije nedostatak RUM implementacije — ona je
-strukturno svojstvo pasivnog posmatranja stvarnih korisnika, i rešava se
-kombinovanjem sa aktivnim probama, ne popravkom RUM-a samog.</p>
-<h3 id="lekcija-iz-pii-incidenta-zasto-dodao-sam-filter-retko-znaci-sve-je-pokriveno">Lekcija iz PII incidenta: zašto "dodao sam filter" retko znači "sve je pokriveno"</h3>
-<p>Ovo je poglavlje u kome se najjasnije vidi princip koji se provlači kroz celu
-knjigu, prvi put eksplicitno imenovan u Poglavlju 1 na drugom primeru: sistem
-može da "radi ispravno" po svakoj proveri koju je neko sproveo, a ipak da
-propušta nešto što nijedna od tih provera nije ni gledala. PII filter za
-logove je bio testiran, radio je, prošao je code review — sve tačno kako
-treba. Ono što nije bilo eksplicitno provereno je pitanje "kroz koje <strong>sve</strong>
-puteve podataka ovaj SDK šalje nešto ka mreži" — a odgovor je bio dva puta,
-ne jedan, i drugi put niko nije aktivno tražio jer se prvi filter "osećao
-kao" kompletno rešenje.</p>
-<p>Kontrafaktički: da je tim od početka mapirao <strong>sve</strong> izlazne puteve RUM SDK-a
-pre nego što je napisao prvi filter (umesto da filter napiše za put koji je
-prvi pao na pamet — logove), ovaj incident se verovatno nikad ne bi ni
-dogodio. Cena tog mapiranja unapred je bila mala — par sati čitanja
-dokumentacije SDK-a. Cena otkrivanja posle činjenice bila je veća: revizija
-istorijskih podataka da se proceni koliko dugo je curenje trajalo, dodatna
-runda review-a za sličnu klasu bagova na drugim mestima u sistemu.</p>
-<p>Vratimo se na ambasadu s početka poglavlja. Ona nema jedan kanal komunikacije
-— ima više, i svaki mora biti proveren posebno, jer provera na jednom
-kanalu ne prelazi automatski na drugi. <strong>Kad štitiš osetljive podatke,
-pitanje nije "da li sam dodao filter" nego "da li sam nabrojao svaki put
-kojim podatak može da izađe, i da li svaki od njih ima sopstvenu,
-eksplicitnu proveru."</strong></p>
-<h2 id="84-skupljena-pravila-iz-ovog-poglavlja">8.4 Skupljena pravila iz ovog poglavlja</h2>
+<p>That last point — a shared trace ID across the entire path — is the reason
+the frontend chapter belongs in this book at all, rather than in some
+separate, isolated topic: even though the transport mechanism structurally
+departs from everything else (direct instead of through the gateway), the
+<em>semantics</em> remain the same OTel semantics from Chapter 2. Same trace ID,
+same context propagation.</p>
+<p><img alt="The browser goes directly to the hosted RUM collector, bypassing the gateway; backend telemetry still goes through the gateway. Two separate PII protections (native signals versus traces) are deliberately highlighted — that's the incident point from this chapter." src="../../diagrams/ch8-rum.png" width="75%" /></p>
+<p><strong>Two points for PII cleanup, not one.</strong> This is the single most valuable
+practical lesson of the chapter. The RUM SDK has one central function that
+intercepts all "native" signals — logs, measurements, errors — and strips
+known sensitive values out of them before sending (email addresses in error
+messages, session IDs in URLs). That function does exactly what's expected of
+it. The problem: <strong>RUM traces do not pass through that same function.</strong>
+Traces are generated and sent through a separate part of the SDK
+(instrumentation of automatic fetch/XHR calls), which has its own,
+independent path to the network — and that path simply bypasses the same
+central function. It turned out that URL parameters carrying user
+identifiers, which had been dutifully stripped out of logs, were still ending
+up in span attributes, because the team's mental model was "I added a PII
+filter" instead of the more precise "I added a PII filter <strong>on this
+particular data path</strong>." The fix required an explicit, separate redaction at
+the span-processor level, not an extension of the existing function that had
+never even seen the traces.</p>
+<p>Here's what a Core Web Vitals dashboard looks like in practice — three
+percentiles (p50/p75/p95) instead of a single line, because an average, or
+even a median, can easily hide precisely the segment of users having the
+worst experience:</p>
+<p><img alt="LCP tracked by percentile: p50 and p75 stay stable, but p95 shows a clear regression on one day — a signal an average would hide, because it hits only a portion of traffic (typically one geographic region or device type)." src="../../diagrams/dashboard-rum.png" width="95%" /></p>
+<h2 id="83-analytical-section-why-a-direct-connection-isnt-a-compromise-but-a-requirement-and-what-it-means-when-one-filter-isnt-enough">8.3 Analytical section — why a direct connection isn't a compromise but a requirement, and what it means when "one filter" isn't enough</h2>
+<h3 id="why-the-standard-rum-architecture-almost-always-goes-directly-to-the-cloud">Why the standard RUM architecture almost always goes directly to the cloud</h3>
+<p>Independent overviews of RUM architecture consistently note that browser
+telemetry goes directly to a hosted collector, not through internal
+infrastructure — for the simple reason that internal infrastructure, by
+definition, isn't reachable from the public internet in any way a browser
+could safely use. Opening the internal network to the public internet just so
+the RUM SDK could send data through "the same gateway as everything else"
+would mean breaching precisely the perimeter Chapter 4 so carefully closed —
+a cost greater than any benefit gained from transport-path consistency. This
+is a rare case where "industry standard" and the implementation this book
+follows are <strong>not in tension</strong> — both take the same route, for the same
+reason.</p>
+<h3 id="why-rum-and-synthetic-monitoring-arent-substitutes-for-each-other">Why RUM and synthetic monitoring aren't substitutes for each other</h3>
+<p>Independent comparisons of RUM and synthetic (black-box) monitoring — a topic
+Chapter 9 covers in detail — point out that RUM depends entirely on real
+traffic: the signal exists only if some user happens to be using the
+application at that moment. That means RUM has a structural blind spot during
+periods of low traffic (nighttime, the run-up to a launch) — if the
+application breaks exactly then, RUM simply won't register it in time,
+because there's no one there to register it. This blind spot isn't a flaw in
+the RUM implementation — it's a structural property of passively observing
+real users, and it's solved by combining RUM with active probes, not by
+fixing RUM itself.</p>
+<h3 id="the-lesson-from-the-pii-incident-why-i-added-a-filter-rarely-means-everything-is-covered">The lesson from the PII incident: why "I added a filter" rarely means "everything is covered"</h3>
+<p>This is the chapter where a principle running through the whole book shows
+most clearly — one first named explicitly in Chapter 1, on a different
+example: a system can "work correctly" by every check anyone ran against it,
+and still miss something none of those checks was even looking at. The PII
+filter for logs was tested, it worked, it passed code review — everything
+exactly as it should be. What was never explicitly checked was the question
+"through <strong>all</strong> of which data paths does this SDK send something to the
+network" — and the answer was two, not one, and nobody actively went looking
+for the second one, because the first filter "felt like" a complete
+solution.</p>
+<p>Counterfactually: had the team mapped <strong>all</strong> of the RUM SDK's outbound paths
+from the start, before writing the first filter (instead of writing the
+filter for the path that came to mind first — logs), this incident probably
+would never have happened. The cost of that upfront mapping was small — a
+couple of hours reading the SDK's documentation. The cost of discovering it
+after the fact was larger: an audit of historical data to estimate how long
+the leak had been going on, an extra round of review for the same class of
+bug elsewhere in the system.</p>
+<p>Back to the embassy from the start of the chapter. It doesn't have a single
+communication channel — it has several, and each has to be checked
+separately, because a check on one channel doesn't automatically carry over
+to another. <strong>When you're protecting sensitive data, the question isn't "did
+I add a filter" but "did I enumerate every path a piece of data can leave by,
+and does each one of them have its own, explicit check."</strong></p>
+<h2 id="84-rules-collected-from-this-chapter">8.4 Rules collected from this chapter</h2>
 <ul>
-<li>Browser telemetrija ide direktno ka hostovanom kolektoru — ne pokušavaj da
-  je forsiraš kroz internu infrastrukturu radi doslednosti transportnog
-  puta; to je pogrešna vrsta doslednosti.</li>
-<li>Zadrži isti trace ID i semantiku konteksta (OTel propagacija) čak i kad se
-  transportni mehanizam strukturno razlikuje od ostatka sistema — to je ono
-  što povezuje frontend i backend u jedan čitljiv trejs.</li>
-<li>Pre nego što napišeš PII filter, mapiraj <strong>sve</strong> izlazne puteve podataka iz
-  SDK-a ili biblioteke koju štitiš — logovi, merenja, greške i trejsovi retko
-  dele istu funkciju za obradu.</li>
-<li>RUM ne zamenjuje sintetičko praćenje niti obrnuto — RUM zavisi od
-  stvarnog saobraćaja i ima slepu tačku u periodima tišine; to nije bag,
-  to je razlog da postoji Poglavlje 9.</li>
-<li>Posle svakog "dodao sam filter za X", eksplicitno pitaj: kroz koje sve
-  puteve X uopšte može da izađe, i da li ih je filter zaista sve pokrio.</li>
+<li>Browser telemetry goes directly to a hosted collector — don't try to force
+  it through internal infrastructure for the sake of transport-path
+  consistency; that's the wrong kind of consistency.</li>
+<li>Keep the same trace ID and context semantics (OTel propagation) even when
+  the transport mechanism structurally differs from the rest of the system —
+  that's what ties frontend and backend into one readable trace.</li>
+<li>Before writing a PII filter, map <strong>all</strong> the outbound data paths of the
+  SDK or library you're protecting — logs, measurements, errors, and traces
+  rarely share the same processing function.</li>
+<li>RUM doesn't replace synthetic monitoring, nor the other way around — RUM
+  depends on real traffic and has a blind spot during quiet periods; that's
+  not a bug, that's the reason Chapter 9 exists.</li>
+<li>After every "I added a filter for X," explicitly ask: through which paths
+  can X possibly leave at all, and did the filter actually cover every one
+  of them.</li>
 </ul>
-<h2 id="85-vezba-za-citaoca">8.5 Vežba za čitaoca</h2>
-<p>Uzmi bilo koju biblioteku ili SDK u svom sistemu koja šalje podatke ka
-spoljnom servisu (RUM, analytics, error tracking) i nabroj <strong>svaki</strong> tip
-signala koji ta biblioteka šalje (logovi, metrike, greške, trejsovi, session
-replay ako postoji). Za svaki tip, proveri nezavisno da li prolazi kroz isti
-filter za osetljive podatke kao i ostali, ili ima sopstveni, poseban put.
-Ako ne znaš odgovor sa sigurnošću za bar jedan tip signala — to je rupa koju
-ovo poglavlje traži da zatvoriš pre nego što je neko drugi otkrije umesto
-tebe.</p>
+<h2 id="85-exercise-for-the-reader">8.5 Exercise for the reader</h2>
+<p>Take any library or SDK in your system that sends data to an external
+service (RUM, analytics, error tracking) and list <strong>every</strong> type of signal
+that library sends (logs, metrics, errors, traces, session replay if it has
+one). For each type, check independently whether it goes through the same
+sensitive-data filter as the others, or has its own, separate path. If you
+can't answer with confidence for at least one signal type — that's the gap
+this chapter is asking you to close before someone else discovers it instead
+of you.</p>
 <hr />
-<h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
+<h3 id="sources-used-in-the-analytical-section">Sources used in the analytical section</h3>
 <ul>
 <li><a href="https://www.dash0.com/faq/what-is-real-user-monitoring">What Is Real User Monitoring (RUM)? — Dash0</a></li>
 <li><a href="https://www.rum-core-web-vitals.com/rum-architecture-tooling-self-hosting/opentelemetry-for-web-rum/">OpenTelemetry for Web RUM — RUM Architecture, Tooling &amp; Self-Hosting</a></li>
@@ -2492,7 +2505,7 @@ tebe.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:03:30 UTC">August 26, 2026</span>
   </span>
 
     

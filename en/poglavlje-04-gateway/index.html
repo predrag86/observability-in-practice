@@ -31,7 +31,7 @@
     
     
       
-        <title>Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju - Observability in Practice</title>
+        <title>Chapter 4 — The gateway pattern: a central point for telemetry - Observability in Practice</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#poglavlje-4-gateway-obrazac-centralna-tacka-za-telemetriju" class="md-skip">
+        <a href="#chapter-4-the-gateway-pattern-a-central-point-for-telemetry" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+              Chapter 4 — The gateway pattern: a central point for telemetry
             
           </span>
         </div>
@@ -580,7 +580,7 @@
   <span class="md-ellipsis">
     
   
-    Deo II — Arhitektura prikupljanja telemetrije
+    Part II — Telemetry-collection architecture
   
 
     
@@ -617,7 +617,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+    Chapter 4 — The gateway pattern: a central point for telemetry
   
 
     
@@ -635,7 +635,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+    Chapter 4 — The gateway pattern: a central point for telemetry
   
 
     
@@ -661,10 +661,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#41-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#41-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.1 Pitanje na koje ovo poglavlje odgovara
+        4.1 The question this chapter answers
       
     </span>
   </a>
@@ -672,10 +672,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#42-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#42-how-it-was-actually-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.2 Kako je to urađeno — praktičan pregled
+        4.2 How it was actually done — a practical overview
       
     </span>
   </a>
@@ -683,22 +683,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#43-analiticki-deo-kako-to-rade-drugi-i-zasto-smo-delimicno-drugacije" class="md-nav__link">
+  <a href="#43-analytical-section-how-others-do-it-and-why-we-partly-did-it-differently" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.3 Analitički deo — kako to rade drugi, i zašto smo (delimično) drugačije
+        4.3 Analytical section — how others do it, and why we (partly) did it differently
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4.3 Analitički deo — kako to rade drugi, i zašto smo (delimično) drugačije">
+    <nav class="md-nav" aria-label="4.3 Analytical section — how others do it, and why we (partly) did it differently">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sta-zvanicna-dokumentacija-preporucuje" class="md-nav__link">
+  <a href="#what-the-official-documentation-recommends" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Šta zvanična dokumentacija preporučuje
+        What the official documentation recommends
       
     </span>
   </a>
@@ -706,10 +706,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#gde-smo-svesno-otisli-drugacijim-putem" class="md-nav__link">
+  <a href="#where-we-consciously-took-a-different-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Gde smo svesno otišli drugačijim putem
+        Where we consciously took a different path
       
     </span>
   </a>
@@ -717,10 +717,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cena-izbora-sta-bi-se-desilo-da-smo-isli-po-knjizi" class="md-nav__link">
+  <a href="#the-cost-of-the-choice-what-would-have-happened-if-wed-gone-by-the-book" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cena izbora: šta bi se desilo da smo išli "po knjizi"
+        The cost of the choice: what would have happened if we'd gone "by the book"
       
     </span>
   </a>
@@ -728,10 +728,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zasto-grafana-alloy-a-ne-cist-opentelemetry-collector" class="md-nav__link">
+  <a href="#why-grafana-alloy-and-not-a-plain-opentelemetry-collector" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto Grafana Alloy, a ne "čist" OpenTelemetry Collector
+        Why Grafana Alloy, and not a "plain" OpenTelemetry Collector
       
     </span>
   </a>
@@ -744,10 +744,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#44-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#44-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.4 Skupljena pravila iz ovog poglavlja
+        4.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -755,22 +755,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#45-vezba-za-citaoca" class="md-nav__link">
+  <a href="#45-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.5 Vežba za čitaoca
+        4.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="4.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -805,7 +805,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+    Chapter 5 — Instrumenting the application: two strategies
   
 
     
@@ -833,7 +833,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+    Chapter 6 — Containerized/batch workloads: the sidecar pattern
   
 
     
@@ -861,7 +861,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 7 — Kada ne možeš da instrumentiraš izvor: pull-obrasci
+    Chapter 7 — When you can't instrument the source: pull-based patterns
   
 
     
@@ -889,7 +889,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 8 — Frontend / RUM observability
+    Chapter 8 — Frontend / RUM observability
   
 
     
@@ -917,7 +917,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 9 — Sintetičko (black-box) praćenje
+    Chapter 9 — Synthetic (Black-Box) Monitoring
   
 
     
@@ -1006,7 +1006,7 @@
   <span class="md-ellipsis">
     
   
-    Deo III — Obrada, kardinalnost i troškovi
+    Part III — Processing, cardinality, and cost
   
 
     
@@ -1034,7 +1034,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+    Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
   
 
     
@@ -1062,7 +1062,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 11 — Kardinalnost i cena: kako sistem prirodno naraste iznad budžeta
+    Chapter 11 — Cardinality and cost: how a system naturally outgrows its budget
   
 
     
@@ -1090,7 +1090,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+    Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
   
 
     
@@ -1179,7 +1179,7 @@
   <span class="md-ellipsis">
     
   
-    Deo IV — Alarmiranje, SLO i odgovor na incidente
+    Part IV — Alerting, SLOs, and incident response
   
 
     
@@ -1207,7 +1207,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+    Chapter 13 — Alerting architecture: two paths, one destination channel
   
 
     
@@ -1235,7 +1235,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+    Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
   
 
     
@@ -1263,7 +1263,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+    Chapter 15 — SLOs and error-budget-based alerts
   
 
     
@@ -1291,7 +1291,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 16 — Runbook-ovi: od alarma do rešenja
+    Chapter 16 — Runbooks: from alert to resolution
   
 
     
@@ -1319,7 +1319,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 17 — Postmortem kultura
+    Chapter 17 — Postmortem culture
   
 
     
@@ -1408,7 +1408,7 @@
   <span class="md-ellipsis">
     
   
-    Deo V — Domenske studije slučaja
+    Part V — Domain case studies
   
 
     
@@ -1436,7 +1436,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 18 — Baze podataka (upravljane, tipa RDS/Aurora)
+    Chapter 18 — Databases (managed, RDS/Aurora-type)
   
 
     
@@ -1464,7 +1464,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 19 — Samostalno upravljani distribuirani sistemi (klaster tipa Dremio)
+    Chapter 19 — Self-managed distributed systems (a Dremio-style cluster)
   
 
     
@@ -1492,7 +1492,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 20 — Autentikacija i IAM (sistem tipa Keycloak)
+    Chapter 20 — Authentication and IAM (a Keycloak-type system)
   
 
     
@@ -1520,7 +1520,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 21 — Hostovi i serveri kao mašine
+    Chapter 21 — Hosts and servers as machines
   
 
     
@@ -1548,7 +1548,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 22 — Mreža kao posebna ravan posmatranja
+    Chapter 22 — The network as its own observation plane
   
 
     
@@ -1576,7 +1576,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 23 — Batch/ETL flota zadataka
+    Chapter 23 — The batch/ETL job fleet
   
 
     
@@ -1604,7 +1604,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 24 — Posmatranje servisa koji nije naš (tipa Snowflake)
+    Chapter 24 — Observing a service that isn't ours (the Snowflake kind)
   
 
     
@@ -1693,7 +1693,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VI — Upravljanje, usklađenost i zrelost
+    Part VI — Governance, compliance, and maturity
   
 
     
@@ -1721,7 +1721,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 25 — Privatnost u telemetriji
+    Chapter 25 — Privacy in telemetry
   
 
     
@@ -1749,7 +1749,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 26 — Observability kao kontrola usklađenosti (SOC 2 primer)
+    Chapter 26 — Observability as a compliance control (a SOC 2 example)
   
 
     
@@ -1777,7 +1777,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 27 — Prioritizacija: cena, performanse, pouzdanost, bezbednost
+    Chapter 27 — Prioritization: cost, performance, reliability, security
   
 
     
@@ -1805,7 +1805,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 28 — AI-asistirana observability: agent koji čita telemetriju
+    Chapter 28 — AI-assisted observability: an agent that reads telemetry
   
 
     
@@ -1894,7 +1894,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VII — Sazrevanje programa
+    Part VII — The program matures
   
 
     
@@ -1922,7 +1922,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 29 — Kako izgleda fazni rollout u realnom vremenu
+    Chapter 29 — What a phased rollout looks like in real time
   
 
     
@@ -1950,7 +1950,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 30 — Merenje zrelosti sopstvenog programa
+    Chapter 30 — Measuring the maturity of your own program
   
 
     
@@ -1978,7 +1978,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 31 — Zaključak: skupljena pravila
+    Chapter 31 — Conclusion: rules collected
   
 
     
@@ -2067,7 +2067,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak A — PromQL/LogQL recepti
+    Appendix A — PromQL/LogQL recipes
   
 
     
@@ -2095,7 +2095,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak B — Rečnik pojmova
+    Appendix B — Glossary of terms
   
 
     
@@ -2123,7 +2123,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak C — Checklist za onboarding novog servisa na observability
+    Appendix C — Checklist for onboarding a new service onto observability
   
 
     
@@ -2151,7 +2151,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak D — Šablon runbook-a i šablon postmortema
+    Appendix D — Runbook template and postmortem template
   
 
     
@@ -2199,10 +2199,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#41-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#41-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.1 Pitanje na koje ovo poglavlje odgovara
+        4.1 The question this chapter answers
       
     </span>
   </a>
@@ -2210,10 +2210,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#42-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#42-how-it-was-actually-done-a-practical-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.2 Kako je to urađeno — praktičan pregled
+        4.2 How it was actually done — a practical overview
       
     </span>
   </a>
@@ -2221,22 +2221,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#43-analiticki-deo-kako-to-rade-drugi-i-zasto-smo-delimicno-drugacije" class="md-nav__link">
+  <a href="#43-analytical-section-how-others-do-it-and-why-we-partly-did-it-differently" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.3 Analitički deo — kako to rade drugi, i zašto smo (delimično) drugačije
+        4.3 Analytical section — how others do it, and why we (partly) did it differently
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4.3 Analitički deo — kako to rade drugi, i zašto smo (delimično) drugačije">
+    <nav class="md-nav" aria-label="4.3 Analytical section — how others do it, and why we (partly) did it differently">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sta-zvanicna-dokumentacija-preporucuje" class="md-nav__link">
+  <a href="#what-the-official-documentation-recommends" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Šta zvanična dokumentacija preporučuje
+        What the official documentation recommends
       
     </span>
   </a>
@@ -2244,10 +2244,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#gde-smo-svesno-otisli-drugacijim-putem" class="md-nav__link">
+  <a href="#where-we-consciously-took-a-different-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Gde smo svesno otišli drugačijim putem
+        Where we consciously took a different path
       
     </span>
   </a>
@@ -2255,10 +2255,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cena-izbora-sta-bi-se-desilo-da-smo-isli-po-knjizi" class="md-nav__link">
+  <a href="#the-cost-of-the-choice-what-would-have-happened-if-wed-gone-by-the-book" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cena izbora: šta bi se desilo da smo išli "po knjizi"
+        The cost of the choice: what would have happened if we'd gone "by the book"
       
     </span>
   </a>
@@ -2266,10 +2266,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zasto-grafana-alloy-a-ne-cist-opentelemetry-collector" class="md-nav__link">
+  <a href="#why-grafana-alloy-and-not-a-plain-opentelemetry-collector" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto Grafana Alloy, a ne "čist" OpenTelemetry Collector
+        Why Grafana Alloy, and not a "plain" OpenTelemetry Collector
       
     </span>
   </a>
@@ -2282,10 +2282,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#44-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#44-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.4 Skupljena pravila iz ovog poglavlja
+        4.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -2293,22 +2293,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#45-vezba-za-citaoca" class="md-nav__link">
+  <a href="#45-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.5 Vežba za čitaoca
+        4.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="4.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -2337,7 +2337,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-04-gateway.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-04-gateway.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2345,238 +2345,258 @@
   
 
 
-<h1 id="poglavlje-4-gateway-obrazac-centralna-tacka-za-telemetriju">Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju</h1>
-<p>Zamisli luku. Brodovi stižu sa svih strana sveta, svaki sa drugačijim tovarom,
-drugačijim papirima, drugačijim namerama. Kad bi svaki brod sam odlučivao gde
-da istovari robu i sam sebi izdavao dozvolu za ulazak, luka bi bila haos za
-par nedelja — ne zato što bi kapetani bili nepošteni, nego zato što dosledna
-primena pravila zahteva jedno mesto gde se ta pravila primenjuju, a ne hiljadu
-nezavisnih tumačenja. Zato roba prolazi kroz carinski terminal: manji broj
-kontrolisanih tačaka, gde se ista provera radi na isti način, bez obzira ko je
-pošiljalac i odakle dolazi.</p>
-<p>Takav terminal ima cenu — ako stane, staje i sav protok kroz njega. Zato dobre
-luke ne rešavaju taj rizik tako što ukidaju terminal, nego tako što ih grade
-više od jednog, i svaki tretiraju sa punom ozbiljnošću, ne uzgredno.</p>
-<p>Ista logika važi za telemetriju — samo je roba drugačija, i to je pitanje na
-koje ovo poglavlje odgovara.</p>
-<h2 id="41-pitanje-na-koje-ovo-poglavlje-odgovara">4.1 Pitanje na koje ovo poglavlje odgovara</h2>
-<p>Svaki sistem koji šalje telemetriju u cloud servis (Grafana Cloud, Datadog,
-Honeycomb...) mora da odgovori na isti arhitektonski problem kao luka iz
-uvoda, pre nego što se napiše ijedna linija instrumentacije: <strong>da li svaki
-pošiljalac priča direktno sa cloud-om, ili postoji nešto između?</strong></p>
-<p>To "nešto između" — kolektor koji stoji na putu i radi nešto sa signalom pre
-nego što ga pusti dalje — zove se u OpenTelemetry svetu jednostavno <em>gateway</em>.
-Pitanje zvuči kao detalj infrastrukture. Nije. Od njega zavisi ko drži
-kredencijale za cloud, gde se troši budžet za obradu, šta se dešava kada cloud
-servis ima kratak prekid, i — kao što ćemo videti — koliko će koštati svaki novi
-tip pošiljaoca koji se doda za godinu dana.</p>
-<h2 id="42-kako-je-to-uraeno-praktican-pregled">4.2 Kako je to urađeno — praktičan pregled</h2>
-<p>U implementaciji koju pratimo kroz knjigu, odluka je bila: <strong>jedan centralni
-gateway, u visokoj dostupnosti, kroz koji prolazi skoro sav saobraćaj.</strong></p>
-<p>Konkretno:</p>
+<h1 id="chapter-4-the-gateway-pattern-a-central-point-for-telemetry">Chapter 4 — The gateway pattern: a central point for telemetry</h1>
+<p>Picture a port. Ships arrive from every corner of the world, each with a
+different cargo, different papers, different intentions. If every ship
+decided for itself where to unload its cargo and issued itself permission to
+enter, the port would be chaos within a couple of weeks — not because the
+captains would be dishonest, but because consistent enforcement of the rules
+requires one place where those rules are applied, not a thousand independent
+interpretations. That's why cargo passes through a customs terminal: a
+smaller number of controlled points, where the same check is done the same
+way, regardless of who the sender is or where they're coming from.</p>
+<p>Such a terminal has a cost — if it goes down, all the traffic through it goes
+down with it. That's why good ports don't solve that risk by getting rid of
+the terminal, but by building more than one, and treating each with full
+seriousness, not as an afterthought.</p>
+<p>The same logic applies to telemetry — only the cargo is different, and that's
+the question this chapter answers.</p>
+<h2 id="41-the-question-this-chapter-answers">4.1 The question this chapter answers</h2>
+<p>Every system that sends telemetry to a cloud service (Grafana Cloud, Datadog,
+Honeycomb...) has to answer the same architectural problem as the port from
+the introduction, before a single line of instrumentation gets written: <strong>does
+every sender talk directly to the cloud, or is there something in between?</strong></p>
+<p>That "something in between" — a collector that sits on the path and does
+something to the signal before letting it continue — is called, in the
+OpenTelemetry world, simply a <em>gateway</em>. The question sounds like an
+infrastructure detail. It isn't. It determines who holds the credentials for
+the cloud, where the processing budget gets spent, what happens when the
+cloud service has a short outage, and — as we'll see — how much every new
+type of sender added a year from now will end up costing.</p>
+<h2 id="42-how-it-was-actually-done-a-practical-overview">4.2 How it was actually done — a practical overview</h2>
+<p>In the implementation this book follows, the decision was: <strong>one central
+gateway, in high availability, through which almost all traffic passes.</strong></p>
+<p>Concretely:</p>
 <ul>
-<li>Gateway je <strong>Grafana Alloy</strong> (distribucija OpenTelemetry Collector-a koju
-  održava Grafana Labs), pokrenut kao dva nezavisna zadatka na kontejnerskoj
-  platformi (AWS ECS/Fargate), iza internog load balansera.</li>
-<li>Svi pošiljaoci — bilo da su to duže-živi servisi (backend aplikacija) ili
-  kratkotrajni batch zadaci — gađaju <strong>jedno stabilno DNS ime</strong> koje ostaje isto
-  kroz rebuild-ove i samog gateway-a i load balansera. Nijedan pošiljalac ne zna
-  niti ga zanima koja od dve instance gateway-a je trenutno primila njegov
+<li>The gateway is <strong>Grafana Alloy</strong> (the distribution of the OpenTelemetry
+  Collector maintained by Grafana Labs), run as two independent tasks on a
+  container platform (AWS ECS/Fargate), behind an internal load balancer.</li>
+<li>All senders — whether longer-lived services (a backend application) or
+  short-lived batch jobs — target <strong>one stable DNS name</strong> that stays the same
+  across rebuilds of both the gateway itself and the load balancer. No sender
+  knows or cares which of the two gateway instances currently received its
   signal.</li>
-<li>Gateway je <strong>jedino mesto koje drži kredencijale za cloud</strong> (basic-auth token
-  ka Grafana Cloud-u). Nijedna aplikacija, nijedan batch zadatak, nijedan
-  sidecar ne zna taj token — što znači da kompromitovanje bilo kog pojedinačnog
-  servisa ne kompromituje pristup posmatračkoj platformi.</li>
-<li>Na gateway-u se dešava sva obrada koja mora biti dosledna kroz ceo sistem:
-  odsecanje šuma (health-check pozivi), skidanje osetljivih atributa,
-  ograničavanje veličine poruka, agregacija visoko-kardinalnih dimenzija — sve
-  ono što je detaljno obrađeno u Poglavlju 10. Ovde je bitno samo da postoji
-  <strong>jedno mesto</strong> gde se te odluke primenjuju, umesto da se ista logika
-  kopira u svaki servis posebno.</li>
+<li>The gateway is <strong>the only place that holds credentials for the cloud</strong> (a
+  basic-auth token toward Grafana Cloud). No application, no batch job, no
+  sidecar knows that token — which means compromising any single service does
+  not compromise access to the observability platform.</li>
+<li>Everything that must be applied consistently across the whole system happens
+  at the gateway: cutting out noise (health-check calls), stripping sensitive
+  attributes, limiting message size, aggregating high-cardinality dimensions —
+  all of it covered in detail in Chapter 10. What matters here is only that
+  there is <strong>one place</strong> where those decisions are applied, instead of the
+  same logic being copied into every service separately.</li>
 </ul>
-<p>Šematski, to izgleda ovako:</p>
-<p><img alt="Telemetrija ide od pošiljalaca ka jednom stabilnom DNS imenu, koje ravnopravno raspoređuje saobraćaj na dve nezavisne gateway instance; samo gateway razgovara sa cloud platformom." src="../../diagrams/diagram.png" width="100%" /></p>
-<p>Ono što ovaj dijagram <em>ne</em> pokazuje, a bitno je: postoji mala, <strong>eksplicitno
-dokumentovana</strong> lista pošiljalaca koji gateway <strong>zaobilaze</strong> — Lambda funkcija
-koja javlja o padu zadataka, i browser-korisnički interfejs. Oba imaju isti
-razlog: gateway živi u privatnoj mreži i fizički mu ne mogu pristupiti (Lambda
-nije u istoj virtuelnoj mreži; browser korisnika nikad neće imati pristup
-internoj infrastrukturi). Umesto da se ta ograničenja zaobilaze veštački, obe
-komponente dobijaju sopstveni, uzak put direktno do cloud-a — i to je namerno,
-ne previd. Vratićemo se na ovaj princip u Poglavlju 7.</p>
-<h2 id="43-analiticki-deo-kako-to-rade-drugi-i-zasto-smo-delimicno-drugacije">4.3 Analitički deo — kako to rade drugi, i zašto smo (delimično) drugačije</h2>
-<h3 id="sta-zvanicna-dokumentacija-preporucuje">Šta zvanična dokumentacija preporučuje</h3>
-<p>OpenTelemetry projekat ima zvanično opisana tri (u praksi četiri, ako se ubroji
-"nema kolektora uopšte") obrasca raspoređivanja kolektora:</p>
+<p>Schematically, it looks like this:</p>
+<p><img alt="Telemetry travels from senders to one stable DNS name, which distributes traffic evenly across two independent gateway instances; only the gateway talks to the cloud platform." src="../../diagrams/diagram.png" width="100%" /></p>
+<p>What this diagram does <em>not</em> show, and matters: there is a small,
+<strong>explicitly documented</strong> list of senders that <strong>bypass</strong> the gateway — a
+Lambda function that reports job failures, and the browser-based user
+interface. Both share the same reason: the gateway lives on a private network
+and they physically cannot reach it (the Lambda isn't in the same virtual
+network; a user's browser will never have access to internal infrastructure).
+Instead of working around those constraints artificially, both components get
+their own narrow path straight to the cloud — and that's intentional, not an
+oversight. We'll come back to this principle in Chapter 7.</p>
+<h2 id="43-analytical-section-how-others-do-it-and-why-we-partly-did-it-differently">4.3 Analytical section — how others do it, and why we (partly) did it differently</h2>
+<h3 id="what-the-official-documentation-recommends">What the official documentation recommends</h3>
+<p>The OpenTelemetry project officially describes three (in practice four, if you
+count "no collector at all") collector deployment patterns:</p>
 <ol>
-<li><strong>Bez kolektora</strong> — aplikacija šalje direktno u cloud. Najmanje pokretnih
-   delova, ali svaki prekid cloud servisa se oseti direktno u aplikaciji, i
-   nema mesta za centralizovanu obradu.</li>
-<li><strong>Agent obrazac</strong> — kolektor po hostu/podu (npr. kao DaemonSet u Kubernetes-u),
-   lokalni "sused" aplikacije koji radi kao privremeni bafer i mesto za
-   transformaciju pre slanja dalje.</li>
-<li><strong>Agent-to-gateway obrazac</strong> — agenti na svakom čvoru šalju napred ka
-   manjem broju centralnih gateway instanci koje rade tešku obradu (tail
-   sampling, redakcija, jedinstvena politika) i koje su jedina tačka koja drži
-   kredencijale.</li>
-<li><strong>Gateway-only obrazac</strong> — pošiljaoci idu direktno na centralni gateway,
-   bez lokalnog posrednika.</li>
+<li><strong>No collector</strong> — the application sends directly to the cloud. The fewest
+   moving parts, but every outage of the cloud service is felt directly in the
+   application, and there's no place for centralized processing.</li>
+<li><strong>Agent pattern</strong> — a collector per host/pod (e.g., as a DaemonSet in
+   Kubernetes), a local "neighbor" of the application that acts as a
+   temporary buffer and a place for transformation before forwarding.</li>
+<li><strong>Agent-to-gateway pattern</strong> — agents on every node send forward to a
+   smaller number of central gateway instances that do the heavy processing
+   (tail sampling, redaction, unified policy) and that are the single point
+   holding credentials.</li>
+<li><strong>Gateway-only pattern</strong> — senders go directly to the central gateway,
+   with no local intermediary.</li>
 </ol>
-<p>Zvanična preporuka za veće, produkcione sisteme je <strong>agent-to-gateway</strong>
-(obrazac #3) — to je ono što OpenTelemetry dokumentacija, Datadog-ov vodič za
-izbor arhitekture i više nezavisnih analiza (SigNoz, OneUptime) navode kao
-"industrijski standard" za sisteme koji rastu. Razlog je konkretan: lokalni
-agent daje bafer ako centralni gateway zakaže, hvata podatke specifične za host
-(metrike operativnog sistema, Kubernetes atribute) koje ništa drugo prirodno ne
-vidi, i skalira se nezavisno od gateway sloja — broj agenata prati broj
-čvorova, broj gateway instanci prati zapreminu telemetrije, i te dve krive
-retko rastu zajedno.</p>
-<h3 id="gde-smo-svesno-otisli-drugacijim-putem">Gde smo svesno otišli drugačijim putem</h3>
-<p>Implementacija koju analiziramo <strong>nema opšti agent sloj</strong>. Većina pošiljalaca
-ide direktno na gateway — što je, po gornjoj taksonomiji, bliže obrascu #4
-(gateway-only), sa jednim značajnim izuzetkom: za kratkotrajne kontejnerske
-zadatke koristi se <strong>sidecar po zadatku</strong> (kolektor upregnut uz aplikaciju u
-istom zadatku, ali ne trajan agent na čvoru — čvor u serverless kontejnerskom
-svetu ni ne postoji na način na koji ga zvanična dokumentacija zamišlja). Treći
-komad — pull-bazirani izvori (baze, samostalno upravljani klasteri, SaaS) —
-uopšte ne liči ni na jedan od četiri standardna obrasca, jer tamo <em>gateway
-sam</em> radi posao koji bi agent obično radio, samo u smeru povlačenja umesto
-guranja podataka.</p>
-<p>Zašto ovo odstupanje, i da li je to greška? Tri razloga, svaki proveriv:</p>
-<p><strong>1. "Čvor" na koji bi se agent instalirao često ne postoji.</strong> Zvanični
-agent-obrazac pretpostavlja stabilan host — VM ili Kubernetes node — na kome
-DaemonSet živi danima ili nedeljama i prirodno hvata host-nivo metrike. Kod
-kratkotrajnih serverless kontejnerskih zadataka (batch posao koji živi par
-minuta i onda nestaje) ta pretpostavka ne važi: nema stabilnog čvora, ima samo
-efemernog zadatka. Sidecar-po-zadatku nije "siromašnija verzija" agenta — to
-je <em>ispravan</em> prevod istog principa (lokalni pratilac koji hvata
-resurs-specifične podatke i daje prostor za graciozno gašenje) u okruženje gde
-klasičan DaemonSet fizički nema na šta da se zakači. Ovo je važna razlika za
-čitaoca: kada standardni obrazac ne stane na tvoju infrastrukturu, pravo
-pitanje nije "kako da ga na silu primenim" nego "koji je princip iza obrasca, i
-kako taj princip izgleda u mom okruženju."</p>
-<p><strong>2. Cena lokalnog hop-a nije uvek isplativa.</strong> Zvanična prednost agent sloja —
-lokalni bafer koji preživljava kratak prekid gateway-a — ima realnu cenu:
-dodatni proces po instanci, dodatna slika za održavanje, dodatna tačka koja
-može da otkaže. Za sistem gde je broj dugotrajnih servisa mali (nekoliko app
-instanci, ne hiljade), a gateway je već u HA (dve nezavisne instance iza load
-balansera sa DNS otpornim na rebuild), granularni rizik koji agent sloj
-uklanja je mali, dok je operativna cena — još jedan artefakt da se gradi,
-verzioniše i prati za svaki servis — realna i konstantna. Ovo je račun koji se
-mora raditi eksplicitno, ne pretpostaviti: "industrijski standard" je dobra
-polazna tačka, ne automatska odluka.</p>
-<p><strong>3. Tail sampling — glavni razlog <em>za</em> agent-to-gateway šablon u zvaničnoj
-dokumentaciji — ovde uopšte nije u igri.</strong> Ovo je najvredniji nalaz ovog
-poređenja. Zvanični agent-to-gateway obrazac dobija najviše smisla kada gateway
-mora da radi <em>tail-based sampling</em> — odluku "da li da zadržim ovaj trejs"
-donetu tek pošto se vide svi njegovi delovi. Za tu odluku, load-balancing
-exporter mora da hešira po trace ID-u tako da svi delovi jednog trejsa stignu
-na <strong>istu</strong> gateway instancu — bez toga tail sampling ne radi ispravno. To je
-netrivijalan zahtev koji utiče na to kako se gateway sloj balansira.
-Implementacija koju analiziramo je <strong>eksplicitno odbila</strong> tail sampling na
-gateway nivou (razrađeno u Poglavlju 12) u korist server-side adaptivnog
-uzorkovanja na cloud strani. Rezultat: ograničenje koje bi opravdalo
-kompleksniji, trace-svestan load-balancing sloj — prosto ne postoji ovde.
-Običan L4 load balanser je dovoljan, jer nijedna odluka na gateway-u ne zavisi
-od toga da li su svi delovi jednog trejsa stigli na isto mesto. <strong>Kada
-odbaciš jedan zahtev iz udžbeničkog rešenja, prirodno otpada i deo arhitekture
-koji je postojao samo da bi taj zahtev zadovoljio</strong> — dobra opšta lekcija za
-čitaoca kada poredi svoj sistem sa referentnom arhitekturom.</p>
-<h3 id="cena-izbora-sta-bi-se-desilo-da-smo-isli-po-knjizi">Cena izbora: šta bi se desilo da smo išli "po knjizi"</h3>
-<p>Vredi odigrati i suprotan scenario, jer to je ono što razlikuje inženjersku
-odluku od slepog kopiranja preporuke.</p>
-<p>Da je uveden pun agent-to-gateway sloj sa DaemonSet-om na svakom kontejnerskom
-"čvoru": u serverless Fargate okruženju bi to značilo dodatni pratilac proces
-po zadatku (što se u praksi svodi na isto što i sidecar koji već postoji za
-batch flotu — samo preimenovan), ali <em>i</em> za dugotrajne servise koji danas idu
-direktno na gateway. Za tih par dugotrajnih servisa, dodatni lokalni kolektor
-bi značio: još jedna slika koja mora da prati verzije OpenTelemetry
-Collector-a, još jedan proces koji troši memoriju pored same aplikacije, i —
-najskuplje od svega — još jedna komponenta čiji pad treba dijagnostikovati kada
-nešto ne štima ("da li je problem u aplikaciji, u lokalnom agentu, u
-gateway-u, ili u mreži između njih?"). Realna korist bi bila mala: gateway već
-jeste u HA, a jedini scenario u kome bi lokalni bafer stvarno pomogao — potpuni
-pad <em>oba</em> gateway zadatka istovremeno — već je pokriven drugim, jeftinijim
-mehanizmom (sintetičko spoljašnje praćenje iz Poglavlja 9, koje uopšte ne
-zavisi od gateway-a).</p>
-<p>Obrnuto, da je izabran čist "bez-kolektora" obrazac (svaka aplikacija direktno
-u cloud, bez ičega između): svaka aplikacija bi morala da nosi cloud
-kredencijale, svaka promena politike obrade (npr. "sakrij ovaj atribut za
-celu flotu") zahtevala bi izmenu u svakom repozitorijumu ponaosob, i — što je
-posebno bitno za temu troškova iz Poglavlja 11 — ne bi postojalo jedno mesto na
-kome se kardinalnost i cena mogu presresti pre nego što stignu do
-naplativog dela cevovoda. Gateway sloj se u praksi vrlo brzo plati kroz jednu
-jedinu intervenciju te vrste.</p>
-<h3 id="zasto-grafana-alloy-a-ne-cist-opentelemetry-collector">Zašto Grafana Alloy, a ne "čist" OpenTelemetry Collector</h3>
-<p>Druga odluka vredna analize: gateway nije pokrenut kao vanilla
-<code>opentelemetry-collector-contrib</code> distribucija, nego kao Grafana Alloy —
-Grafana Labs-ova sopstvena distribucija istog kolektorskog jezgra, sa svojom
-konfiguracionom sintaksom (River/Alloy jezik umesto standardnog YAML pipeline
-opisa) i ugrađenim komponentama za povlačenje metrika (npr. direktno iz
-CloudWatch-a ili Postgres-a).</p>
-<p>Nezavisne analize ovog izbora (uključujući i kritičke, ne samo promotivne)
-navode realan rizik: Alloy uvodi <strong>sopstvenu, ne-standardnu sintaksu</strong> i
-podrazumevano gura korisnika ka Grafana-inom ekosistemu (Loki za logove,
-Mimir/Prometheus za metrike), što otežava kasniju migraciju na drugog
-dobavljača — klasičan oblik blagog vendor lock-in-a, uprkos tome što protokol
-kojim se šalje napred (OTLP) ostaje standardan.</p>
-<p>U implementaciji koju analiziramo, taj rizik je svesno prihvaćen iz dva
-razloga koja imaju smisla samo <em>u kontekstu</em> — ovo nije opšte pravilo "Alloy je
-bolji", nego primer kako se takva odluka opravdava:</p>
+<p>The official recommendation for larger, production systems is
+<strong>agent-to-gateway</strong> (pattern #3) — that's what the OpenTelemetry
+documentation, Datadog's guide to choosing an architecture, and several
+independent analyses (SigNoz, OneUptime) describe as the "industry standard"
+for growing systems. The reason is concrete: a local agent provides a buffer
+if the central gateway fails, captures host-specific data (operating-system
+metrics, Kubernetes attributes) that nothing else naturally sees, and scales
+independently of the gateway layer — the number of agents tracks the number
+of nodes, the number of gateway instances tracks telemetry volume, and those
+two curves rarely grow together.</p>
+<h3 id="where-we-consciously-took-a-different-path">Where we consciously took a different path</h3>
+<p>The implementation we're analyzing <strong>has no general agent layer</strong>. Most
+senders go directly to the gateway — which, by the taxonomy above, is closer
+to pattern #4 (gateway-only), with one significant exception: for short-lived
+containerized jobs, a <strong>per-job sidecar</strong> is used (a collector harnessed to
+the application within the same task, but not a persistent agent on a node —
+a "node" in the serverless container world doesn't even exist in the sense the
+official documentation imagines). The third piece — pull-based sources
+(databases, self-managed clusters, SaaS) — doesn't resemble any of the four
+standard patterns at all, because there <em>the gateway itself</em> does the job an
+agent would normally do, only in the direction of pulling rather than pushing
+data.</p>
+<p>Why this deviation, and is it a mistake? Three reasons, each verifiable:</p>
+<p><strong>1. The "node" an agent would install onto often doesn't exist.</strong> The
+official agent pattern assumes a stable host — a VM or a Kubernetes node — on
+which a DaemonSet lives for days or weeks and naturally captures host-level
+metrics. For short-lived serverless container jobs (a batch job that lives for
+a couple of minutes and then disappears), that assumption doesn't hold: there
+is no stable node, only an ephemeral task. A per-job sidecar isn't a "poorer
+version" of an agent — it's the <em>correct</em> translation of the same principle
+(a local companion that captures resource-specific data and provides room for
+graceful shutdown) into an environment where a classic DaemonSet has
+physically nothing to attach to. This is an important distinction for the
+reader: when the standard pattern doesn't fit your infrastructure, the right
+question isn't "how do I force it to fit" but "what is the principle behind
+the pattern, and what does that principle look like in my environment."</p>
+<p><strong>2. The cost of the local hop isn't always worth paying.</strong> The official
+advantage of the agent layer — a local buffer that survives a brief gateway
+outage — has a real cost: an additional process per instance, an additional
+image to maintain, an additional point that can fail. For a system where the
+number of long-lived services is small (a handful of app instances, not
+thousands), and the gateway is already in HA (two independent instances
+behind a load balancer, with a DNS name resilient to rebuilds), the marginal
+risk that an agent layer removes is small, while the operational cost —
+another artifact to build, version, and monitor for every service — is real
+and constant. This is a calculation that has to be made explicitly, not
+assumed: "industry standard" is a good starting point, not an automatic
+decision.</p>
+<p><strong>3. Tail sampling — the main reason <em>for</em> the agent-to-gateway pattern in the
+official documentation — isn't in play here at all.</strong> This is the most
+valuable finding of this comparison. The official agent-to-gateway pattern
+makes the most sense when the gateway has to perform <em>tail-based sampling</em> —
+the decision "should I keep this trace" made only after all of its parts have
+been seen. For that decision, the load-balancing exporter has to hash by
+trace ID so that all parts of a single trace land on the <strong>same</strong> gateway
+instance — without that, tail sampling doesn't work correctly. That's a
+non-trivial requirement that shapes how the gateway layer is load-balanced.
+The implementation being analyzed <strong>explicitly rejected</strong> tail sampling at
+the gateway level (detailed in Chapter 12) in favor of server-side adaptive
+sampling on the cloud side. The result: the constraint that would have
+justified a more complex, trace-aware load-balancing layer simply doesn't
+exist here. A plain L4 load balancer is enough, because no decision at the
+gateway depends on whether all parts of a single trace arrive at the same
+place. <strong>When you drop one requirement from the textbook solution, part of
+the architecture that existed only to satisfy that requirement naturally
+falls away too</strong> — a good general lesson for the reader when comparing their
+own system against a reference architecture.</p>
+<h3 id="the-cost-of-the-choice-what-would-have-happened-if-wed-gone-by-the-book">The cost of the choice: what would have happened if we'd gone "by the book"</h3>
+<p>It's worth playing out the opposite scenario too, because that's what
+distinguishes an engineering decision from blind copying of a recommendation.</p>
+<p>Had a full agent-to-gateway layer been introduced, with a DaemonSet on every
+container "node": in a serverless Fargate environment that would mean an
+additional companion process per task (which in practice amounts to the same
+thing as the sidecar that already exists for the batch fleet — just renamed),
+but <em>also</em> for the long-lived services that today go directly to the gateway.
+For that handful of long-lived services, an additional local collector would
+mean: one more image that has to keep up with OpenTelemetry Collector
+versions, one more process consuming memory alongside the application itself,
+and — most expensive of all — one more component whose failure has to be
+diagnosed when something's off ("is the problem in the application, in the
+local agent, in the gateway, or in the network between them?"). The real
+benefit would be small: the gateway is already in HA, and the one scenario
+where a local buffer would actually help — a complete simultaneous failure of
+<em>both</em> gateway tasks — is already covered by another, cheaper mechanism
+(synthetic external monitoring from Chapter 9, which doesn't depend on the
+gateway at all).</p>
+<p>Conversely, had a pure "no-collector" pattern been chosen (every application
+straight to the cloud, nothing in between): every application would have to
+carry cloud credentials, every change in processing policy (e.g., "hide this
+attribute across the whole fleet") would require an edit in every repository
+individually, and — particularly relevant to the cost topic in Chapter 11 —
+there would be no single place where cardinality and cost can be intercepted
+before they reach the billable end of the pipeline. In practice, the gateway
+layer pays for itself very quickly through a single intervention of that
+kind.</p>
+<h3 id="why-grafana-alloy-and-not-a-plain-opentelemetry-collector">Why Grafana Alloy, and not a "plain" OpenTelemetry Collector</h3>
+<p>A second decision worth analyzing: the gateway isn't run as a vanilla
+<code>opentelemetry-collector-contrib</code> distribution, but as Grafana Alloy —
+Grafana Labs' own distribution of the same collector core, with its own
+configuration syntax (the River/Alloy language instead of the standard YAML
+pipeline description) and built-in components for pulling metrics (e.g.,
+directly from CloudWatch or Postgres).</p>
+<p>Independent analyses of this choice (including critical ones, not just
+promotional material) cite a real risk: Alloy introduces <strong>its own,
+non-standard syntax</strong> and by default nudges the user toward the Grafana
+ecosystem (Loki for logs, Mimir/Prometheus for metrics), which makes a later
+migration to a different vendor harder — a mild, classic form of vendor
+lock-in, despite the fact that the protocol used to forward data (OTLP)
+remains standard.</p>
+<p>In the implementation being analyzed, that risk was consciously accepted for
+two reasons that only make sense <em>in context</em> — this isn't a general rule
+that "Alloy is better," but an example of how such a decision gets justified:</p>
 <ol>
-<li><strong>Downstream je već Grafana Cloud.</strong> Cena vendor-vezanosti na nivou
-   kolektora je marginalna kada je cela posmatračka platforma iza njega već
-   kod istog dobavljača — lock-in na konfiguracionoj sintaksi kolektora ne
-   dodaje novi rizik povrh onog koji je već prihvaćen izborom platforme.</li>
-<li><strong>Ugrađeni pull-eksporteri menjaju čitavu jednu kategoriju infrastrukture.</strong>
-   Da je izabran čist OpenTelemetry Collector, povlačenje CloudWatch i
-   Postgres metrika (Poglavlje 7) zahtevalo bi <em>odvojenu</em> Prometheus
-   infrastrukturu sa <code>remote_write</code> ka istom cilju — još jedna komponenta,
-   još jedan sloj za rad i praćenje. Alloy to radi u istom procesu, istom
-   pipeline-u, istom monitoring sloju kao i sve ostalo.</li>
+<li><strong>The downstream is already Grafana Cloud.</strong> The cost of collector-level
+   vendor attachment is marginal when the entire observability platform
+   behind it is already with the same vendor — lock-in on the collector's
+   configuration syntax doesn't add a new risk on top of the one already
+   accepted by choosing the platform.</li>
+<li><strong>The built-in pull exporters replace an entire category of
+   infrastructure.</strong> Had a plain OpenTelemetry Collector been chosen, pulling
+   CloudWatch and Postgres metrics (Chapter 7) would have required <em>separate</em>
+   Prometheus infrastructure with <code>remote_write</code> to the same destination —
+   one more component, one more layer to operate and monitor. Alloy does
+   this in the same process, the same pipeline, the same monitoring layer as
+   everything else.</li>
 </ol>
-<p>Poenta za čitaoca nije "izaberi Alloy" — poenta je da svaka odluka o
-konkretnom alatu mora biti opravdana kroz <em>ono što ta odluka menja nizvodno</em>,
-ne kroz reputaciju alata samog po sebi.</p>
-<p>Vratimo se na luku s početka poglavlja. Terminal ne rešava rizik od zastoja
-tako što se ukine, nego tako što se izgradi više od jednog i svaki tretira sa
-punom ozbiljnošću — tačno ono što gateway iz ovog poglavlja radi sa dve
-nezavisne instance umesto jedne. <strong>Centralizacija nije suprotnost
-pouzdanosti — ona je priznanje da je lakše učiniti pouzdanim jedno
-kontrolisano mesto nego hiljadu nekontrolisanih</strong>, uz uslov da se to jedno
-mesto zaista tretira sa punom ozbiljnošću. Mera te ozbiljnosti vraćaće se kroz
-celu knjigu: da li mesto ima dovoljno redundanse, da li njegov pad ima
-nezavisan način da bude primećen, i da li iko van njega može da nastavi da
-radi kada ono padne.</p>
-<h2 id="44-skupljena-pravila-iz-ovog-poglavlja">4.4 Skupljena pravila iz ovog poglavlja</h2>
+<p>The point for the reader isn't "choose Alloy" — the point is that every
+decision about a specific tool has to be justified through <em>what that
+decision changes downstream</em>, not through the tool's reputation on its own.</p>
+<p>Let's return to the port from the start of the chapter. A terminal doesn't
+solve the risk of downtime by being eliminated, but by building more than one
+and treating each with full seriousness — exactly what the gateway in this
+chapter does with two independent instances instead of one.
+<strong>Centralization isn't the opposite of reliability — it's an admission that
+it's easier to make one controlled place reliable than a thousand
+uncontrolled ones</strong>, on the condition that this one place is actually treated
+with full seriousness. The measure of that seriousness will come back
+throughout the book: whether the place has enough redundancy, whether its
+failure has an independent way of being noticed, and whether anyone outside
+it can keep working when it goes down.</p>
+<h2 id="44-rules-collected-from-this-chapter">4.4 Rules collected from this chapter</h2>
 <ul>
-<li>Standardni obrazac (agent + gateway) je dobra polazna pretpostavka, ali
-  proveri da li čvor na koji bi agent išao <em>uopšte postoji</em> u tvom okruženju
-  pre nego što ga kopiraš.</li>
-<li>Kada odbaciš jedan zahtev iz referentne arhitekture (npr. tail sampling),
-  proveri šta je <em>u toj arhitekturi</em> postojalo samo zbog tog zahteva — često
-  možeš da uprostiš i taj deo.</li>
-<li>Gateway koji drži cloud kredencijale mora biti tretiran kao kritična
-  infrastruktura eksplicitno: HA, stabilna adresa, i nezavisan način da neko
-  primeti kada je pao (ne samo "alarmi prestanu da stižu" — to je tiho i lako
-  se propusti, videćemo u Poglavlju 14 zašto).</li>
-<li>Svaka odluka o alatu ("zašto baš ovaj kolektor/ovaj dobavljač") treba da se
-  opravda kroz ono što ta odluka menja <em>nizvodno</em> (koje druge komponente
-  postaju nepotrebne ili neophodne), ne kroz opštu reputaciju alata.</li>
-<li>Namerno zaobilaženje gateway-a (za komponente koje fizički ne mogu da mu
-  pristupe) treba da bude <strong>spisak sa razlogom</strong>, ne slučajno odstupanje koje
-  neko otkrije šest meseci kasnije.</li>
+<li>The standard pattern (agent + gateway) is a good starting assumption, but
+  check whether the node an agent would run on <em>even exists</em> in your
+  environment before you copy it.</li>
+<li>When you drop one requirement from the reference architecture (e.g., tail
+  sampling), check what <em>in that architecture</em> existed only because of that
+  requirement — you can often simplify that part too.</li>
+<li>A gateway that holds cloud credentials must be explicitly treated as
+  critical infrastructure: HA, a stable address, and an independent way for
+  someone to notice when it's down (not just "alerts stop arriving" — that's
+  silent and easy to miss, as we'll see why in Chapter 14).</li>
+<li>Every tool decision ("why this particular collector/this particular
+  vendor") should be justified through what that decision changes
+  <em>downstream</em> (which other components become unnecessary or necessary), not
+  through the tool's general reputation.</li>
+<li>Deliberately bypassing the gateway (for components that physically cannot
+  reach it) should be a <strong>documented list with a reason</strong>, not an accidental
+  deviation someone discovers six months later.</li>
 </ul>
-<h2 id="45-vezba-za-citaoca">4.5 Vežba za čitaoca</h2>
-<p>Nacrtaj dijagram sopstvenog sistema onako kako telemetrija danas putuje —
-svaka aplikacija, svaka baza, svaki eksterni servis. Za svaku strelicu ka
-cloud servisu postavi tri pitanja: (1) da li ova komponenta drži cloud
-kredencijale direktno, (2) šta bi se desilo kada bi cloud servis bio
-nedostupan 5 minuta, i (3) ko bi prvi primetio da ova strelica prestane da
-radi. Ako je odgovor na (3) "niko, dok neko ne primeti da nešto drugo ne
-štima" — to je tvoj prvi kandidat za gateway.</p>
+<h2 id="45-exercise-for-the-reader">4.5 Exercise for the reader</h2>
+<p>Draw a diagram of your own system as telemetry actually travels through it
+today — every application, every database, every external service. For every
+arrow pointing to a cloud service, ask three questions: (1) does this
+component hold cloud credentials directly, (2) what would happen if the cloud
+service were unavailable for 5 minutes, and (3) who would be the first to
+notice if this arrow stopped working. If the answer to (3) is "nobody, until
+someone notices something else is off" — that's your first candidate for a
+gateway.</p>
 <hr />
-<h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
+<h3 id="sources-used-in-the-analytical-section">Sources used in the analytical section</h3>
 <ul>
 <li><a href="https://opentelemetry.io/docs/collector/deploy/other/agent-to-gateway/">Agent-to-gateway deployment pattern — OpenTelemetry</a></li>
 <li><a href="https://opentelemetry.io/docs/collector/deploy/gateway/">Gateway deployment pattern — OpenTelemetry</a></li>
@@ -2606,7 +2626,7 @@ radi. Ako je odgovor na (3) "niko, dok neko ne primeti da nešto drugo ne
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="26. avgust 2026. 16:06:09 UTC">26. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:03:30 UTC">August 26, 2026</span>
   </span>
 
     

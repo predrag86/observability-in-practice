@@ -31,7 +31,7 @@
     
     
       
-        <title>Poglavlje 5 — Instrumentacija aplikacije: dve strategije - Observability in Practice</title>
+        <title>Chapter 5 — Instrumenting the application: two strategies - Observability in Practice</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#poglavlje-5-instrumentacija-aplikacije-dve-strategije" class="md-skip">
+        <a href="#chapter-5-instrumenting-the-application-two-strategies" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+              Chapter 5 — Instrumenting the application: two strategies
             
           </span>
         </div>
@@ -580,7 +580,7 @@
   <span class="md-ellipsis">
     
   
-    Deo II — Arhitektura prikupljanja telemetrije
+    Part II — Telemetry-collection architecture
   
 
     
@@ -608,7 +608,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+    Chapter 4 — The gateway pattern: a central point for telemetry
   
 
     
@@ -645,7 +645,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+    Chapter 5 — Instrumenting the application: two strategies
   
 
     
@@ -663,7 +663,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+    Chapter 5 — Instrumenting the application: two strategies
   
 
     
@@ -689,10 +689,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#51-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#51-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.1 Pitanje na koje ovo poglavlje odgovara
+        5.1 The question this chapter answers
       
     </span>
   </a>
@@ -700,10 +700,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#52-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#52-how-it-was-actually-done-a-practical-walkthrough" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2 Kako je to urađeno — praktičan pregled
+        5.2 How it was actually done — a practical walkthrough
       
     </span>
   </a>
@@ -711,22 +711,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#53-analiticki-deo-kada-rucna-instrumentacija-zaista-vredi-truda" class="md-nav__link">
+  <a href="#53-analytical-section-when-manual-instrumentation-is-actually-worth-the-effort" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.3 Analitički deo — kada ručna instrumentacija zaista vredi truda
+        5.3 Analytical section — when manual instrumentation is actually worth the effort
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="5.3 Analitički deo — kada ručna instrumentacija zaista vredi truda">
+    <nav class="md-nav" aria-label="5.3 Analytical section — when manual instrumentation is actually worth the effort">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sta-auto-instrumentacija-strukturno-ne-moze-da-vidi" class="md-nav__link">
+  <a href="#what-auto-instrumentation-structurally-cannot-see" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Šta auto-instrumentacija strukturno ne može da vidi
+        What auto-instrumentation structurally cannot see
       
     </span>
   </a>
@@ -734,10 +734,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#gde-smo-svesno-stali-i-zasto-nismo-isli-dalje" class="md-nav__link">
+  <a href="#where-the-team-deliberately-stopped-and-why-it-didnt-go-further" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Gde smo svesno stali, i zašto nismo išli dalje
+        Where the team deliberately stopped, and why it didn't go further
       
     </span>
   </a>
@@ -745,10 +745,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sta-bi-se-desilo-suprotnim-izborom" class="md-nav__link">
+  <a href="#what-would-have-happened-with-the-opposite-choice" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Šta bi se desilo suprotnim izborom
+        What would have happened with the opposite choice
       
     </span>
   </a>
@@ -761,10 +761,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#54-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#54-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.4 Skupljena pravila iz ovog poglavlja
+        5.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -772,22 +772,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#55-vezba-za-citaoca" class="md-nav__link">
+  <a href="#55-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.5 Vežba za čitaoca
+        5.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="5.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="5.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -822,7 +822,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+    Chapter 6 — Containerized/batch workloads: the sidecar pattern
   
 
     
@@ -850,7 +850,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 7 — Kada ne možeš da instrumentiraš izvor: pull-obrasci
+    Chapter 7 — When you can't instrument the source: pull-based patterns
   
 
     
@@ -878,7 +878,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 8 — Frontend / RUM observability
+    Chapter 8 — Frontend / RUM observability
   
 
     
@@ -906,7 +906,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 9 — Sintetičko (black-box) praćenje
+    Chapter 9 — Synthetic (Black-Box) Monitoring
   
 
     
@@ -995,7 +995,7 @@
   <span class="md-ellipsis">
     
   
-    Deo III — Obrada, kardinalnost i troškovi
+    Part III — Processing, cardinality, and cost
   
 
     
@@ -1023,7 +1023,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+    Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
   
 
     
@@ -1051,7 +1051,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 11 — Kardinalnost i cena: kako sistem prirodno naraste iznad budžeta
+    Chapter 11 — Cardinality and cost: how a system naturally outgrows its budget
   
 
     
@@ -1079,7 +1079,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+    Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
   
 
     
@@ -1168,7 +1168,7 @@
   <span class="md-ellipsis">
     
   
-    Deo IV — Alarmiranje, SLO i odgovor na incidente
+    Part IV — Alerting, SLOs, and incident response
   
 
     
@@ -1196,7 +1196,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+    Chapter 13 — Alerting architecture: two paths, one destination channel
   
 
     
@@ -1224,7 +1224,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+    Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
   
 
     
@@ -1252,7 +1252,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+    Chapter 15 — SLOs and error-budget-based alerts
   
 
     
@@ -1280,7 +1280,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 16 — Runbook-ovi: od alarma do rešenja
+    Chapter 16 — Runbooks: from alert to resolution
   
 
     
@@ -1308,7 +1308,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 17 — Postmortem kultura
+    Chapter 17 — Postmortem culture
   
 
     
@@ -1397,7 +1397,7 @@
   <span class="md-ellipsis">
     
   
-    Deo V — Domenske studije slučaja
+    Part V — Domain case studies
   
 
     
@@ -1425,7 +1425,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 18 — Baze podataka (upravljane, tipa RDS/Aurora)
+    Chapter 18 — Databases (managed, RDS/Aurora-type)
   
 
     
@@ -1453,7 +1453,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 19 — Samostalno upravljani distribuirani sistemi (klaster tipa Dremio)
+    Chapter 19 — Self-managed distributed systems (a Dremio-style cluster)
   
 
     
@@ -1481,7 +1481,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 20 — Autentikacija i IAM (sistem tipa Keycloak)
+    Chapter 20 — Authentication and IAM (a Keycloak-type system)
   
 
     
@@ -1509,7 +1509,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 21 — Hostovi i serveri kao mašine
+    Chapter 21 — Hosts and servers as machines
   
 
     
@@ -1537,7 +1537,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 22 — Mreža kao posebna ravan posmatranja
+    Chapter 22 — The network as its own observation plane
   
 
     
@@ -1565,7 +1565,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 23 — Batch/ETL flota zadataka
+    Chapter 23 — The batch/ETL job fleet
   
 
     
@@ -1593,7 +1593,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 24 — Posmatranje servisa koji nije naš (tipa Snowflake)
+    Chapter 24 — Observing a service that isn't ours (the Snowflake kind)
   
 
     
@@ -1682,7 +1682,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VI — Upravljanje, usklađenost i zrelost
+    Part VI — Governance, compliance, and maturity
   
 
     
@@ -1710,7 +1710,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 25 — Privatnost u telemetriji
+    Chapter 25 — Privacy in telemetry
   
 
     
@@ -1738,7 +1738,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 26 — Observability kao kontrola usklađenosti (SOC 2 primer)
+    Chapter 26 — Observability as a compliance control (a SOC 2 example)
   
 
     
@@ -1766,7 +1766,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 27 — Prioritizacija: cena, performanse, pouzdanost, bezbednost
+    Chapter 27 — Prioritization: cost, performance, reliability, security
   
 
     
@@ -1794,7 +1794,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 28 — AI-asistirana observability: agent koji čita telemetriju
+    Chapter 28 — AI-assisted observability: an agent that reads telemetry
   
 
     
@@ -1883,7 +1883,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VII — Sazrevanje programa
+    Part VII — The program matures
   
 
     
@@ -1911,7 +1911,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 29 — Kako izgleda fazni rollout u realnom vremenu
+    Chapter 29 — What a phased rollout looks like in real time
   
 
     
@@ -1939,7 +1939,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 30 — Merenje zrelosti sopstvenog programa
+    Chapter 30 — Measuring the maturity of your own program
   
 
     
@@ -1967,7 +1967,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 31 — Zaključak: skupljena pravila
+    Chapter 31 — Conclusion: rules collected
   
 
     
@@ -2056,7 +2056,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak A — PromQL/LogQL recepti
+    Appendix A — PromQL/LogQL recipes
   
 
     
@@ -2084,7 +2084,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak B — Rečnik pojmova
+    Appendix B — Glossary of terms
   
 
     
@@ -2112,7 +2112,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak C — Checklist za onboarding novog servisa na observability
+    Appendix C — Checklist for onboarding a new service onto observability
   
 
     
@@ -2140,7 +2140,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak D — Šablon runbook-a i šablon postmortema
+    Appendix D — Runbook template and postmortem template
   
 
     
@@ -2188,10 +2188,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#51-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
+  <a href="#51-the-question-this-chapter-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.1 Pitanje na koje ovo poglavlje odgovara
+        5.1 The question this chapter answers
       
     </span>
   </a>
@@ -2199,10 +2199,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#52-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
+  <a href="#52-how-it-was-actually-done-a-practical-walkthrough" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2 Kako je to urađeno — praktičan pregled
+        5.2 How it was actually done — a practical walkthrough
       
     </span>
   </a>
@@ -2210,22 +2210,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#53-analiticki-deo-kada-rucna-instrumentacija-zaista-vredi-truda" class="md-nav__link">
+  <a href="#53-analytical-section-when-manual-instrumentation-is-actually-worth-the-effort" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.3 Analitički deo — kada ručna instrumentacija zaista vredi truda
+        5.3 Analytical section — when manual instrumentation is actually worth the effort
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="5.3 Analitički deo — kada ručna instrumentacija zaista vredi truda">
+    <nav class="md-nav" aria-label="5.3 Analytical section — when manual instrumentation is actually worth the effort">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sta-auto-instrumentacija-strukturno-ne-moze-da-vidi" class="md-nav__link">
+  <a href="#what-auto-instrumentation-structurally-cannot-see" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Šta auto-instrumentacija strukturno ne može da vidi
+        What auto-instrumentation structurally cannot see
       
     </span>
   </a>
@@ -2233,10 +2233,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#gde-smo-svesno-stali-i-zasto-nismo-isli-dalje" class="md-nav__link">
+  <a href="#where-the-team-deliberately-stopped-and-why-it-didnt-go-further" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Gde smo svesno stali, i zašto nismo išli dalje
+        Where the team deliberately stopped, and why it didn't go further
       
     </span>
   </a>
@@ -2244,10 +2244,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sta-bi-se-desilo-suprotnim-izborom" class="md-nav__link">
+  <a href="#what-would-have-happened-with-the-opposite-choice" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Šta bi se desilo suprotnim izborom
+        What would have happened with the opposite choice
       
     </span>
   </a>
@@ -2260,10 +2260,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#54-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
+  <a href="#54-rules-collected-from-this-chapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.4 Skupljena pravila iz ovog poglavlja
+        5.4 Rules collected from this chapter
       
     </span>
   </a>
@@ -2271,22 +2271,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#55-vezba-za-citaoca" class="md-nav__link">
+  <a href="#55-exercise-for-the-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.5 Vežba za čitaoca
+        5.5 Exercise for the reader
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="5.5 Vežba za čitaoca">
+    <nav class="md-nav" aria-label="5.5 Exercise for the reader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Izvori korišćeni u analitičkom delu
+        Sources used in the analytical section
       
     </span>
   </a>
@@ -2315,7 +2315,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-05-instrumentacija.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-05-instrumentacija.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2323,157 +2323,171 @@
   
 
 
-<h1 id="poglavlje-5-instrumentacija-aplikacije-dve-strategije">Poglavlje 5 — Instrumentacija aplikacije: dve strategije</h1>
-<p>Odelo kupljeno u prodavnici je skrojeno za prosečnu figuru — ramena, struk,
-dužina rukava, sve je podešeno da odgovara najvećem broju kupaca dovoljno
-dobro. Za devedeset posto prilika, to je sasvim dovoljno: obučeš ga i izgleda
-uredno. Ali za jednu konkretnu priliku — svadbu, važan nastup — krojač uzima
-baš to odelo i menja samo ono što je specifično za tebe: dužinu rukava, širinu
-u ramenima, mesto gde dugme zaista treba da stoji. Krojač ne pravi novo odelo
-od nule. Uzima ono što fabrika već dobro radi, i dodaje samo onaj jedan detalj
-koji fabrika ne može da zna unapred, jer je specifičan za tebe.</p>
-<p>Instrumentacija aplikacije radi po istoj logici. Auto-instrumentacija je
-odelo iz prodavnice — pokriva ono što je zajedničko gotovo svakoj aplikaciji
-istog tipa (HTTP pozivi, upiti ka bazi, redovi za poruke) i to radi dobro, bez
-ijedne linije koda u samoj aplikaciji. Ono što auto-instrumentacija ne može da
-zna je specifično za tebe: ko je pozvao ovaj konkretan zahtev, i preko kog
-kanala. To se dodaje ručno, na tačno jednom mestu, kao krojačev jedan ubod
-igle — ne kao novo odelo od nule.</p>
-<h2 id="51-pitanje-na-koje-ovo-poglavlje-odgovara">5.1 Pitanje na koje ovo poglavlje odgovara</h2>
-<p>Kad se auto-instrumentacija iz Poglavlja 2 postavi i proradi, prirodno pitanje
-je: da li je posao gotov? Da li aplikacija sada ima "svu" telemetriju koja joj
-treba, ili postoji kategorija podataka koju auto-instrumentacija strukturno ne
-može da vidi, bez obzira koliko dobro radi za HTTP pozive i upite ka bazi?</p>
-<p>Odgovor određuje gde tim troši preostalo vreme: da li se ono ulaže u širenje
-auto-instrumentacije na još biblioteka (marginalna korist, jer većina bitnih
-biblioteka je već pokrivena), ili u malen broj ciljanih, ručnih dopuna na
-mestima gde auto-instrumentacija po definiciji ne može da pomogne.</p>
-<h2 id="52-kako-je-to-uraeno-praktican-pregled">5.2 Kako je to urađeno — praktičan pregled</h2>
-<p>Auto-instrumentacija iz Poglavlja 2 (Java agent, Python SDK sa
-entrypoint shim-om) hvata ono što je <strong>strukturno vidljivo iz poznatih
-biblioteka</strong>: dolazni i odlazni HTTP pozivi, upiti ka bazi, pozivi ka redu za
-poruke, standardni resursni atributi postavljeni pri startu. Ovo pokriva
-ogromnu većinu onoga što se ikad pogleda na dashboard-u ili u trejsu tokom
-istrage — i namerno se ne dira ili duplira ručnom instrumentacijom, jer bi to
-bio posao bez koristi.</p>
-<p>To je, u praksi, tačno RED metod (Rate, Errors, Duration) pomenut u Poglavlju
-1 — auto-instrumentacija ga ne implementira kao posebnu biblioteku ili
-dodatnu konfiguraciju, nego ga proizvodi kao nusprodukt: svaki uhvaćen HTTP
-poziv već nosi trajanje i status kod, pa su stopa zahteva, stopa grešaka i
-trajanje po servisu upit nad tim istim podacima, ne dodatni instrumentacioni
-rad. Ovo važi za sinhrone, zahtev/odgovor servise kojima se ovo poglavlje
-bavi; za zakazana batch opterećenja bez kontinualnog toka zahteva ista
-pretpostavka ne važi — vidi Poglavlje 23.</p>
-<p>Postoji tačno jedna kategorija podataka koju tim u implementaciji koju knjiga
-prati dosledno dodaje ručno, na svakom servisu: <strong>identitet pozivaoca i kanal
-kojim je stigao.</strong> Razlog je strukturan, ne stilski — auto-instrumentacija vidi
-da je stigao HTTP zahtev, vidi putanju i metodu, ali ne zna, i ne može da zna,
-<em>ko</em> stoji iza tog zahteva u poslovnom smislu, jer to zavisi od autorizacione
-logike specifične za svaku aplikaciju. U sistemu koji knjiga prati, isti
-endpoint može biti pozvan na tri različita načina:</p>
+<h1 id="chapter-5-instrumenting-the-application-two-strategies">Chapter 5 — Instrumenting the application: two strategies</h1>
+<p>A suit bought off the rack is cut for an average build — shoulders, waist,
+sleeve length, all tuned to fit the largest possible number of customers well
+enough. For ninety percent of occasions, that's entirely sufficient: you put
+it on and it looks fine. But for one specific occasion — a wedding, an
+important performance — a tailor takes that very same suit and changes only
+what's specific to you: the sleeve length, the width across the shoulders,
+the exact spot where a button actually needs to sit. The tailor doesn't build
+a new suit from scratch. He takes what the factory already does well, and
+adds only the one detail the factory can't know in advance, because it's
+specific to you.</p>
+<p>Instrumenting an application works by the same logic. Auto-instrumentation is
+the suit off the rack — it covers what's common to nearly every application
+of a given type (HTTP calls, database queries, message queues) and does that
+well, without a single line of code in the application itself. What
+auto-instrumentation can't know is specific to you: who called this
+particular request, and through which channel. That gets added by hand, at
+exactly one place, like the tailor's single stitch — not as a new suit from
+scratch.</p>
+<h2 id="51-the-question-this-chapter-answers">5.1 The question this chapter answers</h2>
+<p>Once the auto-instrumentation from Chapter 2 is set up and working, a natural
+question follows: is the job done? Does the application now have "all" the
+telemetry it needs, or is there a category of data that auto-instrumentation
+structurally cannot see, no matter how well it performs on HTTP calls and
+database queries?</p>
+<p>The answer determines where the team spends the time that's left: whether it
+goes into extending auto-instrumentation to still more libraries (marginal
+benefit, since most libraries that matter are already covered), or into a
+small number of targeted, manual additions at the points where
+auto-instrumentation by definition cannot help.</p>
+<h2 id="52-how-it-was-actually-done-a-practical-walkthrough">5.2 How it was actually done — a practical walkthrough</h2>
+<p>The auto-instrumentation from Chapter 2 (the Java agent, the Python SDK with
+an entrypoint shim) captures what is <strong>structurally visible from known
+libraries</strong>: inbound and outbound HTTP calls, database queries, calls to a
+message queue, standard resource attributes set at startup. This covers the
+overwhelming majority of what anyone ever looks at on a dashboard or in a
+trace during an investigation — and it's deliberately left untouched, not
+duplicated by manual instrumentation, because that would be work with no
+payoff.</p>
+<p>In practice, this is exactly the RED method (Rate, Errors, Duration)
+mentioned in Chapter 1 — auto-instrumentation doesn't implement it as a
+separate library or extra configuration, it produces it as a byproduct: every
+captured HTTP call already carries a duration and a status code, so request
+rate, error rate, and duration per service are a query over that same data,
+not additional instrumentation work. This holds for the synchronous,
+request/response services this chapter deals with; for scheduled batch
+workloads without a continuous stream of requests, the same assumption
+doesn't hold — see Chapter 23.</p>
+<p>There is exactly one category of data that the team, in the implementation
+this book follows, consistently adds by hand, on every service: <strong>the
+caller's identity and the channel it arrived through.</strong> The reason is
+structural, not stylistic — auto-instrumentation sees that an HTTP request
+arrived, sees the path and the method, but it does not know, and cannot know,
+<em>who</em> stands behind that request in a business sense, because that depends on
+authorization logic specific to each application. In the system this book
+follows, the same endpoint can be called in three different ways:</p>
 <ul>
-<li>korisnik ulogovan preko UI-ja, nosi kratkotrajni sesijski token,</li>
-<li>eksterni klijent koji koristi dugotrajan API ključ,</li>
-<li>legacy integracija koja identitet i dalje šalje kao query-parametar (poznat,
-  dokumentovan dug tehnički dug, ne slučajni previd).</li>
+<li>a user logged in through the UI, carrying a short-lived session token,</li>
+<li>an external client using a long-lived API key,</li>
+<li>a legacy integration that still sends identity as a query parameter (a
+  known, documented piece of technical debt, not an accidental oversight).</li>
 </ul>
-<p>Za svaki od ova tri puta, mala funkcija u zajedničkom middleware sloju
-ekstrahuje identitet — bez obzira odakle je stigao — i postavlja ga kao span
-atribut (<code>enduser.id</code> po semantičkoj konvenciji, plus interni
-<code>auth.channel</code> atribut koji beleži <em>kojim</em> od tri puta je identitet stigao).
-Ovo je <strong>jedina</strong> ručna instrumentaciona tačka u celom sistemu koja se svesno
-održava kao takva — sve ostalo ostaje na auto-instrumentaciji. Namerno je
-smeštena na jedno mesto (middleware), ne razmazana po svakom endpointu
-posebno — tako da promena logike ekstrakcije (npr. dodavanje četvrtog kanala)
-zahteva izmenu na jednom mestu, ne pretragu kroz ceo repozitorijum.</p>
-<p>Bitna posledica: pošto identitet postaje resursni/span atribut na <em>svakom</em>
-zahtevu, upit "koji korisnik je pogodio ovaj spor endpoint" ili "koliko grešaka
-dolazi od ovog specifičnog API ključa" postaje trivijalan filter u Grafana
-Cloud-u — bez toga, taj podatak bi postojao samo u aplikacionim logovima, van
-domašaja trejsova i metrika izvedenih iz njih (span metrics, obrađeno u
-Poglavlju 6).</p>
-<p><img alt="Auto-instrumentacija (Java agent, Python SDK+shim) pokriva sve što je strukturno vidljivo iz poznatih biblioteka; jedina ručna tačka je ekstrakcija identiteta pozivaoca u zajedničkom middleware sloju, bez obzira kojim od tri kanala je identitet stigao." src="../../diagrams/ch5-instrumentation.png" width="92%" /></p>
-<h2 id="53-analiticki-deo-kada-rucna-instrumentacija-zaista-vredi-truda">5.3 Analitički deo — kada ručna instrumentacija zaista vredi truda</h2>
-<h3 id="sta-auto-instrumentacija-strukturno-ne-moze-da-vidi">Šta auto-instrumentacija strukturno ne može da vidi</h3>
-<p>Nezavisne analize ovog izbora (uključujući Elastic-ov vodič za dobru praksu
-instrumentacije) navode dve kategorije gde auto-instrumentacija ostaje slepa,
-bez obzira na to koliko je zrela: <strong>čist aplikativni/poslovni kod koji ne
-prolazi kroz nijednu poznatu biblioteku</strong> (auto-instrumentacija se kači na
-poznate biblioteke — sopstvena poslovna logika prosto nije njena teritorija),
-i <strong>kontekst koji zahteva poslovno znanje</strong> — ko je korisnik, koji je tenant,
-koja je poslovna kategorija zahteva — jer ništa u samom HTTP pozivu to
-strukturno ne nosi bez logike specifične za aplikaciju. Ista analiza
-preporučuje da svaka organizacija ima <strong>dosledan dogovor o resursnim
-atributima</strong> (<code>service.name</code>, <code>service.version</code>, <code>deployment.environment</code>, i
-po potrebi tenant/organizacioni identifikator) primenjen kroz celu flotu —
-tačno princip koji je ovaj sistem već usvojio u Poglavlju 2, samo ovde
-proširen na <em>span</em> nivo za identitet pozivaoca, ne samo <em>resource</em> nivo za
-identitet servisa.</p>
-<h3 id="gde-smo-svesno-stali-i-zasto-nismo-isli-dalje">Gde smo svesno stali, i zašto nismo išli dalje</h3>
-<p>Vredi eksplicitno primetiti šta implementacija <strong>nije</strong> uradila, jer je to
-podjednako bitna odluka kao i ono što jeste. Tim nije pokušao da ručno
-instrumentira "sve što bi moglo biti korisno" — nema ručnih spanova oko svake
-poslovne funkcije, nema ručno dodatih atributa "za svaki slučaj" van
-middleware sloja opisanog gore. Razlog je direktna posledica prakse otkrivene
-u Poglavlju 1 (cacher incident): bogaćenje konteksta "za svaki slučaj" je
-vredno, ali samo kad je jeftino da se održava. Ručni span oko svake poslovne
-funkcije nije jeftin — svaki od njih je linija koda koja mora da se piše,
-review-uje i održava zauvek, i koja zastari čim se logika promeni a
-instrumentacija ne prati. Jedna, dobro plasirana tačka enrichmenta (middleware
-sloj za identitet) daje najveći deo koristi po jedinici truda; deseta,
-dvadeseta ručno dodata tačka daje sve manje koristi za isti trud.</p>
-<h3 id="sta-bi-se-desilo-suprotnim-izborom">Šta bi se desilo suprotnim izborom</h3>
-<p>Da je tim otišao u drugu krajnost — oslonio se isključivo na
-auto-instrumentaciju i nikad ne dodao identitet ručno — svaka istraga o tome
-"ko je pogodio ovaj endpoint" bi zahtevala da se trejs ili metrika ukrste sa
-aplikativnim logom po vremenskom pečatu i ID-ju zahteva, ako taj log uopšte
-postoji i ako nosi identitet u parsibilnom obliku. To je tačno vrsta posla
-koji se radi <em>usred</em> incidenta, pod pritiskom, umesto da postoji kao gotov
-filter unapred — cena koja se, kao i u Poglavlju 1, ne vidi dok ne zatreba, a
-onda se vidi u punom obimu.</p>
-<p>Obrnuto, da je tim otišao u ekstremnu ručnu instrumentaciju svuda —
-efektivno duplirajući ono što auto-instrumentacija već radi, plus ručne
-spanove oko svake poslovne funkcije — rezultat bi bio veći obim koda posvećen
-observability-ju nego samoj poslovnoj logici, veći rizik da instrumentacija
-zastari kad se kod promeni (jer ručni span ne prati refaktorisanje automatski,
-za razliku od auto-instrumentacije koja se kači na stabilan interfejs
-biblioteke), i, paradoksalno, teže dashboard-e — jer bi svaki tim ručno birao
-sopstvena imena atributa umesto da se drži zajedničke konvencije, tačno onaj
-problem sa četiri različita imena za isti koncept iz Poglavlja 2.</p>
-<p>Vratimo se na krojača s početka poglavlja. On ne prepravlja svaki šav na
-odelu — to bi koštalo koliko i novo odelo, i uništilo bi upravo ono što
-fabrika radi dobro. Menja tačno onaj jedan detalj koji fabrika ne može da zna
-unapred. <strong>Ručna instrumentacija koja pokušava da zameni auto-instrumentaciju
-je gubljenje vremena; ručna instrumentacija koja dopunjuje auto-instrumentaciju
-na tačno jednom, dobro izabranom mestu je gotovo uvek vredna truda.</strong> Veština
-nije u tome koliko ručno instrumentiraš, nego u tome da li si prepoznao <em>koji</em>
-je to jedan detalj za tvoj sistem.</p>
-<h2 id="54-skupljena-pravila-iz-ovog-poglavlja">5.4 Skupljena pravila iz ovog poglavlja</h2>
+<p>For each of these three paths, a small function in the shared middleware
+layer extracts the identity — regardless of where it came from — and sets it
+as a span attribute (<code>enduser.id</code> per the semantic convention, plus an
+internal <code>auth.channel</code> attribute recording <em>which</em> of the three paths the
+identity arrived through). This is the <strong>only</strong> manual instrumentation point
+in the whole system that is deliberately maintained as such — everything else
+is left to auto-instrumentation. It's placed at one location on purpose
+(middleware), not scattered across every endpoint separately — so that a
+change to the extraction logic (adding a fourth channel, say) requires an
+edit in one place, not a search across the entire repository.</p>
+<p>An important consequence: because identity becomes a resource/span attribute
+on <em>every</em> request, a query like "which user hit this slow endpoint" or "how
+many errors are coming from this specific API key" becomes a trivial filter
+in Grafana Cloud — without it, that data would exist only in application
+logs, out of reach of traces and the metrics derived from them (span
+metrics, covered in Chapter 6).</p>
+<p><img alt="Auto-instrumentation (Java agent, Python SDK+shim) covers everything structurally visible from known libraries; the only manual point is extracting caller identity in the shared middleware layer, regardless of which of the three channels the identity arrived through." src="../../diagrams/ch5-instrumentation.png" width="92%" /></p>
+<h2 id="53-analytical-section-when-manual-instrumentation-is-actually-worth-the-effort">5.3 Analytical section — when manual instrumentation is actually worth the effort</h2>
+<h3 id="what-auto-instrumentation-structurally-cannot-see">What auto-instrumentation structurally cannot see</h3>
+<p>Independent analyses of this choice (including Elastic's guide to good
+instrumentation practice) name two categories where auto-instrumentation
+remains blind, no matter how mature it is: <strong>pure application/business code
+that doesn't pass through any known library</strong> (auto-instrumentation attaches
+to known libraries — an organization's own business logic simply isn't its
+territory), and <strong>context that requires business knowledge</strong> — who the user
+is, which tenant, what business category the request falls into — because
+nothing in the HTTP call itself structurally carries that without logic
+specific to the application. The same analysis recommends that every
+organization have a <strong>consistent agreement on resource attributes</strong>
+(<code>service.name</code>, <code>service.version</code>, <code>deployment.environment</code>, and a
+tenant/organizational identifier where needed) applied across the whole
+fleet — exactly the principle this system already adopted in Chapter 2, only
+extended here to the <em>span</em> level for caller identity, not just the
+<em>resource</em> level for service identity.</p>
+<h3 id="where-the-team-deliberately-stopped-and-why-it-didnt-go-further">Where the team deliberately stopped, and why it didn't go further</h3>
+<p>It's worth explicitly noting what the implementation <strong>didn't</strong> do, because
+that's just as important a decision as what it did. The team did not try to
+manually instrument "everything that might be useful" — there are no manual
+spans wrapping every business function, no attributes manually added "just in
+case" outside the middleware layer described above. The reason follows
+directly from the lesson uncovered in Chapter 1 (the cacher incident):
+enriching context "just in case" is valuable, but only when it's cheap to
+maintain. A manual span around every business function isn't cheap — each
+one is a line of code that has to be written, reviewed, and maintained
+forever, and that goes stale the moment the logic changes and the
+instrumentation doesn't keep up. One well-placed enrichment point (the
+middleware layer for identity) delivers most of the benefit per unit of
+effort; a tenth, a twentieth manually added point delivers steadily
+diminishing benefit for the same effort.</p>
+<h3 id="what-would-have-happened-with-the-opposite-choice">What would have happened with the opposite choice</h3>
+<p>Had the team gone to the other extreme — relying exclusively on
+auto-instrumentation and never adding identity by hand — every investigation
+into "who hit this endpoint" would have required cross-referencing a trace or
+a metric against an application log by timestamp and request ID, assuming
+that log even exists and carries identity in a parseable form. That's exactly
+the kind of work done <em>in the middle of</em> an incident, under pressure, instead
+of existing as a ready-made filter in advance — a cost that, as in Chapter 1,
+doesn't show up until it's needed, and then shows up in full.</p>
+<p>Conversely, had the team gone to the extreme of manual instrumentation
+everywhere — effectively duplicating what auto-instrumentation already does,
+plus manual spans around every business function — the result would have
+been a greater volume of code devoted to observability than to the business
+logic itself, a greater risk of the instrumentation going stale as the code
+changes (because a manual span doesn't track refactoring automatically, the
+way auto-instrumentation does by attaching to a stable library interface),
+and, paradoxically, harder-to-read dashboards — because every team would end
+up choosing its own attribute names instead of sticking to a shared
+convention, exactly the problem of four different names for the same concept
+from Chapter 2.</p>
+<p>Back to the tailor from the start of the chapter. He doesn't redo every seam
+on the suit — that would cost as much as a new suit, and would destroy the
+very thing the factory does well. He changes exactly the one detail the
+factory can't know in advance. <strong>Manual instrumentation that tries to replace
+auto-instrumentation is wasted time; manual instrumentation that complements
+auto-instrumentation at exactly one, well-chosen place is almost always worth
+the effort.</strong> The skill isn't in how much you instrument by hand, but in
+whether you've recognized <em>which</em> one detail matters for your system.</p>
+<h2 id="54-rules-collected-from-this-chapter">5.4 Rules collected from this chapter</h2>
 <ul>
-<li>Ne pokušavaj da ručno instrumentiraš ono što auto-instrumentacija već
-  pokriva — potraži umesto toga šta auto-instrumentacija strukturno ne može
-  da vidi (poslovni identitet, poslovna kategorija zahteva).</li>
-<li>Postavi dogovor o resursnim atributima (naziv, verzija, okruženje) kroz
-  celu flotu pre nego što bilo koji tim počne da dodaje sopstvene, ad-hoc
-  atribute istog značenja.</li>
-<li>Ako imaš više od jednog kanala kojim identitet ili kontekst stiže (token,
-  API ključ, legacy parametar), normalizuj ih na jednom mestu (middleware),
-  ne u svakom endpointu posebno.</li>
-<li>Postavi sebi pitanje pre svakog novog ručnog spana: "da li ovo dopunjuje
-  auto-instrumentaciju, ili je pokušavam zameniti?" — drugi odgovor je gotovo
-  uvek znak da vreme ide na pogrešno mesto.</li>
-<li>Ručna instrumentacija koja nije jeftina za održavanje neće biti održavana —
-  planiraj je tako od početka, ne kao naknadnu nadu.</li>
+<li>Don't try to manually instrument what auto-instrumentation already covers —
+  look instead for what auto-instrumentation structurally cannot see
+  (business identity, business category of a request).</li>
+<li>Establish an agreement on resource attributes (name, version, environment)
+  across the whole fleet before any team starts adding its own ad-hoc
+  attributes for the same concept.</li>
+<li>If you have more than one channel through which identity or context can
+  arrive (token, API key, legacy parameter), normalize them at one place
+  (middleware), not in every endpoint separately.</li>
+<li>Ask yourself, before every new manual span: "does this complement
+  auto-instrumentation, or am I trying to replace it?" — the second answer is
+  almost always a sign that the time is going to the wrong place.</li>
+<li>Manual instrumentation that isn't cheap to maintain won't be maintained —
+  plan for that from the start, not as an afterthought.</li>
 </ul>
-<h2 id="55-vezba-za-citaoca">5.5 Vežba za čitaoca</h2>
-<p>Pronađi jedan endpoint ili zadatak u svom sistemu gde bi, usred incidenta,
-morao ručno da ukrstiš trejs sa aplikativnim logom da bi saznao <em>ko</em> je
-pokrenuo problematičan zahtev. Ako takav korak postoji, to je tvoj kandidat
-za tačno onu vrstu ciljane ručne instrumentacije opisane u ovom poglavlju —
-jedna tačka, jedno mesto u kodu, dosledna kroz sve puteve kojima taj identitet
-može da stigne.</p>
+<h2 id="55-exercise-for-the-reader">5.5 Exercise for the reader</h2>
+<p>Find one endpoint or job in your system where, in the middle of an incident,
+you'd have to manually cross-reference a trace with an application log to
+find out <em>who</em> triggered the problematic request. If that step exists, it's
+your candidate for exactly the kind of targeted manual instrumentation
+described in this chapter — one point, one place in the code, consistent
+across every path that identity can arrive through.</p>
 <hr />
-<h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
+<h3 id="sources-used-in-the-analytical-section">Sources used in the analytical section</h3>
 <ul>
 <li><a href="https://www.elastic.co/observability-labs/blog/best-practices-instrumenting-opentelemetry">Best practices for instrumenting OpenTelemetry — Elastic Observability Labs</a></li>
 <li><a href="https://cribl.io/blog/manual-vs-auto-instrumentation-opentelemetry-choose-whats-right/">Manual vs. auto instrumentation OpenTelemetry: Choose what's right — Cribl</a></li>
@@ -2501,7 +2515,7 @@ može da stigne.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="26. avgust 2026. 15:47:41 UTC">26. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:03:30 UTC">August 26, 2026</span>
   </span>
 
     
