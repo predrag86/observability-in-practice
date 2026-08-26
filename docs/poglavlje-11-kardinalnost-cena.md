@@ -65,9 +65,10 @@ atribute gde puna preciznost po pojedinačnoj vrednosti nije neophodna za
 dashboard koji se zapravo koristi (ID klijenta je klasičan primer — retko ko
 gleda dashboard filtriran po jednom konkretnom klijentu od hiljada), gateway iz
 Poglavlja 4 dobija transform korak koji grupiše nisko-frekventne vrednosti u
-zajedničku kategoriju pre nego što stignu do skladišta. Ovo je ista tehnika kao
-`reduce_http_card` proces već pomenut u vezi sa `service.instance.id` — primenjen
-ovde na širi skup atributa.
+zajedničku kategoriju pre nego što stignu do skladišta. Ovo je ista tehnika
+koju Poglavlje 4 pominje uopšteno kao "agregacija visoko-kardinalnih
+dimenzija" na gateway-u — ovde razrađena konkretno, primenjena na širi skup
+atributa nego samo resursne (npr. `service.instance.id`).
 
 **Faza 3 — podešavanje Tempo metrics-generator dimenzija.** Metrike generisane
 iz trejsova (span metrics) automatski dodaju intrinzične dimenzije (tip spana,

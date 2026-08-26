@@ -179,7 +179,7 @@ mrtav alarm — samo u suprotnom smeru.
 
 Formalna razlika između "svesno odbijeno sa razlogom" i "još nije
 urađeno" već je uvedena u Poglavlju 27 kroz okvir upravljanja rizikom
-(ISO 31000 prihvatanje rizika kao dokumentovan čin, ne tišina). Ovde se
+(ISO/IEC 27005 prihvatanje rizika kao dokumentovan čin, ne tišina). Ovde se
 ista razlika pojavljuje u drugom obliku — ne kao dispozicija pojedinačnog
 nalaza, nego kao pitanje da li je čitav program uopšte praćen kroz
 sistem koji obavezuje na akciju, ili samo živi u dokumentu koji se čita, a

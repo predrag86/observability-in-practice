@@ -88,7 +88,8 @@ je urađeno u odnosu na ostatak arhitekture.
 ### RED metod je namenjen drugačijem obliku opterećenja
 
 Standardni metod za instrumentaciju servisa — stopa zahteva, greške,
-trajanje — je 2015. godine formulisan namenski za mikroservise sa
+trajanje, opisan u Poglavlju 5 kao nusprodukt auto-instrumentacije — je
+2015. godine formulisan namenski za mikroservise sa
 kontinualnim tokom zahteva: API-je, gateway-e, sve gde su "stopa" i
 "raspodela latencije" smisleni pojmovi jer postoji stalan protok
 zahteva kroz koji se ti pojmovi mogu meriti. Nijedan pregledan izvor ne
