@@ -113,7 +113,7 @@ pad zadatka bi prvo morao biti pretvoren u log liniju ili sintetičku
 metriku, zatim čekati sledeći ciklus evaluacije PromQL upita (kašnjenje koje
 direktan događaj nikad ne bi imao), a sam webhook bi morao biti konfigurisan
 na strani cloud platforme umesto u infrastrukturnom nalogu — što znači da bi
-kvar cloud platforme (tačno onaj scenario koji Poglavlje 12 već pominje kao
+kvar cloud platforme (tačno onaj scenario koji Poglavlje 4 već pominje kao
 razlog za nezavisnost) mogao da obori **oba** puta odjednom, umesto da Put A
 ostane nezavisan i nastavi da radi dok se Put B oporavlja. Doslednost
 transportnog mehanizma bi bila kupljena po ceni upravo one nezavisnosti koja

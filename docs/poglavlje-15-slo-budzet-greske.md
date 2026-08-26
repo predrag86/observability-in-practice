@@ -133,7 +133,7 @@ istrage uzroka, jednostavno podigao prag da alarm prestane da se oglašava
 problem — kanal bi utihnuo. Ali stvaran, pokvaren SLI bi ostao netaknut, i
 sistem bi izgubio sposobnost da otkrije **pravu** degradaciju istog
 servisa, jer bi prag sada bio podešen da toleriše lažni šum umesto da meri
-stvarno stanje. Ovo je isti obrazac viđen već u Poglavlju 6 kod redukcije
+stvarno stanje. Ovo je isti obrazac viđen već u Poglavlju 11 kod redukcije
 kardinalnosti primenjene na pogrešno mesto: mera koja izgleda kao rešenje,
 a zapravo uklanja sposobnost da se problem uopšte primeti kad se sledeći put
 zaista dogodi.
