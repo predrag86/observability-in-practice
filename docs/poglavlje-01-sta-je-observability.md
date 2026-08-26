@@ -81,7 +81,7 @@ sličan pull-zadatak automatski beleži (veličina odgovora, broj zapisa, da li 
 odgovor prazan) — ne kao alarm, nego kao *dostupan kontekst* za sledeće pitanje
 koje još niko nije postavio. Taj princip — bogatiti podatke pre nego što znaš
 pitanje, umesto dodavati alarme posle svakog incidenta — provlači se kroz celu
-knjigu i vraća se eksplicitno u Poglavlju 6 (semantika atributa) i Poglavlju 12
+knjigu i vraća se eksplicitno u Poglavlju 5 (semantika atributa) i Poglavlju 12
 (sampling — jer trag mora i da preživi do trenutka kad neko poželi da ga
 pogleda).
 
@@ -152,6 +152,19 @@ kad se incident dogodio — postojala je jer je neko ranije odlučio da vredi
 snimiti to polje "za svaki slučaj". Ta odluka, ne postojanje trag-alata samog
 po sebi, jeste ono što je incident na kraju rešilo za par minuta umesto par
 dana pretrage logova.
+
+Vredi dodati i kratku napomenu o obimu ove liste: neki dobavljači —
+uključujući Grafana Cloud, platformu koju ova knjiga koristi — u poslednje
+vreme dodaju i **continuous profiling** (Grafana Pyroscope) kao svojevrstan
+četvrti signal, uz metrike, logove i tragove. Profiling odgovara na pitanje
+koje nijedan od tri stuba ne pokriva direktno: *gde tačno u kodu* proces
+troši CPU ili memoriju, na nivou funkcije, bez potrebe da se unapred zna koju
+funkciju posmatrati. Ova knjiga ga ne obrađuje kao posebnu temu —
+implementacija koju prati nije imala profiling kao aktivan deo pipeline-a u
+periodu koji knjiga opisuje — ali vredi ga imati na radaru kao prirodno
+proširenje istog principa: što više dimenzija sistem beleži unapred, "za
+svaki slučaj", to je veća šansa da odgovoriš na pitanje koje juče nisi znao
+da ćeš morati da postaviš.
 
 ## 1.4 Skupljena pravila iz ovog poglavlja
 

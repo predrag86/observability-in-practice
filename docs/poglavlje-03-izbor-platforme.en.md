@@ -99,7 +99,10 @@ dollars.
 Observability platform pricing is deliberately hard to compare directly —
 each one measures a different unit (host, GB, active series, seat, span).
 The table below reduces four real platforms to what each actually charges
-for, per published price lists:
+for, per published price lists, accurate as of when this chapter was
+written (2026) — vendors change their pricing without notice, so treat the
+numbers below as an illustration of the comparison method, not a current
+offer; check the official price list before making any decision:
 
 | Platform | How it's billed | Concrete numbers (published) |
 | --- | --- | --- |
@@ -227,7 +230,7 @@ risk, regulatory requirement, existing team expertise).
 
 ---
 
-### Sources used in the analytical section (for verification/citation in the final version)
+### Sources used in the analytical section
 
 - [Grafana Cloud Pricing In 2026: What It Really Costs — CloudZero](https://www.cloudzero.com/blog/grafana-cloud-pricing/)
 - [Grafana Cloud Pricing 2026 — MonitoringCost.com](https://monitoringcost.com/grafana-cloud-pricing)

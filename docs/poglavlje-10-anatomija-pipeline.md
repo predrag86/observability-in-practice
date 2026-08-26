@@ -51,7 +51,7 @@ flote.** Dva odvojena zadatka žive u ovoj stanici:
 - **Redakcija osetljivih atributa** (SQL tekst, connection stringovi) —
   primenjena samo na delove flote gde debug vrednost punog SQL teksta nije
   potrebna. Za deo flote gde je pun SQL tekst i dalje neophodan za dijagnozu
-  (obrađeno u Poglavlju 19), redakcija se namerno **ne** primenjuje —
+  (obrađeno u Poglavlju 18), redakcija se namerno **ne** primenjuje —
   odluka doneta eksplicitno, po timu/servisu, ne globalno.
 - **Normalizacija naziva spanova** — span koji bi inače nosio promenljiv
   datum ili ID u svom imenu (npr. `process-report-2026-08-21`) se

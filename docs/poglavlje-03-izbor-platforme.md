@@ -98,7 +98,10 @@ infrastrukturom. To je tačno ono što se u § 3.3 meri u dolarima.
 Cenovnici observability platformi su namerno teški za direktno poređenje —
 svaka meri drugu jedinicu (host, GB, aktivna serija, korisnik, span). Tabela
 ispod svodi četiri realne platforme na ono što svaka zaista naplaćuje, po
-objavljenim cenovnicima:
+objavljenim cenovnicima, tačnim na dan pisanja ovog poglavlja (2026) —
+dobavljači menjaju cenovnike bez najave, pa konkretne brojeve ispod tretiraj
+kao ilustraciju metode poređenja, ne kao aktuelnu ponudu; proveri zvaničan
+cenovnik pre bilo koje odluke:
 
 | Platforma | Kako se naplaćuje | Konkretni brojevi (objavljeno) |
 | --- | --- | --- |
@@ -220,7 +223,7 @@ kriterijum (operativni rizik, regulatorni zahtev, postojeća ekspertiza tima).
 
 ---
 
-### Izvori korišćeni u analitičkom delu (za proveru/citiranje u finalnoj verziji)
+### Izvori korišćeni u analitičkom delu
 
 - [Grafana Cloud Pricing In 2026: What It Really Costs — CloudZero](https://www.cloudzero.com/blog/grafana-cloud-pricing/)
 - [Grafana Cloud Pricing 2026 — MonitoringCost.com](https://monitoringcost.com/grafana-cloud-pricing)

@@ -39,6 +39,15 @@ ogromnu većinu onoga što se ikad pogleda na dashboard-u ili u trejsu tokom
 istrage — i namerno se ne dira ili duplira ručnom instrumentacijom, jer bi to
 bio posao bez koristi.
 
+To je, u praksi, tačno RED metod (Rate, Errors, Duration) pomenut u Poglavlju
+1 — auto-instrumentacija ga ne implementira kao posebnu biblioteku ili
+dodatnu konfiguraciju, nego ga proizvodi kao nusprodukt: svaki uhvaćen HTTP
+poziv već nosi trajanje i status kod, pa su stopa zahteva, stopa grešaka i
+trajanje po servisu upit nad tim istim podacima, ne dodatni instrumentacioni
+rad. Ovo važi za sinhrone, zahtev/odgovor servise kojima se ovo poglavlje
+bavi; za zakazana batch opterećenja bez kontinualnog toka zahteva ista
+pretpostavka ne važi — vidi Poglavlje 23.
+
 Postoji tačno jedna kategorija podataka koju tim u implementaciji koju knjiga
 prati dosledno dodaje ručno, na svakom servisu: **identitet pozivaoca i kanal
 kojim je stigao.** Razlog je strukturan, ne stilski — auto-instrumentacija vidi
