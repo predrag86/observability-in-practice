@@ -2,616 +2,616 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/deo-1-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-1-uvod/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-1-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/deo-2-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-2-uvod/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-2-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/deo-3-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-3-uvod/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-3-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/deo-4-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-4-uvod/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-4-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/deo-5-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-5-uvod/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-5-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/deo-6-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-6-uvod/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-6-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/deo-7-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-7-uvod/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-7-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/dodatak-a-promql-logql-recepti/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/dodatak-a-promql-logql-recepti/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/dodatak-a-promql-logql-recepti/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/dodatak-b-recnik-pojmova/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/dodatak-b-recnik-pojmova/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/dodatak-b-recnik-pojmova/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/dodatak-c-checklist-onboarding/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/dodatak-c-checklist-onboarding/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/dodatak-c-checklist-onboarding/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/dodatak-d-sabloni/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/dodatak-d-sabloni/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/dodatak-d-sabloni/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-01-sta-je-observability/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-01-sta-je-observability/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-01-sta-je-observability/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-02-opentelemetry/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-02-opentelemetry/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-02-opentelemetry/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-03-izbor-platforme/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-03-izbor-platforme/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-03-izbor-platforme/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-04-gateway/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-04-gateway/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-04-gateway/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-05-instrumentacija/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-05-instrumentacija/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-05-instrumentacija/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-06-sidecar/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-06-sidecar/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-06-sidecar/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-07-pull-obrasci/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-07-pull-obrasci/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-07-pull-obrasci/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-08-frontend-rum/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-08-frontend-rum/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-08-frontend-rum/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-09-sinteticko-pracenje/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-09-sinteticko-pracenje/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-09-sinteticko-pracenje/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-10-anatomija-pipeline/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-10-anatomija-pipeline/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-10-anatomija-pipeline/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-11-kardinalnost-cena/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-11-kardinalnost-cena/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-11-kardinalnost-cena/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-12-sampling-trejsova/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-12-sampling-trejsova/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-12-sampling-trejsova/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-13-arhitektura-alarmiranja/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-13-arhitektura-alarmiranja/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-13-arhitektura-alarmiranja/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-14-kad-alarm-cuti/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-14-kad-alarm-cuti/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-14-kad-alarm-cuti/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-15-slo-budzet-greske/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-15-slo-budzet-greske/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-15-slo-budzet-greske/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-16-runbook-ovi/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-16-runbook-ovi/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-16-runbook-ovi/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-17-postmortem-kultura/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-17-postmortem-kultura/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-17-postmortem-kultura/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-18-baze-podataka/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-18-baze-podataka/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-18-baze-podataka/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-19-samostalni-klaster/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-19-samostalni-klaster/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-19-samostalni-klaster/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-20-autentikacija-iam/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-20-autentikacija-iam/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-20-autentikacija-iam/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-21-hostovi-serveri/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-21-hostovi-serveri/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-21-hostovi-serveri/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-22-mreza-ravan-posmatranja/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-22-mreza-ravan-posmatranja/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-22-mreza-ravan-posmatranja/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-23-batch-etl-flota/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-23-batch-etl-flota/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-23-batch-etl-flota/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-24-snowflake-servis-koji-nije-nas/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-24-snowflake-servis-koji-nije-nas/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-24-snowflake-servis-koji-nije-nas/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-25-privatnost-telemetriji/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-25-privatnost-telemetriji/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-25-privatnost-telemetriji/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-26-soc2-kontrola/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-26-soc2-kontrola/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-26-soc2-kontrola/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-27-prioritizacija/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-27-prioritizacija/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-27-prioritizacija/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-28-ai-asistirana-observability/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-28-ai-asistirana-observability/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-28-ai-asistirana-observability/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-29-fazni-rollout/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-29-fazni-rollout/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-29-fazni-rollout/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-30-merenje-zrelosti/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-30-merenje-zrelosti/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-30-merenje-zrelosti/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/poglavlje-31-zakljucak/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-31-zakljucak/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-31-zakljucak/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/uvod/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/deo-1-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-1-uvod/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-1-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/deo-2-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-2-uvod/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-2-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/deo-3-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-3-uvod/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-3-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/deo-4-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-4-uvod/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-4-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/deo-5-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-5-uvod/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-5-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/deo-6-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-6-uvod/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-6-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/deo-7-uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/deo-7-uvod/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/deo-7-uvod/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/dodatak-a-promql-logql-recepti/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/dodatak-a-promql-logql-recepti/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/dodatak-a-promql-logql-recepti/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/dodatak-b-recnik-pojmova/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/dodatak-b-recnik-pojmova/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/dodatak-b-recnik-pojmova/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/dodatak-c-checklist-onboarding/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/dodatak-c-checklist-onboarding/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/dodatak-c-checklist-onboarding/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/dodatak-d-sabloni/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/dodatak-d-sabloni/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/dodatak-d-sabloni/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-01-sta-je-observability/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-01-sta-je-observability/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-01-sta-je-observability/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-02-opentelemetry/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-02-opentelemetry/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-02-opentelemetry/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-03-izbor-platforme/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-03-izbor-platforme/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-03-izbor-platforme/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-04-gateway/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-04-gateway/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-04-gateway/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-05-instrumentacija/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-05-instrumentacija/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-05-instrumentacija/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-06-sidecar/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-06-sidecar/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-06-sidecar/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-07-pull-obrasci/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-07-pull-obrasci/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-07-pull-obrasci/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-08-frontend-rum/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-08-frontend-rum/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-08-frontend-rum/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-09-sinteticko-pracenje/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-09-sinteticko-pracenje/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-09-sinteticko-pracenje/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-10-anatomija-pipeline/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-10-anatomija-pipeline/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-10-anatomija-pipeline/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-11-kardinalnost-cena/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-11-kardinalnost-cena/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-11-kardinalnost-cena/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-12-sampling-trejsova/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-12-sampling-trejsova/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-12-sampling-trejsova/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-13-arhitektura-alarmiranja/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-13-arhitektura-alarmiranja/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-13-arhitektura-alarmiranja/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-14-kad-alarm-cuti/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-14-kad-alarm-cuti/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-14-kad-alarm-cuti/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-15-slo-budzet-greske/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-15-slo-budzet-greske/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-15-slo-budzet-greske/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-16-runbook-ovi/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-16-runbook-ovi/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-16-runbook-ovi/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-17-postmortem-kultura/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-17-postmortem-kultura/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-17-postmortem-kultura/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-18-baze-podataka/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-18-baze-podataka/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-18-baze-podataka/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-19-samostalni-klaster/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-19-samostalni-klaster/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-19-samostalni-klaster/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-20-autentikacija-iam/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-20-autentikacija-iam/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-20-autentikacija-iam/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-21-hostovi-serveri/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-21-hostovi-serveri/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-21-hostovi-serveri/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-22-mreza-ravan-posmatranja/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-22-mreza-ravan-posmatranja/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-22-mreza-ravan-posmatranja/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-23-batch-etl-flota/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-23-batch-etl-flota/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-23-batch-etl-flota/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-24-snowflake-servis-koji-nije-nas/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-24-snowflake-servis-koji-nije-nas/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-24-snowflake-servis-koji-nije-nas/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-25-privatnost-telemetriji/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-25-privatnost-telemetriji/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-25-privatnost-telemetriji/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-26-soc2-kontrola/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-26-soc2-kontrola/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-26-soc2-kontrola/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-27-prioritizacija/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-27-prioritizacija/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-27-prioritizacija/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-28-ai-asistirana-observability/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-28-ai-asistirana-observability/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-28-ai-asistirana-observability/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-29-fazni-rollout/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-29-fazni-rollout/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-29-fazni-rollout/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-30-merenje-zrelosti/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-30-merenje-zrelosti/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-30-merenje-zrelosti/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/poglavlje-31-zakljucak/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-31-zakljucak/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/poglavlje-31-zakljucak/"/>
     </url>
     <url>
         <loc>https://predrag86.github.io/observability-in-practice/en/uvod/</loc>
-        <lastmod>2026-08-25</lastmod>
+        <lastmod>2026-08-26</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://predrag86.github.io/observability-in-practice/en/uvod/"/>
         <xhtml:link rel="alternate" hreflang="sr" href="https://predrag86.github.io/observability-in-practice/uvod/"/>

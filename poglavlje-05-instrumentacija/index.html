@@ -2356,6 +2356,14 @@ poruke, standardni resursni atributi postavljeni pri startu. Ovo pokriva
 ogromnu većinu onoga što se ikad pogleda na dashboard-u ili u trejsu tokom
 istrage — i namerno se ne dira ili duplira ručnom instrumentacijom, jer bi to
 bio posao bez koristi.</p>
+<p>To je, u praksi, tačno RED metod (Rate, Errors, Duration) pomenut u Poglavlju
+1 — auto-instrumentacija ga ne implementira kao posebnu biblioteku ili
+dodatnu konfiguraciju, nego ga proizvodi kao nusprodukt: svaki uhvaćen HTTP
+poziv već nosi trajanje i status kod, pa su stopa zahteva, stopa grešaka i
+trajanje po servisu upit nad tim istim podacima, ne dodatni instrumentacioni
+rad. Ovo važi za sinhrone, zahtev/odgovor servise kojima se ovo poglavlje
+bavi; za zakazana batch opterećenja bez kontinualnog toka zahteva ista
+pretpostavka ne važi — vidi Poglavlje 23.</p>
 <p>Postoji tačno jedna kategorija podataka koju tim u implementaciji koju knjiga
 prati dosledno dodaje ručno, na svakom servisu: <strong>identitet pozivaoca i kanal
 kojim je stigao.</strong> Razlog je strukturan, ne stilski — auto-instrumentacija vidi
@@ -2493,7 +2501,7 @@ može da stigne.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="26. avgust 2026. 15:47:41 UTC">26. avgust 2026.</span>
   </span>
 
     
