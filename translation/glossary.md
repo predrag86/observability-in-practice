@@ -80,6 +80,12 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | `poglavlje-10-anatomija-pipeline.md` | `poglavlje-10-anatomija-pipeline.en.md` |
 | `poglavlje-11-kardinalnost-cena.md` | `poglavlje-11-kardinalnost-cena.en.md` |
 | `poglavlje-12-sampling-trejsova.md` | `poglavlje-12-sampling-trejsova.en.md` |
+| `deo-4-uvod.md` | `deo-4-uvod.en.md` |
+| `poglavlje-13-arhitektura-alarmiranja.md` | `poglavlje-13-arhitektura-alarmiranja.en.md` |
+| `poglavlje-14-kad-alarm-cuti.md` | `poglavlje-14-kad-alarm-cuti.en.md` |
+| `poglavlje-15-slo-budzet-greske.md` | `poglavlje-15-slo-budzet-greske.en.md` |
+| `poglavlje-16-runbook-ovi.md` | `poglavlje-16-runbook-ovi.en.md` |
+| `poglavlje-17-postmortem-kultura.md` | `poglavlje-17-postmortem-kultura.en.md` |
 
 ## Stil
 
