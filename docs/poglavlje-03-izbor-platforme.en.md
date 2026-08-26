@@ -227,7 +227,7 @@ risk, regulatory requirement, existing team expertise).
 
 ---
 
-### Sources used in the analytical section (for verification/citation in the final version)
+### Sources used in the analytical section
 
 - [Grafana Cloud Pricing In 2026: What It Really Costs — CloudZero](https://www.cloudzero.com/blog/grafana-cloud-pricing/)
 - [Grafana Cloud Pricing 2026 — MonitoringCost.com](https://monitoringcost.com/grafana-cloud-pricing)
