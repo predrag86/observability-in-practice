@@ -50,6 +50,14 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | usklađenost | compliance | |
 | zrelost (programa) | maturity | |
 | fazni rollout | phased rollout | |
+| obrazac (arhitekturni) | pattern | npr. "gateway obrazac" → "gateway pattern", "agent-to-gateway obrazac" → "agent-to-gateway pattern" |
+| task definicija / task lifecycle (AWS ECS) | task definition / task lifecycle | ostaje kao standardan AWS ECS termin, ne prevodi se slobodno |
+| posmatrač (u smislu watcher procesa) | watcher | dosledno kroz Poglavlje 7 (doctor/pull-pattern analogija) |
+| spoljašnja ravan / unutrašnja ravan | external layer / internal layer | u kontekstu pull-obrazaca (Poglavlje 7) |
+| RUM za siromašne | poor man's RUM | idiomatski prevod, Poglavlje 9 |
+| RUM | RUM | ne prevodi se |
+| PII | PII | ne prevodi se |
+| Core Web Vitals | Core Web Vitals | ne prevodi se |
 
 ## Nazivi delova/poglavlja (za buduće interne linkove)
 
@@ -61,6 +69,13 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | `poglavlje-01-sta-je-observability.md` | `poglavlje-01-sta-je-observability.en.md` |
 | `poglavlje-02-opentelemetry.md` | `poglavlje-02-opentelemetry.en.md` |
 | `poglavlje-03-izbor-platforme.md` | `poglavlje-03-izbor-platforme.en.md` |
+| `deo-2-uvod.md` | `deo-2-uvod.en.md` |
+| `poglavlje-04-gateway.md` | `poglavlje-04-gateway.en.md` |
+| `poglavlje-05-instrumentacija.md` | `poglavlje-05-instrumentacija.en.md` |
+| `poglavlje-06-sidecar.md` | `poglavlje-06-sidecar.en.md` |
+| `poglavlje-07-pull-obrasci.md` | `poglavlje-07-pull-obrasci.en.md` |
+| `poglavlje-08-frontend-rum.md` | `poglavlje-08-frontend-rum.en.md` |
+| `poglavlje-09-sinteticko-pracenje.md` | `poglavlje-09-sinteticko-pracenje.en.md` |
 
 ## Stil
 
@@ -92,6 +107,10 @@ Svaki rekonstruisan dijagram dobija:
 Ovo je jedini način da se dijagram ponovo generiše ili izmeni bez ručnog
 crtanja od nule — vidi `scripts/diagrams/cost_crossover.py` kao prvi
 primer (Poglavlje 3, `cost-crossover.png`).
+
+Napomena: `overview.png` (koristi se u `deo-2-uvod.md`) još nema
+rekonstruisanu skriptu — engleski alt-tekst je preveden, ali sama slika je
+i dalje ista (srpska/generička) datoteka dok se dijagram ne rekonstruiše.
 
 ### Urađeni dijagrami
 
