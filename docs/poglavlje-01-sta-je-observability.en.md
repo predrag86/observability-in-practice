@@ -167,6 +167,20 @@ earlier decided it was worth recording that field "just in case." That
 decision, not the mere existence of a tracing tool, is what resolved the
 incident in a few minutes instead of a few days of log searching.
 
+It's worth adding a short note on the scope of this list: some vendors —
+including Grafana Cloud, the platform this book uses — have recently started
+adding **continuous profiling** (Grafana Pyroscope) as a kind of fourth
+signal, alongside metrics, logs, and traces. Profiling answers a question
+none of the three pillars covers directly: *exactly where in the code* a
+process is spending CPU or memory, at the function level, without needing to
+know in advance which function to watch. This book doesn't treat it as a
+separate topic — the implementation it follows didn't have profiling as an
+active part of the pipeline during the period the book describes — but it's
+worth keeping on your radar as a natural extension of the same principle:
+the more dimensions a system records in advance, "just in case," the better
+your odds of answering a question you didn't know yesterday you'd need to
+ask.
+
 ## 1.4 Rules collected from this chapter
 
 - Monitoring answers questions you asked in advance; observability answers
