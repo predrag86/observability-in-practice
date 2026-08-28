@@ -2561,8 +2561,8 @@ path to the logging platform, outside the main OpenTelemetry pipeline
 that covers the rest of the system. This is recorded as a known gap in
 coverage, not as a hidden oversight — a clearly named boundary of what
 has been done relative to the rest of the architecture.</p>
-<p><img alt="Completeness model for batch/ETL jobs: whether the job started, whether it produced output, and why not if it didn't — with particular emphasis on &quot;completed successfully, but empty&quot; as a distinct, easily missed failure mode." src="../../diagrams/ch23-model-potpunosti.png" width="90%" /></p>
-<p><img alt="Thirty days of runs for one scheduled job: two days when the job never even started, and three days when it finished cleanly but produced zero rows — both failure modes invisible to the naked eye without a dedicated check." src="../../diagrams/dashboard-completeness.png" width="95%" /></p>
+<p><img alt="Completeness model for batch/ETL jobs: whether the job started, whether it produced output, and why not if it didn't — with particular emphasis on &quot;completed successfully, but empty&quot; as a distinct, easily missed failure mode." src="../diagrams/ch23-model-potpunosti.png" width="90%" /></p>
+<p><img alt="Thirty days of runs for one scheduled job: two days when the job never even started, and three days when it finished cleanly but produced zero rows — both failure modes invisible to the naked eye without a dedicated check." src="../diagrams/dashboard-completeness.png" width="95%" /></p>
 <h2 id="233-analytical-section-a-familiar-contrast-with-the-standard-method-for-services">23.3 Analytical section — a familiar contrast with the standard method for services</h2>
 <h3 id="the-red-method-is-meant-for-a-different-shape-of-load">The RED method is meant for a different shape of load</h3>
 <p>The standard method for instrumenting services — request rate, errors,

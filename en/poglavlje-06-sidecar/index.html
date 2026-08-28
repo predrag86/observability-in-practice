@@ -2340,7 +2340,7 @@ work, the ECS task definition is configured so the sidecar gets a short but
 explicit window to flush whatever it's still holding in its buffer before
 the whole task shuts down — without that window, the last few seconds of
 telemetry would simply vanish along with the container that produced them.</p>
-<p><img alt="The job and its sidecar share the same ECS/Fargate task — they start and shut down together; the sidecar gets a short flush window before shutdown to drain its buffer to the central gateway." src="../../diagrams/ch6-sidecar.png" width="85%" /></p>
+<p><img alt="The job and its sidecar share the same ECS/Fargate task — they start and shut down together; the sidecar gets a short flush window before shutdown to drain its buffer to the central gateway." src="../diagrams/ch6-sidecar.png" width="85%" /></p>
 <p>This pattern, brought into production after an initial pilot on two jobs
 (covered in detail in Chapter 29), surfaced a catalog of real-world pitfalls
 that no "quickstart" documentation mentions:</p>

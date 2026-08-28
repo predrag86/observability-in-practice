@@ -2382,7 +2382,7 @@ other leaves a blind spot exactly at the moment of critical failure, or
 exactly at the depth that would explain <em>why</em> the failure happened.</p>
 <p>Here's what that data looks like once it lands on a dashboard — two layers,
 side by side, each showing something the other can't:</p>
-<p><img alt="The external layer (CloudWatch) sees CPU and replica lag even when the database is refusing connections; the internal layer (postgres_exporter) sees which table is actually driving sequential scans — here audit_log, a good candidate for an index." src="../../diagrams/dashboard-rds.png" width="95%" /></p>
+<p><img alt="The external layer (CloudWatch) sees CPU and replica lag even when the database is refusing connections; the internal layer (postgres_exporter) sees which table is actually driving sequential scans — here audit_log, a good candidate for an index." src="../diagrams/dashboard-rds.png" width="95%" /></p>
 <p><strong>A self-managed distributed cluster (Dremio-type) — an agent per node.</strong>
 Unlike a managed database, here the team has full control over the host — it
 can install whatever it needs. The solution: Grafana Alloy installed as an
@@ -2419,7 +2419,7 @@ internal gateway. If this principle is broken — if the observer shares a
 failure mode with what it's observing — you get silence exactly when you
 most need a voice.</p>
 <p>All three patterns, side by side:</p>
-<p><img alt="Three pull-based patterns by level of control: two independent layers for a managed database, an agent-that-pushes for a self-managed cluster, and a direct pull bypassing the gateway for an external SaaS." src="../../diagrams/ch7-pull-obrasci.png" width="98%" /></p>
+<p><img alt="Three pull-based patterns by level of control: two independent layers for a managed database, an agent-that-pushes for a self-managed cluster, and a direct pull bypassing the gateway for an external SaaS." src="../diagrams/ch7-pull-obrasci.png" width="98%" /></p>
 <h2 id="73-analytical-section-why-theres-no-single-universal-pull-based-pattern">7.3 Analytical section — why there's no single universal pull-based pattern</h2>
 <h3 id="the-official-state-of-things-focus-is-almost-entirely-on-push">The official state of things: focus is almost entirely on push</h3>
 <p>It's worth noting something independent comparisons rarely say explicitly:

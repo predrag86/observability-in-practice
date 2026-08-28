@@ -2385,11 +2385,11 @@ scenario in which every other source in this book (RUM going directly to
 the cloud is the exception, but it doesn't test business logic in the same
 explicit way) would fall silent, not because the application went down,
 but because the path to the monitoring system went down.</p>
-<p><img alt="Probes from multiple regions hit the public endpoint directly over the internet, bypassing the internal network, DNS zone, and gateway — and report the result back to the cloud platform independently of internal infrastructure." src="../../diagrams/ch9-synthetic.png" width="92%" /></p>
+<p><img alt="Probes from multiple regions hit the public endpoint directly over the internet, bypassing the internal network, DNS zone, and gateway — and report the result back to the cloud platform independently of internal infrastructure." src="../diagrams/ch9-synthetic.png" width="92%" /></p>
 <p>The multi-region setup pays off in exactly a moment like this — when one
 region goes quiet while the other two keep reporting normal operation, the
 diagnosis narrows itself, without a single additional investigative step:</p>
-<p><img alt="Region B stops reporting latency for a short window while Region A and Region C continue normally — a pattern pointing to a regional network problem, not a failure of the application itself." src="../../diagrams/dashboard-synthetic.png" width="95%" /></p>
+<p><img alt="Region B stops reporting latency for a short window while Region A and Region C continue normally — a pattern pointing to a regional network problem, not a failure of the application itself." src="../diagrams/dashboard-synthetic.png" width="95%" /></p>
 <h2 id="93-analytical-section-why-synthetic-monitoring-isnt-poor-mans-rum">9.3 Analytical section — why synthetic monitoring isn't "poor man's RUM"</h2>
 <h3 id="synthetic-and-rum-solve-different-problems-not-the-same-problem-two-different-ways">Synthetic and RUM solve different problems, not the same problem two different ways</h3>
 <p>Independent comparisons of RUM and synthetic monitoring (including

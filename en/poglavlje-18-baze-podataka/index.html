@@ -2550,8 +2550,8 @@ This is deliberately configured as a last line of defense, not a first one
 — the first line is still fixing the application that leaves transactions
 open — but the lever exists precisely because application code doesn't
 always get every caller fixed in time.</p>
-<p><img alt="Two independent collection layers over one managed database: external (the provider's instance metrics) and internal (an exporter directly on the engine), with a dedicated alert watching whether the internal layer is breathing at all." src="../../diagrams/ch18-dve-ravni.png" width="90%" /></p>
-<p><img alt="A connection leak visible from the inside from hour zero — the external layer (latency) doesn't notice the problem until 40 hours later, by which point the trend is already far along." src="../../diagrams/dashboard-connections.png" width="95%" /></p>
+<p><img alt="Two independent collection layers over one managed database: external (the provider's instance metrics) and internal (an exporter directly on the engine), with a dedicated alert watching whether the internal layer is breathing at all." src="../diagrams/ch18-dve-ravni.png" width="90%" /></p>
+<p><img alt="A connection leak visible from the inside from hour zero — the external layer (latency) doesn't notice the problem until 40 hours later, by which point the trend is already far along." src="../diagrams/dashboard-connections.png" width="95%" /></p>
 <h2 id="183-analytical-section-two-layers-as-a-known-but-rarely-named-pattern">18.3 Analytical section — two layers as a known but rarely named pattern</h2>
 <h3 id="the-official-recommendation-agrees-with-the-split-but-doesnt-name-it-explicitly">The official recommendation agrees with the split, but doesn't name it explicitly</h3>
 <p>The provider's own documentation does distinguish three layers:

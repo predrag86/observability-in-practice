@@ -2378,7 +2378,7 @@ separate, isolated topic: even though the transport mechanism structurally
 departs from everything else (direct instead of through the gateway), the
 <em>semantics</em> remain the same OTel semantics from Chapter 2. Same trace ID,
 same context propagation.</p>
-<p><img alt="The browser goes directly to the hosted RUM collector, bypassing the gateway; backend telemetry still goes through the gateway. Two separate PII protections (native signals versus traces) are deliberately highlighted — that's the incident point from this chapter." src="../../diagrams/ch8-rum.png" width="75%" /></p>
+<p><img alt="The browser goes directly to the hosted RUM collector, bypassing the gateway; backend telemetry still goes through the gateway. Two separate PII protections (native signals versus traces) are deliberately highlighted — that's the incident point from this chapter." src="../diagrams/ch8-rum.png" width="75%" /></p>
 <p><strong>Two points for PII cleanup, not one.</strong> This is the single most valuable
 practical lesson of the chapter. The RUM SDK has one central function that
 intercepts all "native" signals — logs, measurements, errors — and strips
@@ -2399,7 +2399,7 @@ never even seen the traces.</p>
 percentiles (p50/p75/p95) instead of a single line, because an average, or
 even a median, can easily hide precisely the segment of users having the
 worst experience:</p>
-<p><img alt="LCP tracked by percentile: p50 and p75 stay stable, but p95 shows a clear regression on one day — a signal an average would hide, because it hits only a portion of traffic (typically one geographic region or device type)." src="../../diagrams/dashboard-rum.png" width="95%" /></p>
+<p><img alt="LCP tracked by percentile: p50 and p75 stay stable, but p95 shows a clear regression on one day — a signal an average would hide, because it hits only a portion of traffic (typically one geographic region or device type)." src="../diagrams/dashboard-rum.png" width="95%" /></p>
 <h2 id="83-analytical-section-why-a-direct-connection-isnt-a-compromise-but-a-requirement-and-what-it-means-when-one-filter-isnt-enough">8.3 Analytical section — why a direct connection isn't a compromise but a requirement, and what it means when "one filter" isn't enough</h2>
 <h3 id="why-the-standard-rum-architecture-almost-always-goes-directly-to-the-cloud">Why the standard RUM architecture almost always goes directly to the cloud</h3>
 <p>Independent overviews of RUM architecture consistently note that browser

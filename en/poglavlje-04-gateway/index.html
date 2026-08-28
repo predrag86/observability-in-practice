@@ -2398,7 +2398,7 @@ gateway, in high availability, through which almost all traffic passes.</strong>
   same logic being copied into every service separately.</li>
 </ul>
 <p>Schematically, it looks like this:</p>
-<p><img alt="Telemetry travels from senders to one stable DNS name, which distributes traffic evenly across two independent gateway instances; only the gateway talks to the cloud platform." src="../../diagrams/diagram.png" width="100%" /></p>
+<p><img alt="Telemetry travels from senders to one stable DNS name, which distributes traffic evenly across two independent gateway instances; only the gateway talks to the cloud platform." src="../diagrams/diagram.png" width="100%" /></p>
 <p>What this diagram does <em>not</em> show, and matters: there is a small,
 <strong>explicitly documented</strong> list of senders that <strong>bypass</strong> the gateway — a
 Lambda function that reports job failures, and the browser-based user

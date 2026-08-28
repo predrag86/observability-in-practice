@@ -2583,8 +2583,8 @@ indistinguishable from a leak of the production credential — because,
 technically, they were the same one. Both findings were reported to the
 data owners for further decision; observability only made them visible, it
 didn't fix them.</p>
-<p><img alt="Three phases of collection against an external SaaS service, all three within one shared, short-lived session — the data-freshness alert explicitly conditioned on a separate collector-health metric, so a dead collector is never read as a data-flow outage." src="../../diagrams/ch24-tri-faze.png" width="90%" /></p>
-<p><img alt="When the collector dies, the freshness gauge freezes while time keeps passing — without conditioning on a separate collector-health metric, this looks identical to a real catastrophe on a completely healthy system." src="../../diagrams/dashboard-snowflake.png" width="95%" /></p>
+<p><img alt="Three phases of collection against an external SaaS service, all three within one shared, short-lived session — the data-freshness alert explicitly conditioned on a separate collector-health metric, so a dead collector is never read as a data-flow outage." src="../diagrams/ch24-tri-faze.png" width="90%" /></p>
+<p><img alt="When the collector dies, the freshness gauge freezes while time keeps passing — without conditioning on a separate collector-health metric, this looks identical to a real catastrophe on a completely healthy system." src="../diagrams/dashboard-snowflake.png" width="95%" /></p>
 <h2 id="243-analytical-section-observability-without-infrastructure-access-as-a-distinct-problem">24.3 Analytical section — observability without infrastructure access as a distinct problem</h2>
 <h3 id="the-service-itself-distinguishes-between-two-different-forms-of-its-own-observability">The service itself distinguishes between two different forms of its own observability</h3>
 <p>The external service's official documentation draws a clear line between

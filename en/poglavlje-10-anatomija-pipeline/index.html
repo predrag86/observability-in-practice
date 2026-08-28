@@ -2349,7 +2349,7 @@ clog the chemical station with branches.</p>
 <h2 id="102-how-its-done-a-practical-overview">10.2 How it's done — a practical overview</h2>
 <p>The pipeline inside the gateway, in the implementation this book follows,
 has six stations, always in this order:</p>
-<p><img alt="Anatomy of the pipeline: six stations, always in the same order." src="../../diagrams/ch10-pipeline.png" width="98%" /></p>
+<p><img alt="Anatomy of the pipeline: six stations, always in the same order." src="../diagrams/ch10-pipeline.png" width="98%" /></p>
 <p><strong>1. <code>memory_limiter</code> — always first.</strong> Tracks the memory consumption of the
 gateway process itself, at short intervals. When consumption crosses a soft
 threshold, it starts rejecting new data back toward the sender (instead of

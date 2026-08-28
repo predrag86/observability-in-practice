@@ -2470,7 +2470,7 @@ base rate:</p>
   recognize traces that structurally deviate from the usual pattern for that
   service, even when they have no explicit error or high latency.</li>
 </ul>
-<p><img alt="Trace retention decision: drop policies act as an absolute veto and are evaluated first; keep policies operate on OR logic with an effectively random order; only if none decides does the base probabilistic rate come into play." src="../../diagrams/ch12-sampling-policy.png" width="88%" /></p>
+<p><img alt="Trace retention decision: drop policies act as an absolute veto and are evaluated first; keep policies operate on OR logic with an effectively random order; only if none decides does the base probabilistic rate come into play." src="../diagrams/ch12-sampling-policy.png" width="88%" /></p>
 <h3 id="how-the-rules-are-actually-evaluated-and-why-its-surprising">How the rules are actually evaluated — and why it's surprising</h3>
 <p>It's worth being precise about the mechanics, because the intuitive mental
 model ("rules are checked in order, the first one to decide wins") is only
@@ -2541,7 +2541,7 @@ reaction to a number that doesn't match expectations.</p>
 retention rate began to drift from the expected value calculated from the
 configured policies, and it returned to the expected level only after the
 vendor explained the mechanism, not after anyone changed the configuration:</p>
-<p><img alt="Trace retention rate, expected versus measured: a ten-day mismatch period was reported to the vendor, and the configuration was deliberately left unchanged until the mechanism was clarified." src="../../diagrams/dashboard-sampling.png" width="95%" /></p>
+<p><img alt="Trace retention rate, expected versus measured: a ten-day mismatch period was reported to the vendor, and the configuration was deliberately left unchanged until the mechanism was clarified." src="../diagrams/dashboard-sampling.png" width="95%" /></p>
 <h2 id="123-analytical-section-why-server-side-instead-of-collector-side">12.3 Analytical section — why server-side instead of collector-side</h2>
 <h3 id="the-official-distinction-where-the-decision-is-made-and-what-that-means-for-accuracy">The official distinction: where the decision is made, and what that means for accuracy</h3>
 <p>An independent survey of sampling strategies in the OpenTelemetry ecosystem
