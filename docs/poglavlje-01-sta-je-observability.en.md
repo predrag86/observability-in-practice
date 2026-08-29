@@ -22,6 +22,43 @@ operational, not philosophical: monitoring answers questions you asked
 incident you couldn't predict precisely enough to build a dedicated alert
 for.
 
+## Before we go further: a few basic terms
+
+Worth naming a few terms right away that we'll use from this point on,
+without waiting for a dedicated chapter for each one — just like the pilot
+in the example above already knows their instruments before anything goes
+wrong.
+
+- **Metric** — a single number measured over time (requests per second,
+  CPU utilization, queue depth). Cheap to store and quick to graph, but on
+  its own it doesn't say *which* request or *which* user is behind that
+  number.
+- **Log** — a text record of one specific event, at an exact point in
+  time ("14:32:07 — request X returned error Y"). Richer than a metric,
+  but harder to search if it isn't structured and linked to the rest of
+  the system.
+- **Trace** — a record of the path *one* request took through every
+  service it passed through, made up of individual steps called
+  **spans** — one span per service or operation, with a duration and an
+  outcome. The trace with the `records_returned=0` attribute from the
+  incident in § 1.2 below is exactly this kind of record.
+- **Attribute (label)** — a key-value pair attached to a metric, log, or
+  span, saying *whose* data this is and in what context (`service.name`,
+  `http.response.status_code`, `records_returned`). Without attributes,
+  the three pillars are just three piles of numbers with no context for
+  who did what.
+- **Dashboard** and **alert** — a panel made up of charts, and a rule
+  that fires on its own when a value crosses a threshold; these terms
+  already exist in everyday DevOps/SRE work, so this book doesn't give
+  them a dedicated definition, but they come up constantly from this
+  chapter on.
+
+These five or six terms keep coming back in almost every chapter that
+follows. Appendix B, at the end of the book, holds their full
+definitions alongside about thirty more specialized terms (cardinality,
+tail sampling, burn-rate...) — each of which we introduce only in the
+chapter where it first becomes relevant to the story, not before.
+
 ## 1.1 The question this chapter answers
 
 Why draw a line between these two words at all, when on the surface they do
