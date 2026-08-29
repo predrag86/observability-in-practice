@@ -26,13 +26,16 @@ theme:
     - navigation.sections
     - navigation.expand
     - navigation.top
+    - navigation.footer
     - search.highlight
     - search.suggest
     - content.code.copy
     - content.action.edit
+    - content.tooltips
     - toc.follow
 
 markdown_extensions:
+  - abbr
   - admonition
   - pymdownx.details
   - pymdownx.superfences
@@ -47,9 +50,14 @@ markdown_extensions:
 
 hooks:
   - hooks/latin_dates.py
+  - hooks/glossary_tooltips.py
+
+watch:
+  - includes
 
 plugins:
   - search
+  - glightbox
   - i18n:
       docs_structure: suffix
       fallback_to_default: true

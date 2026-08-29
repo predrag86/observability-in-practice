@@ -29,4 +29,5 @@ exclude = [
   "^https?://docs\\.redhat\\.com/",
   "^https?://developers\\.redhat\\.com/",
   "^https?://(www\\.)?airbyte\\.com/",
+  "^https?://(www\\.)?optivulnix\\.com/",
 ]
