@@ -22,6 +22,12 @@ odlučuje šta zadržava, na osnovu politika koje se mogu menjati bez
 redeploy-a pošiljaoca. Ključna razlika od uzorkovanja na strani kolektora:
 politike se primenjuju REDOSLEDOM, prva koja se poklopi pobeđuje.
 
+**Attribute / Label (atribut / labela)** — par ključ-vrednost zakačen za
+metriku, log ili raspon, koji kaže ČIJI je podatak i u kom kontekstu (npr.
+`service.name`, `http.response.status_code`). Resource attribute (vidi
+dole) je poseban slučaj koji opisuje IZVOR telemetrije, ne pojedinačno
+merenje.
+
 **Blast radius (radijus dejstva)** — koliko korisnika/servisa/podataka bi
 bilo pogođeno ako nešto pođe po zlu. Koristi se i za redosled faznog
 rollout-a (najmanji radijus prvi) i za prioritizaciju rizika (radijus ×
@@ -40,6 +46,9 @@ merenja.
 **Collector (kolektor)** — proces koji prima telemetriju (obično preko
 OTLP), po potrebi je transformiše, i prosleđuje dalje. Može biti bočni
 (sidecar, po zadatku) ili centralni (gateway, deljen).
+
+**Dashboard** — grafička tabla sastavljena od panela, gde svaki panel
+prikazuje jedan upit nad metrikama, logovima ili trejsovima.
 
 **Dead man's switch (alarm koji ćuti kad treba da radi)** — alarm koji
 je dizajniran da se OGLASI kad OTKAŽE mehanizam koji bi inače trebalo da
@@ -65,6 +74,10 @@ grafika direktno na konkretan primer. Retencija exemplar-a je obično
 kratka (na primer, nekoliko sati) — koristan je za "šta se sad dešava",
 ne za jučerašnji incident.
 
+**Exporter (eksporter)** — deo SDK-a ili kolektora čiji je jedini posao da
+uzme već generisanu telemetriju i pošalje je dalje, u OTLP formatu, ka
+sledećoj tački u lancu (kolektoru, gateway-u ili direktno cloud platformi).
+
 **Gateway (centralni prolaz)** — deljena komponenta kroz koju prolazi
 telemetrija više pošiljalaca pre nego što ode dalje ka skladištu; radi
 uzorkovanje, autentikaciju i grupisanje na jednom mestu umesto da svaki
@@ -74,16 +87,29 @@ pošiljalac to radi sam.
 zasićenje (latency, traffic, errors, saturation) — osnovni skup od
 četiri dimenzije za ocenu zdravlja servisa (Google SRE Book).
 
+**Instrumentation (instrumentacija)** — kod, ili agent koji se kači na
+kod, koji generiše metrike, logove i tragove iz rada aplikacije; može biti
+AUTOMATSKA (bez izmene koda aplikacije) ili RUČNA (eksplicitna linija
+koda koja emituje raspon ili atribut).
+
 **Keyed-HMAC pseudonimizacija** — pretvaranje identifikatora u
 pseudonim korišćenjem kriptografske heš funkcije sa TAJNIM ključem, za
 razliku od gole heš funkcije bez ključa — ključ sprečava napad grubom
 silom (rečnički napad) protiv poznatog skupa mogućih vrednosti (npr.
 email adresa).
 
+**Log** — tekstualni zapis JEDNOG konkretnog događaja, u tačno određenom
+trenutku; bogatiji je od metrike, ali teži za pretragu ako nije
+strukturiran i povezan sa ostatkom sistema.
+
 **MCP (Model Context Protocol)** — otvoren protokol koji AI agentu
 omogućava strukturisan pristup alatima i podacima (u ovoj knjizi:
 platformi za posmatranje) izvan onoga što je model naučio tokom
 treniranja.
+
+**Metric (metrika)** — jedan broj koji se meri tokom vremena (npr. broj
+zahteva u sekundi). Jeftin je za čuvanje i brz za grafikon, ali sam po
+sebi ne kaže KOJI zahtev ili KOJI korisnik stoji iza tog broja.
 
 **Native histogram** — format histograma gde se raspodela po kantama
 (bucket) šalje kompaktnije nego kod klasičnog histograma sa unapred
@@ -127,6 +153,9 @@ da se isto pitanje iznova postavlja svakom novom čitaocu.
 konkretnu KLASU kvara, ne za jedan događaj — koristi se dok alarm još
 uvek zvoni, za razliku od postmortem-a koji dolazi posle.
 
+**SDK (software development kit)** — biblioteka koju aplikacija uključuje
+da bi uopšte mogla da proizvede telemetriju u OpenTelemetry formatu.
+
 **Semantic conventions (semantičke konvencije)** — standardizovana imena
 atributa i metrika koje OTel propisuje (npr. `http.status_code`), da bi
 telemetrija iz različitih sistema bila uporediva bez ručnog mapiranja.
@@ -138,6 +167,9 @@ raspone pri gašenju) koje centralni kolektor van zadatka ne bi video.
 **SLI / SLO** — Service Level Indicator (merljiv signal, npr. procenat
 uspešnih zahteva) i Service Level Objective (ciljna vrednost tog
 signala kroz vreme, npr. 99.9%).
+
+**Span (raspon)** — jedan korak unutar traga (trace): jedna operacija ili
+poziv jednog servisa, sa trajanjem, ishodom i sopstvenim atributima.
 
 **Span metrics** — metrike IZVEDENE iz raspona (traces) pre bilo kakvog
 uzorkovanja — omogućavaju da RED dashboard ostane pun-vernosti (full-
@@ -155,6 +187,9 @@ vrednosti — česta tačka za proveru identiteta zadatka/instance.
 **Tier (nivo hitnosti)** — klasifikacija alarma po ozbiljnosti (npr.
 kritičan/standardan/tih) koja određuje da li se dedup-uje, da li uopšte
 šalje obaveštenje, i kojim putem.
+
+**Trace (trag)** — zapis putanje JEDNOG zahteva kroz sve servise kroz
+koje je prošao, sastavljen od pojedinačnih raspona (spans).
 
 **USE metod** — Utilization, Saturation, Errors (iskorišćenost,
 zasićenost, greške) — okvir za posmatranje RESURSA (host, disk, mreža),
