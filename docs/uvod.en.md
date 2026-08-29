@@ -9,6 +9,11 @@ when an alert that looks correct stays silent exactly when it's needed most,
 or when you have to explain to an auditor why a user's email address ended
 up in a trace.
 
+If the terms in the previous paragraph (attribute, cardinality, trace)
+don't mean anything to you yet — that's expected at this point. Chapter 1
+introduces them one at a time, before any of them becomes necessary to
+follow what comes next.
+
 This book starts from that other point: from a real, multi-month rollout of
 observability **company-wide**, not one demo service in one repository. The
 implementation the book follows as its central case study covers dozens of

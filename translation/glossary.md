@@ -21,6 +21,12 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | kardinalnost | cardinality | |
 | semantičke konvencije | semantic conventions | |
 | resursni atributi | resource attributes | |
+| metrika | metric | |
+| log | log | ne prevodi se |
+| atribut / labela | attribute / label | plain atribut, za razliku od 'resursni atributi' iznad |
+| raspon (trag) | span | jedan korak unutar traga (trace) |
+| eksporter | exporter | |
+| kolektor | collector | van fraze 'bočni kolektor' ispod |
 | gateway | gateway | ne prevodi se |
 | self-hosted | self-hosted | ne prevodi se |
 | upravljana platforma | managed platform | |
