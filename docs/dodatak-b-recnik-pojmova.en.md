@@ -22,6 +22,12 @@ what to keep, based on policies that can be changed without redeploying
 the sender. The key difference from collector-side sampling: policies
 are applied IN ORDER, and the first one that matches wins.
 
+**Attribute / Label** — a key-value pair attached to a metric, log, or
+span, saying WHOSE data this is and in what context (e.g.
+`service.name`, `http.response.status_code`). A resource attribute (see
+below) is a special case that describes the SOURCE of telemetry, not an
+individual measurement.
+
 **Blast radius** — how many users/services/records would be affected if
 something goes wrong. Used both to order a phased rollout (smallest
 radius first) and to prioritize risk (radius × probability × cost to
@@ -39,6 +45,9 @@ cost is charged per combination, not per measurement.
 **Collector** — a process that receives telemetry (usually over OTLP),
 transforms it as needed, and forwards it onward. Can be a sidecar
 (per-task) or centralized (a gateway, shared).
+
+**Dashboard** — a panel made up of tiles, each showing one query
+against metrics, logs, or traces.
 
 **Dead man's switch** — an alert designed to FIRE when the mechanism
 that would normally report a problem STOPS working — the logic is
@@ -63,6 +72,11 @@ straight to a concrete example. Exemplar retention is usually short
 (a few hours, for example) — useful for "what's happening right now,"
 not for yesterday's incident.
 
+**Exporter** — the part of an SDK or collector whose only job is to
+take telemetry that's already been generated and send it onward, in
+OTLP format, to the next point in the chain (a collector, a gateway, or
+the cloud platform directly).
+
 **Gateway** — a shared component that telemetry from multiple senders
 passes through before going on to storage; it does sampling,
 authentication, and batching in one place instead of every sender doing
@@ -71,15 +85,28 @@ it on its own.
 **Golden signals** — latency, traffic, errors, saturation — the core set
 of four dimensions for judging a service's health (Google SRE Book).
 
+**Instrumentation** — code, or an agent attached to code, that
+generates metrics, logs, and traces from an application's behavior;
+can be AUTOMATIC (no code changes) or MANUAL (an explicit line of code
+that emits a span or attribute).
+
 **Keyed-HMAC pseudonymization** — turning an identifier into a
 pseudonym using a cryptographic hash function with a SECRET key, as
 opposed to a bare, unkeyed hash function — the key prevents a
 brute-force attack (a dictionary attack) against a known set of
 possible values (e.g. email addresses).
 
+**Log** — a text record of ONE specific event, at an exact point in
+time; richer than a metric, but harder to search if it isn't
+structured and linked to the rest of the system.
+
 **MCP (Model Context Protocol)** — an open protocol that gives an AI
 agent structured access to tools and data (in this book: an
 observability platform) beyond what the model learned during training.
+
+**Metric** — a single number measured over time (e.g. requests per
+second). Cheap to store and quick to graph, but on its own it doesn't
+say WHICH request or WHICH user is behind that number.
 
 **Native histogram** — a histogram format where the distribution across
 buckets is sent more compactly than in a classic histogram with
@@ -124,6 +151,9 @@ tree) for a specific CLASS of failure, not for a single event — used
 while the alert is still firing, as opposed to a postmortem, which comes
 afterward.
 
+**SDK (software development kit)** — the library an application
+includes so it can produce telemetry in OpenTelemetry format at all.
+
 **Semantic conventions** — standardized attribute and metric names that
 OTel prescribes (e.g. `http.status_code`), so telemetry from different
 systems is comparable without manual mapping.
@@ -136,6 +166,9 @@ see.
 **SLI / SLO** — Service Level Indicator (a measurable signal, e.g. the
 percentage of successful requests) and Service Level Objective (a
 target value for that signal over time, e.g. 99.9%).
+
+**Span** — one step inside a trace: a single operation or call to one
+service, with a duration, an outcome, and its own attributes.
 
 **Span metrics** — metrics DERIVED from spans (traces) before any
 sampling — they let a RED dashboard stay full-fidelity even when the
@@ -154,6 +187,9 @@ identity.
 **Tier** — a classification of alerts by severity (e.g.
 critical/standard/quiet) that determines whether it gets deduped,
 whether it sends a notification at all, and by which path.
+
+**Trace** — a record of the path ONE request took through every
+service it passed through, made up of individual spans.
 
 **USE method** — Utilization, Saturation, Errors — a framework for
 observing RESOURCES (host, disk, network), as opposed to the RED method,
