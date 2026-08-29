@@ -62,8 +62,9 @@ with real numbers, not just intuition — is worked out in § 3.3.
 **What actually happened afterward.** The decision wasn't "set it once and
 forget it." As the number of instrumented services grew, the system at one
 point **blew through the free tier in a single weekend** — metric
-cardinality consumption exceeded the quota faster than anyone had planned
-for. The response to that moment wasn't "let's switch to self-hosted to
+cardinality consumption — the number of unique label combinations
+metrics produce, covered in detail in Chapter 11 — exceeded the quota
+faster than anyone had planned for. The response to that moment wasn't "let's switch to self-hosted to
 avoid the bill" (Chapter 11 shows in detail why that would have been a
 panicked, not a rational, decision at that point), but two parallel moves:
 upgrading to the paid **Pro** tier (so the system would immediately stop

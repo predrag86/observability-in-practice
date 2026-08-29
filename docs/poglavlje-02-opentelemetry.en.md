@@ -24,6 +24,22 @@ gateway, and the cloud platform on the other side can all work with the
 data without ever needing to know what language the application producing
 it was written in.
 
+## Before we go further: three terms that will keep coming back
+
+- **Instrumentation** — code (or an agent attached to code) that
+  generates metrics, logs, and traces from an application's behavior.
+  Can be *automatic* (a library does it for you, no code changes) or
+  *manual* (you explicitly add a line of code that emits a span or
+  attribute).
+- **SDK** (software development kit) — the library an application
+  includes so it can produce telemetry in OpenTelemetry format at all;
+  it's what the Python services below explicitly initialize, and what
+  the Java agent does on their behalf through bytecode manipulation.
+- **Exporter** — the part of the SDK (or the collector) whose only job
+  is to take telemetry that's already been generated and send it
+  onward, in OTLP format, to the next point in the chain (a collector, a
+  gateway, or the cloud platform directly).
+
 ## 2.1 The question this chapter answers
 
 Before writing the first line of instrumentation for any specific
