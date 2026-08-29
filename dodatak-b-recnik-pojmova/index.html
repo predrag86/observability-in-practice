@@ -2082,6 +2082,11 @@ uzorkovanja raspona (traces) gde platforma za posmatranje, ne kolektor,
 odlučuje šta zadržava, na osnovu politika koje se mogu menjati bez
 redeploy-a pošiljaoca. Ključna razlika od uzorkovanja na strani kolektora:
 politike se primenjuju REDOSLEDOM, prva koja se poklopi pobeđuje.</p>
+<p><strong>Attribute / Label (atribut / labela)</strong> — par ključ-vrednost zakačen za
+metriku, log ili raspon, koji kaže ČIJI je podatak i u kom kontekstu (npr.
+<code>service.name</code>, <code>http.response.status_code</code>). Resource attribute (vidi
+dole) je poseban slučaj koji opisuje IZVOR telemetrije, ne pojedinačno
+merenje.</p>
 <p><strong>Blast radius (<abbr title="Koliko korisnika, servisa ili podataka bi bilo pogođeno ako nešto pođe po zlu.">radijus dejstva</abbr>)</strong> — koliko korisnika/servisa/podataka bi
 bilo pogođeno ako nešto pođe po zlu. Koristi se i za redosled faznog
 rollout-a (najmanji radijus prvi) i za prioritizaciju rizika (radijus ×
@@ -2097,6 +2102,8 @@ merenja.</p>
 <p><strong>Collector (kolektor)</strong> — proces koji prima telemetriju (obično preko
 OTLP), po potrebi je transformiše, i prosleđuje dalje. Može biti bočni
 (sidecar, po zadatku) ili centralni (gateway, deljen).</p>
+<p><strong>Dashboard</strong> — grafička tabla sastavljena od panela, gde svaki panel
+prikazuje jedan upit nad metrikama, logovima ili trejsovima.</p>
 <p><strong><abbr title="Alarm koji se oglašava kad OTKAŽE mehanizam koji bi inače prijavio problem — tišina je loš znak.">Dead man's switch</abbr> (alarm koji ćuti kad treba da radi)</strong> — alarm koji
 je dizajniran da se OGLASI kad OTKAŽE mehanizam koji bi inače trebalo da
 prijavi problem — logika je obrnuta od uobičajenog alarma: tišina je
@@ -2116,6 +2123,9 @@ sa tačkom na histogramu metrike, koji omogućava skok sa agregiranog
 grafika direktno na konkretan primer. Retencija exemplar-a je obično
 kratka (na primer, nekoliko sati) — koristan je za "šta se sad dešava",
 ne za jučerašnji incident.</p>
+<p><strong>Exporter (eksporter)</strong> — deo SDK-a ili kolektora čiji je jedini posao da
+uzme već generisanu telemetriju i pošalje je dalje, u OTLP formatu, ka
+sledećoj tački u lancu (kolektoru, gateway-u ili direktno cloud platformi).</p>
 <p><strong>Gateway (centralni prolaz)</strong> — deljena komponenta kroz koju prolazi
 telemetrija više pošiljalaca pre nego što ode dalje ka skladištu; radi
 uzorkovanje, autentikaciju i grupisanje na jednom mestu umesto da svaki
@@ -2123,15 +2133,25 @@ pošiljalac to radi sam.</p>
 <p><strong>Golden signals (<abbr title="Kašnjenje, saobraćaj, greške, zasićenje — osnovna četiri dimenzije za ocenu zdravlja servisa.">zlatni signali</abbr>)</strong> — kašnjenje, saobraćaj, greške,
 zasićenje (latency, traffic, errors, saturation) — osnovni skup od
 četiri dimenzije za ocenu zdravlja servisa (Google SRE Book).</p>
+<p><strong>Instrumentation (instrumentacija)</strong> — kod, ili agent koji se kači na
+kod, koji generiše metrike, logove i tragove iz rada aplikacije; može biti
+AUTOMATSKA (bez izmene koda aplikacije) ili RUČNA (eksplicitna linija
+koda koja emituje raspon ili atribut).</p>
 <p><strong><abbr title="Pretvaranje identifikatora u pseudonim heš funkcijom sa tajnim ključem, protiv brute-force napada.">Keyed-HMAC pseudonimizacija</abbr></strong> — pretvaranje identifikatora u
 pseudonim korišćenjem kriptografske heš funkcije sa TAJNIM ključem, za
 razliku od gole heš funkcije bez ključa — ključ sprečava napad grubom
 silom (rečnički napad) protiv poznatog skupa mogućih vrednosti (npr.
 email adresa).</p>
+<p><strong>Log</strong> — tekstualni zapis JEDNOG konkretnog događaja, u tačno određenom
+trenutku; bogatiji je od metrike, ali teži za pretragu ako nije
+strukturiran i povezan sa ostatkom sistema.</p>
 <p><strong><abbr title="Model Context Protocol — otvoren protokol koji AI agentu daje strukturisan pristup alatima i podacima.">MCP</abbr> (Model Context Protocol)</strong> — otvoren protokol koji AI agentu
 omogućava strukturisan pristup alatima i podacima (u ovoj knjizi:
 platformi za posmatranje) izvan onoga što je model naučio tokom
 treniranja.</p>
+<p><strong>Metric (metrika)</strong> — jedan broj koji se meri tokom vremena (npr. broj
+zahteva u sekundi). Jeftin je za čuvanje i brz za grafikon, ali sam po
+sebi ne kaže KOJI zahtev ili KOJI korisnik stoji iza tog broja.</p>
 <p><strong>Native histogram</strong> — format histograma gde se raspodela po kantama
 (bucket) šalje kompaktnije nego kod klasičnog histograma sa unapred
 fiksnim granicama kanti; utiče na naplativu kardinalnost drugačije od
@@ -2165,6 +2185,8 @@ da se isto pitanje iznova postavlja svakom novom čitaocu.</p>
 <p><strong>Runbook</strong> — unapred pripremljeno uputstvo (obično stablo odluka) za
 konkretnu KLASU kvara, ne za jedan događaj — koristi se dok alarm još
 uvek zvoni, za razliku od postmortem-a koji dolazi posle.</p>
+<p><strong>SDK (software development kit)</strong> — biblioteka koju aplikacija uključuje
+da bi uopšte mogla da proizvede telemetriju u OpenTelemetry formatu.</p>
 <p><strong>Semantic conventions (<abbr title="Standardizovana imena atributa i metrika koje OTel propisuje, npr. http.status_code.">semantičke konvencije</abbr>)</strong> — standardizovana imena
 atributa i metrika koje OTel propisuje (npr. <code>http.status_code</code>), da bi
 telemetrija iz različitih sistema bila uporediva bez ručnog mapiranja.</p>
@@ -2174,6 +2196,8 @@ raspone pri gašenju) koje centralni kolektor van zadatka ne bi video.</p>
 <p><strong><abbr title="Service Level Indicator — merljiv signal, npr. procenat uspešnih zahteva.">SLI</abbr> / <abbr title="Service Level Objective — ciljna vrednost signala kroz vreme, npr. 99.9%.">SLO</abbr></strong> — Service Level Indicator (merljiv signal, npr. procenat
 uspešnih zahteva) i Service Level Objective (ciljna vrednost tog
 signala kroz vreme, npr. 99.9%).</p>
+<p><strong>Span (raspon)</strong> — jedan korak unutar traga (trace): jedna operacija ili
+poziv jednog servisa, sa trajanjem, ishodom i sopstvenim atributima.</p>
 <p><strong>Span metrics</strong> — metrike IZVEDENE iz raspona (traces) pre bilo kakvog
 uzorkovanja — omogućavaju da RED dashboard ostane pun-vernosti (full-
 fidelity) čak i kad se sami rasponi agresivno uzorkuju za skladištenje.</p>
@@ -2187,6 +2211,8 @@ vrednosti — česta tačka za proveru identiteta zadatka/instance.</p>
 <p><strong>Tier (<abbr title="Klasifikacija alarma po ozbiljnosti koja određuje dedup i put obaveštenja.">nivo hitnosti</abbr>)</strong> — klasifikacija alarma po ozbiljnosti (npr.
 kritičan/standardan/tih) koja određuje da li se <abbr title="Grupisanje ponovljenih obaveštenja o istom kvaru u jedan zapis unutar vremenskog prozora.">dedup</abbr>-uje, da li uopšte
 šalje obaveštenje, i kojim putem.</p>
+<p><strong>Trace (trag)</strong> — zapis putanje JEDNOG zahteva kroz sve servise kroz
+koje je prošao, sastavljen od pojedinačnih raspona (spans).</p>
 <p><strong><abbr title="Utilization, Saturation, Errors — okvir za posmatranje resursa (host, disk, mreža).">USE metod</abbr></strong> — Utilization, Saturation, Errors (iskorišćenost,
 zasićenost, greške) — okvir za posmatranje RESURSA (host, disk, mreža),
 za razliku od RED metoda koji posmatra SERVISE.</p>
@@ -2214,7 +2240,7 @@ upravo u trenutku kad je najpotrebniji, i on je nem.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="29. avgust 2026. 10:15:51 UTC">29. avgust 2026.</span>
   </span>
 
     
