@@ -62,8 +62,9 @@ intuicijom — razrađen je u § 3.3.
 
 **Šta se zapravo desilo posle.** Odluka nije bila "podesi jednom i zaboravi".
 Kako je broj instrumentisanih servisa rastao, sistem je u jednom trenutku
-**probio besplatni tier za jedan vikend** — potrošnja kardinalnosti metrika je
-premašila kvotu brže nego što je iko planirao. Reakcija na taj trenutak nije
+**probio besplatni tier za jedan vikend** — potrošnja kardinalnosti metrika — broja jedinstvenih kombinacija labela
+koje metrike proizvode, detaljno u Poglavlju 11 — je premašila kvotu brže
+nego što je iko planirao. Reakcija na taj trenutak nije
 bila "pređimo na self-hosted da izbegnemo račun" (Poglavlje 11 detaljno
 pokazuje zašto bi to u tom trenutku bila panična, ne racionalna odluka), nego
 dva paralelna poteza: nadogradnja na plaćeni **Pro** tier (da sistem odmah

@@ -22,6 +22,21 @@ kolektor, gateway i cloud platforma sa druge strane mogu da rade sa podatkom, a
 da nikad nisu morali da znaju u kom je jeziku pisana aplikacija koja ga je
 proizvela.
 
+## Pre nego što krenemo dalje: tri pojma koja će se stalno vraćati
+
+- **Instrumentacija** — kod (ili agent koji se kači na kod) koji generiše
+  metrike, logove i tragove iz rada aplikacije. Može biti *automatska*
+  (biblioteka to radi umesto tebe, bez izmene koda) ili *ručna*
+  (eksplicitno dodaješ liniju koda koja emituje raspon ili atribut).
+- **SDK** (software development kit) — biblioteka koju aplikacija
+  uključuje da bi uopšte mogla da proizvede telemetriju u OpenTelemetry
+  formatu; to je ono što Python servisi ispod eksplicitno inicijalizuju, a
+  što Java agent radi u njihovo ime kroz bytecode manipulaciju.
+- **Eksporter** — deo SDK-a (ili kolektora) čiji je jedini posao da uzme
+  već generisanu telemetriju i pošalje je dalje, u OTLP formatu, ka
+  sledećoj tački u lancu (kolektoru, gateway-u ili direktno cloud
+  platformi).
+
 ## 2.1 Pitanje na koje ovo poglavlje odgovara
 
 Pre nego što se napiše prva linija instrumentacije za bilo koju konkretnu
