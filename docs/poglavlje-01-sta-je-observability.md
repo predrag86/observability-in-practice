@@ -20,6 +20,40 @@ filozofska: monitoring odgovara na pitanja koja si postavio *unapred*.
 Observability odgovara na pitanja koja postaviš *posle*, o incidentu koji nisi
 mogao da predvidiš dovoljno precizno da za njega napraviš poseban alarm.
 
+## Pre nego što krenemo dalje: nekoliko osnovnih pojmova
+
+Vredi odmah imenovati par termina koje ćemo od ove tačke koristiti bez
+čekanja na posebno poglavlje za svaki — tačno onako kako je pilotu iz
+primera gore njegov instrument poznat pre nego što bilo šta pođe po zlu.
+
+- **Metrika** — jedan broj koji se meri tokom vremena (broj zahteva u
+  sekundi, iskorišćenost CPU-a, dužina reda za obradu). Jeftina je za
+  čuvanje i brza za grafikon, ali sama po sebi ne kaže *koji* zahtev ili
+  *koji* korisnik stoji iza tog broja.
+- **Log** — tekstualni zapis jednog konkretnog događaja, u tačno
+  određenom trenutku ("14:32:07 — zahtev X vratio grešku Y"). Bogatiji je
+  od metrike, ali teži za pretragu ako nije strukturiran i povezan sa
+  ostatkom sistema.
+- **Trag (trace)** — zapis putanje *jednog* zahteva kroz sve servise kroz
+  koje je prošao, sastavljen od pojedinačnih koraka koji se zovu
+  **rasponi (spans)** — jedan raspon po servisu ili operaciji, sa
+  trajanjem i ishodom. Trag sa atributom `records_returned=0` iz
+  incidenta u § 1.2 ispod je upravo ovakav zapis.
+- **Atribut (label)** — par ključ-vrednost zakačen za metriku, log ili
+  raspon, koji kaže *čiji* je podatak i u kom kontekstu (`service.name`,
+  `http.response.status_code`, `records_returned`). Bez atributa, tri
+  stuba ostaju tri gomile brojeva bez konteksta ko je šta uradio.
+- **Dashboard** i **alarm** — grafička tabla sa grafikonima, i pravilo
+  koje se samo oglašava kad neka vrednost pređe prag; ovi pojmovi već
+  postoje u svakodnevnom DevOps/SRE radu, pa im ova knjiga ne posvećuje
+  posebnu definiciju, ali se stalno pominju od ovog poglavlja nadalje.
+
+Ovih pet-šest termina se vraćaju u gotovo svakom poglavlju koje sledi.
+Dodatak B na kraju knjige drži njihove pune definicije zajedno sa
+tridesetak specijalizovanijih pojmova (kardinalnost, tail sampling,
+burn-rate...) — svaki od njih uvodimo tek u poglavlju gde prvi put
+postane bitan za priču, ne pre.
+
 ## 1.1 Pitanje na koje ovo poglavlje odgovara
 
 Zašto uopšte praviti razliku između te dve reči, kad naizgled rade istu stvar —

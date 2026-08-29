@@ -8,6 +8,11 @@ za jedan vikend, kada alarm koji izgleda ispravno ćuti baš onda kada je
 najpotrebniji, ili kada moraš da objasniš auditoru zašto email korisnika
 završava u trejsu.
 
+Ako ti pojmovi u prethodnom pasusu (atribut, kardinalnost, trag) još ništa
+ne znače — to je i očekivano na ovom mestu. Poglavlje 1 ih uvodi jedan po
+jedan, pre nego što ijedan od njih postane neophodan za razumevanje teksta
+koji sledi.
+
 Ova knjiga polazi od druge tačke: od stvarnog, višemesečnog uvođenja
 observability-ja **na nivou cele firme**, ne jednog demo-servisa u jednom
 repozitorijumu. Implementacija koju knjiga prati kao svoju centralnu studiju
