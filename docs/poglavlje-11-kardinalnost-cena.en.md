@@ -144,6 +144,50 @@ rollout, uncovered exactly such a case — one metric that looked unused
 turned out to be the only signal for a rare but real problem, and it was put
 back on the list that same day.
 
+### Exemplars — a bridge between metric and trace, and why it didn't work here for a long time
+
+The histogram from Phase 1 solves the cost problem — but a histogram,
+classic or native, carries a second capability, independent of the bucket
+format: every observation that lands in the histogram can carry an
+**exemplar** along with it — a single concrete sample, usually the ID of
+the trace active at the moment of that observation, attached directly to
+the point on the metric's graph. Clicking that point doesn't open
+aggregated statistics but one real trace that actually contributed to that
+value — the shortest possible path from "I see a spike" to "here's exactly
+what was slow in that call."
+
+In the implementation this book follows, this bridge existed for a long
+time only as a gap on a list: metrics and traces were both already arriving
+through the same gateway, both were already available, and the link
+between them simply hadn't been turned on — not because it's technically
+hard, but because nothing forced the priority until someone, in the middle
+of a real incident, asked "okay, I see a spike, but which call exactly was
+slow" and discovered that the answer to that question didn't exist in one
+click.
+
+Once it was finally turned on, a trap surfaced that isn't obvious from the
+documentation at first glance: **exemplars are retained for much less time
+than the metric they're attached to.** While the metric's graph stays
+readable for weeks, the exemplar point on that same graph stops leading
+anywhere after roughly four hours. A panel that yesterday had a clickable
+point on a spike has, today, the same point visually — but clicking it
+leads nowhere. This isn't a bug; it's the expected behavior of a short
+retention window, and it's worth knowing in advance, not discovering in the
+middle of investigating a week-old incident, once the exemplar has long
+since expired.
+
+Turning exemplars on by itself isn't a complete solution either, without
+one more step: an exemplar is only as useful as the histogram it's attached
+to is broken down finely enough for the click to actually lead somewhere
+relevant. A duration histogram measured at the level of the whole service,
+without breaking it down by individual route, gives an exemplar that's
+technically clickable but statistically close to random — a link to one of
+hundreds of concurrent calls, not necessarily the one that matters. The
+next item on the list (still unbuilt at the time of writing) is a histogram
+broken down by route for a couple of especially heavy endpoints, so that an
+exemplar from the top of a spike leads to a trace from that exact endpoint,
+not just any call to the same service at the same moment.
+
 ## 11.3 Analytical section — why cardinality isn't a "storage detail"
 
 ### The official recommendation: native histograms as a structural solution
@@ -215,6 +259,11 @@ at once.**
   variable, not a redeploy) — the cost of a slow return at the moment
   someone genuinely needs exactly that data is greater than the cost of a
   slower rollout of the measure itself.
+- Turn on exemplars as soon as a histogram already exists — the cost is
+  negligible, and the payoff (one click from a spike on a graph to the
+  actual trace) rarely comes cheaper. But know in advance that exemplar
+  retention is much shorter than metric retention: clicking an old point on
+  a graph won't lead anywhere, and that's expected behavior, not a bug.
 
 ## 11.5 Exercise for the reader
 

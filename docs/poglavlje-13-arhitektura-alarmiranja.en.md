@@ -83,6 +83,54 @@ here, the default route is a real, watched channel, not a wastebasket.
 
 ![Two independent paths converge on routing by domain ownership, with an explicit fallback chain toward the general, always-watched channel when a dedicated webhook isn't configured.](diagrams/ch13-dual-path.png){: width="95%" }
 
+### How the alerts and dashboards themselves are kept under version control
+
+The routing mechanism described above — rules, contact points (Grafana's
+term for a single notification destination: webhook, email, and so on), the
+fallback chain — isn't something anyone maintains by hand through the
+observability platform's web interface. The rules for Path B (the PromQL
+condition, the threshold, the contact point the rule notifies) are defined
+as infrastructure code, using the same tool (Terraform) and the same
+repository style as the infrastructure that produces that telemetry in the
+first place. Every rule group and every contact point is a resource in
+code; a change goes through the same `plan`/`apply` cycle as any other
+infrastructure change, with state kept in the same remote store.
+
+Dashboards take a different path — they deliberately live apart from the
+infrastructure code, in their own repository, and are published exclusively
+through a dedicated script, never by a manual API call. The reason for the
+separation isn't historical but deliberate: an alert definition is an
+infrastructure decision (threshold, condition, who it goes to) that
+naturally follows the same change-review discipline as the network or the
+database; a dashboard's content is more often editorial work — panel
+layout, which query feeds which chart — handled by a wider circle of
+people, including ones who don't write infrastructure code. Forcing the
+same tool and the same approval flow onto both would either slow down
+iteration on dashboards or weaken the discipline around alerts.
+
+This discipline reveals a trap that's invisible until you hit it: editing
+an existing rule group resets the state of **every** rule in that group,
+not just the one being changed. If any rule in the group is currently
+firing, applying the change immediately sends a false "resolved"
+notification, drops the rule to a neutral state, and then walks it back
+through the same transition into firing again — a pair of messages that
+looks in Slack exactly like a flap, and isn't one. A recorded case:
+changing just one incidental parameter (how often the notification
+repeats) on a rule that had already been firing calmly at the same,
+unchanged value for six hours produced exactly that pair of messages —
+"resolved" at the moment of the apply, then "firing again" exactly as many
+minutes later as that rule's confirmation window (in the recorded case,
+half an hour). The condition itself never changed in between.
+
+This isn't a configuration bug but an unavoidable consequence of the
+architecture — rule state lives per group, not per individual rule — and
+it's worth expecting in advance rather than hunting for a cause after every
+apply: one "resolved, then firing again" pair per currently-firing rule in
+the group, for every apply that touches that group. The practical
+consequence: apply changes when nothing in that group is firing if there's
+a choice, and warn the team in advance that a pair of messages will arrive
+if applying while something is already firing.
+
 ## 13.3 Analytical section — why they don't merge into one mechanism
 
 ### The official recommendation: route by ownership, not by technology
@@ -158,6 +206,11 @@ one down with it.**
 - Regularly measure what percentage of alerts actually hits a dedicated
   route — a drop in that percentage is an early signal that some domain has
   outgrown its current configuration.
+- Keep alert definitions (thresholds, contact points) as infrastructure
+  code alongside the rest of the system and apply them through the same
+  `plan`/`apply` cycle — but expect editing a rule group to send a false
+  "resolved, then firing again" pair for every rule currently firing in
+  that group, not just the rule actually being changed.
 
 ## 13.5 Exercise for the reader
 
