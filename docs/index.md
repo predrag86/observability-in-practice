@@ -1,8 +1,6 @@
 # Observability u praksi
 
-<figure markdown>
 ![Observability u praksi](diagrams/cover-emblem.png){: width="220" }
-</figure>
 
 ## OpenTelemetry i Grafana LGTM stack
 
