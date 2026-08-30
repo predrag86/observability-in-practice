@@ -1028,6 +1028,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#exemplars-a-bridge-between-metric-and-trace-and-why-it-didnt-work-here-for-a-long-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplars — a bridge between metric and trace, and why it didn't work here for a long time
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2320,6 +2331,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#exemplars-a-bridge-between-metric-and-trace-and-why-it-didnt-work-here-for-a-long-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemplars — a bridge between metric and trace, and why it didn't work here for a long time
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2554,6 +2576,45 @@ experiment, applied to one less critical segment of the fleet before wider
 rollout, uncovered exactly such a case — one metric that looked unused
 turned out to be the only signal for a rare but real problem, and it was put
 back on the list that same day.</p>
+<h3 id="exemplars-a-bridge-between-metric-and-trace-and-why-it-didnt-work-here-for-a-long-time">Exemplars — a bridge between metric and trace, and why it didn't work here for a long time</h3>
+<p>The histogram from Phase 1 solves the cost problem — but a histogram,
+classic or native, carries a second capability, independent of the bucket
+format: every observation that lands in the histogram can carry an
+<strong>exemplar</strong> along with it — a single concrete sample, usually the ID of
+the trace active at the moment of that observation, attached directly to
+the point on the metric's graph. Clicking that point doesn't open
+aggregated statistics but one real trace that actually contributed to that
+value — the shortest possible path from "I see a spike" to "here's exactly
+what was slow in that call."</p>
+<p>In the implementation this book follows, this bridge existed for a long
+time only as a gap on a list: metrics and traces were both already arriving
+through the same gateway, both were already available, and the link
+between them simply hadn't been turned on — not because it's technically
+hard, but because nothing forced the priority until someone, in the middle
+of a real incident, asked "okay, I see a spike, but which call exactly was
+slow" and discovered that the answer to that question didn't exist in one
+click.</p>
+<p>Once it was finally turned on, a trap surfaced that isn't obvious from the
+documentation at first glance: <strong>exemplars are retained for much less time
+than the metric they're attached to.</strong> While the metric's graph stays
+readable for weeks, the exemplar point on that same graph stops leading
+anywhere after roughly four hours. A panel that yesterday had a clickable
+point on a spike has, today, the same point visually — but clicking it
+leads nowhere. This isn't a bug; it's the expected behavior of a short
+retention window, and it's worth knowing in advance, not discovering in the
+middle of investigating a week-old incident, once the exemplar has long
+since expired.</p>
+<p>Turning exemplars on by itself isn't a complete solution either, without
+one more step: an exemplar is only as useful as the histogram it's attached
+to is broken down finely enough for the click to actually lead somewhere
+relevant. A duration histogram measured at the level of the whole service,
+without breaking it down by individual route, gives an exemplar that's
+technically clickable but statistically close to random — a link to one of
+hundreds of concurrent calls, not necessarily the one that matters. The
+next item on the list (still unbuilt at the time of writing) is a histogram
+broken down by route for a couple of especially heavy endpoints, so that an
+exemplar from the top of a spike leads to a trace from that exact endpoint,
+not just any call to the same service at the same moment.</p>
 <h2 id="113-analytical-section-why-cardinality-isnt-a-storage-detail">11.3 Analytical section — why cardinality isn't a "storage detail"</h2>
 <h3 id="the-official-recommendation-native-histograms-as-a-structural-solution">The official recommendation: native histograms as a structural solution</h3>
 <p>The Prometheus community (including its own documentation on histogram
@@ -2617,6 +2678,11 @@ at once.</strong></p>
   variable, not a redeploy) — the cost of a slow return at the moment
   someone genuinely needs exactly that data is greater than the cost of a
   slower rollout of the measure itself.</li>
+<li>Turn on exemplars as soon as a histogram already exists — the cost is
+  negligible, and the payoff (one click from a spike on a graph to the
+  actual trace) rarely comes cheaper. But know in advance that exemplar
+  retention is much shorter than metric retention: clicking an old point on
+  a graph won't lead anywhere, and that's expected behavior, not a bug.</li>
 </ul>
 <h2 id="115-exercise-for-the-reader">11.5 Exercise for the reader</h2>
 <p>Run <code>count by (__name__)({__name__=~".+"})</code> (or the equivalent check in the
@@ -2654,7 +2720,7 @@ your candidate for the next unplanned jump in the bill.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:06:19 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 30, 2026 07:44:39 UTC">August 30, 2026</span>
   </span>
 
     
