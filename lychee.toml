@@ -31,4 +31,5 @@ exclude = [
   "^https?://(www\\.)?airbyte\\.com/",
   "^https?://(www\\.)?optivulnix\\.com/",
   "^https?://(www\\.)?nhimg\\.org/",
+  "^https?://(www\\.)?projectmanagementacademy\\.net/",
 ]
