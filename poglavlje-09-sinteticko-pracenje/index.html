@@ -836,6 +836,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="9.2 Kako je to urađeno — praktičan pregled">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#treci-sloj-da-li-se-aplikacija-zaista-renderuje-ne-samo-da-li-server-odgovara" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treći sloj: da li se aplikacija zaista renderuje, ne samo da li server odgovara
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2223,6 +2240,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="9.2 Kako je to urađeno — praktičan pregled">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#treci-sloj-da-li-se-aplikacija-zaista-renderuje-ne-samo-da-li-server-odgovara" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treći sloj: da li se aplikacija zaista renderuje, ne samo da li server odgovara
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2399,6 +2433,37 @@ pala, nego zato što je put do monitoring sistema pao.</p>
 utihne dok ostala dva i dalje javljaju normalan rad, dijagnoza se sužava sama
 od sebe, bez ijednog dodatnog koraka istrage:</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-synthetic.png" data-desc-position="bottom"><img alt="Region B prestaje da javlja latenciju u kratkom prozoru dok Region A i Region C nastavljaju normalno — obrazac koji upućuje na regionalni mrežni problem, ne na pad same aplikacije." src="../diagrams/dashboard-synthetic.png" width="95%"></a></p>
+<h3 id="treci-sloj-da-li-se-aplikacija-zaista-renderuje-ne-samo-da-li-server-odgovara">Treći sloj: da li se aplikacija zaista renderuje, ne samo da li server odgovara</h3>
+<p>Osnovna dostupnost-proba i proba poslovnog toka i dalje ostavljaju jednu
+rupu: obe testiraju šta server <strong>vrati</strong>, nijedna ne testira šta browser
+zaista <strong>prikaže</strong>. Pokvaren JavaScript bundle — loš deploy, izmenjena
+putanja do statičkog fajla, greška u build koraku — i dalje vraća HTTP 200 sa
+punim HTML dokumentom; sama stranica ostaje prazna, jer se skripta koja bi je
+napunila sadržajem nikad ne izvrši. Ni osnovna dostupnost-proba (vidi 200,
+prijavljuje "radi") ni proba poslovnog toka usmerena na API pozive ne bi
+ovo uhvatile — obe gledaju server, a kvar je isključivo na strani klijenta.</p>
+<p>Implementacija koju knjiga prati dodaje treći, poseban tip probe za tačno
+ovaj slučaj: proba koja pokreće pravi headless browser (Chromium, upravljan
+istim k6 alatom koji stoji iza probe poslovnog toka), učitava frontend
+aplikaciju kao pravi korisnik, i proverava da je stranica zaista popunjena
+sadržajem posle mrežnog mirovanja — ne samo da je odgovor stigao. Ovo je isti
+obrazac tihog kvara iz Poglavlja 1 i iz "kritičnog poslovnog toka" iznad,
+primenjen na treći sloj sistema (klijentsko renderovanje) koji prva dva tipa
+probe strukturno ne mogu da vide.</p>
+<p>Dve stvari vredi eksplicitno reći o ovoj probi. Prva: namerno <strong>ne</strong> emituje
+podatke u isti RUM tok kao stvarni korisnici (Poglavlje 8) — bila bi to
+sintetička sesija koja bi tiho zagadila baseline p75/p95 izračunat iz
+stvarnog saobraćaja, pa se drži potpuno odvojeno, kao nezavisan heartbeat.
+Druga: browser proba je najskuplji sloj sintetičkog praćenja — pokretanje
+punog Chromium-a po izvršenju nosi mnogo veći trošak (i u novcu i u broju
+generisanih serija/logova) od proste HTTP probe — pa se namerno drži na
+minimalnom otisku koji i dalje daje signal: jedna lokacija, redak interval,
+umesto raskošne multi-regionalne postavke koju osnovna dostupnost-proba sebi
+može da priušti. Isti princip — da učestalost i broj lokacija direktno
+množe trošak, ne samo preciznost — već je jednom primoran na test kod
+osnovnih HTTP probi u ovoj implementaciji, kad je prekomerna multi-regionalna
+postavka izazvala neplanirano prekoračenje budžeta i morala biti svedena na
+jednu lokaciju sa ređim intervalom.</p>
 <h2 id="93-analiticki-deo-zasto-sinteticko-pracenje-nije-rum-za-siromasne">9.3 Analitički deo — zašto sintetičko praćenje nije "RUM za siromašne"</h2>
 <h3 id="sinteticko-i-rum-resavaju-razlicite-probleme-ne-isti-problem-na-dva-nacina">Sintetičko i RUM rešavaju različite probleme, ne isti problem na dva načina</h3>
 <p>Nezavisna poređenja RUM-a i sintetičkog praćenja (uključujući ClickHouse-ov i
@@ -2460,6 +2525,11 @@ kada problem postoji baš u trenutku kad niko ne gleda, neko ipak zna.</strong><
 <li>Proveri da li tvoje probe rade tačno u periodima kad je saobraćaj
   najmanji (noć, vikend) — to je period u kome njihova vrednost dolazi do
   izražaja, i period u kome se najlakše zaboravi da se testira.</li>
+<li>Dodaj sloj koji zaista renderuje klijenta (headless browser), ne samo
+  proverava HTTP status — pokvaren JS bundle i dalje vraća 200 dok je
+  stranica prazna, i nijedna server-side proba to ne vidi. Drži tu probu
+  odvojenu od stvarnog RUM toka i na minimalnom otisku (jedna lokacija, redak
+  interval) — ona je najskuplji sloj sintetičkog praćenja.</li>
 </ul>
 <h2 id="95-vezba-za-citaoca">9.5 Vežba za čitaoca</h2>
 <p>Zamisli da tvoj sistem prestane da radi u tri ujutru u vremenskoj zoni gde
@@ -2497,7 +2567,7 @@ saobraćaja, to je znak da ti nedostaje sloj opisan u ovom poglavlju.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 06:45:14 UTC">30. avgust 2026.</span>
   </span>
 
     

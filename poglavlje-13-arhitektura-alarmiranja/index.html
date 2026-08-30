@@ -1151,6 +1151,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kako-se-sami-alarmi-i-dashboard-i-drze-pod-kontrolom-verzija" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kako se sami alarmi i dashboard-i drže pod kontrolom verzija
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2276,6 +2287,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kako-se-sami-alarmi-i-dashboard-i-drze-pod-kontrolom-verzija" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kako se sami alarmi i dashboard-i drže pod kontrolom verzija
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2458,6 +2480,47 @@ vredna zato što je suprotstavljena intuitivnom refleksu "podrazumevana ruta
 je mesto gde idu alarmi koje ne želimo da vidimo" — ovde je podrazumevana
 ruta stvaran, gledan kanal, ne kanta za otpatke.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch13-dual-path.png" data-desc-position="bottom"><img alt="Dva nezavisna puta konvergiraju na rutiranje po vlasništvu nad domenom, sa eksplicitnim fallback lancem ka opštem, uvek gledanom kanalu kad namenski webhook nije podešen." src="../diagrams/ch13-dual-path.png" width="95%"></a></p>
+<h3 id="kako-se-sami-alarmi-i-dashboard-i-drze-pod-kontrolom-verzija">Kako se sami alarmi i dashboard-i drže pod kontrolom verzija</h3>
+<p>Mehanizam rutiranja opisan gore — pravila, kontakt tačke (Grafana-ov naziv
+za odredište jednog obaveštenja: webhook, email, itd.), fallback lanac —
+nije nešto što neko ručno održava kroz web interfejs observability
+platforme. Pravila za Put B (PromQL uslov, prag, kontakt tačka kojoj
+pravilo šalje obaveštenje) definisana su kao infrastrukturni kod, istim
+alatom (Terraform) i u istom stilu repozitorijuma kojim je definisana i
+sama infrastruktura koja tu telemetriju proizvodi. Svaka grupa pravila i
+svaka kontakt tačka je resurs u kodu; promena ide kroz isti <code>plan</code>/<code>apply</code>
+ciklus kao i svaka druga infrastrukturna promena, sa stanjem čuvanim u
+istom udaljenom skladištu.</p>
+<p>Dashboard-i idu drugačijim putem — namerno žive odvojeno od infrastrukturnog
+koda, u sopstvenom repozitorijumu, i objavljuju se isključivo kroz namenski
+skript, nikad ručnim pozivom API-ja. Razlog razdvajanja nije istorijski
+nego namerni: definicija alarma je infrastrukturna odluka (prag, uslov, kome
+ide) koja prirodno prati istu disciplinu pregleda promena kao mreža ili baza
+podataka; sadržaj dashboard-a je češće uređivački posao — raspored panela,
+koji upit ide na koji grafikon — kojim se bavi širi krug ljudi, uključujući
+i one koji ne pišu infrastrukturni kod. Nametanje istog alata i istog toka
+odobravanja na oba bi ili usporilo iteraciju na dashboard-ima ili oslabilo
+disciplinu oko alarma.</p>
+<p>Ova disciplina otkriva zamku koja se ne vidi dok se u nju ne udari: izmena
+postojeće grupe pravila resetuje stanje <strong>svakog</strong> pravila u toj grupi, ne
+samo onog koje se menja. Ako je bilo koje pravilo u grupi trenutno aktivno
+(alarmira), primena promene odmah šalje lažno "razrešeno" obaveštenje,
+spušta pravilo na neutralno stanje, i onda ga ponovo vodi kroz isti prelaz
+nazad ka alarmiranju — par poruka koji u Slack-u izgleda identično kao da je
+alarm zatreperio, a nije. Zabeležen slučaj: promena samo jednog sporednog
+parametra (koliko često se obaveštenje ponavlja) na pravilu koje je već
+šest sati mirno alarmiralo na istoj, nepromenjenoj vrednosti izazvala je
+tačno taj par poruka — "razrešeno" u trenutku primene, pa "ponovo aktivno"
+tačno onoliko kasnije koliko iznosi prozor potvrde tog pravila (u zabeleženom
+slučaju, pola sata). Uslov se u međuvremenu nije nijednom promenio.</p>
+<p>Ovo nije kvar konfiguracije nego neizbežna posledica arhitekture — stanje
+pravila živi po grupi, ne po pojedinačnom pravilu — i vredi je unapred
+očekivati, ne tražiti joj uzrok posle svake primene: jedan par
+"razrešeno pa ponovo aktivno" po svakom trenutno-aktivnom pravilu u grupi,
+za svaku primenu koja tu grupu dotiče. Praktična posledica: primenjivati
+promene kad ništa u toj grupi ne alarmira ako postoji izbor, i unapred
+najaviti timu da će par poruka doći ako se primenjuje dok nešto već
+alarmira.</p>
 <h2 id="133-analiticki-deo-zasto-se-ne-stapaju-u-jedan-mehanizam">13.3 Analitički deo — zašto se ne stapaju u jedan mehanizam</h2>
 <h3 id="zvanicna-preporuka-rutiranje-po-vlasnistvu-ne-po-tehnologiji">Zvanična preporuka: rutiranje po vlasništvu, ne po tehnologiji</h3>
 <p>Nezavisan pregled prakse rutiranja alarma dosledno preporučuje dvoslojni
@@ -2520,6 +2583,11 @@ drugi sa sobom.</strong></p>
 <li>Meri redovno koliki procenat alarma zaista pogađa namensku rutu — pad tog
   procenta je rani signal da je neki domen prerastao svoju trenutnu
   konfiguraciju.</li>
+<li>Drži definicije alarma (pragovi, kontakt tačke) kao infrastrukturni kod uz
+  ostatak sistema i primenjuj ih istim <code>plan</code>/<code>apply</code> ciklusom — ali očekuj
+  da izmena grupe pravila pošalje lažan par "razrešeno pa ponovo aktivno"
+  za svako trenutno aktivno pravilo u toj grupi, ne samo za pravilo koje se
+  zapravo menja.</li>
 </ul>
 <h2 id="135-vezba-za-citaoca">13.5 Vežba za čitaoca</h2>
 <p>Pronađi u svom sistemu bar dva alarma koja stižu potpuno različitim
@@ -2555,7 +2623,7 @@ tačno taj alarm završava — u nekom stvarno gledanom kanalu, ili tiho nigde?<
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="26. avgust 2026. 16:25:19 UTC">26. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 06:41:37 UTC">30. avgust 2026.</span>
   </span>
 
     
