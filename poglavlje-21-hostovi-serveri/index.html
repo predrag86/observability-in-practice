@@ -1454,6 +1454,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kako-se-izgubljena-oznaka-zaista-vraca-korak-po-korak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kako se izgubljena oznaka zaista vraća, korak po korak
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#minimalan-namerno-biran-skup-metrika-umesto-tueg-kompleta" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2321,6 +2332,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kako-se-izgubljena-oznaka-zaista-vraca-korak-po-korak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kako se izgubljena oznaka zaista vraća, korak po korak
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#minimalan-namerno-biran-skup-metrika-umesto-tueg-kompleta" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2555,6 +2577,42 @@ podešavanju, nego zbog neusaglašenosti koja postoji čak i kad je sve
 <p>Zajednička nit sve četiri: nijedan od ova četiri razloga nije "korisnička
 greška" u klasičnom smislu. Svaki je strukturna neusaglašenost između
 pretpostavki dashboarda i stvarnog okruženja u koje je uvezen.</p>
+<h3 id="kako-se-izgubljena-oznaka-zaista-vraca-korak-po-korak">Kako se izgubljena oznaka zaista vraća, korak po korak</h3>
+<p>Četvrti razlog — agregacija koja tiho briše oznake — zaslužuje dublji uvid,
+jer njegov mehanizam krije dve zamke koje čine očigledan popravak
+neupotrebljivim.</p>
+<p>Prva zamka: ista metrika, ista tražena oznaka, ali različita funkcija
+agregacije daje potpuno različit rezultat. Sistem koji automatski smanjuje
+broj vremenskih serija ne pamti "ovu oznaku" — pamti tačno <strong>koje</strong>
+agregacione funkcije je prethodno izračunao i sačuvao za svaku
+kombinaciju. Upit koji koristi baš tu sačuvanu funkciju radi. Upit koji
+traži drugu, podjednako razumnu funkciju nad istim podacima vraća — ne
+grešku, nego tiho <strong>prazan rezultat</strong>, nerazlučiv od "ovog problema
+jednostavno nema." Dva od četiri uobičajena izbora funkcije mogu vratiti
+prazno, dok preostala dva rade, na potpuno istoj metrici i istoj oznaci.</p>
+<p>Druga zamka je suptilnija i čini najprirodniji popravak nemogućim: ideja
+"dodaj alarm ili pravilo koje redovno čita ovu oznaku, pa će sistem sam
+zaključiti da je oznaka tražena i prestati da je briše" <strong>ne može sama
+sebe pokrenuti</strong>. Dok je oznaka još uvek pod agregacijom, upit koji bi
+takav alarm koristio pogađa prvu zamku — tiho prazan rezultat, zauvek —
+tako da alarm nikad ne vidi podatak koji bi ga naveo da uopšte postoji.
+Popravak zato mora ići u suprotnom redosledu od intuitivnog: prvo se samo
+pravilo agregacije ručno ukloni za tačno one metrike i oznake koje
+nedostaju, zatim se potvrdi da su oznake stvarno počele da se pune (u
+merenom slučaju, u roku od nekoliko minuta), i tek onda se dodaje trajno
+pravilo koje čita tu oznaku — da bi je ubuduće držalo van agregacije, ne
+da bi je prvi put oslobodilo.</p>
+<p>Sam čin uklanjanja pravila nosi treću zamku, operativnu: sistem koji
+automatski predlaže i primenjuje agregaciona pravila radi u pozadini, bez
+nadzora, i menja isti skup pravila koji se upravo pokušava ručno
+izmeniti. Dva čitanja istog skupa pravila, minut-dva razmaknuta, mogu
+pokazati različit broj pravila — što znači da naivno "pročitaj, izmeni
+lokalno, upiši nazad" rizikuje da tiho obriše tuđu, međuvremenu izmenu.
+Ispravan pristup uslovljava upis na tačnu verziju pročitanog stanja, tako
+da upis otkaže (umesto da tiho pregazi) ako se stanje u međuvremenu
+promenilo, i posle upisa eksplicitno potvrđuje da je promenjeno tačno
+onoliko pravila koliko je i nameravano — ni više ni manje.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch21-redosled-vracanja.png" data-desc-position="bottom"><img alt="Pogrešan redosled popravke izgubljene oznake ne radi — oznaka je i dalje pod agregacijom, upit tiho vraća prazno. Ispravan redosled prvo uklanja pravilo agregacije, potvrđuje da se oznaka zaista vratila, i tek onda dodaje trajno pravilo koje je ubuduće drži otvorenom." src="../diagrams/ch21-redosled-vracanja.png" width="75%"></a></p>
 <h3 id="minimalan-namerno-biran-skup-metrika-umesto-tueg-kompleta">Minimalan, namerno biran skup metrika umesto tuđeg kompleta</h3>
 <p>Umesto da pokuša da popravi svaki od četiri razloga za svaki uvezeni
 dashboard, implementacija je krenula suprotnim putem: definisala je
@@ -2672,6 +2730,14 @@ svaki deo njega je proveren i tačan za grad u kom se stvarno vozi.</p>
   tuđeg kompleta — svaki panel koji postoji zato što odgovara na poznato
   pitanje je vredniji od deset panela koji postoje zato što su došli u
   paketu.</li>
+<li>Kad vraćaš oznaku koju je automatska agregacija obrisala, ne dodaji
+  prvo alarm koji je "drži otvorenom" — dok je oznaka još agregirana, taj
+  alarm sam sebe ne može pokrenuti, jer pogađa istu tihu-prazno zamku
+  koju pokušava da otkrije. Prvo ukloni pravilo agregacije, potvrdi da se
+  oznaka vratila, tek onda dodaj trajno pravilo. I uslovi taj upis na
+  tačnu verziju pravila koje menjaš, ako isti skup pravila u pozadini
+  menja i neki automatski proces — inače rizikuješ da tiho pregaziš
+  promenu koja se desila između tvog čitanja i tvog pisanja.</li>
 </ul>
 <h2 id="215-vezba-za-citaoca">21.5 Vežba za čitaoca</h2>
 <p>Otvori jedan uvezeni, zajednički dashboard koji tvoj tim koristi za
@@ -2710,7 +2776,7 @@ praznog panela pre nego što odlučiš da li ga popraviti ili ukloniti.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 20:15:51 UTC">30. avgust 2026.</span>
   </span>
 
     
