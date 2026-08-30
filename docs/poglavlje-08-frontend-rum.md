@@ -56,6 +56,29 @@ mehanizam transporta strukturno odstupa od svega drugog (direktno umesto kroz
 gateway), *semantika* ostaje ista OTel semantika iz Poglavlja 2. Isti trace
 ID, ista propagacija konteksta.
 
+**Zašto propagacija radi bez ijedne CORS izmene.** RUM SDK po podrazumevanom
+podešavanju ubacuje trace-context header samo u pozive čiji je URL isti
+origin kao i sama stranica — cross-origin pozivi ostaju bez njega osim ako
+se eksplicitno ne uključe na dozvoljenu listu. U implementaciji koju knjiga
+prati ovo se poklapa savršeno sa stvarnim oblikom saobraćaja: backend
+aplikacija sama servira frontend (isti origin kao i stranica), a frontend je
+poziva na relativnim putanjama (`/api/...`) umesto apsolutnim URL-ovima — pa
+je svaki poziv ka backend-u automatski isti origin, bez ijedne CORS izmene i
+bez liste dozvoljenih domena koju treba održavati. Kad backend Java agent
+primi taj header, njegov server span postaje dete browser span-a — isti
+trace ID, jedan kontinuiran trejs, bez ijednog reda koda napisanog samo za
+ovu vezu.
+
+Cross-origin pozivi (provajder identiteta, mape, druge treće strane)
+namerno ostaju bez trace-context header-a — ne propust, nego eksplicitna
+odluka: uključivanje bi značilo curenje trace ID-ja ka servisima van
+sopstvene kontrole i stvaranje osirotelih span-ova tamo (span-ova bez para
+na drugom kraju, jer taj servis ne šalje ništa nazad u isti Tempo tenant).
+Isto tako, dodatni OTel mehanizam za prenošenje proizvoljnih parova
+ključ-vrednost uz trejs (baggage) namerno nije uključen uopšte — samo trace
+ID prelazi granicu browser→backend, ništa više. Manja površina za curenje je
+ovde svesno odabrana nad većom fleksibilnošću.
+
 ![Browser ide direktno ka hostovanom RUM kolektoru, zaobilazeći gateway; backend telemetrija i dalje ide kroz gateway. Dve odvojene PII zaštite (native signali naspram trejsova) su namerno naglašene — to je tačka incidenta iz ovog poglavlja.](diagrams/ch8-rum.png){: width="75%" }
 
 **Dve tačke za čišćenje PII, ne jedna.** Ovo je najvrednija praktična lekcija
@@ -141,6 +164,11 @@ eksplicitnu proveru."**
 - Zadrži isti trace ID i semantiku konteksta (OTel propagacija) čak i kad se
   transportni mehanizam strukturno razlikuje od ostatka sistema — to je ono
   što povezuje frontend i backend u jedan čitljiv trejs.
+- Osloni se na isti-origin propagaciju kad god je moguće (backend servira
+  frontend, pozivi na relativnim putanjama) — ona ne traži nijednu CORS
+  izmenu. Ne uključuj propagaciju ka cross-origin trećim stranama niti
+  baggage bez eksplicitnog razloga — svaki od njih širi površinu curenja
+  trace konteksta van sopstvene kontrole.
 - Pre nego što napišeš PII filter, mapiraj **sve** izlazne puteve podataka iz
   SDK-a ili biblioteke koju štitiš — logovi, merenja, greške i trejsovi retko
   dele istu funkciju za obradu.

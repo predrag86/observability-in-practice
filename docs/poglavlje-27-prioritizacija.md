@@ -60,6 +60,24 @@ pomena" (razmotreno, svesno rangirano niže) od "nikad ni pomenuto" je
 samo po sebi informacija — govori timu da je nešto viđeno i procenjeno,
 ne propušteno.
 
+Konkretan primer kako ova kategorija izgleda u praksi, ne samo u teoriji:
+kontinuirano profilisanje (CPU/memorija na nivou linije koda, ne samo na
+nivou zahteva) je mogućnost koju observability platforma koju knjiga
+prati već nudi — izvor podataka postoji, spreman za upotrebu — a ipak
+nijedan servis nije instrumentisan da ga koristi. Ovo nije propust koji
+niko nije primetio: formalni pregled programa ga je eksplicitno naveo kao
+stavku sa statusom "praznina", ne kao nešto što se slučajno izgubilo iz
+vida, i dodelio mu je mesto u drugom talasu prioriteta — posle stavki sa
+većim dometom štete ili većom verovatnoćom, ne zato što profilisanje
+nema vrednost. Preporučeni sledeći korak je već zapisan i čeka na
+spisku: uključiti ga prvo na endpoint-ima koji već imaju definisan budžet
+greške (Poglavlje 15), gde bi povezivanje trejsa sa profilom omogućilo da
+se spor poziv, uhvaćen exemplar-om (Poglavlje 11), prati ne samo do
+trejsa nego do tačne linije koda koja je potrošila vreme. Razlika između
+ovog i "nikad ni pomenuto" je upravo ono što ova sekcija čuva: neko je
+razmotrio, zapisao razlog, i ostavio jasan sledeći korak za dan kada se
+stavka promoviše.
+
 ### Brisanje kao pravilo, ne kao izuzetak
 
 Kada je stavka završena, ona se **briše** sa spiska — ne prebacuje u arhivu
@@ -166,7 +184,9 @@ listu korisnom umesto da postane još jedan dokument koji niko ne čita.
   uzroka pre rangiranja, ne posle.
 - Drži formalnu, imenovanu "časna pomena" kategoriju ispod praga glavnog
   spiska — razlikuj "razmotreno i svesno rangirano niže" od "nikad
-  pomenuto", jer je ta razlika sama po sebi vredna informacija.
+  pomenuto", jer je ta razlika sama po sebi vredna informacija. Za svaku
+  takvu stavku zapiši i konkretan sledeći korak, ne samo razlog odlaganja
+  — dan kad se stavka promoviše, taj korak treba da već čeka spreman.
 - Briši stavke sa spiska kad su stvarno završene, umesto da ih gomilaš u
   precrtanu arhivu — spisak koji samo raste postepeno prestaje da bude
   nešto što tim stvarno konsultuje.
