@@ -69,6 +69,67 @@ Ovaj redosled nije proizvoljan izbor — direktno odražava topologiju:
 izvršni čvorovi su zamenjivi i njihov pojedinačni gubitak je apsorbovan,
 koordinacioni čvor nije, i njegov gubitak zaustavlja sve.
 
+### Dve faze uvođenja, ne samo redosled čvorova
+
+Razlika u ceni promene po sloju, opisana iznad, ne diktira samo redosled
+čvorova — deli ceo rollout u dve jasno odvojene faze na nivou cele flote.
+Faza jedan uvodi oba jeftina sloja (host i log) na sva tri čvora
+odjednom, kao potpuno odvojen, dodatni proces koji ne dodiruje ni
+konfiguraciju ni izvršavanje glavne aplikacije — nula rizika, jer čak i
+da ovaj dodatni proces otkaže, sam klaster nastavlja da radi nesmetano.
+Tek pošto se ovaj prvi krug potvrdi kao ispravan, do kraja, na čvoru
+najmanjeg uticaja, počinje faza dva — uvođenje trećeg, skupljeg sloja —
+koja onda prati isti redosled po radijusu dejstva opisan iznad, ali sa
+dodatnim uslovom pre svakog koraka: pošto ova verzija sistema nema
+ugrađenu komandu za "ispražnjavanje" čvora pre restarta, operater ručno
+proverava da na tom čvoru (i, za koordinacioni čvor, u celom klasteru)
+trenutno nema aktivnih ili čekajućih zadataka, pre nego što restartuje.
+Za sam koordinacioni čvor, poslednji u redosledu, ova provera nije
+dovoljna sama po sebi — taj korak se dodatno najavljuje unapred kao
+prozor održavanja, jer restart tog jednog procesa obara korisnički
+vidljivu površinu (upiti, interfejs) na trajanje samog restarta, dok se
+odvojena, kolokirana usluga koja čuva članstvo klastera namerno NE
+restartuje zajedno s njim — tako da klaster, kad se digne, zna ko mu je
+i dalje član, umesto da tu informaciju mora da rekonstruiše od nule.
+
+![Dve faze uvođenja posmatranja u samostalno upravljanom klasteru: prva faza (host + log) ide na sva tri čvora bez restarta i bez rizika; druga faza (skuplji sloj) prati isti redosled po radijusu dejstva, ali svaki korak čeka ručnu proveru da nema aktivnih zadataka, a poslednji korak dodatno čeka najavljen prozor održavanja.](diagrams/ch19-dve-faze.png){: width="80%" }
+
+### Zamka na prvom čvoru: pogrešan identitet, i zapisi koji nestaju bez traga
+
+Prvi krug uvođenja, na čvoru najmanjeg uticaja, otkrio je dve stvarne
+greške pre nego što je nastavljen na ostatak klastera — obe bi, da su
+ostale neotkrivene, tiho pokvarile podatke sa svih ostalih čvorova.
+
+Prva: metrike host sloja su se prvo pojavile pod pogrešnim identitetom.
+Sam alat za prikupljanje host metrika po difoltu markira svoje mete
+sopstvenim, generičkim imenom — i ta oznaka je tiho pregazila
+identifikator čvora i ulogu koje je implementacija nameravala da svaki
+signal nosi, jer je podrazumevano pravilo bilo "ne gazi već postojeću
+oznaku." Ispravka je bila eksplicitno obrnuti to pravilo za ovaj
+konkretan agent — dozvoliti mu da pregazi sopstvenu podrazumevanu oznaku
+namerno, jer je za direktan agent na samom čvoru (za razliku od
+deljenog kolektora nizvodno, koji mora poštovati šta god pošiljalac već
+markirao) upravo taj čvor izvor istine za sopstveni identitet.
+
+Druga, suptilnija: gotovo svi zapisi sa prvog čvora su nestali bez
+ijedne greške koja bi to najavila — ne "nula zapisa jer ih još nema,"
+nego stotine poslatih, nula upisanih. Uzrok: zapisi pročitani direktno
+iz datoteke po difoltu nose neodređenu, nepostavljenu oznaku ozbiljnosti,
+a deljeni kolektor nizvodno — isti koji nosi ostatak flote — ima pravilo
+koje tiho odbacuje sve ispod minimalnog nivoa ozbiljnosti, uključujući i
+"neodređeno," po pretpostavci da pošiljalac koji se ne trudi da označi
+ozbiljnost verovatno šalje šum. Ispravka je morala ići na strani
+pošiljaoca, ne na deljenom kolektoru (da se ne dira pravilo od kog
+zavisi ostatak flote): svaki zapis dobija podrazumevanu, informativnu
+ozbiljnost, koja se zatim diže ili spušta na osnovu prepoznatljive reči
+već prisutne u samom tekstu zapisa.
+
+Ovaj drugi nalaz je opšteniji od konkretnog popravka: potpuno tih
+gubitak — bez ijedne greške, bez ijednog upozorenja, samo odsustvo — je
+tačno ona klasa kvara koju sam mehanizam odbacivanja šuma, po definiciji,
+ne može sam da otkrije. Novi izvor koji prvi put šalje ništa izgleda
+identično stvarno tihom izvoru koji ima malo šta da kaže.
+
 ### Merenje pre pretpostavke: da li automatsko gašenje uopšte radi ovde
 
 Standardna poluga za uštedu troška na uvek-uključenim klasterima je
@@ -196,6 +257,17 @@ mu stvarno treba, ni manje ni više, i da ostane sastavljen.
 - Proceni koliko novih vremenskih serija donosi svaki novi izvor metrika
   pre nego što ga uključiš, posebno za JMX/Dropwizard porodice — one mogu
   udvostručiti ukupnu kardinalnost pre nego što iko stigne da to primeti.
+- Kad volumen zapisa (i račun za njih) poraste, ne seci naslepo — prvo
+  izmeri koji tok i koje polje unutar njega zapravo nosi najveći deo
+  volumena (u jednom stvarnom slučaju, jedan tok je nosio većinu dnevnog
+  volumena cele flote, a jedno slobodno-tekstualno polje unutar njega
+  većinu toga), pa skrati baš to polje na ulaznoj tački — skrati, ne
+  obriši, ako ijedan panel još uvek treba da ga prikaže čoveku koji
+  istražuje konkretan slučaj — i namerno ostavi strukturisana, ugnježdena
+  polja netaknuta, jer bi njihovo naivno sečenje pravilom zasnovanim na
+  tekstu lako proizvelo nevalidnu strukturu i srušilo čitanje sa greškom
+  umesto da tiho izostavi jedno polje, obarajući odjednom svaki panel koji
+  čita taj izvor.
 
 ## 19.5 Vežba za čitaoca
 
