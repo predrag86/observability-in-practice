@@ -35,6 +35,39 @@ and, occasionally, a user's subjective impression that some queries were
 from every previous case study, where some form of observability already
 existed and was being improved.
 
+### Why scheduled collection, not a direct connection
+
+Before any of what's described above was built, three different paths to
+the same goal were considered — a dashboard in the observability
+platform showing what's happening inside the external service.
+
+The first idea was to install a ready-made connector on the
+observability platform for a direct, interactive connection to the
+external service, signed and loaded outside the official catalog. This
+turned out to be technically infeasible on the platform variant in use
+(managed, in the cloud, not self-hosted): the managed variant installs
+only connectors from the official catalog, and the mechanism for
+privately signing and loading your own connector exists only for the
+self-hosted variant of the platform. A dead end, discovered only after
+it was attempted.
+
+The second idea was to pay for the official, vendor-provided connector
+for a direct connection — technically it would have worked on the
+managed platform variant without any obstacles. It was rejected because
+it represents a recurring, ongoing cost item, not a one-time build
+cost — the budget for it didn't exist.
+
+The third path — the one chosen and built — doesn't use any direct
+connector at all: instead of interactive access where someone could
+write an arbitrary query and get an answer immediately, a scheduled,
+short-lived run periodically pulls the slowest queries from the
+service's own, built-in usage history that it already keeps, and pushes
+them as sanitized records directly into the observability platform. A
+dashboard over those records replaces interactive browsing. The accepted
+trade-off is explicit: there's no free, arbitrary querying that a real
+connector would give you — what you get is a periodically refreshed
+table of the worst queries, not an exploration tool.
+
 ### Three phases, one shared session
 
 The solution was built in three separate phases, each covering a different
@@ -57,6 +90,54 @@ separate session would mean paying that minimum charge again. By merging
 all three phases into one invocation, the second and third phases cost
 practically **zero additional credits** above what the first phase would
 have cost on its own.
+
+### How the mechanism actually works, step by step
+
+All three phases from the previous section are executed by the same
+mechanism, and that mechanism is worth describing at the "how" level,
+not just the "what":
+
+- **Trigger.** A scheduled rule kicks off a short-lived run every three
+  hours. A trap worth knowing: an "every N hours" schedule like this is,
+  in practice, computed from the moment *the rule itself was created*,
+  not from clock midnight — if the rule is ever recreated (not just
+  edited), the exact trigger time shifts. Whoever first sets up a
+  schedule like this expecting it to land on round hours will be
+  surprised.
+- **The bookmark of where it left off.** Before each query against the
+  external service, the mechanism reads a durably stored bookmark — the
+  last row it successfully reached. The query asks only for rows newer
+  than that bookmark, with an upper bound on the number of rows per run,
+  always oldest first. The bookmark only advances once the rows have
+  been successfully delivered to the observability platform — not
+  before — so a failed run neither loses rows nor duplicates them.
+- **A minimally privileged identity.** The query doesn't run under the
+  same identity real applications use, but under a purpose-built,
+  read-only identity, limited to only the required view of usage
+  history. Authentication goes through a key pair, not a password — a
+  leaked credential here opens nothing beyond this narrow view. The
+  query itself runs on the smallest possible unit of compute the service
+  offers, for the same reason mentioned earlier: minimum billed time per
+  wake-up.
+- **Sanitization before the data leaves the service.** The text of every
+  query is scrubbed of actual values before being sent (concrete
+  literals are replaced with a placeholder character), collapsed to a
+  single line, and truncated to a reasonable length — what arrives at
+  the observability platform is the shape of the query, not the data the
+  query ran over.
+- **Delivery.** The sanitized rows are sent as logs, through the same
+  general protocol this implementation uses everywhere to send logs,
+  directly into the observability platform — no intermediary server, no
+  temporary file.
+
+The entire run, all three phases together, takes on the order of ten
+seconds to a minute — short enough that the code package doesn't even
+need to be packaged as a container image. A run that finds no new rows
+is entirely routine and quietly finishes with nothing to send — for most
+of the day, an earlier run the same day has already picked up everything
+that happened that day.
+
+![The concrete data flow through scheduled collection: from the actual query against the external service, through the trigger and the bookmark of where it left off, to sanitized records in the observability platform.](diagrams/ch24-mehanizam-prikupljanja.png){: width="90%" }
 
 ### Structural lag, not a design flaw
 
@@ -216,6 +297,12 @@ else's delayed report.
   problems that have nothing to do with observability itself — forgotten
   resources, shared credentials — because no one before had a reason, or a
   tool, to go looking for them.
+- When a direct, interactive connection to an external service isn't
+  available for free (and the paid variant isn't in the budget), check
+  whether the external service already keeps its own usage history that
+  you can periodically pull and push as logs — a periodically refreshed
+  table of the worst cases is often a good enough substitute for free-form
+  querying.
 
 ## 24.5 Exercise for the reader
 
