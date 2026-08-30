@@ -1,5 +1,7 @@
 # Observability u praksi
 
+![Observability u praksi](diagrams/cover-emblem.png){: width="220" }
+
 ## OpenTelemetry i Grafana LGTM stack
 
 Knjiga strukturirana oko stvarne, višemesečne evolucije jednog produkcionog
