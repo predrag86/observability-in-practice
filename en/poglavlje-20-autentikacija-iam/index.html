@@ -1426,6 +1426,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#three-signals-directly-one-through-a-sidecar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three signals directly, one through a sidecar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#an-asymmetry-discovered-by-reading-the-default-logging-levels" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2310,6 +2321,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#three-signals-directly-one-through-a-sidecar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three signals directly, one through a sidecar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#an-asymmetry-discovered-by-reading-the-default-logging-levels" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2518,6 +2540,41 @@ container on start. The practical consequence: any option that affects
 which events the system is even capable of emitting has to be baked into
 the image ahead of time, which turns every change to the logging pattern
 into a new build and redeploy, not a quick configuration change.</p>
+<h3 id="three-signals-directly-one-through-a-sidecar">Three signals directly, one through a sidecar</h3>
+<p>The authentication system itself is able to push three of the four
+signals directly to the observability collector — traces and logs
+through built-in, native telemetry-push support, with no agent and no
+sidecar. Metrics are the exception: the system doesn't push them, it only
+exposes them locally on its own port, in a format meant for pulling, not
+pushing. Since the observability platform accepts only push, an
+intermediary is needed — a dedicated sidecar within the same
+infrastructure unit that periodically pulls that local source (every
+thirty-ish seconds, infrequent enough for a long-lived service) and
+pushes the result onward. This sidecar isn't a new pattern — it reuses
+the same sidecar that already collects the infrastructure unit's own
+metrics (CPU, memory, network) for the rest of the fleet, just with an
+added module that knows how to pull from the local source.</p>
+<p>The reuse wasn't without its trap: both replicas of the authentication
+system expose metrics on an <em>identical</em> local address — without
+additional intervention, the collector would derive an identical source
+identity for both replicas, and their metrics would merge into a single
+time series, hiding the difference between the two separate instances.
+The fix was to explicitly override that derived identity with a value
+that's actually unique per unit (the infrastructure unit's own
+identifier), instead of relying on what the collector derives on its own
+from the address it scanned — a small difference in how the data gets
+merged (override instead of only adding if missing) that, without care,
+silently erases half the data.</p>
+<p>Traces have their own trap, related to cost, not correctness: the
+default trace sampling rate is 100% — every request generates a trace.
+For an authentication system, which is by nature a hot path with a high
+request volume, this would generate a trace volume out of proportion to
+its actual diagnostic value. The rate was dropped to just a few percent
+from the very start, with a deliberate plan to raise it later if traces
+turn out to be too sparse too often to be useful — the reverse order from
+raising detail only once it's needed, because the default rate would
+have been too expensive to ever ship to production.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch20-mehanizam-signala.png" data-desc-position="bottom"><img alt="Three signals go directly from the authentication system to the observability collector by push; the fourth (metrics) the system only exposes locally, so a sidecar pulls it and pushes it onward — with an explicit override of the source identity so the two replicas don't collapse into one series." src="../../diagrams/ch20-mehanizam-signala.png" width="90%"></a></p>
 <h3 id="an-asymmetry-discovered-by-reading-the-default-logging-levels">An asymmetry discovered by reading the default logging levels</h3>
 <p>The implementation uncovered this chapter's central finding not through an
 incident, but through a systematic review of the default logging levels
@@ -2658,6 +2715,11 @@ but because hidden inside the pile of successes is the one that isn't.</p>
   (not incorrect) credentials: would that class of attack ever produce a
   single failed attempt — if not, your system that tracks only failures
   is completely blind to that class of attack.</li>
+<li>When a metrics-pulling sidecar is reused across multiple identical
+  replicas, explicitly override the source identity with a value unique
+  per replica — don't rely on what the collector derives on its own from
+  the address it scanned, because identical addresses across all replicas
+  silently merge them all into one series.</li>
 </ul>
 <h2 id="205-exercise-for-the-reader">20.5 Exercise for the reader</h2>
 <p>Check the default logging level for a successful login in the
@@ -2697,7 +2759,7 @@ it.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:14:11 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 30, 2026 20:49:20 UTC">August 30, 2026</span>
   </span>
 
     

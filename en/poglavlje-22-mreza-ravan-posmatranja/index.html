@@ -1514,6 +1514,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#applying-the-principle-to-the-alert-itself-a-route-that-survives-its-own-collector-going-down" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying the principle to the alert itself: a route that survives its own collector going down
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-kinds-of-check-for-two-kinds-of-bugs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two kinds of check for two kinds of bugs
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2331,6 +2353,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#applying-the-principle-to-the-alert-itself-a-route-that-survives-its-own-collector-going-down" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying the principle to the alert itself: a route that survives its own collector going down
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-kinds-of-check-for-two-kinds-of-bugs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two kinds of check for two kinds of bugs
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2534,6 +2578,52 @@ alert was supposed to travel is precisely what just broke." Reading two
 independent paths to the same failure domain together — one still
 reporting, the other silent — is the only way to tell "there really is no
 problem" apart from "the problem exists, but its messenger is mute."</p>
+<h3 id="applying-the-principle-to-the-alert-itself-a-route-that-survives-its-own-collector-going-down">Applying the principle to the alert itself: a route that survives its own collector going down</h3>
+<p>The implementation applied the same differential-reading principle to the
+delivery of the alert itself, not just to measurement. Most network alert
+rules evaluate over the same shared collector and the same pipeline that
+carries the rest of the fleet's telemetry — which means that if that
+exact pipeline goes down, the rule doesn't report an error, it simply
+<strong>stops evaluating</strong> and goes quiet. A rule's silence is, from the
+outside, indistinguishable from "everything is fine" — exactly the
+problem this chapter already described for ordinary metrics, now applied
+to the very mechanism that's supposed to warn about a failure. The fix
+was to deliberately split a small number of the most critical rules into
+a separate group that reads directly from an independent data source,
+bypassing the shared collector — so that when the collector or its
+pipeline goes down, that other group of rules keeps evaluating, and can
+still report. Both groups send to the same notification channel, so the
+difference exists only in the path to that point, not in where it
+ultimately shows up.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch22-nezavisna-ruta.png" data-desc-position="bottom"><img alt="The main route for network alerts evaluates over the same collector that carries the rest of the telemetry, so when that collector goes down — the route goes quiet, indistinguishable from &quot;everything is fine.&quot; An independent route reads directly from a separate source, bypassing the shared collector, and keeps working at exactly that moment." src="../../diagrams/ch22-nezavisna-ruta.png" width="85%"></a></p>
+<h3 id="two-kinds-of-check-for-two-kinds-of-bugs">Two kinds of check for two kinds of bugs</h3>
+<p>Before the newly built dashboard was put into use, the implementation
+replayed every query on every panel live, compared it against expected
+values, and looked for empty or failed results — a check that caught
+several real bugs in the queries themselves. But that same check
+<strong>passed</strong> two separate, real bugs that had nothing wrong with the
+query — the panel was returning correct data, it was just
+<strong>displaying</strong> it wrong: a title truncated because there wasn't enough
+space for the text, and one panel that, because of combining an
+aggregation with a default zero-value in the wrong place, displayed two
+values side by side where there should have been only one. A query-based
+check can't see either of these two bugs, because both return valid,
+non-empty data — the bug exists only in how the result is displayed, not
+in the result itself. These two layers of checking catch strictly
+different classes of bugs, and neither replaces the other: <strong>a query
+check proves a panel isn't dead, not that it's correct</strong> — for the
+latter you need to look at the rendered panel itself, not just the data
+that feeds it.</p>
+<p>It's worth noting a subtler trap within the query check itself: one panel
+had data at build time, and was empty barely forty minutes later — not
+because of a bug, but because the real measured value hit zero and the
+source stopped emitting it at all. The lesson isn't "remember which
+metrics are known to disappear" — that's a moving target, exactly which
+metrics are empty at a given moment depends only on what's currently
+measuring zero. The lesson is that every error or rejection counter has
+to be treated as capable of disappearing, and given an explicit
+zero-default proactively, instead of adding that protection only after
+something specific has actually disappeared.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch22-devet-ravni.png" data-desc-position="bottom"><img alt="Nine planes of network infrastructure grouped by how visibly they report their own failure — the worst group is blind and, at the same time, the path along which the telemetry of all the other planes travels." src="../diagrams/ch22-devet-ravni.png" width="90%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-natdiff.png" data-desc-position="bottom"><img alt="Inbound and outbound byte flow through the outbound gateway, read as a pair: the divergence between the two lines, not either line on its own, is what reveals traffic loss." src="../diagrams/dashboard-natdiff.png" width="95%"></a></p>
 <h2 id="223-analytical-section-a-principle-known-in-two-separate-official-forms">22.3 Analytical section — a principle known in two separate official forms</h2>
@@ -2617,6 +2707,16 @@ report it can even speak.</p>
   synchronization — all three are documented as neglected, with no
   default detailed telemetry, despite their direct impact on TLS, logs,
   and tracing.</li>
+<li>Split a handful of the most critical network alerts into a separate
+  group that reads directly from a source independent of the shared
+  collector — if every rule evaluates over the same pipeline that
+  carries it, that pipeline going down silences exactly the rules that
+  should be reporting it, and that silence looks identical to health.</li>
+<li>Don't trust a panel just because its query passed a live check — a
+  query check proves a panel isn't dead, not that it's displayed
+  correctly; for rendering bugs (truncated text, a duplicated value
+  where there should be one) you need to look at the rendered panel
+  itself.</li>
 </ul>
 <h2 id="225-exercise-for-the-reader">22.5 Exercise for the reader</h2>
 <p>List the network layers a typical request in your system passes through,
@@ -2655,7 +2755,7 @@ layer that is currently completely blind.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:14:11 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 30, 2026 20:51:22 UTC">August 30, 2026</span>
   </span>
 
     

@@ -1370,6 +1370,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#both-layers-share-the-same-collector-not-two-separate-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Both layers share the same collector, not two separate tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#a-separate-easily-forgotten-alert-the-monitoring-itself-went-down-not-the-database" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1385,6 +1396,17 @@
     <span class="md-ellipsis">
       
         TLS only to the instance, never through an intermediary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-identity-the-internal-layer-uses-and-the-order-it-was-introduced-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The identity the internal layer uses — and the order it was introduced in
       
     </span>
   </a>
@@ -2310,6 +2332,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#both-layers-share-the-same-collector-not-two-separate-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Both layers share the same collector, not two separate tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#a-separate-easily-forgotten-alert-the-monitoring-itself-went-down-not-the-database" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2325,6 +2358,17 @@
     <span class="md-ellipsis">
       
         TLS only to the instance, never through an intermediary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-identity-the-internal-layer-uses-and-the-order-it-was-introduced-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The identity the internal layer uses — and the order it was introduced in
       
     </span>
   </a>
@@ -2531,6 +2575,24 @@ before the external layer notices any rise in latency at all. Conversely, a
 total loss of network reachability to the instance itself is visible
 <strong>only</strong> from outside — because at that moment the internal exporter can't
 even connect to report anything.</p>
+<h3 id="both-layers-share-the-same-collector-not-two-separate-tools">Both layers share the same collector, not two separate tools</h3>
+<p>Neither the external nor the internal layer is a separate, standalone
+tool built just for the database — both flow into the same shared
+collector that already carries the rest of the fleet, just with added,
+dedicated jobs. The external layer is a set of <strong>statically named</strong> jobs,
+one per known instance — not label-based auto-discovery. This is a
+deliberate trade-off: the static approach needs no extra permissions to
+search for resources or tag databases, and the cost per scrape stays
+predictable and bounded in advance; the cost is that a new instance
+doesn't enter observation automatically — someone has to explicitly add
+a new job. Both layers then merge into the same data store under one,
+shared instance identifier — so the external and internal views of the
+same database can be looked at side by side, not as two separate
+systems. The role (writer or reader) is read from the database's own,
+internal replication status, never from the network endpoint's name —
+because the endpoint can, by definition, be silently redirected to a
+different physical instance after a role change, while the replication
+status stays accurate regardless of where the name currently points.</p>
 <h3 id="a-separate-easily-forgotten-alert-the-monitoring-itself-went-down-not-the-database">A separate, easily forgotten alert: the monitoring itself went down, not the database</h3>
 <p>The implementation explicitly separates two different claims that are easy
 to conflate: "the database isn't working" and "the exporter watching the
@@ -2556,6 +2618,40 @@ internal table belongs to this specific instance/client" stops holding —
 and that mapping is exactly what the internal collection layer exists to
 guarantee. Collection has to go directly to the instance to keep its
 meaning.</p>
+<h3 id="the-identity-the-internal-layer-uses-and-the-order-it-was-introduced-in">The identity the internal layer uses — and the order it was introduced in</h3>
+<p>The internal exporter doesn't connect under the same identity
+applications use — it connects under a purpose-built, dedicated role
+with a built-in, minimal privilege for reading internal state, without
+full administrative rights. That role carries an explicit limit on the
+number of concurrent connections, and is explicitly excluded from its
+own long-running-query tracking — without that exclusion, the exporter
+would profile its own, repeated queries against the internal tables and
+drown out exactly the signal it's trying to measure.</p>
+<p>Introducing this identity into the shared collector wasn't trivial — it
+required a strict order of steps, because the shared collector refuses
+to start at all if it references a credential that doesn't yet exist,
+which would have broken observability for the whole fleet, not just the
+database. The order that avoided that: first open the network path, then
+apply the infrastructure with an <strong>empty</strong> placeholder for the
+credential (the collector then just quietly logs that the connection
+failed, without crashing), then populate the real credential separately
+(outside the infrastructure-as-code system, so the password never enters
+its stored state), then create the role itself on the database side, and
+only at the end wire the credential to the job that uses it. An
+interesting confirmation that the order was correct came from the
+failure itself: the first connection attempt after opening the network
+path didn't report a network or certificate problem — it reported a
+"wrong password" error, which was, paradoxically, a good sign: the
+network, the TLS handshake, and certificate verification had all passed;
+all that was left was for the role to be created.</p>
+<p>On the cardinality side, the internal layer keeps most of the default
+internal signals, but explicitly turns on one that's off by default —
+precisely the one that tracks long-running, open transactions, and which
+is the central signal for the connection leak described earlier — and
+explicitly excludes a few others (per-table and per-index statistics)
+that would otherwise multiply a single time series into one per table
+and index in the database, without matching analytical value at this
+stage.</p>
 <h3 id="a-lever-at-the-database-level-not-the-infrastructure-level">A lever at the database level, not the infrastructure level</h3>
 <p>When the internal layer detects sessions that stay open in the "idle in
 transaction" state longer than is reasonable — the most common cause of a
@@ -2566,6 +2662,7 @@ This is deliberately configured as a last line of defense, not a first one
 — the first line is still fixing the application that leaves transactions
 open — but the lever exists precisely because application code doesn't
 always get every caller fixed in time.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch18-deljeni-kolektor.png" data-desc-position="bottom"><img alt="Both collection layers share the same collector that carries the rest of the fleet — the external layer through statically named per-instance jobs, the internal layer through a dedicated role with limited connections, merged under one instance identifier, with the writer/reader role read from the database's own replication status." src="../../diagrams/ch18-deljeni-kolektor.png" width="90%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch18-dve-ravni.png" data-desc-position="bottom"><img alt="Two independent collection layers over one managed database: external (the provider's instance metrics) and internal (an exporter directly on the engine), with a dedicated alert watching whether the internal layer is breathing at all." src="../diagrams/ch18-dve-ravni.png" width="90%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-connections.png" data-desc-position="bottom"><img alt="A connection leak visible from the inside from hour zero — the external layer (latency) doesn't notice the problem until 40 hours later, by which point the trend is already far along." src="../diagrams/dashboard-connections.png" width="95%"></a></p>
 <h2 id="183-analytical-section-two-layers-as-a-known-but-rarely-named-pattern">18.3 Analytical section — two layers as a known but rarely named pattern</h2>
@@ -2672,6 +2769,14 @@ source of truth.</p>
 <li>Don't measure the success of monitoring by whether the dashboard looks
   quiet — measure it by whether you know, with certainty, whether that
   quiet is real or just an absence of data.</li>
+<li>When you introduce a new, credential-protected source into a shared
+  collector that already carries the rest of the system, sequence the
+  rollout so the collector never references an empty credential at
+  startup — open the network path, apply the infrastructure with an
+  empty placeholder for the credential, populate the credential outside
+  the infrastructure-as-code system, then wire it up — a mistake in any
+  one step of this order would break observability for the whole fleet,
+  not just the new source.</li>
 </ul>
 <h2 id="185-exercise-for-the-reader">18.5 Exercise for the reader</h2>
 <p>Check whether your team has a dedicated alert that tracks only the
@@ -2711,7 +2816,7 @@ dashboard they've been looking at hasn't shown anything new for days?</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:14:11 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 30, 2026 20:46:52 UTC">August 30, 2026</span>
   </span>
 
     

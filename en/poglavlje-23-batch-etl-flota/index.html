@@ -1510,6 +1510,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#how-a-job-actually-flows-through-the-system-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a job actually flows through the system, step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#a-specific-and-deliberately-different-pattern-completed-successfully-but-empty" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1536,6 +1547,17 @@
     <span class="md-ellipsis">
       
         Eliminating one class of interruption by changing order, not by adding resilience
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-fleet-didnt-need-a-separate-failure-alert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this fleet didn't need a separate failure alert
       
     </span>
   </a>
@@ -2321,6 +2343,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#how-a-job-actually-flows-through-the-system-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a job actually flows through the system, step by step
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#a-specific-and-deliberately-different-pattern-completed-successfully-but-empty" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2347,6 +2380,17 @@
     <span class="md-ellipsis">
       
         Eliminating one class of interruption by changing order, not by adding resilience
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-fleet-didnt-need-a-separate-failure-alert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this fleet didn't need a separate failure alert
       
     </span>
   </a>
@@ -2536,6 +2580,36 @@ batch job into a mold built for services that continuously receive
 traffic — because a single scheduled job has no meaningful "request
 rate," and its duration, without confirmation that it actually produced
 something, says nothing useful on its own.</p>
+<h3 id="how-a-job-actually-flows-through-the-system-step-by-step">How a job actually flows through the system, step by step</h3>
+<p>The completeness model from the previous section isn't an arbitrary
+choice — it directly tracks the concrete steps every job actually passes
+through:</p>
+<ol>
+<li><strong>Trigger.</strong> A scheduled rule or a call from another job initiates
+   submission.</li>
+<li><strong>Submission.</strong> Called with the queue name and the job definition
+   name — with no pinned definition revision, so it always uses the
+   latest version available at the moment of submission.</li>
+<li><strong>Queue.</strong> The job passes through a series of states — submitted,
+   pending, ready to run.</li>
+<li><strong>Capacity source selection.</strong> The system walks the list of possible
+   capacity sources in exactly the order they're listed for that queue,
+   and places the job on the first source that has enough resources to
+   accept it. This is the exact mechanism behind the ordering lesson in
+   the next section — "changing the order" literally means swapping the
+   positions of two sources on this list, nothing more.</li>
+<li><strong>Execution.</strong> The job runs as an ordinary instance of the container
+   infrastructure, sharing everything that infrastructure already
+   offers.</li>
+<li><strong>Exit.</strong> The exit code determines whether the job succeeded or not.
+   If a retry is configured, the system resubmits the job on its own
+   with an incremented attempt count, until the give-up rule says
+   "enough" or the upper attempt limit is reached.</li>
+</ol>
+<p>These six steps are the same for every job in the fleet, regardless of
+what the job actually does — which is exactly why the completeness model
+could be a single, general pattern instead of per-job custom logic.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch23-zivotni-ciklus.png" data-desc-position="bottom"><img alt="The six steps every job passes through: submission, queue, capacity source selection in order, execution, exit code, and resubmission only for transient causes of failure." src="../../diagrams/ch23-zivotni-ciklus.png" width="90%"></a></p>
 <h3 id="a-specific-and-deliberately-different-pattern-completed-successfully-but-empty">A specific and deliberately different pattern: completed successfully, but empty</h3>
 <p>The most important failure mode the implementation explicitly covers —
 and the easiest one to miss — is a job that finishes with a clean,
@@ -2570,6 +2644,30 @@ valuable lesson in its own right: not every reliability problem is solved
 by adding fault tolerance — sometimes it's cheaper and more reliable to
 simply change the order of selection so that the less reliable option
 gets used less often in the first place.</p>
+<h3 id="why-this-fleet-didnt-need-a-separate-failure-alert">Why this fleet didn't need a separate failure alert</h3>
+<p>Jobs in this fleet, when they run, run as ordinary instances of the same
+container infrastructure that carries the rest of the system — there's
+no separate, dedicated infrastructure just for batch work. The practical
+consequence: the general, per-family, aggregated alert on a non-zero
+exit code, described in Chapter 29, automatically covers this fleet too,
+without a single line of code written specifically for it. This was
+confirmed live on the very same day the capacity source order was
+changed — a real, interrupted job on the older, less reliable source was
+caught and reported by that same general mechanism within minutes, with
+no special preparation ahead of time.</p>
+<p>This wasn't always the only path for a failure alert. Until recently, a
+second, purpose-built mechanism existed in parallel just for this
+fleet: a dedicated function that counted failures and published them as
+a separate metric, feeding three named alerts. It was decommissioned in
+the same cleanup as a related case elsewhere in the system — same
+pattern, different fleet — for two reasons: its execution environment
+had been obsolete for years, and an audit found that all three alerts
+had sat silently in the exact same, unchanged state for over three
+years. No one had noticed, because the newer, general mechanism had
+quietly been doing the real work the whole time. Only the scheduled rule
+that used to trigger that old mechanism was deliberately kept —
+redirected to just archive the records for cheap after-the-fact
+forensics, with nothing left that would send an alert from it.</p>
 <h3 id="current-state-outside-the-main-telemetry-pipeline">Current state: outside the main telemetry pipeline</h3>
 <p>The implementation records what hasn't been done yet, not just what has:
 the batch job fleet currently sends its logs through an older, direct
@@ -2655,6 +2753,13 @@ customers, that the shelves are empty.</p>
   the fleet still isn't onboarded onto the main telemetry pipeline —
   instead of leaving the gap hidden until someone stumbles onto it by
   chance.</li>
+<li>Check whether the jobs in your fleet share execution infrastructure
+  with the rest of the system — if they do, a general alert on exit code
+  already covers the fleet for free, and a separate, purpose-built
+  mechanism for the same thing is an unnecessary risk of silently going
+  stale. Periodically audit existing alerts to confirm none of them has
+  sat in the exact same, unchanged state for years without anyone
+  noticing.</li>
 </ul>
 <h2 id="235-exercise-for-the-reader">23.5 Exercise for the reader</h2>
 <p>Find one scheduled job in your system that is currently tracked only
@@ -2691,7 +2796,7 @@ there currently a single alert that would catch that situation?</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:14:11 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 30, 2026 20:52:36 UTC">August 30, 2026</span>
   </span>
 
     

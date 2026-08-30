@@ -1409,6 +1409,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#two-phases-of-rollout-not-just-node-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two phases of rollout, not just node order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-trap-on-the-first-node-wrong-identity-and-records-that-vanish-without-a-trace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The trap on the first node: wrong identity, and records that vanish without a trace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#measure-before-assuming-does-auto-shutdown-even-work-here" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2321,6 +2343,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#two-phases-of-rollout-not-just-node-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two phases of rollout, not just node order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-trap-on-the-first-node-wrong-identity-and-records-that-vanish-without-a-trace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The trap on the first node: wrong identity, and records that vanish without a trace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#measure-before-assuming-does-auto-shutdown-even-work-here" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2548,6 +2592,63 @@ it does if something goes wrong:</p>
 <p>This order isn't an arbitrary choice — it directly reflects the topology:
 executor nodes are interchangeable and losing one is absorbed, the
 coordinator node is not, and losing it stops everything.</p>
+<h3 id="two-phases-of-rollout-not-just-node-order">Two phases of rollout, not just node order</h3>
+<p>The difference in change cost per layer, described above, doesn't just
+dictate node order — it splits the entire rollout into two clearly
+separate phases across the whole fleet. Phase one introduces both cheap
+layers (host and log) on all three nodes at once, as a fully separate,
+additional process that touches neither the configuration nor the
+execution of the main application — zero risk, because even if this
+additional process were to fail, the cluster itself keeps running
+uninterrupted. Only once this first round is confirmed correct, all the
+way through, on the node of smallest <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr>, does phase two begin —
+introducing the third, more expensive layer — which then follows the same
+blast-radius order described above, but with an additional condition
+before each step: since this version of the system has no built-in
+"drain" command to empty a node before restart, the operator manually
+verifies that the node (and, for the coordinator node, the entire
+cluster) currently has no active or pending jobs, before restarting. For
+the coordinator node itself, last in the order, this check alone isn't
+enough — that step is additionally announced ahead of time as a
+maintenance window, because restarting that one process takes down the
+user-visible surface (queries, interface) for the duration of the restart
+itself, while a separate, co-located service that holds cluster
+membership is deliberately <strong>not</strong> restarted along with it — so that when
+the cluster comes back up, it knows who its members still are, instead of
+having to reconstruct that information from scratch.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch19-dve-faze.png" data-desc-position="bottom"><img alt="Two phases of rolling out observability in a self-managed cluster: phase one (host + log) goes to all three nodes with no restart and no risk; phase two (the more expensive layer) follows the same blast-radius order, but each step waits on a manual check that no jobs are active, and the last step additionally waits on an announced maintenance window." src="../../diagrams/ch19-dve-faze.png" width="80%"></a></p>
+<h3 id="the-trap-on-the-first-node-wrong-identity-and-records-that-vanish-without-a-trace">The trap on the first node: wrong identity, and records that vanish without a trace</h3>
+<p>The first rollout round, on the node of smallest <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr>, surfaced
+two real bugs before it continued to the rest of the cluster — both of
+which, left undetected, would have quietly corrupted data from every
+other node.</p>
+<p>First: host-layer metrics initially showed up under the wrong identity.
+The host-metrics collection tool itself, by default, tags its targets
+with its own generic name — and that tag silently overrode the node
+identifier and role that the implementation intended every signal to
+carry, because the default rule was "don't override an already-existing
+tag." The fix was to explicitly reverse that rule for this specific
+agent — letting it deliberately override its own default tag, because for
+a direct agent on the node itself (unlike the shared collector
+downstream, which has to respect whatever the sender already tagged) that
+very node is the source of truth for its own identity.</p>
+<p>Second, more subtle: nearly all records from the first node vanished
+without a single error to announce it — not "zero records because there
+are none yet," but hundreds sent, zero written. The cause: records read
+directly from a file default to an unset, unspecified severity tag, and
+the shared collector downstream — the same one that carries the rest of
+the fleet — has a rule that silently drops anything below a minimum
+severity level, including "unspecified," on the assumption that a sender
+that doesn't bother tagging severity is probably sending noise. The fix
+had to happen on the sender side, not on the shared collector (so as not
+to touch the rule the rest of the fleet depends on): every record now
+defaults to informational severity, which is then raised or lowered based
+on a recognizable word already present in the record's own text.</p>
+<p>This second finding is more general than the specific fix: a completely
+silent loss — no error, no warning, just absence — is exactly the class
+of failure that the noise-dropping mechanism itself, by definition,
+cannot detect on its own. A new source sending nothing for the first time
+looks identical to a genuinely quiet source that has little to say.</p>
 <h3 id="measure-before-assuming-does-auto-shutdown-even-work-here">Measure before assuming: does auto-shutdown even work here</h3>
 <p>The standard lever for cutting costs on always-on clusters is automatic
 shutdown during periods of low activity. The implementation <strong>measured</strong>
@@ -2666,6 +2767,17 @@ and no less, and staying assembled.</p>
 <li>Estimate how many new time series each new metrics source brings before
   turning it on, especially for JMX/Dropwizard families — they can double
   total cardinality before anyone gets around to noticing.</li>
+<li>When record volume (and its bill) grows, don't cut blindly — first
+  measure which stream, and which field within it, actually carries the
+  bulk of the volume (in one real case, a single stream carried most of
+  the whole fleet's daily volume, and a single free-text field within it
+  carried most of that), then truncate exactly that field at the ingest
+  point — truncate, don't delete, if any panel still needs to show it to a
+  human investigating a specific case — and deliberately leave
+  structured, nested fields untouched, because naively truncating them
+  with a text-based rule could easily produce invalid structure and break
+  every panel reading that source with an error, instead of quietly
+  dropping one field.</li>
 </ul>
 <h2 id="195-exercise-for-the-reader">19.5 Exercise for the reader</h2>
 <p>Find one system in your environment that currently has automatic shutdown
@@ -2703,7 +2815,7 @@ exist, long enough to justify shutting down — or is the assumption of a
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:14:11 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 30, 2026 20:48:12 UTC">August 30, 2026</span>
   </span>
 
     
