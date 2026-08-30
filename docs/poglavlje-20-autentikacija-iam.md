@@ -40,6 +40,75 @@ događaje sistem uopšte ume da emituje mora biti ispečena u sliku unapred,
 što svaku izmenu obrasca logovanja pretvara u novi build i redeploy, ne u
 brzu promenu konfiguracije.
 
+Ova podela nije bila očigledna unapred — otkrivena je kroz stvaran
+neuspeh. Rana verzija konfiguracije je tri konkretne opcije (tip
+uzorkovanja trejsova, uključivanje metrika korisničkih događaja,
+uključivanje slanja logova) pogrešno klasifikovala kao opcije vremena
+pokretanja, na osnovu doslovnog čitanja dokumentacije. Postavljanje sve
+tri kao promenljive okruženja u produkcionom rasporedu srušilo je
+kontejner pri svakom pokušaju starta, sa jasnom porukom da se vrednosti
+opcija iz vremena građenja razlikuju od onih već upisanih u sliku —
+automatski mehanizam za povratak na prethodnu, zdravu verziju je odmah
+preuzeo kontrolu. Ispravka: sam neuspeli raspored, ne dokumentacija,
+postao je merodavan izvor istine o tome koja opcija je zaista fiksirana u
+vreme građenja — sve tri opcije su premeštene u proces građenja slike. Od
+tada važi jednostavno pravilo: kad je nejasno da li je neka opcija ovog
+sistema opcija vremena građenja ili vremena pokretanja, tretiraj je kao
+opciju vremena građenja dok se suprotno ne dokaže.
+
+Postoje dva načina da se opcija vremena građenja zaista postavi.
+Preporučen način je da se slika ponovo izgradi sa opcijom već upečenom —
+jedini put pogodan za produkciju. Drugi način — privremeno ukloniti sam
+optimizovani režim pokretanja, čime sistem sam sebe ponovo gradi iz
+promenljivih okruženja pri svakom startu — tehnički radi, ali sistem
+tada mora iznova da izvede i sve ostale opcije vremena građenja iz
+konfiguracije, uključujući, na primer, koji tip baze podataka koristi;
+ako neka od tih opcija nije eksplicitno navedena van slike, rizik je da
+se tiho izvede drugačija vrednost nego što slika stvarno koristi. Zbog
+tog rizika, ukidanje optimizovanog režima je prihvatljivo samo kao
+jednokratni eksperiment na test okruženju, nikad u produkciji.
+
+### Tri signala direktno, jedan preko pratećeg kontejnera
+
+Sistem za autentikaciju sam ume da gura tri od četiri signala direktno
+ka kolektoru posmatranja — trejsove i logove preko ugrađene, izvorne
+podrške za guranje telemetrije, bez agenta i bez pratećeg kontejnera.
+Metrike su izuzetak: sistem ih ne gura, samo ih izlaže lokalno na
+sopstvenom portu, u obliku pogodnom za povlačenje, ne guranje. Pošto
+platforma za posmatranje prima isključivo guranje, potreban je
+posrednik — namenski, prateći kontejner unutar iste infrastrukturne
+jedinice, koji periodično povlači taj lokalni izvor (na svakih
+tridesetak sekundi, dovoljno retko za dugoživeći servis) i gura rezultat
+dalje. Ovaj prateći kontejner nije nov obrazac — ponovna je upotreba
+istog pratećeg kontejnera koji već prikuplja metrike same infrastrukture
+(procesor, memorija, mreža) za ostatak flote, samo sa dodatim modulom
+koji zna da povlači sa lokalnog izvora.
+
+Ponovna upotreba nije bila bez zamke: obe replike sistema za
+autentikaciju izlažu metrike na *identičnoj* lokalnoj adresi — bez
+dodatne intervencije, kolektor bi izveo identičan identitet izvora za
+obe replike, i njihove metrike bi se stopile u jednu jedinu vremensku
+seriju, sakrivajući razliku između dve zasebne instance. Ispravka je
+bila eksplicitno prepisati taj izvedeni identitet vrednošću koja je
+stvarno jedinstvena po jedinici (identifikator same infrastrukturne
+jedinice), umesto da se osloni na ono što kolektor sam izvede iz adrese
+koju je skenirao — sitna razlika u načinu spajanja podataka (prepisati
+umesto samo dodati ako nedostaje) koja bez pažnje tiho briše polovinu
+podataka.
+
+Trejsovi imaju sopstvenu zamku vezanu za trošak, ne ispravnost:
+podrazumevana stopa uzorkovanja trejsova je 100% — svaki zahtev
+generiše trejs. Za sistem za autentikaciju, koji je po prirodi vruća
+putanja sa velikim brojem zahteva, ovo bi generisalo trejs-volumen koji
+ne odgovara njegovoj stvarnoj važnosti za dijagnostiku. Stopa je
+spuštena na svega nekoliko procenata od samog starta, sa svesnim planom
+da se po potrebi podigne ako se pokaže da su trejsovi prečesto premali
+da bi bili korisni — obrnut redosled od podizanja detalja tek kad
+zatreba, jer bi podrazumevana stopa bila preskupa da se uopšte pusti u
+produkciju.
+
+![Tri signala idu direktno od sistema za autentikaciju ka kolektoru posmatranja guranjem; četvrti (metrike) sistem samo lokalno izlaže, pa ga prateći kontejner povlači i gura dalje — sa eksplicitnim prepisivanjem identiteta izvora da dve replike ne bi kolabirale u jednu seriju.](diagrams/ch20-mehanizam-signala.png){: width="90%" }
+
 ### Asimetrija otkrivena čitanjem podrazumevanih nivoa logovanja
 
 Implementacija je otkrila centralni nalaz ovog poglavlja ne kroz incident,
@@ -197,6 +266,11 @@ to nije.
   pogrešnih) kredencijala: da li bi ta klasa napada ikad proizvela
   ijedan neuspeli pokušaj — ako ne, tvoj sistem koji prati samo neuspehe
   je za tu klasu napada potpuno slep.
+- Kad se prateći kontejner za povlačenje metrika ponovo koristi na više
+  identičnih replika, eksplicitno prepiši identitet izvora vrednošću
+  jedinstvenom po replici — ne oslanjaj se na ono što kolektor sam izvede
+  iz adrese koju je skenirao, jer identične adrese na svim replikama
+  tiho stope sve njih u jednu seriju.
 
 ## 20.5 Vežba za čitaoca
 
