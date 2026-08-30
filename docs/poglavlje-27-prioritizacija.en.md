@@ -63,6 +63,24 @@ mention" (considered, deliberately ranked lower) from "never even mentioned"
 is itself information — it tells the team that something was seen and
 assessed, not missed.
 
+A concrete example of what this category looks like in practice, not just
+in theory: continuous profiling (CPU/memory at the line-of-code level, not
+just the request level) is a capability the observability platform this
+book follows already offers — the data source exists, ready to use — and
+yet no service is instrumented to use it. This isn't an oversight nobody
+noticed: a formal review of the program explicitly listed it with a "gap"
+status, not as something that had simply slipped from view, and assigned
+it a spot in the second wave of priorities — after items with a larger
+reach of damage or higher likelihood, not because profiling has no value.
+The recommended next step is already written down and waiting on the
+list: turn it on first for the endpoints that already have a defined error
+budget (Chapter 15), where linking the trace to the profile would let a
+slow call, caught by an exemplar (Chapter 11), be traced not just to the
+trace but to the exact line of code that spent the time. The difference
+between this and "never even mentioned" is exactly what this section
+preserves: someone considered it, wrote down the reason, and left a clear
+next step ready for the day the item gets promoted.
+
 ### Deletion as the rule, not the exception
 
 Once an item is finished, it is **deleted** from the list — not moved to a
@@ -173,7 +191,10 @@ reads.
 - Keep a formal, named "honorable mention" category below the threshold of
   the main list — distinguish "considered and deliberately ranked lower"
   from "never mentioned at all," because that distinction is itself
-  valuable information.
+  valuable information. For every
+  such item, write down a concrete next step too, not just the reason for
+  deferring it — on the day the item gets promoted, that step should
+  already be waiting, ready to go.
 - Delete items from the list once they're actually finished, instead of
   piling them up in a crossed-out archive — a list that only grows
   gradually stops being something the team actually consults.
