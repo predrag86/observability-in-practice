@@ -71,6 +71,41 @@ od sebe, bez ijednog dodatnog koraka istrage:
 
 ![Region B prestaje da javlja latenciju u kratkom prozoru dok Region A i Region C nastavljaju normalno — obrazac koji upućuje na regionalni mrežni problem, ne na pad same aplikacije.](diagrams/dashboard-synthetic.png){: width="95%" }
 
+### Treći sloj: da li se aplikacija zaista renderuje, ne samo da li server odgovara
+
+Osnovna dostupnost-proba i proba poslovnog toka i dalje ostavljaju jednu
+rupu: obe testiraju šta server **vrati**, nijedna ne testira šta browser
+zaista **prikaže**. Pokvaren JavaScript bundle — loš deploy, izmenjena
+putanja do statičkog fajla, greška u build koraku — i dalje vraća HTTP 200 sa
+punim HTML dokumentom; sama stranica ostaje prazna, jer se skripta koja bi je
+napunila sadržajem nikad ne izvrši. Ni osnovna dostupnost-proba (vidi 200,
+prijavljuje "radi") ni proba poslovnog toka usmerena na API pozive ne bi
+ovo uhvatile — obe gledaju server, a kvar je isključivo na strani klijenta.
+
+Implementacija koju knjiga prati dodaje treći, poseban tip probe za tačno
+ovaj slučaj: proba koja pokreće pravi headless browser (Chromium, upravljan
+istim k6 alatom koji stoji iza probe poslovnog toka), učitava frontend
+aplikaciju kao pravi korisnik, i proverava da je stranica zaista popunjena
+sadržajem posle mrežnog mirovanja — ne samo da je odgovor stigao. Ovo je isti
+obrazac tihog kvara iz Poglavlja 1 i iz "kritičnog poslovnog toka" iznad,
+primenjen na treći sloj sistema (klijentsko renderovanje) koji prva dva tipa
+probe strukturno ne mogu da vide.
+
+Dve stvari vredi eksplicitno reći o ovoj probi. Prva: namerno **ne** emituje
+podatke u isti RUM tok kao stvarni korisnici (Poglavlje 8) — bila bi to
+sintetička sesija koja bi tiho zagadila baseline p75/p95 izračunat iz
+stvarnog saobraćaja, pa se drži potpuno odvojeno, kao nezavisan heartbeat.
+Druga: browser proba je najskuplji sloj sintetičkog praćenja — pokretanje
+punog Chromium-a po izvršenju nosi mnogo veći trošak (i u novcu i u broju
+generisanih serija/logova) od proste HTTP probe — pa se namerno drži na
+minimalnom otisku koji i dalje daje signal: jedna lokacija, redak interval,
+umesto raskošne multi-regionalne postavke koju osnovna dostupnost-proba sebi
+može da priušti. Isti princip — da učestalost i broj lokacija direktno
+množe trošak, ne samo preciznost — već je jednom primoran na test kod
+osnovnih HTTP probi u ovoj implementaciji, kad je prekomerna multi-regionalna
+postavka izazvala neplanirano prekoračenje budžeta i morala biti svedena na
+jednu lokaciju sa ređim intervalom.
+
 ## 9.3 Analitički deo — zašto sintetičko praćenje nije "RUM za siromašne"
 
 ### Sintetičko i RUM rešavaju različite probleme, ne isti problem na dva načina
@@ -141,6 +176,11 @@ kada problem postoji baš u trenutku kad niko ne gleda, neko ipak zna.**
 - Proveri da li tvoje probe rade tačno u periodima kad je saobraćaj
   najmanji (noć, vikend) — to je period u kome njihova vrednost dolazi do
   izražaja, i period u kome se najlakše zaboravi da se testira.
+- Dodaj sloj koji zaista renderuje klijenta (headless browser), ne samo
+  proverava HTTP status — pokvaren JS bundle i dalje vraća 200 dok je
+  stranica prazna, i nijedna server-side proba to ne vidi. Drži tu probu
+  odvojenu od stvarnog RUM toka i na minimalnom otisku (jedna lokacija, redak
+  interval) — ona je najskuplji sloj sintetičkog praćenja.
 
 ## 9.5 Vežba za čitaoca
 
