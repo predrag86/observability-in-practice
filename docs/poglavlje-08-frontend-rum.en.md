@@ -61,6 +61,30 @@ departs from everything else (direct instead of through the gateway), the
 *semantics* remain the same OTel semantics from Chapter 2. Same trace ID,
 same context propagation.
 
+**Why propagation works without a single CORS change.** By default, the
+RUM SDK injects the trace-context header only into calls whose URL is
+same-origin as the page itself — cross-origin calls go without it unless
+explicitly added to an allow-list. In the implementation this book
+follows, this lines up perfectly with the actual shape of the traffic: the
+backend application serves the frontend itself (same origin as the page),
+and the frontend calls it on relative paths (`/api/...`) instead of
+absolute URLs — so every call to the backend is automatically same-origin,
+with no CORS change and no allow-list of domains to maintain. When the
+backend's Java agent receives that header, its server span becomes a child
+of the browser's span — same trace ID, one continuous trace, without a
+single line of code written just for this connection.
+
+Cross-origin calls (an identity provider, maps, other third parties)
+deliberately go without the trace-context header — not an oversight, but
+an explicit decision: turning it on would mean leaking the trace ID to
+services outside your own control and creating orphan spans there (spans
+with no matching half, because that service never sends anything back
+into the same Tempo tenant). Likewise, the additional OTel mechanism for
+carrying arbitrary key-value pairs alongside a trace (baggage) is
+deliberately not enabled at all — only the trace ID crosses the
+browser→backend boundary, nothing more. A smaller leak surface is
+deliberately chosen here over greater flexibility.
+
 ![The browser goes directly to the hosted RUM collector, bypassing the gateway; backend telemetry still goes through the gateway. Two separate PII protections (native signals versus traces) are deliberately highlighted — that's the incident point from this chapter.](diagrams/ch8-rum.png){: width="75%" }
 
 **Two points for PII cleanup, not one.** This is the single most valuable
@@ -153,6 +177,11 @@ and does each one of them have its own, explicit check."**
 - Keep the same trace ID and context semantics (OTel propagation) even when
   the transport mechanism structurally differs from the rest of the system —
   that's what ties frontend and backend into one readable trace.
+- Lean on same-origin propagation whenever possible (backend serves the
+  frontend, calls on relative paths) — it needs no CORS change at all.
+  Don't turn on propagation to cross-origin third parties or baggage
+  without an explicit reason — each one widens the leak surface for trace
+  context beyond your own control.
 - Before writing a PII filter, map **all** the outbound data paths of the
   SDK or library you're protecting — logs, measurements, errors, and traces
   rarely share the same processing function.

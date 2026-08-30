@@ -78,6 +78,45 @@ diagnosis narrows itself, without a single additional investigative step:
 
 ![Region B stops reporting latency for a short window while Region A and Region C continue normally — a pattern pointing to a regional network problem, not a failure of the application itself.](diagrams/dashboard-synthetic.png){: width="95%" }
 
+### The third layer: does the application actually render, not just does the server respond
+
+The basic availability probe and the business-flow probe still leave one
+gap: both test what the server **returns**, neither tests what the browser
+actually **shows**. A broken JavaScript bundle — a bad deploy, a changed
+path to a static file, an error in the build step — still returns HTTP 200
+with a full HTML document; the page itself stays blank, because the script
+that would fill it with content never runs. Neither the basic availability
+probe (sees a 200, reports "up") nor the business-flow probe aimed at API
+calls would catch this — both are looking at the server, and the failure is
+purely on the client side.
+
+The implementation this book follows adds a third, separate probe type for
+exactly this case: a probe that launches a real headless browser (Chromium,
+driven by the same k6 tool behind the business-flow probe), loads the
+frontend application the way a real user would, and checks that the page is
+actually populated with content after the network goes idle — not just
+that a response arrived. This is the same silent-failure pattern from
+Chapter 1 and from "critical business flow" above, applied to a third layer
+of the system (client-side rendering) that the first two probe types simply
+can't see.
+
+Two things are worth stating explicitly about this probe. First: it
+deliberately does **not** emit data into the same RUM stream as real users
+(Chapter 8) — it would be a synthetic session that quietly polluted the
+p75/p95 baseline computed from real traffic, so it's kept entirely
+separate, as an independent heartbeat. Second: the browser probe is the
+most expensive layer of synthetic monitoring — running a full Chromium
+instance per execution carries a much higher cost (both in money and in
+generated series/logs) than a plain HTTP probe — so it's deliberately kept
+to a minimal footprint that still delivers a signal: one location, an
+infrequent interval, instead of the generous multi-region setup the basic
+availability probe can afford. The same principle — that frequency and
+number of locations directly multiply cost, not just precision — was
+already forced into a test once, on the basic HTTP probes in this
+implementation, when an over-broad multi-region setup triggered an
+unplanned budget overage and had to be trimmed down to a single location at
+a longer interval.
+
 ## 9.3 Analytical section — why synthetic monitoring isn't "poor man's RUM"
 
 ### Synthetic and RUM solve different problems, not the same problem two different ways
@@ -156,6 +195,12 @@ watching, someone still knows.**
 - Check that your probes actually run during the periods when traffic is
   lowest (night, weekend) — that's the period when their value shows up,
   and the period it's easiest to forget to test.
+- Add a layer that actually renders the client (headless browser), not
+  just checks the HTTP status — a broken JS bundle still returns 200 while
+  the page is blank, and no server-side probe sees that. Keep that probe
+  separate from real RUM traffic and at a minimal footprint (one location,
+  infrequent interval) — it's the most expensive layer of synthetic
+  monitoring.
 
 ## 9.5 Exercise for the reader
 
