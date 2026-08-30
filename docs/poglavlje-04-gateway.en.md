@@ -134,6 +134,24 @@ reader: when the standard pattern doesn't fit your infrastructure, the right
 question isn't "how do I force it to fit" but "what is the principle behind
 the pattern, and what does that principle look like in my environment."
 
+It's worth making this explicit here rather than leaving it implicit in
+the paragraph above: the system this book follows doesn't run Kubernetes
+**anywhere** — not for this gateway, not for anything else in the system
+(the container platform is services without managed nodes, plus a handful
+of classic virtual machines, serverless functions, and a managed batch
+service). This isn't a gap in the book's coverage but a carried-over, real
+architecture, and it's worth keeping in mind through the rest of the book:
+an entire category of tooling that assumes a Kubernetes cluster exists —
+whether network tools built on direct access to the operating system
+kernel, or operator-style agents that expect a cluster they manage —
+simply doesn't apply to infrastructure shaped like this, not for lack of
+quality but because of a structural assumption the tool itself carries. A
+reader whose system **is** on Kubernetes gets the reverse advantage from
+that same fact: that entire category of tooling is available to them in a
+way it never will be to this implementation — worth keeping in mind
+whenever a later chapter says some tool was considered and rejected: the
+reason is often exactly this, not the quality of the tool itself.
+
 **2. The cost of the local hop isn't always worth paying.** The official
 advantage of the agent layer — a local buffer that survives a brief gateway
 outage — has a real cost: an additional process per instance, an additional
@@ -268,6 +286,10 @@ it can keep working when it goes down.
 - Deliberately bypassing the gateway (for components that physically cannot
   reach it) should be a **documented list with a reason**, not an accidental
   deviation someone discovers six months later.
+- Know explicitly whether your infrastructure assumes Kubernetes or not —
+  an entire category of tooling (kernel-based network tools, operator
+  agents) is either available or structurally inapplicable depending on
+  that one answer, independent of the quality of the tool itself.
 
 ## 4.5 Exercise for the reader
 
