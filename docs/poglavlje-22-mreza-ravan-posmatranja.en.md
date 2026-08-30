@@ -84,6 +84,58 @@ independent paths to the same failure domain together — one still
 reporting, the other silent — is the only way to tell "there really is no
 problem" apart from "the problem exists, but its messenger is mute."
 
+### Applying the principle to the alert itself: a route that survives its own collector going down
+
+The implementation applied the same differential-reading principle to the
+delivery of the alert itself, not just to measurement. Most network alert
+rules evaluate over the same shared collector and the same pipeline that
+carries the rest of the fleet's telemetry — which means that if that
+exact pipeline goes down, the rule doesn't report an error, it simply
+**stops evaluating** and goes quiet. A rule's silence is, from the
+outside, indistinguishable from "everything is fine" — exactly the
+problem this chapter already described for ordinary metrics, now applied
+to the very mechanism that's supposed to warn about a failure. The fix
+was to deliberately split a small number of the most critical rules into
+a separate group that reads directly from an independent data source,
+bypassing the shared collector — so that when the collector or its
+pipeline goes down, that other group of rules keeps evaluating, and can
+still report. Both groups send to the same notification channel, so the
+difference exists only in the path to that point, not in where it
+ultimately shows up.
+
+![The main route for network alerts evaluates over the same collector that carries the rest of the telemetry, so when that collector goes down — the route goes quiet, indistinguishable from "everything is fine." An independent route reads directly from a separate source, bypassing the shared collector, and keeps working at exactly that moment.](diagrams/ch22-nezavisna-ruta.png){: width="85%" }
+
+### Two kinds of check for two kinds of bugs
+
+Before the newly built dashboard was put into use, the implementation
+replayed every query on every panel live, compared it against expected
+values, and looked for empty or failed results — a check that caught
+several real bugs in the queries themselves. But that same check
+**passed** two separate, real bugs that had nothing wrong with the
+query — the panel was returning correct data, it was just
+**displaying** it wrong: a title truncated because there wasn't enough
+space for the text, and one panel that, because of combining an
+aggregation with a default zero-value in the wrong place, displayed two
+values side by side where there should have been only one. A query-based
+check can't see either of these two bugs, because both return valid,
+non-empty data — the bug exists only in how the result is displayed, not
+in the result itself. These two layers of checking catch strictly
+different classes of bugs, and neither replaces the other: **a query
+check proves a panel isn't dead, not that it's correct** — for the
+latter you need to look at the rendered panel itself, not just the data
+that feeds it.
+
+It's worth noting a subtler trap within the query check itself: one panel
+had data at build time, and was empty barely forty minutes later — not
+because of a bug, but because the real measured value hit zero and the
+source stopped emitting it at all. The lesson isn't "remember which
+metrics are known to disappear" — that's a moving target, exactly which
+metrics are empty at a given moment depends only on what's currently
+measuring zero. The lesson is that every error or rejection counter has
+to be treated as capable of disappearing, and given an explicit
+zero-default proactively, instead of adding that protection only after
+something specific has actually disappeared.
+
 ![Nine planes of network infrastructure grouped by how visibly they report their own failure — the worst group is blind and, at the same time, the path along which the telemetry of all the other planes travels.](diagrams/ch22-devet-ravni.png){: width="90%" }
 
 ![Inbound and outbound byte flow through the outbound gateway, read as a pair: the divergence between the two lines, not either line on its own, is what reveals traffic loss.](diagrams/dashboard-natdiff.png){: width="95%" }
@@ -179,6 +231,16 @@ report it can even speak.
   synchronization — all three are documented as neglected, with no
   default detailed telemetry, despite their direct impact on TLS, logs,
   and tracing.
+- Split a handful of the most critical network alerts into a separate
+  group that reads directly from a source independent of the shared
+  collector — if every rule evaluates over the same pipeline that
+  carries it, that pipeline going down silences exactly the rules that
+  should be reporting it, and that silence looks identical to health.
+- Don't trust a panel just because its query passed a live check — a
+  query check proves a panel isn't dead, not that it's displayed
+  correctly; for rendering bugs (truncated text, a duplicated value
+  where there should be one) you need to look at the rendered panel
+  itself.
 
 ## 22.5 Exercise for the reader
 

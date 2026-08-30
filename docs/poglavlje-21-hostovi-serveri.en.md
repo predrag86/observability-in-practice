@@ -57,6 +57,52 @@ The common thread across all four: none of these four reasons is "user
 error" in the classic sense. Each is a structural mismatch between the
 dashboard's assumptions and the actual environment it was imported into.
 
+### How a lost label actually comes back, step by step
+
+The fourth reason — aggregation that silently strips labels — deserves a
+closer look, because its mechanism hides two traps that make the obvious
+fix unusable.
+
+The first trap: the same metric, the same requested label, but a
+different aggregation function gives a completely different result. The
+system that automatically reduces the number of time series doesn't
+remember "this label" — it remembers exactly **which** aggregation
+functions it previously computed and saved for each combination. A query
+that uses exactly that saved function works. A query that asks for a
+different, equally reasonable function over the same data returns — not
+an error, but a silent **empty result**, indistinguishable from "this
+problem simply doesn't exist." Two of four common function choices can
+return empty, while the remaining two work, on the exact same metric and
+label.
+
+The second trap is subtler, and it's what makes the most natural fix
+impossible: the idea of "add an alert or rule that regularly reads this
+label, so the system will conclude on its own that the label is wanted
+and stop stripping it" **can't bootstrap itself**. While the label is
+still under aggregation, the query such an alert would use hits the first
+trap — a silent empty result, forever — so the alert never sees the data
+that would make it exist in the first place. The fix therefore has to go
+in the reverse of the intuitive order: first, the aggregation rule itself
+is manually removed for exactly the metrics and labels that are missing,
+then it's confirmed that the labels have actually started populating (in
+the measured case, within a few minutes), and only then is a permanent
+rule added that reads that label — to keep it out of aggregation going
+forward, not to free it for the first time.
+
+The act of removing the rule itself carries a third trap, an operational
+one: the system that automatically proposes and applies aggregation rules
+runs in the background, unsupervised, and modifies the exact same rule
+set that's being manually edited at the same time. Two reads of the same
+rule set, a minute or two apart, can show a different rule count — which
+means a naive "read, modify locally, write back" risks silently erasing
+someone else's concurrent change. The correct approach conditions the
+write on the exact version of the state that was read, so the write fails
+(instead of silently overwriting) if the state changed in the meantime,
+and after the write, explicitly confirms that exactly as many rules
+changed as intended — no more, no less.
+
+![The wrong order for fixing a lost label doesn't work — the label is still under aggregation, so the query silently returns empty. The correct order first removes the aggregation rule, confirms the label has actually come back, and only then adds the permanent rule that keeps it open going forward.](diagrams/ch21-redosled-vracanja.png){: width="75%" }
+
 ### A minimal, deliberately chosen set of metrics instead of someone else's bundle
 
 Rather than trying to fix each of the four reasons for every imported
@@ -203,6 +249,15 @@ actually drive in.
   of importing someone else's bundle — one panel that exists because it
   answers a known question is worth more than ten panels that exist
   because they came in the package.
+- When restoring a label that automatic aggregation stripped, don't add
+  a "keep it open" alert first — while the label is still aggregated,
+  that alert can't bootstrap itself, because it hits the same silent-
+  empty trap it's trying to detect. First remove the aggregation rule,
+  confirm the label came back, only then add the permanent rule. And
+  condition that write on the exact version of the rules you're
+  modifying, if the same rule set is also being changed by an automatic
+  process in the background — otherwise you risk silently overwriting a
+  change that happened between your read and your write.
 
 ## 21.5 Exercise for the reader
 

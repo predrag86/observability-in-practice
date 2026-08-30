@@ -53,6 +53,26 @@ total loss of network reachability to the instance itself is visible
 **only** from outside — because at that moment the internal exporter can't
 even connect to report anything.
 
+### Both layers share the same collector, not two separate tools
+
+Neither the external nor the internal layer is a separate, standalone
+tool built just for the database — both flow into the same shared
+collector that already carries the rest of the fleet, just with added,
+dedicated jobs. The external layer is a set of **statically named** jobs,
+one per known instance — not label-based auto-discovery. This is a
+deliberate trade-off: the static approach needs no extra permissions to
+search for resources or tag databases, and the cost per scrape stays
+predictable and bounded in advance; the cost is that a new instance
+doesn't enter observation automatically — someone has to explicitly add
+a new job. Both layers then merge into the same data store under one,
+shared instance identifier — so the external and internal views of the
+same database can be looked at side by side, not as two separate
+systems. The role (writer or reader) is read from the database's own,
+internal replication status, never from the network endpoint's name —
+because the endpoint can, by definition, be silently redirected to a
+different physical instance after a role change, while the replication
+status stays accurate regardless of where the name currently points.
+
 ### A separate, easily forgotten alert: the monitoring itself went down, not the database
 
 The implementation explicitly separates two different claims that are easy
@@ -82,6 +102,44 @@ and that mapping is exactly what the internal collection layer exists to
 guarantee. Collection has to go directly to the instance to keep its
 meaning.
 
+### The identity the internal layer uses — and the order it was introduced in
+
+The internal exporter doesn't connect under the same identity
+applications use — it connects under a purpose-built, dedicated role
+with a built-in, minimal privilege for reading internal state, without
+full administrative rights. That role carries an explicit limit on the
+number of concurrent connections, and is explicitly excluded from its
+own long-running-query tracking — without that exclusion, the exporter
+would profile its own, repeated queries against the internal tables and
+drown out exactly the signal it's trying to measure.
+
+Introducing this identity into the shared collector wasn't trivial — it
+required a strict order of steps, because the shared collector refuses
+to start at all if it references a credential that doesn't yet exist,
+which would have broken observability for the whole fleet, not just the
+database. The order that avoided that: first open the network path, then
+apply the infrastructure with an **empty** placeholder for the
+credential (the collector then just quietly logs that the connection
+failed, without crashing), then populate the real credential separately
+(outside the infrastructure-as-code system, so the password never enters
+its stored state), then create the role itself on the database side, and
+only at the end wire the credential to the job that uses it. An
+interesting confirmation that the order was correct came from the
+failure itself: the first connection attempt after opening the network
+path didn't report a network or certificate problem — it reported a
+"wrong password" error, which was, paradoxically, a good sign: the
+network, the TLS handshake, and certificate verification had all passed;
+all that was left was for the role to be created.
+
+On the cardinality side, the internal layer keeps most of the default
+internal signals, but explicitly turns on one that's off by default —
+precisely the one that tracks long-running, open transactions, and which
+is the central signal for the connection leak described earlier — and
+explicitly excludes a few others (per-table and per-index statistics)
+that would otherwise multiply a single time series into one per table
+and index in the database, without matching analytical value at this
+stage.
+
 ### A lever at the database level, not the infrastructure level
 
 When the internal layer detects sessions that stay open in the "idle in
@@ -93,6 +151,8 @@ This is deliberately configured as a last line of defense, not a first one
 — the first line is still fixing the application that leaves transactions
 open — but the lever exists precisely because application code doesn't
 always get every caller fixed in time.
+
+![Both collection layers share the same collector that carries the rest of the fleet — the external layer through statically named per-instance jobs, the internal layer through a dedicated role with limited connections, merged under one instance identifier, with the writer/reader role read from the database's own replication status.](diagrams/ch18-deljeni-kolektor.png){: width="90%" }
 
 ![Two independent collection layers over one managed database: external (the provider's instance metrics) and internal (an exporter directly on the engine), with a dedicated alert watching whether the internal layer is breathing at all.](diagrams/ch18-dve-ravni.png){: width="90%" }
 
@@ -214,6 +274,14 @@ source of truth.
 - Don't measure the success of monitoring by whether the dashboard looks
   quiet — measure it by whether you know, with certainty, whether that
   quiet is real or just an absence of data.
+- When you introduce a new, credential-protected source into a shared
+  collector that already carries the rest of the system, sequence the
+  rollout so the collector never references an empty credential at
+  startup — open the network path, apply the infrastructure with an
+  empty placeholder for the credential, populate the credential outside
+  the infrastructure-as-code system, then wire it up — a mistake in any
+  one step of this order would break observability for the whole fleet,
+  not just the new source.
 
 ## 18.5 Exercise for the reader
 
