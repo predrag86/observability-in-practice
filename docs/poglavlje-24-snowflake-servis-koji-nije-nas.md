@@ -34,6 +34,37 @@ da su pojedini upiti "spori." Ovo je vredna polazna tačka za poglavlje —
 razlikuje ga od svih prethodnih studija slučaja, gde je neka forma
 posmatranja već postojala i unapređivana.
 
+### Zašto zakazano prikupljanje, a ne direktna konekcija
+
+Pre nego što je bilo šta od gore opisanog izgrađeno, razmotrene su tri
+različite putanje ka istom cilju — dashboard u platformi za posmatranje
+koji pokazuje šta se dešava unutar spoljnog servisa.
+
+Prva ideja je bila da se na platformu za posmatranje instalira gotov
+konektor za direktnu, interaktivnu konekciju ka spoljnom servisu, potpisan
+i učitan van zvaničnog kataloga. Ovo se pokazalo tehnički neizvodljivim na
+korišćenoj varijanti platforme (upravljanoj, u oblaku, a ne
+samostalno-hostovanoj): upravljana varijanta instalira isključivo
+konektore iz zvaničnog kataloga, a mehanizam za privatno potpisivanje i
+učitavanje sopstvenog konektora postoji samo za samostalno-hostovanu
+varijantu platforme. Ćorsokak, otkriven tek pošto je pokušan.
+
+Druga ideja je bila da se plati zvanični, proizvođački konektor za
+direktnu konekciju — tehnički bi radio na upravljanoj varijanti platforme
+bez ikakvih prepreka. Odbačen je zato što predstavlja stalnu, ponavljanu
+stavku troška, a ne jednokratni trošak izgradnje — budžet za to nije
+postojao.
+
+Treća, izabrana i izgrađena putanja ne koristi nikakav direktan konektor
+uopšte: umesto interaktivnog pristupa gde bi neko mogao da napiše
+proizvoljan upit i odmah dobije odgovor, zakazano, kratkotrajno
+pokretanje periodično povlači najsporije upite iz sopstvene, ugrađene
+istorije upotrebe koju servis već vodi, i gura ih kao sanitizovane
+zapise direktno u platformu za posmatranje. Dashboard nad tim zapisima
+zamenjuje interaktivni pregled. Prihvaćen kompromis je eksplicitan: nema
+slobodnog, proizvoljnog upitivanja kakvo bi dao pravi konektor — dobija
+se periodično osvežavana tabela najgorih upita, ne alat za istraživanje.
+
 ### Tri faze, jedna zajednička sesija
 
 Rešenje je izgrađeno u tri odvojene faze, svaka pokrivajući drugačiji cilj,
@@ -56,6 +87,51 @@ minimalnom vremenu aktivacije radne jedinice, svaka dodatna, odvojena
 sesija bi značila dodatnu naplatu tog minimuma. Spajanjem sve tri faze u
 jedno pokretanje, druga i treća faza koštaju praktično **nula dodatnih
 kredita** iznad onoga što bi prva faza sama koštala.
+
+### Kako mehanizam zaista radi, korak po korak
+
+Sve tri faze iz prethodnog odeljka izvršava isti mehanizam, i taj
+mehanizam vredi opisati na nivou "kako", ne samo "šta":
+
+- **Okidač.** Zakazano pravilo pokreće kratkotrajno izvršavanje na svaka
+  tri sata. Vredna zamka: ovakav "svaka N sati" raspored se u praksi
+  računa od trenutka kada je *samo pravilo napravljeno*, ne od ponoći po
+  časovniku — ako se pravilo ikad iznova napravi (a ne samo izmeni),
+  tačno vreme pokretanja se pomera. Ko god prvi put podesi ovakav
+  raspored i očekuje da će pogađati okrugle časove, iznenadiće se.
+- **Beleška o mestu gde je stalo.** Pre svakog upita ka spoljnom servisu,
+  mehanizam čita trajno sačuvanu belešku — do kog reda je poslednji put
+  uspešno stigao. Upit traži samo redove novije od te beleške, sa gornjom
+  granicom broja redova po pokretanju, uvek najstarije prvo. Beleška se
+  pomera tek pošto su redovi uspešno isporučeni platformi za
+  posmatranje — ne ranije — tako da neuspešno pokretanje ne gubi redove
+  niti ih duplira.
+- **Identitet sa minimalnim ovlašćenjima.** Upit se ne izvršava pod istim
+  identitetom koji koriste stvarne aplikacije, već pod posebno napravljenim,
+  isključivo-za-čitanje identitetom, ograničenim samo na potreban pogled
+  na istoriju upotrebe. Autentikacija ide preko para ključeva, ne
+  lozinke — kredencijal koji curi ovde ne otvara ništa osim ovog uskog
+  pogleda. Sam upit se izvršava nad najmanjom mogućom radnom jedinicom
+  servisa, iz istog razloga pomenutog ranije: minimalno vreme naplate po
+  buđenju.
+- **Sanitizacija pre nego što podatak napusti servis.** Tekst svakog
+  upita se pre slanja čisti od stvarnih vrednosti (konkretni literali se
+  zamenjuju placeholder znakom), svodi na jednu liniju i seče na razumnu
+  dužinu — ono što stigne u platformu za posmatranje je oblik upita, ne
+  podaci nad kojima je upit izvršen.
+- **Isporuka.** Sanitizovani redovi se šalju kao logovi, istim opštim
+  protokolom kojim ova implementacija svuda šalje logove, direktno u
+  platformu za posmatranje — bez posrednog servera, bez privremenog
+  fajla.
+
+Celo pokretanje, sve tri faze zajedno, traje reda veličine desetak
+sekundi do minut — dovoljno kratko da paket koda ne mora ni da se pakuje
+kao kontejnerska slika. Pokretanje koje ne pronađe nijedan nov red je
+sasvim uobičajeno i tiho se završava bez ičega za slanje — najveći deo
+dana, jedno ranije pokretanje istog dana već je pokupilo sve što se tog
+dana desilo.
+
+![Konkretan tok podataka kroz zakazano prikupljanje: od stvarnog upita nad spoljnim servisom, preko okidača i beleške o mestu gde je stalo, do sanitizovanih zapisa u platformi za posmatranje.](diagrams/ch24-mehanizam-prikupljanja.png){: width="90%" }
 
 ### Strukturno kašnjenje, ne greška u dizajnu
 
@@ -213,6 +289,12 @@ izveštaj.
   nikakve veze sa observability-jem — zaboravljene resurse, deljene
   kredencijale — jer niko pre toga nije imao razlog, ni alat, da ih
   potraži.
+- Kad direktna, interaktivna konekcija ka spoljnom servisu nije
+  dostupna besplatno (a plaćena varijanta nije u budžetu), proveri da li
+  spoljni servis već vodi sopstvenu istoriju upotrebe koju možeš
+  periodično povlačiti i gurati kao logove — periodično osvežavana
+  tabela najgorih slučajeva je često dovoljna zamena za slobodno
+  upitivanje.
 
 ## 24.5 Vežba za čitaoca
 
