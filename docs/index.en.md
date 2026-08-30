@@ -1,5 +1,7 @@
 # Observability in Practice
 
+![Observability in Practice](diagrams/cover-emblem.png){: width="220" }
+
 ## OpenTelemetry and the Grafana LGTM stack
 
 A book structured around the real, multi-month evolution of a production
