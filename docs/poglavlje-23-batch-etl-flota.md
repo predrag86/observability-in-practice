@@ -33,6 +33,37 @@ servise koji stalno primaju saobraćaj — jer pojedinačan zakazan zadatak
 nema smislenu "stopu zahteva," a njegovo trajanje bez potvrde da je
 zaista nešto proizveo ne govori ništa korisno samo po sebi.
 
+### Kako zadatak zaista prolazi kroz sistem, korak po korak
+
+Model potpunosti iz prethodnog odeljka nije proizvoljan izbor — direktno
+prati konkretne korake kroz koje svaki zadatak zaista prolazi:
+
+1. **Okidač.** Zakazano pravilo ili poziv iz drugog zadatka pokreće
+   predaju.
+2. **Predaja.** Poziva se sa imenom reda čekanja i imenom definicije
+   zadatka — bez fiksirane revizije definicije, pa se uvek koristi
+   najnovija dostupna verzija u trenutku predaje.
+3. **Red čekanja.** Zadatak prolazi kroz niz stanja — predat, na čekanju,
+   spreman za izvršavanje.
+4. **Izbor izvora kapaciteta.** Sistem prolazi kroz listu mogućih izvora
+   kapaciteta tačno onim redosledom kojim su navedeni za taj red čekanja,
+   i stavlja zadatak na prvi izvor koji ima dovoljno resursa da ga
+   primi. Ovo je tačan mehanizam koji stoji iza lekcije o redosledu iz
+   narednog odeljka — "promeniti redosled" znači doslovno zameniti mesta
+   dva izvora na ovoj listi, ništa više.
+5. **Izvršavanje.** Zadatak se pokreće kao obična instanca kontejnerske
+   infrastrukture, deleći sve što ta infrastruktura već nudi.
+6. **Izlaz.** Izlazni kod određuje da li je zadatak uspeo ili nije. Ako je
+   definisano ponovno pokušavanje, sistem sam ponovo predaje zadatak sa
+   uvećanim brojem pokušaja, sve dok pravilo o tome kada odustati ne kaže
+   "dosta" ili dok se ne dostigne gornja granica pokušaja.
+
+Ovih šest koraka su ista za svaki zadatak u floti, bez obzira na to šta
+zadatak zapravo radi — što je i razlog zašto je model potpunosti mogao da
+bude jedan, opšti obrazac umesto posebne logike po zadatku.
+
+![Šest koraka kroz koje svaki zadatak prolazi: predaja, red čekanja, izbor izvora kapaciteta po redosledu, izvršavanje, izlazni kod, i ponovna predaja samo za prolazne uzroke neuspeha.](diagrams/ch23-zivotni-ciklus.png){: width="90%" }
+
 ### Poseban i namerno drugačiji obrazac: uspešno završeno, ali prazno
 
 Najvažniji, i najlakše propušten oblik kvara koji je implementacija
@@ -69,6 +100,32 @@ logike za oporavak od prekida. Ovo je vredna lekcija sama po sebi: nije
 svaki problem sa pouzdanošću rešen dodavanjem otpornosti na kvar — nekad
 je jeftinije i pouzdanije jednostavno promeniti redosled izbora tako da se
 manje pouzdana opcija ređe uopšte i koristi.
+
+### Zašto ovoj floti nije trebao poseban alarm za neuspeh
+
+Zadaci u ovoj floti, kad se izvršavaju, rade kao obične instance iste
+kontejnerske infrastrukture koja nosi i ostatak sistema — nema posebne,
+odvojene infrastrukture samo za batch posao. Praktična posledica: opšti,
+po-porodici skupljen alarm na izlazni kod različit od nule, opisan u
+Poglavlju 29, automatski pokriva i ovu flotu, bez ijedne linije koda
+napisane posebno za nju. Ovo je potvrđeno uživo istog dana kad je
+redosled izvora kapaciteta promenjen — stvaran, prekinut zadatak na
+starom, manje pouzdanom izvoru je uhvaćen i prijavljen tim istim, opštim
+mehanizmom u roku od nekoliko minuta, bez ikakve posebne pripreme
+unapred.
+
+Ovo nije uvek bio jedini put za alarm o neuspehu. Paralelno je do
+nedavno postojao i drugi, posebno izgrađen mehanizam samo za ovu flotu:
+namenska funkcija koja je brojala neuspehe i objavljivala ih kao
+posebnu metriku, napajajući tri imenovana alarma. Ukinut je u istom
+čišćenju kao i srodan slučaj drugde u sistemu — istog obrasca, samo
+druga flota — iz dva razloga: njegovo izvršno okruženje je godinama
+prevaziđeno, a revizija je otkrila da su sva tri alarma tiho stajala u
+istom, nepromenjenom stanju duže od tri godine. Niko to nije primetio,
+jer je noviji, opšti mehanizam sve to vreme tiho radio pravi posao.
+Namerno je zadržano samo zakazano pravilo koje je taj stari mehanizam
+pokretao — preusmereno da samo arhivira zapise radi jeftine naknadne
+forenzike, bez ičega što bi iz njega dalje slalo alarm.
 
 ### Trenutno stanje: van glavnog cevovoda za telemetriju
 
@@ -168,6 +225,12 @@ pekar koji sazna tek ujutru, od mušterija, da police stoje prazne.
 - Beleži poznate praznine u pokrivenosti eksplicitno — na primer, koji deo
   flote još nije uključen u glavni cevovod za telemetriju — umesto da
   praznina ostane skrivena dok je neko slučajno ne otkrije.
+- Proveri da li zadaci u tvojoj floti dele infrastrukturu izvršavanja sa
+  ostatkom sistema — ako je dele, opšti alarm na izlazni kod već
+  pokriva flotu besplatno, i poseban, namenski mehanizam za istu stvar
+  je nepotreban rizik od tihog zastarevanja. Periodično revidiraj
+  postojeće alarme da proveriš da nijedan nije godinama u istom,
+  nepromenjenom stanju bez da iko primeti.
 
 ## 23.5 Vežba za čitaoca
 

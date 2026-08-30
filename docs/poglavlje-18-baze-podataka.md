@@ -51,6 +51,25 @@ mrežne dostupnosti do same instance vidi se **samo** spolja — jer u tom
 trenutku exporter iznutra ne može ni da se konektuje da bi bilo šta
 prijavio.
 
+### Obe ravni dele isti kolektor, ne dva odvojena alata
+
+Ni spoljna ni unutrašnja ravan nisu poseban, samostalan alat izgrađen
+samo za bazu — obe se ulivaju u isti deljeni kolektor koji već nosi
+ostatak flote, samo sa dodatim, namenskim poslovima. Spoljna ravan je
+niz **statički imenovanih** poslova, jedan po poznatoj instanci — ne
+automatsko otkrivanje po oznaci. Ovo je svesna razmena: statički pristup
+ne zahteva dodatna ovlašćenja za pretragu resursa niti obeležavanje baza
+oznakama, a trošak po pozivu ostaje predvidiv i ograničen unapred; cena
+je da nova instanca ne uđe u posmatranje automatski, neko mora eksplicitno
+dodati novi posao. Obe ravni se zatim spajaju u isti prostor podataka pod
+jednim, zajedničkim identifikatorom instance — tako da spoljni i
+unutrašnji pogled na istu bazu mogu da se gledaju jedan pored drugog, ne
+kao dva odvojena sistema. Uloga (pisac ili čitalac) se čita iz
+sopstvenog, unutrašnjeg statusa replikacije baze, nikad iz imena
+mrežnog endpointa — jer se endpoint po definiciji može tiho preusmeriti
+na drugu fizičku instancu posle promene uloge, dok status replikacije
+ostaje tačan bez obzira na to gde trenutno pokazuje ime.
+
 ### Poseban i lako zaboravljen alarm: monitoring sam pao, ne baza
 
 Implementacija eksplicitno razdvaja dve različite tvrdnje koje se lako
@@ -78,6 +97,41 @@ tabeli pripada ovoj konkretnoj instanci/klijentu" prestaje da važi — a to
 mapiranje je tačno ono što unutrašnja ravan prikupljanja postoji da
 obezbedi. Prikupljanje mora ići direktno na instancu da bi zadržalo smisao.
 
+### Identitet koji unutrašnja ravan koristi — i redosled kojim je uveden
+
+Unutrašnji exporter se ne konektuje pod istim identitetom koji koriste
+aplikacije, već pod posebno napravljenom, namenskom ulogom sa ugrađenom,
+minimalnom privilegijom za čitanje internog stanja — bez punih
+administratorskih prava. Ta uloga ima eksplicitno ograničenje broja
+istovremenih konekcija, i eksplicitno je isključena iz sopstvenog
+praćenja dugotrajnih upita — bez ovog isključenja, exporter bi
+profilisao sopstvene, ponavljane upite ka internim tabelama i zagušio
+tačno onaj signal koji pokušava da izmeri.
+
+Uvođenje ovog identiteta u deljeni kolektor nije bilo trivijalno —
+zahtevalo je strog redosled koraka, jer deljeni kolektor odbija da se
+uopšte pokrene ako referencira kredencijal koji još ne postoji, što bi
+srušilo posmatranje cele flote, ne samo baze. Redosled koji je to
+izbegao: prvo otvoriti mrežni put, zatim primeniti infrastrukturu sa
+**praznim** mestom za kredencijal (kolektor tada samo tiho beleži da je
+veza neuspešna, bez pada), zatim popuniti stvaran kredencijal odvojeno
+(van sistema za upravljanje infrastrukturom kao kodom, da lozinka nikad
+ne uđe u njegovo sačuvano stanje), zatim napraviti samu ulogu na strani
+baze, i tek na kraju povezati kredencijal sa poslom koji ga koristi.
+Zanimljiva potvrda da je redosled ispravan stigla je iz same greške:
+prvi pokušaj konekcije posle otvaranja mrežnog puta nije prijavio
+problem sa mrežom ili sertifikatom, nego grešku "pogrešna lozinka" —
+što je, paradoksalno, bio dobar znak: mreža, TLS rukovanje i provera
+sertifikata su svi prošli, ostalo je samo da uloga bude napravljena.
+
+Sa strane kardinalnosti, unutrašnja ravan zadržava većinu podrazumevanih
+internih signala, ali eksplicitno uključuje jedan koji je isključen po
+difoltu — upravo onaj koji prati dugotrajne, otvorene transakcije, i koji
+je centralni signal za curenje konekcija opisano ranije — i eksplicitno
+isključuje nekoliko drugih (statistiku po pojedinačnoj tabeli i indeksu)
+koji bi inače množili jednu vremensku seriju u jednu po svakoj tabeli i
+indeksu u bazi, bez odgovarajuće analitičke vrednosti u ovoj fazi.
+
 ### Poluga na nivou baze, ne infrastrukture
 
 Kada unutrašnja ravan otkrije sesije koje ostaju otvorene u stanju
@@ -89,6 +143,8 @@ konfigurisano kao poslednja linija odbrane, ne kao prva — prva linija je i
 dalje ispravljanje aplikacije koja ostavlja transakcije otvorene — ali
 poluga postoji upravo zato što aplikacijski kod ne ispravlja uvek sve
 pozivaoce na vreme.
+
+![Obe ravni prikupljanja dele isti deljeni kolektor koji nosi ostatak flote — spoljna kroz statički imenovane poslove po instanci, unutrašnja kroz namensku ulogu sa ograničenim konekcijama, spojene pod jednim identifikatorom instance, sa ulogom pisac/čitalac iz sopstvenog statusa replikacije baze.](diagrams/ch18-deljeni-kolektor.png){: width="90%" }
 
 ![Dve nezavisne ravni prikupljanja nad jednom upravljanom bazom: spoljna (provajderove metrike instance) i unutrašnja (exporter direktno na engine), sa posebnim alarmom koji prati da li unutrašnja ravan uopšte diše.](diagrams/ch18-dve-ravni.png){: width="90%" }
 
@@ -203,6 +259,13 @@ redovno, kao drugi, jednako legitiman izvor istine.
 - Ne meri uspeh monitoringa time da li dashboard izgleda mirno — meri ga
   time da li znaš, sa sigurnošću, da li je taj mir stvaran ili je samo
   odsustvo podataka.
+- Kad uvodiš novi, kredencijalima zaštićen izvor u deljeni kolektor koji
+  već nosi ostatak sistema, sekvenciraj raspored tako da kolektor nikad
+  ne referencira prazan kredencijal pri pokretanju — otvori mrežni put,
+  primeni infrastrukturu sa praznim mestom za kredencijal, popuni
+  kredencijal van sistema za upravljanje infrastrukturom kao kodom, pa tek
+  onda poveži — greška u jednom koraku ovog redosleda srušila bi
+  posmatranje cele flote, ne samo novog izvora.
 
 ## 18.5 Vežba za čitaoca
 
