@@ -127,6 +127,23 @@ klasičan DaemonSet fizički nema na šta da se zakači. Ovo je važna razlika z
 pitanje nije "kako da ga na silu primenim" nego "koji je princip iza obrasca, i
 kako taj princip izgleda u mom okruženju."
 
+Vredi ovde biti eksplicitan umesto da ostane implicitno u prethodnom pasusu:
+sistem koji knjiga prati ne pokreće Kubernetes **nigde** — ni za ovaj
+gateway, ni za bilo šta drugo u sistemu (kontejnerska platforma je servisi
+bez upravljanih čvorova, uz nekoliko klasičnih virtuelnih mašina, funkcije
+bez servera i upravljani batch servis). Ovo nije propust u pokrivenosti
+knjige nego prenesena, stvarna arhitektura, i vredi je imati na umu kroz
+ostatak knjige: čitava kategorija alata koja pretpostavlja postojanje
+Kubernetes klastera — bilo mrežni alati zasnovani na direktnom pristupu
+jezgru operativnog sistema, bilo operatorski agenti koji očekuju klaster
+kojim upravljaju — jednostavno nije primenjiva na ovakvu infrastrukturu, ne
+zbog nedostatka nego zbog strukturne pretpostavke koju sam alat nosi u
+sebi. Čitalac čiji sistem **jeste** na Kubernetes-u dobija, iz iste
+činjenice, obrnutu prednost: cela ta kategorija alata mu je na raspolaganju
+na način na koji ovoj implementaciji nikad neće biti — vredi to imati u
+vidu kad god neko poglavlje kasnije kaže da je neki alat razmotren i
+odbijen: razlog je često baš ovaj, ne kvalitet samog alata.
+
 **2. Cena lokalnog hop-a nije uvek isplativa.** Zvanična prednost agent sloja —
 lokalni bafer koji preživljava kratak prekid gateway-a — ima realnu cenu:
 dodatni proces po instanci, dodatna slika za održavanje, dodatna tačka koja
@@ -249,6 +266,10 @@ radi kada ono padne.
 - Namerno zaobilaženje gateway-a (za komponente koje fizički ne mogu da mu
   pristupe) treba da bude **spisak sa razlogom**, ne slučajno odstupanje koje
   neko otkrije šest meseci kasnije.
+- Znaj eksplicitno da li tvoja infrastruktura pretpostavlja Kubernetes ili ne
+  — cela kategorija alata (mrežni alati zasnovani na jezgru, operatorski
+  agenti) je dostupna ili strukturno neprimenljiva u zavisnosti od tog
+  jednog odgovora, nezavisno od kvaliteta samog alata.
 
 ## 4.5 Vežba za čitaoca
 

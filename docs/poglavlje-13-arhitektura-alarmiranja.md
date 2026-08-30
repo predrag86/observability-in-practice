@@ -74,6 +74,52 @@ ruta stvaran, gledan kanal, ne kanta za otpatke.
 
 ![Dva nezavisna puta konvergiraju na rutiranje po vlasništvu nad domenom, sa eksplicitnim fallback lancem ka opštem, uvek gledanom kanalu kad namenski webhook nije podešen.](diagrams/ch13-dual-path.png){: width="95%" }
 
+### Kako se sami alarmi i dashboard-i drže pod kontrolom verzija
+
+Mehanizam rutiranja opisan gore — pravila, kontakt tačke (Grafana-ov naziv
+za odredište jednog obaveštenja: webhook, email, itd.), fallback lanac —
+nije nešto što neko ručno održava kroz web interfejs observability
+platforme. Pravila za Put B (PromQL uslov, prag, kontakt tačka kojoj
+pravilo šalje obaveštenje) definisana su kao infrastrukturni kod, istim
+alatom (Terraform) i u istom stilu repozitorijuma kojim je definisana i
+sama infrastruktura koja tu telemetriju proizvodi. Svaka grupa pravila i
+svaka kontakt tačka je resurs u kodu; promena ide kroz isti `plan`/`apply`
+ciklus kao i svaka druga infrastrukturna promena, sa stanjem čuvanim u
+istom udaljenom skladištu.
+
+Dashboard-i idu drugačijim putem — namerno žive odvojeno od infrastrukturnog
+koda, u sopstvenom repozitorijumu, i objavljuju se isključivo kroz namenski
+skript, nikad ručnim pozivom API-ja. Razlog razdvajanja nije istorijski
+nego namerni: definicija alarma je infrastrukturna odluka (prag, uslov, kome
+ide) koja prirodno prati istu disciplinu pregleda promena kao mreža ili baza
+podataka; sadržaj dashboard-a je češće uređivački posao — raspored panela,
+koji upit ide na koji grafikon — kojim se bavi širi krug ljudi, uključujući
+i one koji ne pišu infrastrukturni kod. Nametanje istog alata i istog toka
+odobravanja na oba bi ili usporilo iteraciju na dashboard-ima ili oslabilo
+disciplinu oko alarma.
+
+Ova disciplina otkriva zamku koja se ne vidi dok se u nju ne udari: izmena
+postojeće grupe pravila resetuje stanje **svakog** pravila u toj grupi, ne
+samo onog koje se menja. Ako je bilo koje pravilo u grupi trenutno aktivno
+(alarmira), primena promene odmah šalje lažno "razrešeno" obaveštenje,
+spušta pravilo na neutralno stanje, i onda ga ponovo vodi kroz isti prelaz
+nazad ka alarmiranju — par poruka koji u Slack-u izgleda identično kao da je
+alarm zatreperio, a nije. Zabeležen slučaj: promena samo jednog sporednog
+parametra (koliko često se obaveštenje ponavlja) na pravilu koje je već
+šest sati mirno alarmiralo na istoj, nepromenjenoj vrednosti izazvala je
+tačno taj par poruka — "razrešeno" u trenutku primene, pa "ponovo aktivno"
+tačno onoliko kasnije koliko iznosi prozor potvrde tog pravila (u zabeleženom
+slučaju, pola sata). Uslov se u međuvremenu nije nijednom promenio.
+
+Ovo nije kvar konfiguracije nego neizbežna posledica arhitekture — stanje
+pravila živi po grupi, ne po pojedinačnom pravilu — i vredi je unapred
+očekivati, ne tražiti joj uzrok posle svake primene: jedan par
+"razrešeno pa ponovo aktivno" po svakom trenutno-aktivnom pravilu u grupi,
+za svaku primenu koja tu grupu dotiče. Praktična posledica: primenjivati
+promene kad ništa u toj grupi ne alarmira ako postoji izbor, i unapred
+najaviti timu da će par poruka doći ako se primenjuje dok nešto već
+alarmira.
+
 ## 13.3 Analitički deo — zašto se ne stapaju u jedan mehanizam
 
 ### Zvanična preporuka: rutiranje po vlasništvu, ne po tehnologiji
@@ -144,6 +190,11 @@ drugi sa sobom.**
 - Meri redovno koliki procenat alarma zaista pogađa namensku rutu — pad tog
   procenta je rani signal da je neki domen prerastao svoju trenutnu
   konfiguraciju.
+- Drži definicije alarma (pragovi, kontakt tačke) kao infrastrukturni kod uz
+  ostatak sistema i primenjuj ih istim `plan`/`apply` ciklusom — ali očekuj
+  da izmena grupe pravila pošalje lažan par "razrešeno pa ponovo aktivno"
+  za svako trenutno aktivno pravilo u toj grupi, ne samo za pravilo koje se
+  zapravo menja.
 
 ## 13.5 Vežba za čitaoca
 

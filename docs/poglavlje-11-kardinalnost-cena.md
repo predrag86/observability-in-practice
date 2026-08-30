@@ -135,6 +135,44 @@ primene, otkrio je baš takav slučaj — jedna metrika koja je izgledala
 neiskorišćeno je zapravo bila jedini signal za redak, ali stvaran problem, i
 vraćena je na listu istog dana.
 
+### Exemplari — most između metrike i trejsa, i zašto dugo nije radio
+
+Histogram iz Faze 1 rešava trošak — ali histogram, klasičan ili nativan,
+nosi i drugu mogućnost, nezavisnu od formata bucket-a: svaka opservacija
+koja upadne u histogram može da ponese sa sobom **exemplar** — jedan
+konkretan uzorak, obično ID trejsa aktivnog u trenutku te opservacije,
+zakačen direktno na tačku na grafiku metrike. Klik na tu tačku ne otvara
+agregiranu statistiku nego jedan stvaran trejs koji je doprineo baš toj
+vrednosti — najkraći mogući put od "vidim skok" do "evo tačno šta je bilo
+sporo u tom pozivu".
+
+Ovaj most je u implementaciji koju knjiga prati dugo postojao samo kao
+praznina na listi: metrike i trejsovi su oba već stizala kroz isti gateway,
+oba su bila dostupna, a spona između njih nije bila uključena — ne zato što
+je tehnički teško, nego zato što ništa nije prisililo prioritet dok neko
+nije, usred stvarnog incidenta, pitao "dobro, vidim skok, ali koji je tačno
+poziv bio spor" i otkrio da odgovor na to pitanje ne postoji jednim klikom.
+
+Kad je konačno uključen, otkrivena je zamka koja se ne vidi u dokumentaciji
+na prvi pogled: **exemplari se čuvaju mnogo kraće od same metrike na koju su
+zakačeni.** Dok grafik metrike ostaje čitljiv nedeljama, exemplar tačka na
+tom istom grafiku prestaje da vodi ikuda posle otprilike četiri sata. Panel
+koji je juče imao klikabilnu tačku na skoku, danas ima istu tačku vizuelno —
+ali klik na nju ne vodi nigde. Ovo nije kvar nego očekivano ponašanje kratke
+retencije, i vredi ga znati unapred, ne otkriti ga usred istrage
+incidenta starog nedelju dana, kad je exemplar davno istekao.
+
+Samo uključivanje exemplar-a takođe nije potpuno rešenje bez još jednog
+koraka: exemplar je koristan onoliko koliko je histogram na koji je zakačen
+dovoljno raščlanjen da klik zaista vodi ka relevantnom pozivu. Histogram
+trajanja meren na nivou celog servisa, bez raščlanjivanja po pojedinačnoj
+ruti, daje exemplar koji je tehnički klikabilan ali statistički skoro
+nasumičan — spoj sa jednim od stotina istovremenih poziva, ne nužno onim
+koji zanima. Sledeći korak na listi (u trenutku pisanja još neizgrađen) je
+histogram raščlanjen po ruti za par posebno teških endpoint-a, tako da
+exemplar sa vrha skoka vodi ka trejsu zaista tog endpoint-a, ne bilo kog
+poziva istog servisa u istom trenutku.
+
 ## 11.3 Analitički deo — zašto kardinalnost nije "detalj skladištenja"
 
 ### Zvanična preporuka: nativni histogrami kao strukturno rešenje
@@ -202,6 +240,11 @@ odjednom.**
   (jedna promenljiva, ne redeploy) — cena sporog povratka u trenutku kad
   nekom zaista treba upravo taj podatak je veća od cene sporije primene same
   mere.
+- Uključi exemplare čim histogram već postoji — trošak je zanemarljiv, a
+  korist (jedan klik od skoka na grafiku do stvarnog trejsa) retko dolazi
+  jeftinije. Ali unapred znaj da je retencija exemplar-a mnogo kraća od
+  retencije same metrike: klik na staru tačku na grafiku neće voditi nigde,
+  i to nije kvar nego očekivano ponašanje.
 
 ## 11.5 Vežba za čitaoca
 
