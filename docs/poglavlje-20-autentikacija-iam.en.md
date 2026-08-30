@@ -40,6 +40,46 @@ which events the system is even capable of emitting has to be baked into
 the image ahead of time, which turns every change to the logging pattern
 into a new build and redeploy, not a quick configuration change.
 
+### Three signals directly, one through a sidecar
+
+The authentication system itself is able to push three of the four
+signals directly to the observability collector — traces and logs
+through built-in, native telemetry-push support, with no agent and no
+sidecar. Metrics are the exception: the system doesn't push them, it only
+exposes them locally on its own port, in a format meant for pulling, not
+pushing. Since the observability platform accepts only push, an
+intermediary is needed — a dedicated sidecar within the same
+infrastructure unit that periodically pulls that local source (every
+thirty-ish seconds, infrequent enough for a long-lived service) and
+pushes the result onward. This sidecar isn't a new pattern — it reuses
+the same sidecar that already collects the infrastructure unit's own
+metrics (CPU, memory, network) for the rest of the fleet, just with an
+added module that knows how to pull from the local source.
+
+The reuse wasn't without its trap: both replicas of the authentication
+system expose metrics on an *identical* local address — without
+additional intervention, the collector would derive an identical source
+identity for both replicas, and their metrics would merge into a single
+time series, hiding the difference between the two separate instances.
+The fix was to explicitly override that derived identity with a value
+that's actually unique per unit (the infrastructure unit's own
+identifier), instead of relying on what the collector derives on its own
+from the address it scanned — a small difference in how the data gets
+merged (override instead of only adding if missing) that, without care,
+silently erases half the data.
+
+Traces have their own trap, related to cost, not correctness: the
+default trace sampling rate is 100% — every request generates a trace.
+For an authentication system, which is by nature a hot path with a high
+request volume, this would generate a trace volume out of proportion to
+its actual diagnostic value. The rate was dropped to just a few percent
+from the very start, with a deliberate plan to raise it later if traces
+turn out to be too sparse too often to be useful — the reverse order from
+raising detail only once it's needed, because the default rate would
+have been too expensive to ever ship to production.
+
+![Three signals go directly from the authentication system to the observability collector by push; the fourth (metrics) the system only exposes locally, so a sidecar pulls it and pushes it onward — with an explicit override of the source identity so the two replicas don't collapse into one series.](diagrams/ch20-mehanizam-signala.png){: width="90%" }
+
 ### An asymmetry discovered by reading the default logging levels
 
 The implementation uncovered this chapter's central finding not through an
@@ -200,6 +240,11 @@ but because hidden inside the pile of successes is the one that isn't.
   (not incorrect) credentials: would that class of attack ever produce a
   single failed attempt — if not, your system that tracks only failures
   is completely blind to that class of attack.
+- When a metrics-pulling sidecar is reused across multiple identical
+  replicas, explicitly override the source identity with a value unique
+  per replica — don't rely on what the collector derives on its own from
+  the address it scanned, because identical addresses across all replicas
+  silently merge them all into one series.
 
 ## 20.5 Exercise for the reader
 

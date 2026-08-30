@@ -72,6 +72,71 @@ This order isn't an arbitrary choice — it directly reflects the topology:
 executor nodes are interchangeable and losing one is absorbed, the
 coordinator node is not, and losing it stops everything.
 
+### Two phases of rollout, not just node order
+
+The difference in change cost per layer, described above, doesn't just
+dictate node order — it splits the entire rollout into two clearly
+separate phases across the whole fleet. Phase one introduces both cheap
+layers (host and log) on all three nodes at once, as a fully separate,
+additional process that touches neither the configuration nor the
+execution of the main application — zero risk, because even if this
+additional process were to fail, the cluster itself keeps running
+uninterrupted. Only once this first round is confirmed correct, all the
+way through, on the node of smallest blast radius, does phase two begin —
+introducing the third, more expensive layer — which then follows the same
+blast-radius order described above, but with an additional condition
+before each step: since this version of the system has no built-in
+"drain" command to empty a node before restart, the operator manually
+verifies that the node (and, for the coordinator node, the entire
+cluster) currently has no active or pending jobs, before restarting. For
+the coordinator node itself, last in the order, this check alone isn't
+enough — that step is additionally announced ahead of time as a
+maintenance window, because restarting that one process takes down the
+user-visible surface (queries, interface) for the duration of the restart
+itself, while a separate, co-located service that holds cluster
+membership is deliberately **not** restarted along with it — so that when
+the cluster comes back up, it knows who its members still are, instead of
+having to reconstruct that information from scratch.
+
+![Two phases of rolling out observability in a self-managed cluster: phase one (host + log) goes to all three nodes with no restart and no risk; phase two (the more expensive layer) follows the same blast-radius order, but each step waits on a manual check that no jobs are active, and the last step additionally waits on an announced maintenance window.](diagrams/ch19-dve-faze.png){: width="80%" }
+
+### The trap on the first node: wrong identity, and records that vanish without a trace
+
+The first rollout round, on the node of smallest blast radius, surfaced
+two real bugs before it continued to the rest of the cluster — both of
+which, left undetected, would have quietly corrupted data from every
+other node.
+
+First: host-layer metrics initially showed up under the wrong identity.
+The host-metrics collection tool itself, by default, tags its targets
+with its own generic name — and that tag silently overrode the node
+identifier and role that the implementation intended every signal to
+carry, because the default rule was "don't override an already-existing
+tag." The fix was to explicitly reverse that rule for this specific
+agent — letting it deliberately override its own default tag, because for
+a direct agent on the node itself (unlike the shared collector
+downstream, which has to respect whatever the sender already tagged) that
+very node is the source of truth for its own identity.
+
+Second, more subtle: nearly all records from the first node vanished
+without a single error to announce it — not "zero records because there
+are none yet," but hundreds sent, zero written. The cause: records read
+directly from a file default to an unset, unspecified severity tag, and
+the shared collector downstream — the same one that carries the rest of
+the fleet — has a rule that silently drops anything below a minimum
+severity level, including "unspecified," on the assumption that a sender
+that doesn't bother tagging severity is probably sending noise. The fix
+had to happen on the sender side, not on the shared collector (so as not
+to touch the rule the rest of the fleet depends on): every record now
+defaults to informational severity, which is then raised or lowered based
+on a recognizable word already present in the record's own text.
+
+This second finding is more general than the specific fix: a completely
+silent loss — no error, no warning, just absence — is exactly the class
+of failure that the noise-dropping mechanism itself, by definition,
+cannot detect on its own. A new source sending nothing for the first time
+looks identical to a genuinely quiet source that has little to say.
+
 ### Measure before assuming: does auto-shutdown even work here
 
 The standard lever for cutting costs on always-on clusters is automatic
@@ -208,6 +273,17 @@ and no less, and staying assembled.
 - Estimate how many new time series each new metrics source brings before
   turning it on, especially for JMX/Dropwizard families — they can double
   total cardinality before anyone gets around to noticing.
+- When record volume (and its bill) grows, don't cut blindly — first
+  measure which stream, and which field within it, actually carries the
+  bulk of the volume (in one real case, a single stream carried most of
+  the whole fleet's daily volume, and a single free-text field within it
+  carried most of that), then truncate exactly that field at the ingest
+  point — truncate, don't delete, if any panel still needs to show it to a
+  human investigating a specific case — and deliberately leave
+  structured, nested fields untouched, because naively truncating them
+  with a text-based rule could easily produce invalid structure and break
+  every panel reading that source with an error, instead of quietly
+  dropping one field.
 
 ## 19.5 Exercise for the reader
 

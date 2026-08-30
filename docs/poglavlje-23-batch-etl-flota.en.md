@@ -36,6 +36,39 @@ traffic — because a single scheduled job has no meaningful "request
 rate," and its duration, without confirmation that it actually produced
 something, says nothing useful on its own.
 
+### How a job actually flows through the system, step by step
+
+The completeness model from the previous section isn't an arbitrary
+choice — it directly tracks the concrete steps every job actually passes
+through:
+
+1. **Trigger.** A scheduled rule or a call from another job initiates
+   submission.
+2. **Submission.** Called with the queue name and the job definition
+   name — with no pinned definition revision, so it always uses the
+   latest version available at the moment of submission.
+3. **Queue.** The job passes through a series of states — submitted,
+   pending, ready to run.
+4. **Capacity source selection.** The system walks the list of possible
+   capacity sources in exactly the order they're listed for that queue,
+   and places the job on the first source that has enough resources to
+   accept it. This is the exact mechanism behind the ordering lesson in
+   the next section — "changing the order" literally means swapping the
+   positions of two sources on this list, nothing more.
+5. **Execution.** The job runs as an ordinary instance of the container
+   infrastructure, sharing everything that infrastructure already
+   offers.
+6. **Exit.** The exit code determines whether the job succeeded or not.
+   If a retry is configured, the system resubmits the job on its own
+   with an incremented attempt count, until the give-up rule says
+   "enough" or the upper attempt limit is reached.
+
+These six steps are the same for every job in the fleet, regardless of
+what the job actually does — which is exactly why the completeness model
+could be a single, general pattern instead of per-job custom logic.
+
+![The six steps every job passes through: submission, queue, capacity source selection in order, execution, exit code, and resubmission only for transient causes of failure.](diagrams/ch23-zivotni-ciklus.png){: width="90%" }
+
 ### A specific and deliberately different pattern: completed successfully, but empty
 
 The most important failure mode the implementation explicitly covers —
@@ -75,6 +108,33 @@ valuable lesson in its own right: not every reliability problem is solved
 by adding fault tolerance — sometimes it's cheaper and more reliable to
 simply change the order of selection so that the less reliable option
 gets used less often in the first place.
+
+### Why this fleet didn't need a separate failure alert
+
+Jobs in this fleet, when they run, run as ordinary instances of the same
+container infrastructure that carries the rest of the system — there's
+no separate, dedicated infrastructure just for batch work. The practical
+consequence: the general, per-family, aggregated alert on a non-zero
+exit code, described in Chapter 29, automatically covers this fleet too,
+without a single line of code written specifically for it. This was
+confirmed live on the very same day the capacity source order was
+changed — a real, interrupted job on the older, less reliable source was
+caught and reported by that same general mechanism within minutes, with
+no special preparation ahead of time.
+
+This wasn't always the only path for a failure alert. Until recently, a
+second, purpose-built mechanism existed in parallel just for this
+fleet: a dedicated function that counted failures and published them as
+a separate metric, feeding three named alerts. It was decommissioned in
+the same cleanup as a related case elsewhere in the system — same
+pattern, different fleet — for two reasons: its execution environment
+had been obsolete for years, and an audit found that all three alerts
+had sat silently in the exact same, unchanged state for over three
+years. No one had noticed, because the newer, general mechanism had
+quietly been doing the real work the whole time. Only the scheduled rule
+that used to trigger that old mechanism was deliberately kept —
+redirected to just archive the records for cheap after-the-fact
+forensics, with nothing left that would send an alert from it.
 
 ### Current state: outside the main telemetry pipeline
 
@@ -177,6 +237,13 @@ customers, that the shelves are empty.
   the fleet still isn't onboarded onto the main telemetry pipeline —
   instead of leaving the gap hidden until someone stumbles onto it by
   chance.
+- Check whether the jobs in your fleet share execution infrastructure
+  with the rest of the system — if they do, a general alert on exit code
+  already covers the fleet for free, and a separate, purpose-built
+  mechanism for the same thing is an unnecessary risk of silently going
+  stale. Periodically audit existing alerts to confirm none of them has
+  sat in the exact same, unchanged state for years without anyone
+  noticing.
 
 ## 23.5 Exercise for the reader
 
