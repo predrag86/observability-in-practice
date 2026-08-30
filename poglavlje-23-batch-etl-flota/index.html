@@ -1510,6 +1510,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kako-zadatak-zaista-prolazi-kroz-sistem-korak-po-korak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kako zadatak zaista prolazi kroz sistem, korak po korak
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#poseban-i-namerno-drugaciji-obrazac-uspesno-zavrseno-ali-prazno" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1536,6 +1547,17 @@
     <span class="md-ellipsis">
       
         Eliminacija jedne klase prekida promenom redosleda, ne dodavanjem otpornosti
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zasto-ovoj-floti-nije-trebao-poseban-alarm-za-neuspeh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zašto ovoj floti nije trebao poseban alarm za neuspeh
       
     </span>
   </a>
@@ -2321,6 +2343,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kako-zadatak-zaista-prolazi-kroz-sistem-korak-po-korak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kako zadatak zaista prolazi kroz sistem, korak po korak
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#poseban-i-namerno-drugaciji-obrazac-uspesno-zavrseno-ali-prazno" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2347,6 +2380,17 @@
     <span class="md-ellipsis">
       
         Eliminacija jedne klase prekida promenom redosleda, ne dodavanjem otpornosti
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zasto-ovoj-floti-nije-trebao-poseban-alarm-za-neuspeh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zašto ovoj floti nije trebao poseban alarm za neuspeh
       
     </span>
   </a>
@@ -2533,6 +2577,34 @@ namerno ne pokušava da forsira batch zadatak u kalup napravljen za
 servise koji stalno primaju saobraćaj — jer pojedinačan zakazan zadatak
 nema smislenu "stopu zahteva," a njegovo trajanje bez potvrde da je
 zaista nešto proizveo ne govori ništa korisno samo po sebi.</p>
+<h3 id="kako-zadatak-zaista-prolazi-kroz-sistem-korak-po-korak">Kako zadatak zaista prolazi kroz sistem, korak po korak</h3>
+<p>Model potpunosti iz prethodnog odeljka nije proizvoljan izbor — direktno
+prati konkretne korake kroz koje svaki zadatak zaista prolazi:</p>
+<ol>
+<li><strong>Okidač.</strong> Zakazano pravilo ili poziv iz drugog zadatka pokreće
+   predaju.</li>
+<li><strong>Predaja.</strong> Poziva se sa imenom reda čekanja i imenom definicije
+   zadatka — bez fiksirane revizije definicije, pa se uvek koristi
+   najnovija dostupna verzija u trenutku predaje.</li>
+<li><strong>Red čekanja.</strong> Zadatak prolazi kroz niz stanja — predat, na čekanju,
+   spreman za izvršavanje.</li>
+<li><strong>Izbor izvora kapaciteta.</strong> Sistem prolazi kroz listu mogućih izvora
+   kapaciteta tačno onim redosledom kojim su navedeni za taj red čekanja,
+   i stavlja zadatak na prvi izvor koji ima dovoljno resursa da ga
+   primi. Ovo je tačan mehanizam koji stoji iza lekcije o redosledu iz
+   narednog odeljka — "promeniti redosled" znači doslovno zameniti mesta
+   dva izvora na ovoj listi, ništa više.</li>
+<li><strong>Izvršavanje.</strong> Zadatak se pokreće kao obična instanca kontejnerske
+   infrastrukture, deleći sve što ta infrastruktura već nudi.</li>
+<li><strong>Izlaz.</strong> Izlazni kod određuje da li je zadatak uspeo ili nije. Ako je
+   definisano ponovno pokušavanje, sistem sam ponovo predaje zadatak sa
+   uvećanim brojem pokušaja, sve dok pravilo o tome kada odustati ne kaže
+   "dosta" ili dok se ne dostigne gornja granica pokušaja.</li>
+</ol>
+<p>Ovih šest koraka su ista za svaki zadatak u floti, bez obzira na to šta
+zadatak zapravo radi — što je i razlog zašto je model potpunosti mogao da
+bude jedan, opšti obrazac umesto posebne logike po zadatku.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch23-zivotni-ciklus.png" data-desc-position="bottom"><img alt="Šest koraka kroz koje svaki zadatak prolazi: predaja, red čekanja, izbor izvora kapaciteta po redosledu, izvršavanje, izlazni kod, i ponovna predaja samo za prolazne uzroke neuspeha." src="../diagrams/ch23-zivotni-ciklus.png" width="90%"></a></p>
 <h3 id="poseban-i-namerno-drugaciji-obrazac-uspesno-zavrseno-ali-prazno">Poseban i namerno drugačiji obrazac: uspešno završeno, ali prazno</h3>
 <p>Najvažniji, i najlakše propušten oblik kvara koji je implementacija
 eksplicitno pokrila jeste zadatak koji se završi sa urednim, uspešnim
@@ -2564,6 +2636,29 @@ logike za oporavak od prekida. Ovo je vredna lekcija sama po sebi: nije
 svaki problem sa pouzdanošću rešen dodavanjem otpornosti na kvar — nekad
 je jeftinije i pouzdanije jednostavno promeniti redosled izbora tako da se
 manje pouzdana opcija ređe uopšte i koristi.</p>
+<h3 id="zasto-ovoj-floti-nije-trebao-poseban-alarm-za-neuspeh">Zašto ovoj floti nije trebao poseban alarm za neuspeh</h3>
+<p>Zadaci u ovoj floti, kad se izvršavaju, rade kao obične instance iste
+kontejnerske infrastrukture koja nosi i ostatak sistema — nema posebne,
+odvojene infrastrukture samo za batch posao. Praktična posledica: opšti,
+po-porodici skupljen alarm na izlazni kod različit od nule, opisan u
+Poglavlju 29, automatski pokriva i ovu flotu, bez ijedne linije koda
+napisane posebno za nju. Ovo je potvrđeno uživo istog dana kad je
+redosled izvora kapaciteta promenjen — stvaran, prekinut zadatak na
+starom, manje pouzdanom izvoru je uhvaćen i prijavljen tim istim, opštim
+mehanizmom u roku od nekoliko minuta, bez ikakve posebne pripreme
+unapred.</p>
+<p>Ovo nije uvek bio jedini put za alarm o neuspehu. Paralelno je do
+nedavno postojao i drugi, posebno izgrađen mehanizam samo za ovu flotu:
+namenska funkcija koja je brojala neuspehe i objavljivala ih kao
+posebnu metriku, napajajući tri imenovana alarma. Ukinut je u istom
+čišćenju kao i srodan slučaj drugde u sistemu — istog obrasca, samo
+druga flota — iz dva razloga: njegovo izvršno okruženje je godinama
+prevaziđeno, a revizija je otkrila da su sva tri alarma tiho stajala u
+istom, nepromenjenom stanju duže od tri godine. Niko to nije primetio,
+jer je noviji, opšti mehanizam sve to vreme tiho radio pravi posao.
+Namerno je zadržano samo zakazano pravilo koje je taj stari mehanizam
+pokretao — preusmereno da samo arhivira zapise radi jeftine naknadne
+forenzike, bez ičega što bi iz njega dalje slalo alarm.</p>
 <h3 id="trenutno-stanje-van-glavnog-cevovoda-za-telemetriju">Trenutno stanje: van glavnog cevovoda za telemetriju</h3>
 <p>Implementacija beleži i ono što još nije urađeno, ne samo ono što jeste:
 flota batch zadataka trenutno šalje svoje logove kroz stariji, direktan
@@ -2646,6 +2741,12 @@ pekar koji sazna tek ujutru, od mušterija, da police stoje prazne.</p>
 <li>Beleži poznate praznine u pokrivenosti eksplicitno — na primer, koji deo
   flote još nije uključen u glavni cevovod za telemetriju — umesto da
   praznina ostane skrivena dok je neko slučajno ne otkrije.</li>
+<li>Proveri da li zadaci u tvojoj floti dele infrastrukturu izvršavanja sa
+  ostatkom sistema — ako je dele, opšti alarm na izlazni kod već
+  pokriva flotu besplatno, i poseban, namenski mehanizam za istu stvar
+  je nepotreban rizik od tihog zastarevanja. Periodično revidiraj
+  postojeće alarme da proveriš da nijedan nije godinama u istom,
+  nepromenjenom stanju bez da iko primeti.</li>
 </ul>
 <h2 id="235-vezba-za-citaoca">23.5 Vežba za čitaoca</h2>
 <p>Pronađi jedan zakazan zadatak u tvom sistemu koji se trenutno prati samo
@@ -2682,7 +2783,7 @@ i ako da, postoji li trenutno ijedan alarm koji bi tu situaciju uhvatio?</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="26. avgust 2026. 15:47:41 UTC">26. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 08:48:12 UTC">30. avgust 2026.</span>
   </span>
 
     

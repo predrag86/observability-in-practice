@@ -1426,6 +1426,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#tri-signala-direktno-jedan-preko-prateceg-kontejnera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tri signala direktno, jedan preko pratećeg kontejnera
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#asimetrija-otkrivena-citanjem-podrazumevanih-nivoa-logovanja" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2310,6 +2321,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#tri-signala-direktno-jedan-preko-prateceg-kontejnera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tri signala direktno, jedan preko pratećeg kontejnera
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#asimetrija-otkrivena-citanjem-podrazumevanih-nivoa-logovanja" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2518,6 +2540,68 @@ startu. Praktična posledica: bilo koja opcija koja utiče na to koje
 događaje sistem uopšte ume da emituje mora biti ispečena u sliku unapred,
 što svaku izmenu obrasca logovanja pretvara u novi build i redeploy, ne u
 brzu promenu konfiguracije.</p>
+<p>Ova podela nije bila očigledna unapred — otkrivena je kroz stvaran
+neuspeh. Rana verzija konfiguracije je tri konkretne opcije (tip
+uzorkovanja trejsova, uključivanje metrika korisničkih događaja,
+uključivanje slanja logova) pogrešno klasifikovala kao opcije vremena
+pokretanja, na osnovu doslovnog čitanja dokumentacije. Postavljanje sve
+tri kao promenljive okruženja u produkcionom rasporedu srušilo je
+kontejner pri svakom pokušaju starta, sa jasnom porukom da se vrednosti
+opcija iz vremena građenja razlikuju od onih već upisanih u sliku —
+automatski mehanizam za povratak na prethodnu, zdravu verziju je odmah
+preuzeo kontrolu. Ispravka: sam neuspeli raspored, ne dokumentacija,
+postao je merodavan izvor istine o tome koja opcija je zaista fiksirana u
+vreme građenja — sve tri opcije su premeštene u proces građenja slike. Od
+tada važi jednostavno pravilo: kad je nejasno da li je neka opcija ovog
+sistema opcija vremena građenja ili vremena pokretanja, tretiraj je kao
+opciju vremena građenja dok se suprotno ne dokaže.</p>
+<p>Postoje dva načina da se opcija vremena građenja zaista postavi.
+Preporučen način je da se slika ponovo izgradi sa opcijom već upečenom —
+jedini put pogodan za produkciju. Drugi način — privremeno ukloniti sam
+optimizovani režim pokretanja, čime sistem sam sebe ponovo gradi iz
+promenljivih okruženja pri svakom startu — tehnički radi, ali sistem
+tada mora iznova da izvede i sve ostale opcije vremena građenja iz
+konfiguracije, uključujući, na primer, koji tip baze podataka koristi;
+ako neka od tih opcija nije eksplicitno navedena van slike, rizik je da
+se tiho izvede drugačija vrednost nego što slika stvarno koristi. Zbog
+tog rizika, ukidanje optimizovanog režima je prihvatljivo samo kao
+jednokratni eksperiment na test okruženju, nikad u produkciji.</p>
+<h3 id="tri-signala-direktno-jedan-preko-prateceg-kontejnera">Tri signala direktno, jedan preko pratećeg kontejnera</h3>
+<p>Sistem za autentikaciju sam ume da gura tri od četiri signala direktno
+ka kolektoru posmatranja — trejsove i logove preko ugrađene, izvorne
+podrške za guranje telemetrije, bez agenta i bez pratećeg kontejnera.
+Metrike su izuzetak: sistem ih ne gura, samo ih izlaže lokalno na
+sopstvenom portu, u obliku pogodnom za povlačenje, ne guranje. Pošto
+platforma za posmatranje prima isključivo guranje, potreban je
+posrednik — namenski, prateći kontejner unutar iste infrastrukturne
+jedinice, koji periodično povlači taj lokalni izvor (na svakih
+tridesetak sekundi, dovoljno retko za dugoživeći servis) i gura rezultat
+dalje. Ovaj prateći kontejner nije nov obrazac — ponovna je upotreba
+istog pratećeg kontejnera koji već prikuplja metrike same infrastrukture
+(procesor, memorija, mreža) za ostatak flote, samo sa dodatim modulom
+koji zna da povlači sa lokalnog izvora.</p>
+<p>Ponovna upotreba nije bila bez zamke: obe replike sistema za
+autentikaciju izlažu metrike na <em>identičnoj</em> lokalnoj adresi — bez
+dodatne intervencije, kolektor bi izveo identičan identitet izvora za
+obe replike, i njihove metrike bi se stopile u jednu jedinu vremensku
+seriju, sakrivajući razliku između dve zasebne instance. Ispravka je
+bila eksplicitno prepisati taj izvedeni identitet vrednošću koja je
+stvarno jedinstvena po jedinici (identifikator same infrastrukturne
+jedinice), umesto da se osloni na ono što kolektor sam izvede iz adrese
+koju je skenirao — sitna razlika u načinu spajanja podataka (prepisati
+umesto samo dodati ako nedostaje) koja bez pažnje tiho briše polovinu
+podataka.</p>
+<p>Trejsovi imaju sopstvenu zamku vezanu za trošak, ne ispravnost:
+podrazumevana stopa uzorkovanja trejsova je 100% — svaki zahtev
+generiše trejs. Za sistem za autentikaciju, koji je po prirodi vruća
+putanja sa velikim brojem zahteva, ovo bi generisalo trejs-volumen koji
+ne odgovara njegovoj stvarnoj važnosti za dijagnostiku. Stopa je
+spuštena na svega nekoliko procenata od samog starta, sa svesnim planom
+da se po potrebi podigne ako se pokaže da su trejsovi prečesto premali
+da bi bili korisni — obrnut redosled od podizanja detalja tek kad
+zatreba, jer bi podrazumevana stopa bila preskupa da se uopšte pusti u
+produkciju.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch20-mehanizam-signala.png" data-desc-position="bottom"><img alt="Tri signala idu direktno od sistema za autentikaciju ka kolektoru posmatranja guranjem; četvrti (metrike) sistem samo lokalno izlaže, pa ga prateći kontejner povlači i gura dalje — sa eksplicitnim prepisivanjem identiteta izvora da dve replike ne bi kolabirale u jednu seriju." src="../diagrams/ch20-mehanizam-signala.png" width="90%"></a></p>
 <h3 id="asimetrija-otkrivena-citanjem-podrazumevanih-nivoa-logovanja">Asimetrija otkrivena čitanjem podrazumevanih nivoa logovanja</h3>
 <p>Implementacija je otkrila centralni nalaz ovog poglavlja ne kroz incident,
 nego kroz sistematičan pregled podrazumevanih nivoa logovanja za svaki tip
@@ -2655,6 +2739,11 @@ to nije.</p>
   pogrešnih) kredencijala: da li bi ta klasa napada ikad proizvela
   ijedan neuspeli pokušaj — ako ne, tvoj sistem koji prati samo neuspehe
   je za tu klasu napada potpuno slep.</li>
+<li>Kad se prateći kontejner za povlačenje metrika ponovo koristi na više
+  identičnih replika, eksplicitno prepiši identitet izvora vrednošću
+  jedinstvenom po replici — ne oslanjaj se na ono što kolektor sam izvede
+  iz adrese koju je skenirao, jer identične adrese na svim replikama
+  tiho stope sve njih u jednu seriju.</li>
 </ul>
 <h2 id="205-vezba-za-citaoca">20.5 Vežba za čitaoca</h2>
 <p>Proveri podrazumevani nivo logovanja za uspešnu prijavu u sistemu za
@@ -2693,7 +2782,7 @@ tvoj tim trenutno ne može da odgovori zbog toga.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 08:40:04 UTC">30. avgust 2026.</span>
   </span>
 
     

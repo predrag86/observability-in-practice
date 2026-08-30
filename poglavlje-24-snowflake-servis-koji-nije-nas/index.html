@@ -1538,10 +1538,32 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#zasto-zakazano-prikupljanje-a-ne-direktna-konekcija" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zašto zakazano prikupljanje, a ne direktna konekcija
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#tri-faze-jedna-zajednicka-sesija" class="md-nav__link">
     <span class="md-ellipsis">
       
         Tri faze, jedna zajednička sesija
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kako-mehanizam-zaista-radi-korak-po-korak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kako mehanizam zaista radi, korak po korak
       
     </span>
   </a>
@@ -2321,10 +2343,32 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#zasto-zakazano-prikupljanje-a-ne-direktna-konekcija" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zašto zakazano prikupljanje, a ne direktna konekcija
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#tri-faze-jedna-zajednicka-sesija" class="md-nav__link">
     <span class="md-ellipsis">
       
         Tri faze, jedna zajednička sesija
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kako-mehanizam-zaista-radi-korak-po-korak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kako mehanizam zaista radi, korak po korak
       
     </span>
   </a>
@@ -2534,6 +2578,32 @@ postojalo bio je mesečni račun i, povremeno, subjektivan utisak korisnika
 da su pojedini upiti "spori." Ovo je vredna polazna tačka za poglavlje —
 razlikuje ga od svih prethodnih studija slučaja, gde je neka forma
 posmatranja već postojala i unapređivana.</p>
+<h3 id="zasto-zakazano-prikupljanje-a-ne-direktna-konekcija">Zašto zakazano prikupljanje, a ne direktna konekcija</h3>
+<p>Pre nego što je bilo šta od gore opisanog izgrađeno, razmotrene su tri
+različite putanje ka istom cilju — dashboard u platformi za posmatranje
+koji pokazuje šta se dešava unutar spoljnog servisa.</p>
+<p>Prva ideja je bila da se na platformu za posmatranje instalira gotov
+konektor za direktnu, interaktivnu konekciju ka spoljnom servisu, potpisan
+i učitan van zvaničnog kataloga. Ovo se pokazalo tehnički neizvodljivim na
+korišćenoj varijanti platforme (upravljanoj, u oblaku, a ne
+samostalno-hostovanoj): upravljana varijanta instalira isključivo
+konektore iz zvaničnog kataloga, a mehanizam za privatno potpisivanje i
+učitavanje sopstvenog konektora postoji samo za samostalno-hostovanu
+varijantu platforme. Ćorsokak, otkriven tek pošto je pokušan.</p>
+<p>Druga ideja je bila da se plati zvanični, proizvođački konektor za
+direktnu konekciju — tehnički bi radio na upravljanoj varijanti platforme
+bez ikakvih prepreka. Odbačen je zato što predstavlja stalnu, ponavljanu
+stavku troška, a ne jednokratni trošak izgradnje — budžet za to nije
+postojao.</p>
+<p>Treća, izabrana i izgrađena putanja ne koristi nikakav direktan konektor
+uopšte: umesto interaktivnog pristupa gde bi neko mogao da napiše
+proizvoljan upit i odmah dobije odgovor, zakazano, kratkotrajno
+pokretanje periodično povlači najsporije upite iz sopstvene, ugrađene
+istorije upotrebe koju servis već vodi, i gura ih kao sanitizovane
+zapise direktno u platformu za posmatranje. Dashboard nad tim zapisima
+zamenjuje interaktivni pregled. Prihvaćen kompromis je eksplicitan: nema
+slobodnog, proizvoljnog upitivanja kakvo bi dao pravi konektor — dobija
+se periodično osvežavana tabela najgorih upita, ne alat za istraživanje.</p>
 <h3 id="tri-faze-jedna-zajednicka-sesija">Tri faze, jedna zajednička sesija</h3>
 <p>Rešenje je izgrađeno u tri odvojene faze, svaka pokrivajući drugačiji cilj,
 ali sve tri <strong>dele istu sesiju</strong> prema spoljnom servisu — svaka faza se
@@ -2555,6 +2625,48 @@ minimalnom vremenu aktivacije radne jedinice, svaka dodatna, odvojena
 sesija bi značila dodatnu naplatu tog minimuma. Spajanjem sve tri faze u
 jedno pokretanje, druga i treća faza koštaju praktično <strong>nula dodatnih
 kredita</strong> iznad onoga što bi prva faza sama koštala.</p>
+<h3 id="kako-mehanizam-zaista-radi-korak-po-korak">Kako mehanizam zaista radi, korak po korak</h3>
+<p>Sve tri faze iz prethodnog odeljka izvršava isti mehanizam, i taj
+mehanizam vredi opisati na nivou "kako", ne samo "šta":</p>
+<ul>
+<li><strong>Okidač.</strong> Zakazano pravilo pokreće kratkotrajno izvršavanje na svaka
+  tri sata. Vredna zamka: ovakav "svaka N sati" raspored se u praksi
+  računa od trenutka kada je <em>samo pravilo napravljeno</em>, ne od ponoći po
+  časovniku — ako se pravilo ikad iznova napravi (a ne samo izmeni),
+  tačno vreme pokretanja se pomera. Ko god prvi put podesi ovakav
+  raspored i očekuje da će pogađati okrugle časove, iznenadiće se.</li>
+<li><strong>Beleška o mestu gde je stalo.</strong> Pre svakog upita ka spoljnom servisu,
+  mehanizam čita trajno sačuvanu belešku — do kog reda je poslednji put
+  uspešno stigao. Upit traži samo redove novije od te beleške, sa gornjom
+  granicom broja redova po pokretanju, uvek najstarije prvo. Beleška se
+  pomera tek pošto su redovi uspešno isporučeni platformi za
+  posmatranje — ne ranije — tako da neuspešno pokretanje ne gubi redove
+  niti ih duplira.</li>
+<li><strong>Identitet sa minimalnim ovlašćenjima.</strong> Upit se ne izvršava pod istim
+  identitetom koji koriste stvarne aplikacije, već pod posebno napravljenim,
+  isključivo-za-čitanje identitetom, ograničenim samo na potreban pogled
+  na istoriju upotrebe. Autentikacija ide preko para ključeva, ne
+  lozinke — kredencijal koji curi ovde ne otvara ništa osim ovog uskog
+  pogleda. Sam upit se izvršava nad najmanjom mogućom radnom jedinicom
+  servisa, iz istog razloga pomenutog ranije: minimalno vreme naplate po
+  buđenju.</li>
+<li><strong>Sanitizacija pre nego što podatak napusti servis.</strong> Tekst svakog
+  upita se pre slanja čisti od stvarnih vrednosti (konkretni literali se
+  zamenjuju placeholder znakom), svodi na jednu liniju i seče na razumnu
+  dužinu — ono što stigne u platformu za posmatranje je oblik upita, ne
+  podaci nad kojima je upit izvršen.</li>
+<li><strong>Isporuka.</strong> Sanitizovani redovi se šalju kao logovi, istim opštim
+  protokolom kojim ova implementacija svuda šalje logove, direktno u
+  platformu za posmatranje — bez posrednog servera, bez privremenog
+  fajla.</li>
+</ul>
+<p>Celo pokretanje, sve tri faze zajedno, traje reda veličine desetak
+sekundi do minut — dovoljno kratko da paket koda ne mora ni da se pakuje
+kao kontejnerska slika. Pokretanje koje ne pronađe nijedan nov red je
+sasvim uobičajeno i tiho se završava bez ičega za slanje — najveći deo
+dana, jedno ranije pokretanje istog dana već je pokupilo sve što se tog
+dana desilo.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch24-mehanizam-prikupljanja.png" data-desc-position="bottom"><img alt="Konkretan tok podataka kroz zakazano prikupljanje: od stvarnog upita nad spoljnim servisom, preko okidača i beleške o mestu gde je stalo, do sanitizovanih zapisa u platformi za posmatranje." src="../diagrams/ch24-mehanizam-prikupljanja.png" width="90%"></a></p>
 <h3 id="strukturno-kasnjenje-ne-greska-u-dizajnu">Strukturno kašnjenje, ne greška u dizajnu</h3>
 <p>Implementacija eksplicitno dokumentuje da ništa u ovom sistemu nije, niti
 je ikad bilo namenjeno da bude, u realnom vremenu. Podaci koje spoljni
@@ -2691,6 +2803,12 @@ izveštaj.</p>
   nikakve veze sa observability-jem — zaboravljene resurse, deljene
   kredencijale — jer niko pre toga nije imao razlog, ni alat, da ih
   potraži.</li>
+<li>Kad direktna, interaktivna konekcija ka spoljnom servisu nije
+  dostupna besplatno (a plaćena varijanta nije u budžetu), proveri da li
+  spoljni servis već vodi sopstvenu istoriju upotrebe koju možeš
+  periodično povlačiti i gurati kao logove — periodično osvežavana
+  tabela najgorih slučajeva je često dovoljna zamena za slobodno
+  upitivanje.</li>
 </ul>
 <h2 id="245-vezba-za-citaoca">24.5 Vežba za čitaoca</h2>
 <p>Nabroj spoljne, upravljane servise koje tvoj sistem koristi, a nad kojima
@@ -2730,7 +2848,7 @@ zatvoriš.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 08:32:56 UTC">30. avgust 2026.</span>
   </span>
 
     
