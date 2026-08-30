@@ -77,6 +77,54 @@ nezavisna puta ka istom domenu kvara zajedno — jedan i dalje javlja, drugi
 ćuti — je jedini način da se razdvoji "stvarno nema problema" od
 "problem postoji, ali njegov glasnik je nem."
 
+### Primena principa na sam alarm: ruta koja preživljava pad sopstvenog kolektora
+
+Isti princip diferencijalnog čitanja implementacija je primenila i na
+samu isporuku alarma, ne samo na merenje. Većina pravila za mrežne alarme
+evaluira nad istim deljenim kolektorom i istim cevovodom koji nosi
+ostatak telemetrije flote — što znači da, ako baš taj cevovod padne,
+pravilo ne javlja grešku, nego jednostavno **prestaje da evaluira** i
+utihne. Tišina pravila je, spolja gledano, neraspoznatljiva od "sve je u
+redu" — tačno onaj problem koji je ovo poglavlje već opisalo za obične
+metrike, sada primenjen na sam mehanizam koji bi trebalo da upozori na
+kvar. Rešenje je bilo namerno razdvojiti mali broj najkritičnijih pravila
+u posebnu grupu koja čita direktno iz nezavisnog izvora podataka, mimo
+deljenog kolektora — tako da, kad kolektor ili njegov cevovod padnu, ta
+druga grupa pravila i dalje evaluira, i dalje može da javi. Obe grupe
+šalju na isti kanal za obaveštavanje, tako da razlika postoji samo u
+putanji do te tačke, ne u tome gde se na kraju pojavljuje.
+
+![Glavna ruta za mrežne alarme evaluira nad istim kolektorom koji nosi ostatak telemetrije, pa kad taj kolektor padne — ruta utihne, neraspoznatljivo od "sve je u redu". Nezavisna ruta čita direktno iz odvojenog izvora, mimo deljenog kolektora, i nastavlja da radi baš u tom trenutku.](diagrams/ch22-nezavisna-ruta.png){: width="85%" }
+
+### Dve vrste provere za dve vrste grešaka
+
+Pre nego što je novoizgrađeni dashboard pušten u upotrebu, implementacija
+je propustila svaki upit na svakom panelu uživo, uporedila sa očekivanim
+vrednostima, i tražila prazne ili neuspele rezultate — provera koja je
+uhvatila nekoliko stvarnih grešaka u samim upitima. Ali ta ista provera
+je **prošla** kroz dve odvojene, stvarne greške koje ništa u upitu nisu
+imale — panel je vraćao tačne podatke, samo ih je pogrešno **prikazivao**:
+naslov odsečen zbog premalog razmaka za tekst, i jedan panel koji je,
+zbog kombinovanja agregacije sa podrazumevanom nula-vrednošću na pogrešnom
+mestu, prikazao dve vrednosti jednu pored druge tamo gde je trebalo da
+postoji samo jedna. Provera zasnovana na upitu ne može da vidi nijednu od
+ove dve greške, jer obe vraćaju validne, neprazne podatke — greška
+postoji samo u tome kako je prikazan rezultat, ne u samom rezultatu.
+Ova dva sloja provere hvataju strogo različite klase grešaka i nijedan ne
+zamenjuje drugi: **provera upita dokazuje da panel nije mrtav, ne da je
+ispravan** — za to drugo je potreban pogled na sam iscrtani panel, ne
+samo na podatke koji ga pune.
+
+Ovde je vredno primetiti i suptilniju zamku iz same provere upita: jedan
+panel je imao podatke u trenutku izgradnje, a bio prazan svega četrdesetak
+minuta kasnije — ne zbog kvara, nego zato što je stvarna vrednost pala na
+nulu i izvor je prestao da je uopšte emituje. Pouka nije "zapamti koje
+metrike znaju da nestanu" — to je pokretna meta, tačno koje metrike su
+prazne u datom trenutku zavisi samo od toga šta trenutno meri nulu. Pouka
+je da se svaki brojač greške ili odbijanja mora tretirati kao da može
+nestati, i eksplicitno mu se doda podrazumevana nula-vrednost, umesto da
+se ta zaštita doda tek pošto nešto konkretno stvarno nestane.
+
 ![Devet ravni mrežne infrastrukture grupisane po tome koliko vidljivo javljaju o sopstvenom kvaru — najgora grupa je slepa i istovremeno predstavlja put kojim prolazi telemetrija svih ostalih ravni.](diagrams/ch22-devet-ravni.png){: width="90%" }
 
 ![Ulazni i izlazni tok bajtova kroz izlazni prolaz, čitani u paru: razilaženje između dve linije, ne bilo koja linija pojedinačno, je ono što otkriva gubitak saobraćaja.](diagrams/dashboard-natdiff.png){: width="95%" }
@@ -164,6 +212,15 @@ javi uopšte može da progovori.
 - Ne zaboravi DNS, servis metapodataka instance, i sinhronizaciju sata —
   sva tri su dokumentovano zapostavljena, bez podrazumevane detaljne
   telemetrije, uprkos direktnom uticaju na TLS, logove i praćenje.
+- Razdvoji šačicu najkritičnijih mrežnih alarma u posebnu grupu koja čita
+  direktno iz izvora nezavisnog od deljenog kolektora — ako sva pravila
+  evaluiraju nad istim cevovodom koji nose, pad tog cevovoda utihne baš
+  ona pravila koja bi trebalo da ga prijave, i ta tišina izgleda identično
+  zdravlju.
+- Ne veruj da je panel ispravan samo zato što je njegov upit prošao
+  proveru uživo — provera upita dokazuje da panel nije mrtav, ne da je
+  ispravno prikazan; za greške u prikazu (odsečen tekst, dupla vrednost
+  na mestu gde treba jedna) potreban je pogled na sam iscrtani panel.
 
 ## 22.5 Vežba za čitaoca
 
