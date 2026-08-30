@@ -55,6 +55,48 @@ Zajednička nit sve četiri: nijedan od ova četiri razloga nije "korisnička
 greška" u klasičnom smislu. Svaki je strukturna neusaglašenost između
 pretpostavki dashboarda i stvarnog okruženja u koje je uvezen.
 
+### Kako se izgubljena oznaka zaista vraća, korak po korak
+
+Četvrti razlog — agregacija koja tiho briše oznake — zaslužuje dublji uvid,
+jer njegov mehanizam krije dve zamke koje čine očigledan popravak
+neupotrebljivim.
+
+Prva zamka: ista metrika, ista tražena oznaka, ali različita funkcija
+agregacije daje potpuno različit rezultat. Sistem koji automatski smanjuje
+broj vremenskih serija ne pamti "ovu oznaku" — pamti tačno **koje**
+agregacione funkcije je prethodno izračunao i sačuvao za svaku
+kombinaciju. Upit koji koristi baš tu sačuvanu funkciju radi. Upit koji
+traži drugu, podjednako razumnu funkciju nad istim podacima vraća — ne
+grešku, nego tiho **prazan rezultat**, nerazlučiv od "ovog problema
+jednostavno nema." Dva od četiri uobičajena izbora funkcije mogu vratiti
+prazno, dok preostala dva rade, na potpuno istoj metrici i istoj oznaci.
+
+Druga zamka je suptilnija i čini najprirodniji popravak nemogućim: ideja
+"dodaj alarm ili pravilo koje redovno čita ovu oznaku, pa će sistem sam
+zaključiti da je oznaka tražena i prestati da je briše" **ne može sama
+sebe pokrenuti**. Dok je oznaka još uvek pod agregacijom, upit koji bi
+takav alarm koristio pogađa prvu zamku — tiho prazan rezultat, zauvek —
+tako da alarm nikad ne vidi podatak koji bi ga naveo da uopšte postoji.
+Popravak zato mora ići u suprotnom redosledu od intuitivnog: prvo se samo
+pravilo agregacije ručno ukloni za tačno one metrike i oznake koje
+nedostaju, zatim se potvrdi da su oznake stvarno počele da se pune (u
+merenom slučaju, u roku od nekoliko minuta), i tek onda se dodaje trajno
+pravilo koje čita tu oznaku — da bi je ubuduće držalo van agregacije, ne
+da bi je prvi put oslobodilo.
+
+Sam čin uklanjanja pravila nosi treću zamku, operativnu: sistem koji
+automatski predlaže i primenjuje agregaciona pravila radi u pozadini, bez
+nadzora, i menja isti skup pravila koji se upravo pokušava ručno
+izmeniti. Dva čitanja istog skupa pravila, minut-dva razmaknuta, mogu
+pokazati različit broj pravila — što znači da naivno "pročitaj, izmeni
+lokalno, upiši nazad" rizikuje da tiho obriše tuđu, međuvremenu izmenu.
+Ispravan pristup uslovljava upis na tačnu verziju pročitanog stanja, tako
+da upis otkaže (umesto da tiho pregazi) ako se stanje u međuvremenu
+promenilo, i posle upisa eksplicitno potvrđuje da je promenjeno tačno
+onoliko pravila koliko je i nameravano — ni više ni manje.
+
+![Pogrešan redosled popravke izgubljene oznake ne radi — oznaka je i dalje pod agregacijom, upit tiho vraća prazno. Ispravan redosled prvo uklanja pravilo agregacije, potvrđuje da se oznaka zaista vratila, i tek onda dodaje trajno pravilo koje je ubuduće drži otvorenom.](diagrams/ch21-redosled-vracanja.png){: width="75%" }
+
 ### Minimalan, namerno biran skup metrika umesto tuđeg kompleta
 
 Umesto da pokuša da popravi svaki od četiri razloga za svaki uvezeni
@@ -193,6 +235,14 @@ svaki deo njega je proveren i tačan za grad u kom se stvarno vozi.
   tuđeg kompleta — svaki panel koji postoji zato što odgovara na poznato
   pitanje je vredniji od deset panela koji postoje zato što su došli u
   paketu.
+- Kad vraćaš oznaku koju je automatska agregacija obrisala, ne dodaji
+  prvo alarm koji je "drži otvorenom" — dok je oznaka još agregirana, taj
+  alarm sam sebe ne može pokrenuti, jer pogađa istu tihu-prazno zamku
+  koju pokušava da otkrije. Prvo ukloni pravilo agregacije, potvrdi da se
+  oznaka vratila, tek onda dodaj trajno pravilo. I uslovi taj upis na
+  tačnu verziju pravila koje menjaš, ako isti skup pravila u pozadini
+  menja i neki automatski proces — inače rizikuješ da tiho pregaziš
+  promenu koja se desila između tvog čitanja i tvog pisanja.
 
 ## 21.5 Vežba za čitaoca
 
