@@ -1056,6 +1056,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#trosak-zavisi-od-nelinearnog-praga-ne-linearno-od-procenta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trošak zavisi od nelinearnog praga, ne linearno od procenta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dva-brojaca-dve-razlicite-tacke-u-istoj-cevi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dva brojača, dve različite tačke u istoj cevi
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2320,6 +2342,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#trosak-zavisi-od-nelinearnog-praga-ne-linearno-od-procenta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trošak zavisi od nelinearnog praga, ne linearno od procenta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dva-brojaca-dve-razlicite-tacke-u-istoj-cevi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dva brojača, dve različite tačke u istoj cevi
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2548,6 +2592,44 @@ je počela da odstupa od očekivane vrednosti izračunate iz konfigurisanih
 politika, i vraćena je na očekivani nivo tek pošto je dobavljač objasnio
 mehanizam, ne pošto je neko promenio konfiguraciju:</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-sampling.png" data-desc-position="bottom"><img alt="Stopa zadržavanja trejsova, očekivano naspram izmerenog: desetodnevni period neslaganja je prijavljen dobavljaču i konfiguracija namerno nije menjana dok mehanizam nije razjašnjen." src="../diagrams/dashboard-sampling.png" width="95%"></a></p>
+<h3 id="trosak-zavisi-od-nelinearnog-praga-ne-linearno-od-procenta">Trošak zavisi od nelinearnog praga, ne linearno od procenta</h3>
+<p>Vredi razdvojiti dva pitanja koja se lako mešaju kad se bira bazna
+probabilistička stopa (trenutno 10%, ranije 25%, pomenuto u § 12.2): koliko
+sampling-a je dovoljno za dijagnostičku vrednost, i koliko sampling-a je
+dovoljno da promeni račun. Odgovor na drugo pitanje nije linearan sa
+procentom, i to menja koja je odluka zapravo jeftina.</p>
+<p>Platforma naplaćuje zadržane trejsove kroz tri odvojene komponente (obrada,
+upis, zadržavanje), svaku sa sopstvenom uključenom kvotom po mesecu. Dok god
+zadržana zapremina posle sampling-a ostaje <strong>ispod</strong> te kvote, komponente
+upisa i zadržavanja padaju na nulu — ne zato što je sampling agresivniji,
+nego zato što sve što se zadrži jednostavno stane u već uključeni prostor.
+Iznad tog praga, svaki dodatni procenat zadržavanja direktno diže račun.
+Ovo znači da postoji tačka, izmeriva za konkretnu zapreminu saobraćaja,
+ispod koje spuštanje bazne stope za još par procenata ne štedi skoro ništa
+(već je ispod praga), a iznad koje isti potez štedi neproporcionalno mnogo
+(upravo prelazi prag).</p>
+<p>Jedna komponenta cene je, međutim, potpuno nezavisna od procenta koji se
+bira: obrada se naplaćuje na sirov ulaz, <strong>pre</strong> bilo kakve odluke o
+zadržavanju, i raste sa obimom flote bez obzira koliko agresivan sampling
+bude. Sampling štiti dve od tri komponente cene, ne sve tri — vredi to
+znati unapred, umesto da se otkrije kad račun i dalje raste posle
+agresivnog spuštanja bazne stope.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch12-prag-troska.png" data-desc-position="bottom"><img alt="Trošak zadržavanja i upisa pada na nulu ispod jednog izmerivog praga zapremine, dok trošak obrade ostaje nezavisan od procenta sampling-a jer se naplaćuje na sirov ulaz, pre odluke o zadržavanju." src="../diagrams/ch12-prag-troska.png" width="78%"></a></p>
+<h3 id="dva-brojaca-dve-razlicite-tacke-u-istoj-cevi">Dva brojača, dve različite tačke u istoj cevi</h3>
+<p>Zamka merenja iz § 12.2 (spanmetrics potcenjuje stvaran obim, i ne može da
+izmeri uštedu koju downsampling donosi) ima blizak rođak, na drugom paru
+brojača. Platforma izlaže dva merenja obima podataka koja izgledaju kao ista
+brojka izmerena dva puta — a mere dve različite tačke u toku: jedno meri
+zapreminu <strong>pre</strong> nego što je odluka o zadržavanju doneta, drugo meri ono
+što je iz te odluke stvarno preživelo i otišlo dalje ka skladištu.</p>
+<p>Deljenje jednog brojkom drugog daje besmislen rezultat čim se pomeša
+smer — brojka veća od 100% "pokrivenosti" na prvi pogled izgleda kao greška
+u merenju, a zapravo je artefakt deljenja dva broja koja mere različite
+tačke u pipeline-u, ne isti trenutak dva puta. Pravilo koje sprečava ovu
+zabunu je jednostavno, ali nije očigledno dok se ne naiđe na nju uživo: par
+"pre sampling-a" koristi se isključivo za računanje stope odbacivanja, a par
+"posle sampling-a" isključivo za naplativu zapreminu — ta dva se nikad ne
+dele jedno drugim, čak i kad im imena zvuče zamenljivo.</p>
 <h2 id="123-analiticki-deo-zasto-server-side-umesto-collector-side">12.3 Analitički deo — zašto server-side umesto collector-side</h2>
 <h3 id="zvanicna-razlika-gde-se-donosi-odluka-i-sta-to-znaci-za-tacnost">Zvanična razlika: gde se donosi odluka i šta to znači za tačnost</h3>
 <p>Nezavisan pregled sampling strategija u OpenTelemetry ekosistemu razlikuje
@@ -2613,6 +2695,14 @@ posle punog uvida je odluka.</strong></p>
 <li>Odbačen trejs nije trajno nedostupan odmah, ali prozor je kratak (tipično
   merljiv u satima, ne danima) — ne oslanjaj se na mogućnost da ćeš mu se
   vratiti kasnije ako ga odmah ne pogledaš.</li>
+<li>Pre nego što spustiš baznu stopu sampling-a da bi uštedeo, izmeri gde je
+  nelinearan prag zapremine za tvoj obim saobraćaja — ispod praga uštede su
+  male, iznad njega neproporcionalno velike, i jedna komponenta cene
+  (obrada sirovog ulaza) ne pada ni u jednom slučaju.</li>
+<li>Kad platforma izlaže par brojača "pre" i "posle" iste tačke u pipeline-u,
+  nikad ih ne deli jedan drugim da bi se dobila "procenat pokrivenosti" —
+  svaki brojač u paru ima tačno jednu namenu (stopa odbacivanja, ili
+  naplativa zapremina), ne obe.</li>
 </ul>
 <h2 id="125-vezba-za-citaoca">12.5 Vežba za čitaoca</h2>
 <p>Pronađi gde se u tvom sistemu donosi odluka o sampling-u trejsova — na nivou
@@ -2650,7 +2740,7 @@ postojala?</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 12:50:53 UTC">31. avgust 2026.</span>
   </span>
 
     

@@ -953,6 +953,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="10.2 Kako je to urađeno — praktičan pregled">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#zastita-koja-ne-pokriva-svaki-ulaz-u-cev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zaštita koja ne pokriva svaki ulaz u cev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cev-koja-radi-a-ipak-tiho-izgubi-jedan-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cev koja "radi" a ipak tiho izgubi jedan signal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2223,6 +2251,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="10.2 Kako je to urađeno — praktičan pregled">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#zastita-koja-ne-pokriva-svaki-ulaz-u-cev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zaštita koja ne pokriva svaki ulaz u cev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cev-koja-radi-a-ipak-tiho-izgubi-jedan-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cev koja "radi" a ipak tiho izgubi jedan signal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2409,6 +2465,47 @@ obradu za ceo prozor, uključujući hiljade drugih, potpuno normalnih poruka
 koje su čekale u istom paketu. Posle ovog incidenta, eksplicitna gornja
 granica veličine po poruci je dodata u <code>filter</code> stanicu — predaleko niz
 lanac je bilo prekasno.</p>
+<h3 id="zastita-koja-ne-pokriva-svaki-ulaz-u-cev">Zaštita koja ne pokriva svaki ulaz u cev</h3>
+<p>Vredi zumirati na jednu naizgled sitnu, ali važnu nijansu prve stanice iz
+prethodnog pregleda: <code>memory_limiter</code> je namerno prva stanica upravo zato
+da bi backpressure stigao pre nego što bilo šta nizvodno potroši memoriju
+na podatak koji će ionako biti odbačen — ali "prva stanica u lancu" ne znači
+i "jedini put kojim podatak ulazi u proces". Dva izvora podataka (izvoznik
+metrika ka platformi za praćenje troška, i samo-merenje gateway-a o
+sopstvenom radu) ulaze u pipeline direktno na <code>batch</code> stanici, ne na ulazu
+gde sedi <code>memory_limiter</code> — što znači da njihov doprinos potrošnji memorije
+uopšte nije pod zaštitom prve stanice, bez obzira što je ta stanica prva za
+sav ostali saobraćaj.</p>
+<p>Posledica je konkretan, merljiv dijagnostički obrazac: kad gateway padne sa
+greškom "nema više memorije", prva provera nije da li je <code>memory_limiter</code>
+zakazao, nego da li je brojač odbijenih zapisa uopšte porastao pre pada.
+Ako <strong>jeste</strong> rastao, limiter je radio tačno svoj posao — samo nije mogao da
+prati tempo, i pravo rešenje je nizvodno (ili više memorije). Ako brojač
+odbijanja ostane na nuli sve do pada, to je znak da je nešto potrošilo
+memoriju <strong>mimo</strong> limiterovog knjigovodstva — sumnjiv je poslednji dodat
+deo konfiguracije, ne sama stanica čiji je posao da spreči baš ovaj ishod.
+Razlika između ta dva slučaja se ne vidi ni na jednom dashboard-u dok se
+neko eksplicitno ne seti da uporedi ta dva broja.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch10-limiter-zaobilazak.png" data-desc-position="bottom"><img alt="memory_limiter je prva stanica u lancu za sav uobičajen saobraćaj, ali dva izvora podataka ulaze direktno na batch stanicu, mimo njegove zaštite — otud dva različita dijagnostička obrasca za isti pad." src="../diagrams/ch10-limiter-zaobilazak.png" width="78%"></a></p>
+<h3 id="cev-koja-radi-a-ipak-tiho-izgubi-jedan-signal">Cev koja "radi" a ipak tiho izgubi jedan signal</h3>
+<p>Redosled stanica nije jedini način na koji pipeline može da otkaže tiho.
+Svaka stanica mora eksplicitno da prosledi <strong>sva tri tipa signala</strong>
+(metrike, logove, tragove) na ulaz sledeće stanice — a propuštanje jednog
+tipa ne ruši proces, ne baca grešku, i alarm za pad zadatka nikad neće
+opaliti za to, jer proces ostaje živ i zdrav po svakoj metrici koju taj
+alarm prati. Deploy koji "uspe" po svakoj standardnoj proveri može tiho
+izgubiti baš logove, dok metrike i tragovi nastavljaju normalno.</p>
+<p>U implementaciji koju knjiga prati postoji svega nekoliko namernih izuzetaka
+od pravila "sve tri niti signala idu dalje" — jedna stanica koja namerno
+cilja samo metrike (agregacija visoko-kardinalnih HTTP atributa iz
+Poglavlja 11), i dve koje namerno ciljaju samo tragove (redakcija i
+normalizacija iz § 10.2 gore). Ta lista izuzetaka je eksplicitno zapisana i
+kratka baš zato da bi svaki NOVI izuzetak upadao u oči kao odstupanje koje
+treba objasniti, ne kao još jedna stavka na već dugačkoj, nejasnoj listi.
+Praktična posledica za svakog ko dodaje novu stanicu u lanac: proveri da li
+si zaboravio da povežeš jedan od tri izlaza na ulaz sledeće stanice pre
+deploy-a, jer posle deploy-a jedini način da se to otkrije jeste da neko
+eksplicitno primeti da nedostaje baš onaj tip podatka koji mu je trebao.</p>
 <h2 id="103-analiticki-deo-zasto-redosled-nije-stilska-odluka">10.3 Analitički deo — zašto redosled nije stilska odluka</h2>
 <h3 id="zvanicna-preporuka-o-redosledu-procesora">Zvanična preporuka o redosledu procesora</h3>
 <p>Zvanična OpenTelemetry Collector dokumentacija eksplicitno preporučuje da
@@ -2474,6 +2571,14 @@ stanici koja je pomerena, nego na svakoj stanici posle nje.</p>
   — jedan preveliki zapis ne sme moći da povuče hiljadu ispravnih sa sobom.</li>
 <li>Ne izmišljaj priču o odstupanju od standarda tamo gde standard već rešava
   problem dobro — prepoznaj kad je "sledi recept" ispravan odgovor.</li>
+<li>Kad gateway padne sa greškom "nema više memorije", prvo proveri da li je
+  brojač odbijenih zapisa rastao pre pada — ako nije, sumnjaj na deo
+  konfiguracije koji ulazi u pipeline mimo prve stanice, ne na samu tu
+  stanicu.</li>
+<li>Kad dodaješ novu stanicu u pipeline, eksplicitno proveri da li si povezao
+  sva tri tipa signala (metrike, logove, tragove) na ulaz sledeće stanice —
+  nedostajuća veza ne ruši proces i nijedan alarm za pad zadatka je neće
+  uhvatiti.</li>
 </ul>
 <h2 id="105-vezba-za-citaoca">10.5 Vežba za čitaoca</h2>
 <p>Nacrtaj redosled stanica u sopstvenom telemetrijskom pipeline-u (ili,
@@ -2511,7 +2616,7 @@ nego što ga proizvodni saobraćaj otkrije umesto tebe.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="26. avgust 2026. 16:22:58 UTC">26. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 12:50:53 UTC">31. avgust 2026.</span>
   </span>
 
     
