@@ -106,6 +106,60 @@ osnovnih HTTP probi u ovoj implementaciji, kad je prekomerna multi-regionalna
 postavka izazvala neplanirano prekoračenje budžeta i morala biti svedena na
 jednu lokaciju sa ređim intervalom.
 
+### Dve dubine iste probe, ne dva odvojena alarma
+
+Osnovna dostupnost-proba iz prethodnog odeljka nije uvek samo jedna proba —
+u implementaciji koju knjiga prati, ista javna aplikacija ima **dve** HTTP
+probe, namerno usmerene na dve različite dubine sistema. Plitka proba gađa
+koreni put i proverava samo da li šelj aplikacije uopšte odgovara — a to
+može da bude tačno čak i kad je pozadinski deo sistema potpuno nezdrav, jer
+statički sadržaj šelja često servira sloj ispred same aplikacije. Duboka
+proba gađa poseban endpoint koji, umesto da samo vrati "u redu", **stvarno
+izvrši** ograničen upit ka bazi podataka na kojoj aplikacija zavisi i vrati
+grešku ako taj upit ne uspe.
+
+Razlika u dubini nije kozmetička — ona je sama dijagnostička informacija, bez
+ijednog dodatnog koraka istrage. Ako plitka proba prolazi dok duboka pada,
+zaključak je momentalan: aplikacija je dostupna, problem je u bazi podataka
+iza nje. Ako obe prolaze, a treći sloj probe iz prethodnog odeljka — ona sa
+pravim browser-om — ipak padne, zaključak je opet momentalan: kvar je
+isključivo na strani klijenta, ni aplikacija ni baza nemaju veze s tim. Ovo
+je ista logika koja već radi za probe raspoređene po više geografskih
+lokacija (kad jedan region ćuti dok ostali rade, sužava se na mrežni
+problem tog regiona) — samo primenjena na drugu osu: dubinu provere umesto
+geografije. Obrazac otkaza kroz slojeve je dijagnoza sama po sebi.
+
+Duboka proba nosi i sopstvenu cenu koju treba priznati: pošto stvarno izvrši
+upit, njeno vreme odziva prati latenciju baze, ne samo mrežnu latenciju do
+aplikacije — što znači da vremenski limit te probe mora biti širi od limita
+plitke probe, inače će svaki povremeni spor upit (ne stvaran otkaz) lažno
+okinuti alarm namenjen otkrivanju pravih otkaza.
+
+![Tri sloja probe, svaki testira drugu dubinu sistema: plitka proba samo da li šelj odgovara, duboka proba da li baza iza aplikacije zaista radi, proba sa renderovanjem da li se stranica stvarno prikazuje. Obrazac koji sloj prolazi a koji pada je sama dijagnoza.](diagrams/ch09-slojevi-otkaza.png){: width="85%" }
+
+### Ista metrika, dva različita praga, jer ne odgovaraju na isto pitanje
+
+Sintetički sloj sa pravim browser-om iz prethodnog odeljka ne meri samo da
+li se stranica prikazuje — meri i iste metrike percepcije performansi
+(najveći sadržajni prikaz, stabilnost layout-a) koje RUM iz Poglavlja 8 već
+prati kod stvarnih korisnika. Na prvi pogled to zvuči kao dupliranje istog
+signala dva puta. U implementaciji koju knjiga prati, prag za tu sintetičku
+proveru je namerno postavljen mnogo strože od RUM-ovog praga za "loše"
+iskustvo — jer sintetička proba uvek renderuje istu, laganu, neautentikovanu
+početnu stranicu, sa stabilnim osnovnim vremenom mnogo ispod RUM granice za
+"loše"; svako značajno odstupanje od te stabilne osnove je **regresija**,
+ne samo "loše iskustvo".
+
+Dve provere zato odgovaraju na različita pitanja, iako mere istoimenu
+metriku: sintetička proba pita "da li se nešto upravo pokvarilo u odnosu na
+juče", RUM pita "da li je iskustvo stvarnih korisnika, u svoj svojoj
+raznovrsnosti mreža i uređaja, trenutno prihvatljivo". Da je sintetičkoj
+probi dodeljen isti, širok RUM prag, izgubila bi svrhu kao rani signal
+regresije — pravi kvar bi morao da postane dovoljno loš da pređe prag
+kalibrisan za haotičan stvaran saobraćaj pre nego što bi ga sintetička
+proba uopšte prijavila, iako bi ga na sopstvenoj, stabilnoj osnovi
+prepoznala mnogo ranije.
+
 ## 9.3 Analitički deo — zašto sintetičko praćenje nije "RUM za siromašne"
 
 ### Sintetičko i RUM rešavaju različite probleme, ne isti problem na dva načina
@@ -181,6 +235,14 @@ kada problem postoji baš u trenutku kad niko ne gleda, neko ipak zna.**
   stranica prazna, i nijedna server-side proba to ne vidi. Drži tu probu
   odvojenu od stvarnog RUM toka i na minimalnom otisku (jedna lokacija, redak
   interval) — ona je najskuplji sloj sintetičkog praćenja.
+- Kad imaš probu koja stvarno izvršava upit (ne samo proverava da servis
+  odgovara), daj joj širi vremenski limit od plitke probe — njeno vreme
+  odziva prati latenciju onoga što upituje, ne samo mrežnu latenciju do
+  aplikacije.
+- Kad ista metrika postoji i u sintetičkoj probi i u RUM-u, ne daj im isti
+  prag — sintetička proba na stabilnoj, laganoj osnovi treba strog prag za
+  ranu regresiju, RUM na haotičnom stvarnom saobraćaju treba širi prag za
+  stvarno loše iskustvo; isti prag na oba mesta gubi svrhu jednog od njih.
 
 ## 9.5 Vežba za čitaoca
 
