@@ -82,6 +82,63 @@ obzira na to da li je ta oblast uopšte formalno u obimu revizije.
 
 ![Kontrola posmatranja kao dvosmeran odnos: sistem alarmiranja je dokaz nadzora, ali telemetrija koju taj sistem nosi je istovremeno i poverljiv podatak koji sam treba zaštitu.](diagrams/ch26-dvosmeran-odnos.png){: width="85%" }
 
+### Automatizovana akcija iz chat-a: token dozvoljava, kanal ograničava
+
+Jedna kontrola u tabeli zaslužuje poseban osvrt jer pokazuje koliko duboko
+mora ići analiza kad automatizacija dobije mogućnost da menja stanje sistema,
+ne samo da ga posmatra. Alarm u kanalu za otkaze zadataka nosi dugme koje
+pokreće **produkcioni** zadatak iznova — pravo pisanje u infrastrukturu,
+pokrenuto direktno iz chat poruke. Mehanizam otkriva dva odvojena sloja
+ovlašćenja, i implementacija je eksplicitno imenovala oba, umesto da tretira
+"dugme radi" kao dovoljnu proveru.
+
+Prvi sloj je tehnički neizbežan kompromis: okidač je **javni** URL bez
+potpisivanja zahteva na strani platforme za razmenu poruka, jer ta platforma
+nema mehanizam da potpiše zahtev standardnim protokolom za pristup oblaku.
+Umesto toga, autentičnost dolazi od **sopstvenog** HMAC potpisa platforme za
+razmenu poruka na svakom zahtevu, sa vremenskim prozorom od nekoliko minuta
+koji sprečava da neko snimljenu poruku pošalje ponovo kasnije — i mehanizam
+namerno **odbija** zahtev ako tajni ključ za proveru potpisa nije podešen,
+umesto da propusti zahtev bez provere. Drugi sloj je suptilniji: platforma za
+razmenu poruka nema mehanizam za odobrenje na nivou pojedinačnog dugmeta — pa
+je **privatnost samog kanala** jedina stvarna kontrola pristupa. Ko god je
+član tog kanala može da pritisne dugme; ko nije, ne vidi ga uopšte. Formalna
+lista ovlašćenja u sistemu za upravljanje identitetom je najuža moguća (samo
+jedna izvršna funkcija sme da pokrene zadatak, sa ulogom ograničenom na tačno
+tri uloge kojima sme da je dodeli) — ali ta lista ništa ne znači ako
+članstvo u kanalu nije isto tako strogo kontrolisano i redovno pregledano.
+
+Ovo je tačno vrsta uvida koji iskrena interna tabela treba da uhvati: kontrola
+"ko sme da pokrene produkcionu akciju" ovde zapravo **nije jedna** kontrola
+nego dve — tehnička (potpis, uloga, opseg dozvola) i organizaciona (ko je
+član kanala) — i samo prva od te dve je proverljiva kroz kod i infrastrukturu.
+Druga zavisi od discipline oko članstva u chat kanalu, što je lakše
+zaboraviti da se redovno proveri.
+
+![Dva odvojena sloja ovlašćenja za akciju pokrenutu iz chat-a: tehnički sloj (potpis, uloga, opseg dozvola) je proverljiv kroz kod, dok je organizacioni sloj (članstvo u kanalu) jedina stvarna kontrola pristupa dugmetu.](diagrams/ch26-lanac-ovlascenja.png){: width="82%" }
+
+### Least-privilege za servise nije isto što i least-privilege za ljude
+
+Ista tabela pokazuje obrazac koji se ponavlja kroz više redova: mašinska
+strana pristupa je često strogo, proverljivo ograničena, dok je ljudska
+strana istog sistema potpuno nedokumentovana. Pristupni tokeni servisa koji
+šalju telemetriju žive u trezoru za tajne, dodeljeni sa najužim mogućim
+opsegom po nameni — ovo je stanje koje se može proveriti čitanjem
+konfiguracije, i implementacija ga otvoreno beleži kao **na mestu**. Ali ko
+tačno ima interaktivan pristup samoj konzoli platforme za telemetriju, i sa
+kojom ulogom, nije nigde formalno popisano — ovo ostaje **delimično**, ne
+zato što je pristup nužno prevelik nego zato što niko ne može da dokaže
+suprotno bez popisa.
+
+Poenta koju implementacija imenuje: "kontrola pristupa" kao jedna stavka na
+listi kontrola je pogrešno zrnasta jedinica merenja. Ona pokriva najmanje dva
+nezavisna pitanja — da li su mašine ograničene na ono što im treba, i da li
+su ljudi ograničeni na ono što im treba — i organizacija može imati potpuno
+tačan odgovor na jedno pitanje dok nema nikakav odgovor na drugo. Tabela koja
+beleži samo jednu, zbirnu ocenu za "pristup" bi sakrila tačno tu razliku;
+tabela koja razdvaja mašinski i ljudski red čini prazninu vidljivom umesto da
+je zamagli iza dela koji je već u redu.
+
 ## 26.3 Analitički deo — usaglašenost kao samo-doslednost, ne spoljni katalog
 
 ### Zvanična struktura kriterijuma potvrđuje dvoslojnu podelu
@@ -171,6 +228,14 @@ govore istu priču.
 - Uskladi retenciju i praksu brisanja sa onim što stvarno **pišeš** da
   radiš, ne sa onim što bi u idealnom svetu trebalo da radiš — praznina
   postaje nalaz samo kad tvrdnja i stvarnost krenu različitim putem.
+- Kad automatizacija iz chat-a sme da menja stanje produkcije, imenuj oba
+  sloja ovlašćenja odvojeno — tehnički (potpis, uloga, opseg dozvola) i
+  organizacioni (ko je član kanala koji vidi dugme) — jer prvi je proverljiv
+  kroz kod, a drugi zavisi od discipline koja se lako zaboravi.
+- Ne beleži "kontrolu pristupa" kao jednu zbirnu stavku — razdvoji mašinsku
+  stranu (tokeni, opseg dozvola) od ljudske strane (ko ima interaktivan
+  pristup, sa kojom ulogom) — organizacija često ima tačan odgovor na jedno
+  pitanje dok nema nikakav na drugo, i zbirna ocena tu razliku sakriva.
 
 ## 26.5 Vežba za čitaoca
 
