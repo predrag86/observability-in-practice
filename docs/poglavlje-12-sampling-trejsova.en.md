@@ -48,9 +48,13 @@ base rate:
 - **Slow traces** — latency above a defined threshold is retained, since
   performance problems rarely leave a trace anywhere except in the trace
   itself.
-- **Anomalies** — the platform uses a machine-learning-based model to
-  recognize traces that structurally deviate from the usual pattern for that
-  service, even when they have no explicit error or high latency.
+- **Pattern diversity** — at least one trace per unique fingerprint
+  (combination of service, route, and outcome) within the window is
+  retained, regardless of the base rate — so a sudden burst of near-identical
+  requests (say, the same error repeating a thousand times in a couple of
+  minutes) leaves behind at least one representative, instead of the
+  probabilistic rate randomly keeping a handful of copies of the same
+  pattern, or none at all.
 
 ![Trace retention decision: drop policies act as an absolute veto and are evaluated first; keep policies operate on OR logic with an effectively random order; only if none decides does the base probabilistic rate come into play.](diagrams/ch12-sampling-policy.png){: width="88%" }
 
@@ -152,11 +156,12 @@ happened yet.
 
 The adaptive sampling used by the platform in the implementation the book
 follows is a form of tail sampling, with an adaptive component added on top
-(ML-based anomaly detection, dynamic adjustment of the base percentage).
-This is, officially, exactly the category of problem tail sampling exists
-for: a system where rare but critical traces (errors, anomalies) are
-precisely the ones head sampling is most likely to miss, because their
-"value" isn't known at the moment head sampling has to decide.
+(the pattern-diversity rule from § 12.2, dynamic adjustment of the base
+percentage). This is, officially, exactly the category of problem tail
+sampling exists for: a system where rare but critical traces (errors, rare
+patterns) are precisely the ones head sampling is most likely to miss,
+because their "value" isn't known at the moment head sampling has to
+decide.
 
 ### Why not at the gateway level — the cost a self-managed tail sampling would carry
 
@@ -198,7 +203,7 @@ step; sampling that happens after full insight is a decision.**
 ## 12.4 Rules collected from this chapter
 
 - Whenever possible, make the sampling decision after the trace has been
-  fully collected (tail sampling), not before — errors and anomalies are
+  fully collected (tail sampling), not before — errors and rare patterns are
   rarely known at the moment head sampling has to decide.
 - Remember that drop policies are an absolute veto, while keep policies
   operate on OR logic with an effectively random evaluation order — don't
