@@ -124,6 +124,59 @@ umesto zaboravljen.
 
 ![Zavodljiv, ali pogrešan signal: izveden procenat 'neispravnosti okruženja' izgleda kao ozbiljan ispad, dok autoritativna stopa 5xx grešaka sa balansera opterećenja pokazuje da su korisnici stvarnost jedva i osetili — bez ovog konteksta, agent bi lako potvrdio pogrešnu dijagnozu.](diagrams/dashboard-ebhealth-vs-5xx.png){: width="95%" }
 
+### Lažni uspeh: kad agent kaže "urađeno" a ništa se nije desilo
+
+Implementacija je otkrila mehanizam koji je opasniji od agenta koji pogrešno
+dijagnostikuje — agent koji **iskreno** prenosi lažnu informaciju o
+sopstvenoj akciji, jer ni sam ne može da zna bolje. Alat koji agentu daje
+pristup platformi za telemetriju je namerno podešen kao samo-za-čitanje,
+sprovedeno kroz opseg dozvola samog pristupnog tokena, ne kroz obećanje ili
+uputstvo u promptu. Kad agent, u testu, pokuša da izbriše pravilo za
+alarmiranje sa tim tokenom, platforma odgovara porukom da je brisanje
+**uspelo** — dok se u stvarnosti ništa nije promenilo. Agent tu poruku
+iskreno prenosi dalje, jer je to tačno ono što mu je alat vratio.
+
+Otrežnjujuća posledica, koju implementacija eksplicitno imenuje: odgovor
+"uspešno obrisano" izgleda **identično** bez obzira da li je akcija stvarno
+sprovedena ili tiho blokirana. Agent nema način da iznutra razlikuje ta dva
+ishoda — razlika postoji samo na nivou toga da li je token zaista imao
+dozvolu pisanja, što je informacija van agentovog domašaja. Ovo znači da
+granica "agent sme da predlaže, ne da izvršava" ne sme počivati na uputstvu
+agentu niti na proveri agentovog sopstvenog izveštaja — mora biti sprovedena
+**spolja**, na nivou opsega dozvola samog pristupa, jer je to jedino mesto
+gde razlika između "blokirano" i "izvršeno" uopšte postoji. Poverenje u
+agentovu prijavu o tome šta je uradio je, u ovom modelu pretnji, pogrešno
+mesto za poverenje.
+
+![Blokiran upis i stvaran upis vraćaju identičnu poruku o uspehu — agent nema način da iznutra razlikuje ta dva ishoda, pa granica "samo-za-čitanje" mora biti sprovedena na opsegu dozvola tokena, ne na poverenju u agentov izveštaj.](diagrams/ch28-lazni-uspeh.png){: width="80%" }
+
+### Pogrešno skladište zvuči kao "nema problema", ne kao greška
+
+Implementacija je dokumentovala posebnu klasu greške koja se razlikuje od
+"pogrešan brojač u istom skladištu podataka" iz trećeg ponovnog odigravanja:
+ovde je upitano **pogrešno skladište u celini**, jer neki događaji
+strukturno ne postoje nigde drugde. Konkretan, izmeren primer: greška koju
+prijavljuje uređaj za balansiranje saobraćaja na granici sistema **nikad**
+ne dopire do trejsova samog backend servisa, jer se dešava na sloju koji
+backend nikad ne vidi — upit trejsovima vraća prazno, ne zato što greške
+nema, nego zato što trejsovi strukturno ne mogu da je sadrže. Isto važi u
+suprotnom smeru: određene vrste pada aplikacije zapisuju se samo u
+infrastrukturni sistem za logove, nikad u centralizovanu platformu za
+telemetriju. Upit pogrešnom skladištu ne vraća grešku — vraća uverljivu,
+praznu nulu, koja se čita kao "nema problema" tačno onoliko ubedljivo koliko
+bi izgledao i stvaran nalaz da nema problema.
+
+Implementacija dodaje i srodnu, uočljivu zamku istog porekla: percentil
+izračunat nad malim brojem zahteva je matematički artefakt, ne merenje —
+visok percentil sa svega nekoliko zahteva dnevno ne znači "spor endpoint,"
+znači da uzorak nema statističku snagu da percentil bilo šta govori.
+Odbrana protiv obe zamke je ista: pre nego što se poveruje na prazan ili
+ekstreman rezultat, proveriti **koje skladište uopšte može da sadrži**
+traženi tip događaja, i **koliko zahteva** stoji iza izvedene statistike —
+oba pitanja koja generičko znanje o observability-ju ne postavlja
+automatski, ali specifičan sloj konteksta o ovom sistemu treba da ih
+nametne.
+
 ## 28.3 Analitički deo — potvrda spolja, i jedna otrežnjujuća granica
 
 ### Protokol za povezivanje agenata na telemetriju je nov, ali već standardizovan
@@ -226,6 +279,14 @@ sloj konteksta oko njega ažuran, iskren, i dostupan u pravom trenutku.
 - Drži agenta savetodavnim za promene stanja sistema — neka predlaže i
   objašnjava, ne izvršava — dok se ne izgradi dovoljno poverenja i
   provere da autonomno delovanje bude opravdano.
+- Sprovedi granicu "samo-za-čitanje" na nivou opsega dozvola samog pristupa,
+  ne na nivou uputstva agentu — blokiran upis i stvaran upis mogu izgledati
+  identično u agentovom izveštaju, pa poverenje u taj izveštaj nije mesto
+  gde ta granica sme da počiva.
+- Pre nego što poveruješ praznom ili ekstremnom rezultatu, proveri da li
+  traženi tip događaja uopšte može da postoji u skladištu koje je upitano, i
+  koliko zahteva stoji iza izvedene statistike poput percentila — obe zamke
+  vraćaju uverljivu, ali pogrešnu nulu umesto poruke o grešci.
 
 ## 28.5 Vežba za čitaoca
 
