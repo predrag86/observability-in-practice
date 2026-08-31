@@ -106,6 +106,69 @@ anti-spam mechanism's threshold, none of them ever sent:
 
 ![Nineteen failures spread across seventeen hours — each suppressed, none sent, because no pair of failures falls close enough together in time to satisfy the "three in thirty minutes" threshold.](diagrams/dashboard-suppression.png){: width="95%" }
 
+### Third case study: the channel every single alert passes through
+
+A review of the entire alerting system uncovered something independent of
+the first two case studies, but of the same kind: **every** path an alert
+travels — whether a direct infrastructure event (Path A from Chapter 13) or
+a signal derived from telemetry (Path B) — ends up in the same, single
+notification channel. No alert had a backup path. The honest answer to
+"where will I hear about it if that channel stops working" was
+**nowhere** — and that's exactly the kind of silence this chapter is about,
+just shifted one layer up: not a single alert going quiet, but the
+**delivery mechanism for all alerts** going quiet without anyone noticing,
+because a failure of that channel looks identical to "there's simply
+nothing to report right now."
+
+The fix wasn't adding a backup channel to every individual alert — that
+would duplicate literally every message, every time, making the backup
+channel useless as a signal (it would become a mirror of the primary, not
+a warning that the primary had failed). Instead, the backup channel is
+deliberately wired **exclusively** to that narrow set of alerts whose
+firing, by itself, means "the primary delivery channel has stopped
+working" — nothing else. The first attempt at this change, from an
+understandable instinct to "not miss anything," mistakenly added the
+backup channel to a couple of ordinary alerts too — the mistake was caught
+and fixed the same day, because otherwise the backup channel would have
+started receiving a copy of everything, losing exactly the property that
+makes it useful: staying quiet while everything is fine, and speaking up
+exactly when the primary path can't.
+
+An additional complication: the primary delivery channel has **multiple
+independent paths** leading to it, not one, and each fails in a different
+way — a single detector watching only one of those paths doesn't see a
+failure on the other two. For one of those three paths, no reliable way
+was even found to detect its failure without introducing an entirely new,
+standalone class of check — the decision was to **consciously accept that
+gap as a known, unaddressed risk** rather than silently assume it was
+covered, because the real danger lies exactly in someone believing a
+protection exists that actually doesn't.
+
+![The first attempt added the backup channel (email) to multiple alerts, duplicating every message and making it useless as a signal; the adopted solution wires it exclusively to alerts whose firing, by itself, means the primary delivery channel is down.](diagrams/ch14-slack-spof.png){: width="80%" }
+
+### Fourth case study: a report that stays silent when healthy and when dead
+
+A weekly, automated check that compares the fleet's actual state against
+its expected configuration sends a message **only when it finds something
+worth attention** — a design chosen deliberately, because a report
+repeating the same, already-acknowledged findings every week would quickly
+start getting ignored. That same decision carries its own, subtle flaw: a
+quiet channel looks **identical** whether the fleet is genuinely clean or
+the check itself has stopped working (broken before it got around to
+examining anything). "No message" looks exactly the same from the outside
+for both reasons — the same silence, two opposite causes.
+
+The fix wasn't forcing the check to always send something (that would undo
+the exact reason "send only when there's something" was introduced in the
+first place) — it was adding a **completely separate** alert that tracks
+whether the check itself successfully finishes running, independent of
+what the check finds. This is the same class of solution as the backup
+channel above, just applied one level inward: whenever a mechanism
+deliberately stays quiet while everything is fine, there has to be a
+separate signal proving that mechanism is alive at all — because the
+mechanism itself, by design, can't vouch for itself at the moment it's
+dead.
+
 ## 14.3 Analytical section — why almost nobody else writes about this
 
 ### An anti-spam mechanism encodes an assumption about the shape of failure
@@ -175,6 +238,16 @@ while correct-but-wrongly-calibrated looks like calm.**
   its effect immediately after introducing it (how many messages
   disappeared, and for which families) — don't assume a drop in message
   count means "the system got healthier."
+- Ask yourself honestly where you'll hear about it if the single channel
+  ALL alerts travel through stops working — if the answer is "nowhere,"
+  add a backup path wired exclusively to alerts whose firing means the
+  primary channel is down, not to every alert (that would just duplicate
+  everything, not add protection).
+- When a mechanism deliberately stays quiet while everything is fine (a
+  report that only sends a message when it finds something), add a
+  separate signal proving the mechanism itself is alive — silence because
+  "everything's clean" and silence because "the check broke" look
+  identical from the outside.
 
 ## 14.5 Exercise for the reader
 

@@ -131,6 +131,78 @@ comes back explicitly in Chapter 5 (attribute semantics) and Chapter 12
 (sampling — because a trace also has to survive long enough for someone to
 want to look at it).
 
+### Three accurate observations, three different causes, the same false picture
+
+A second, related case makes the same point from an even more uncomfortable
+angle: sometimes monitoring doesn't miss one unknown unknown — instead, three
+independent, perfectly ordinary mechanisms line up so that each one,
+individually, does exactly what it was built to do, and the result is still
+total invisibility. One afternoon a colleague reported three observations
+about a different scheduled job (an archiver that periodically writes older
+data into long-term storage): the main overview dashboard showed that job
+failing for the past 24 hours; no alert had fired; and the dashboard
+dedicated specifically to job execution showed zero failures for that job,
+even with the job filter set to "All." All three turned out to be accurate —
+and all three had a completely different cause.
+
+First: the gate that decides whether an alert gets sent to Slack requires at
+least three failures within 30 minutes before it sends anything — and that
+job runs roughly every eight minutes and fails at a rate of about 1%, which
+means failures are rare but almost always isolated. Measured: at most two
+failures in any 30-minute window over the past 24 hours. A gate built for a
+burst isn't just "less sensitive" to this pattern — it mathematically can
+never fire. Second: the "All" filter on the job-execution dashboard wasn't
+actually all — the dropdown list the filter populates from came from a
+narrower signal containing only jobs with instrumentation installed, while
+the panels underneath the filter actually read from a broader data source
+containing every job. "All" was, technically, an enumerated list, not a
+wildcard. Third: that specific job wasn't instrumented at all at the time, so
+every metrics-based panel for it was accurately and legitimately empty.
+
+The only dashboard telling the truth was a separate overview screen whose
+single signal was deliberately written into the system *before* the
+alert-suppression gate and *independent of* whether the job had
+instrumentation — an earlier design decision that happened to be the only
+reason anyone could notice the problem at all. The point for this chapter:
+none of the three mechanisms was broken. The gate worked exactly to spec, the
+filter worked exactly by its own definition, the empty panels were accurately
+empty because there was nothing to show. What failed was a system-level
+property — "can an operator answer the question of whether this job is
+healthy" — and that's exactly the kind of question three individually
+correct components can jointly answer wrong, which is why "check that each
+component works" isn't the same test as "check that the system answers the
+real question."
+
+![Three independently accurate observations about the same job, three independent causes — and only one earlier signal, written before the gate and independent of instrumentation, told the truth.](diagrams/ch01-tri-uzroka.png){: width="80%" }
+
+### An alarm shaped for a burst is blind to a leak
+
+It's worth zooming in on the first of the three causes from the previous
+example, because it carries a more general lesson about the monitoring layer
+itself, not just about this one job. A gate of the form "N failures in M
+minutes" isn't just a sensitivity threshold — it encodes an assumption about
+the *shape* in which failures arrive, not just their total count.
+
+Concrete numbers make this tangible: the job runs about 180 times a day
+(roughly every eight minutes) and fails at a rate of about 1% — which adds up
+to a handful of failures per day in total, but nearly always isolated,
+minutes or hours apart from each other. A gate set to "at least three
+failures in 30 minutes" for this pattern isn't "less sensitive" — it's
+permanently unsatisfiable, no matter how many days pass. And yet, observed
+over a longer period, that same job *did* alert — 25 times out of a total of
+47 times a failure made it through the gate, while 22 times it was
+suppressed. So a shape-check of "does this job ever alert" would answer "yes"
+and move on, even though the question that actually matters is what fraction
+of failures makes it through the gate — for this job, less than half.
+
+The lesson for anyone choosing an "N in M minutes" gate: before introducing
+it, calculate whether the arrival pattern of failures for *that specific*
+signal can even satisfy the condition at all — not just whether the total
+failure count, over a long enough period, is worrying. A job that sometimes
+alerts is a harder-to-spot blind spot than a job that never alerts, because
+it passes the shallow check of "does this ever fire" — and that shallow check
+is exactly what people usually run first.
+
 ## 1.3 Analytical section — where this distinction comes from, and why the three pillars aren't enough
 
 ### Known unknowns and unknown unknowns aren't a marketing phrase
@@ -235,6 +307,14 @@ ask.
 - Having all three "pillars" (metrics, logs, traces) doesn't guarantee
   observability on its own — what guarantees it is the habit of using those
   tools for questions you didn't anticipate in advance.
+- When checking whether a system is "healthy," don't automatically trust
+  that "All" on a dashboard filter really means all — check which signal
+  that filter is populated from, and whether that signal covers the same
+  set of jobs as the panels underneath it.
+- Before introducing a gate of the form "N failures in M minutes," calculate
+  whether the arrival pattern of failures for that specific job can even
+  satisfy the condition at all — not just whether the total failure count,
+  over a long enough period, is worrying.
 
 ## 1.5 Exercise for the reader
 

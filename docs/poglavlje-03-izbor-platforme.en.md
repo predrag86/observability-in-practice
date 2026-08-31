@@ -93,6 +93,56 @@ scaling, backups, upgrades, multi-tenant isolation, 24/7 on-call over
 someone else's infrastructure. That's exactly what § 3.3 measures in
 dollars.
 
+### An alarm that arrives before the bill, not after it
+
+It's worth separating the "blew through the free tier in a single weekend"
+moment in the story above from the usual picture that phrase conjures — it
+wasn't discovered by someone looking at the monthly bill after the fact. It
+was caught by a dedicated budget alarm with an explicit threshold (95% of
+the monthly budget), backed by an even earlier layer — an anomaly detector
+that tracks an unusual *rate of growth* in spend, not just the absolute
+level, and so warns even before the threshold itself is crossed.
+
+The billing model behind this is a deliberate decision, not an accident:
+going over on the Grafana Cloud Pro tier isn't a hard cap — it's billed per
+unit above the plan's included quota. That choice ("bill, don't block the
+write") is exactly why the incident was survivable with zero downtime — the
+pipeline never stopped accepting data — but it's also why it required a
+fast, dedicated human response instead of being self-limiting: an unchecked
+cardinality spike continues as a growing bill, not as a dead pipe that would
+eventually force attention through a visible failure on its own.
+
+An alarm that fires on total spend by itself doesn't say which of two quite
+different causes is responsible — a spike in metric cardinality (the number
+of unique label combinations) or a spike in log volume — and the two require
+completely different fixes. That's why the runbook behind that one alarm
+deliberately branches diagnosis into two separate paths, instead of assuming
+which cause is at play. And the 95% threshold itself wasn't fixed forever —
+it had already been raised twice before, gradually, as real, organic spend
+grew — each time as a conscious, documented decision, not as unnoticed scope
+creep.
+
+![A budget alarm as an early warning before overage starts being billed, and the diagnostic branch into two different possible causes behind it.](diagrams/ch03-alarm-pre-racuna.png){: width="76%" }
+
+### Why the budget-alarm rules are deliberately kept out of Terraform
+
+The alarm rules that catch exactly this scenario are managed solely through
+the vendor's own cost-management tool interface, never through the team's
+Terraform — and that's a deliberate, documented decision, not a gap nobody's
+gotten around to closing.
+
+The reason: the cost-management application internally reconciles its own
+alarm rules; if a parallel copy of the same rule existed in Terraform, the
+vendor's tool would periodically overwrite it or silently revert it, with no
+clean signal of who "won" that ownership conflict over the same object. This
+is a concrete instance of this chapter's broader point about leasing versus
+building: leasing a platform doesn't just mean you don't maintain its
+servers — it can also mean accepting that some of its internal configuration
+surfaces can safely live only inside the vendor's own tool, and that
+insisting every single piece of a managed product live under your own IaC
+discipline can be the wrong call precisely because it's a managed product,
+with its own reconciliation logic.
+
 ## 3.3 Analytical section — what the price comparison actually shows
 
 ### Price lists, as they really are
@@ -215,6 +265,14 @@ from the chart above, not "the company has more than fifty employees."
 - Blowing through a free tier isn't a defeat — it's a signal the system has
   reached its next phase, and needs a planned response (upgrade + cardinality
   control), not a panicked migration.
+- A budget alarm that only reports "X% spent" isn't enough on its own —
+  check whether the runbook behind it branches diagnosis into at least
+  "metric cardinality" versus "log volume," since the two require
+  completely different fixes.
+- Don't insist that every single piece of a managed platform's configuration
+  live in your Terraform — if the platform reconciles its own rules (like
+  budget alarms in a cost-management tool), a parallel IaC copy gets
+  silently reverted, not preserved.
 
 ## 3.5 Exercise for the reader
 

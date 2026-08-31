@@ -86,6 +86,58 @@ of other, completely normal messages waiting in the same package. After this
 incident, an explicit upper bound on per-message size was added to the
 `filter` station — too far down the chain was too late.
 
+### A safeguard that doesn't cover every entry point into the pipe
+
+It's worth zooming in on one seemingly small but important nuance of the
+first station from the overview above: `memory_limiter` is deliberately the
+first station precisely so that backpressure arrives before anything
+downstream spends memory on data that's going to be dropped anyway — but
+"first station in the chain" doesn't mean "the only path by which data
+enters the process." Two data sources (the exporter feeding the
+cost-tracking platform, and the gateway's own self-measurement of its own
+operation) enter the pipeline directly at the `batch` station, not at the
+entry point where `memory_limiter` sits — which means their contribution to
+memory consumption isn't under the first station's protection at all,
+regardless of that station being first for all other traffic.
+
+The consequence is a concrete, measurable diagnostic pattern: when the
+gateway fails with an "out of memory" error, the first check isn't whether
+`memory_limiter` fell behind, but whether the refused-record counter grew
+at all before the crash. If it **did** grow, the limiter was doing exactly
+its job — it just couldn't keep pace, and the real fix is downstream (or
+more memory). If the refusal counter stays at zero right up to the crash,
+that's a sign something consumed memory **outside** the limiter's
+accounting — the most recently added piece of configuration is the
+suspect, not the station whose job is to prevent exactly this outcome. The
+difference between these two cases isn't visible on any dashboard until
+someone explicitly remembers to compare those two numbers.
+
+![memory_limiter is the first station in the chain for all ordinary traffic, but two data sources enter directly at the batch station, bypassing its protection — hence two different diagnostic patterns for the same crash.](diagrams/ch10-limiter-zaobilazak.png){: width="78%" }
+
+### A pipe that "works" and still silently drops one signal
+
+Station order isn't the only way a pipeline can fail silently. Every
+station has to explicitly forward **all three signal types** (metrics,
+logs, traces) to the next station's input — and dropping one type doesn't
+crash the process, doesn't throw an error, and a job-failure alert will
+never catch it, because the process stays alive and healthy by every metric
+that alert tracks. A deploy that "succeeds" by every standard check can
+silently lose exactly the logs, while metrics and traces continue normally.
+
+The implementation this book follows has only a handful of deliberate
+exceptions to the "all three signal streams move forward" rule — one
+station that deliberately targets only metrics (aggregating
+high-cardinality HTTP attributes from Chapter 11), and two that
+deliberately target only traces (the redaction and normalization from
+§ 10.2 above). That exception list is explicitly written down and short
+precisely so that any NEW exception stands out as a deviation that needs
+explaining, not as just another entry on an already long, unclear list. The
+practical consequence for anyone adding a new station to the chain: check
+whether you forgot to wire one of the three outputs into the next station's
+input before deploying, because after the deploy the only way to catch it
+is for someone to explicitly notice that exactly the data type they needed
+is missing.
+
 ## 10.3 Analytical section — why order isn't a matter of style
 
 ### The official recommendation on processor order
@@ -165,6 +217,14 @@ up at the station that got moved — it shows up at every station after it.
 - Don't invent a story about deviating from the standard where the standard
   already solves the problem well — recognize when "follow the recipe" is
   the right answer.
+- When the gateway fails with an "out of memory" error, first check whether
+  the refused-record counter grew before the crash — if it didn't, suspect
+  the piece of configuration that enters the pipeline bypassing the first
+  station, not the station itself.
+- When you add a new station to the pipeline, explicitly check whether
+  you've wired all three signal types (metrics, logs, traces) into the next
+  station's input — a missing connection doesn't crash the process, and no
+  job-failure alert will catch it.
 
 ## 10.5 Exercise for the reader
 
