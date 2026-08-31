@@ -119,6 +119,74 @@ knjigu i vraća se eksplicitno u Poglavlju 5 (semantika atributa) i Poglavlju 12
 (sampling — jer trag mora i da preživi do trenutka kad neko poželi da ga
 pogleda).
 
+### Tri tačna zapažanja, tri različita uzroka, ista lažna slika
+
+Drugi, srodan slučaj pokazuje istu poentu iz još neprijatnijeg ugla: nekad
+monitoring ne propusti jedan unknown unknown, nego tri nezavisna, sasvim
+obična mehanizma se poklope tako da svaki, pojedinačno, radi tačno ono za šta
+je napravljen — a rezultat je i dalje potpuna nevidljivost. Kolega je jednog
+popodneva prijavio tri zapažanja o jednom drugom zakazanom poslu (arhiver koji
+periodično upisuje starije podatke u dugoročno skladište): glavni pregledni
+dashboard pokazuje da taj posao pada poslednja 24 sata; nijedan alarm nije
+stigao; a dashboard posvećen baš izvršavanju zadataka pokazuje nula kvarova za
+taj posao, čak i kad je filter za posao postavljen na "Sve". Sve troje se
+pokazalo tačnim — i sve troje je imalo potpuno različit uzrok.
+
+Prvo: gejt koji odlučuje da li se alarm šalje na Slack traži bar tri kvara u
+roku od 30 minuta pre nego što bilo šta pošalje — a taj posao se pokreće na
+svakih osam minuta i pada sa stopom od otprilike 1%, što znači da su kvarovi
+retki, ali skoro uvek izolovani. Izmereno: najviše dva kvara u bilo kom
+30-minutnom prozoru u poslednja 24 časa. Gejt napravljen za nalet nije samo
+"manje osetljiv" na ovakav obrazac — matematički ne može nikad da se okine.
+Drugo: filter "Sve" na dashboard-u za izvršavanje zadataka nije bio zaista
+sve — padajuća lista iz koje se filter puni dolazila je iz užeg signala koji
+sadrži samo poslove sa instalisanom instrumentacijom, dok su paneli ispod
+filtera zapravo čitali širi izvor podataka koji sadrži svaki posao. "Sve" je,
+tehnički, bilo enumerisana lista, ne džoker znak. Treće: taj konkretan posao
+tada uopšte nije bio instrumentisan, pa je svaki panel zasnovan na metrikama
+za njega tačno i legitimno prazan.
+
+Jedini dashboard koji je govorio istinu bio je poseban, pregledni ekran čiji
+je jedini signal namerno upisivan u sistem *pre* gejta za potiskivanje alarma
+i *nezavisno* od toga da li posao ima instrumentaciju — jedna ranija odluka
+projektovanja koja je, slučajno, bila jedini razlog što je iko uopšte mogao da
+primeti problem. Poenta za ovo poglavlje: nijedan od tri mehanizma nije bio
+pokvaren. Gejt je radio tačno po specifikaciji, filter je radio tačno po
+svojoj definiciji, prazni paneli su bili tačno prazni jer nije bilo šta da se
+prikaže. Ono što je otkazalo jeste sistemsko svojstvo — "može li operater da
+odgovori na pitanje da li je ovaj posao zdrav" — a to je tačno vrsta pitanja
+na koju tri pojedinačno ispravne komponente mogu zajedno da odgovore
+pogrešno, i zato "proveri da li svaka komponenta radi" nije isti test kao
+"proveri da li sistem odgovara na stvarno pitanje".
+
+![Tri nezavisno tačna zapažanja o istom poslu, tri nezavisna uzroka — a samo jedan raniji signal, upisan pre gejta i nezavisno od instrumentacije, rekao je istinu.](diagrams/ch01-tri-uzroka.png){: width="80%" }
+
+### Alarm oblikovan za nalet je slep za curenje
+
+Vredi zumirati na prvi od tri uzroka iz prethodnog primera, jer nosi
+opštiju lekciju o samom monitoring sloju, ne samo o ovom jednom poslu. Gejt
+tipa "N kvarova za M minuta" nije samo prag osetljivosti — on kodira
+pretpostavku o *obliku* dolaska kvarova, ne samo o njihovom ukupnom broju.
+
+Konkretni brojevi to čine opipljivim: posao se pokreće oko 180 puta dnevno
+(otprilike na svakih osam minuta) i pada sa stopom od približno 1% — što
+znači nekoliko kvarova dnevno u zbiru, ali gotovo uvek izolovanih, minutima
+ili satima jedan od drugog. Gejt postavljen na "bar tri kvara za 30 minuta"
+za ovakav obrazac nije "manje osetljiv" — trajno je nezadovoljiv, bez obzira
+koliko dana prođe. A ipak, posmatrano preko dužeg perioda, isti taj posao
+*jeste* alarmirao — 25 puta od ukupno 47 puta kad je kvar prošao kroz gejt,
+dok je 22 puta bio potisnut. Zato bi provera oblika "da li ovaj posao ikad
+alarmira" dala odgovor "da" i prošla dalje, iako je stvarno bitno pitanje koji
+deo kvarova prođe kroz gejt — za ovaj posao, manje od polovine.
+
+Lekcija za svakog ko bira gejt tipa "N za M minuta": pre uvođenja, izračunaj
+da li obrazac dolaska kvarova *tog konkretnog* signala uopšte može da
+zadovolji taj uslov — ne samo da li je ukupan broj kvarova, preko dovoljno
+dugog perioda, zabrinjavajući. Posao koji ponekad alarmira je teže uočljiv
+slepi ugao od posla koji nikad ne alarmira, jer prolazi površnu proveru "da li
+se ovo ikad javi" — a upravo ta površna provera je ono što ljudi obično rade
+prvo.
+
 ## 1.3 Analitički deo — odakle dolazi ova razlika, i zašto tri stuba nisu dovoljna
 
 ### Known unknowns i unknown unknowns nisu marketinški izraz
@@ -217,6 +285,14 @@ da ćeš morati da postaviš.
 - Posedovanje sva tri "stuba" (metrike, logovi, tragovi) ne garantuje
   observability samo po sebi — garantuje ga navika da se ti alati koriste i za
   pitanja koja nisi unapred predvideo.
+- Kad proveravaš da li je sistem "zdrav", ne veruj automatski da "Sve" na
+  filteru dashboard-a zaista znači sve — proveri iz kog signala je taj filter
+  popunjen, i da li taj signal pokriva isti skup poslova kao paneli ispod
+  njega.
+- Pre nego što uvedeš gejt tipa "N kvarova za M minuta", izračunaj da li
+  obrazac dolaska kvarova tog konkretnog posla uopšte može da zadovolji taj
+  uslov — ne samo da li je ukupan broj kvarova, preko dovoljno dugog perioda,
+  zabrinjavajući.
 
 ## 1.5 Vežba za čitaoca
 
