@@ -104,6 +104,69 @@ Sva tri obrasca, jedan pored drugog:
 
 ![Tri pull-obrasca prema nivou kontrole: dve nezavisne ravni za upravljanu bazu, agent-koji-gura za samostalno upravljan klaster, i direktan pull mimo gateway-a za spoljni SaaS.](diagrams/ch7-pull-obrasci.png){: width="98%" }
 
+### Cena povlačenja se meri po pozivu, ne po tački podataka
+
+Kod push-a, marginalna cena dodatnog signala je približno linearna sa
+količinom podataka — jedan dodatan raspon je jedan dodatan raspon, bez obzira
+odakle je stigao. Povlačenje protiv API-ja upravljanog cloud servisa ima
+potpuno drugačiji ekonomski oblik: dobavljač naplaćuje **po pozivu**, ne po
+vrednosti koju taj poziv vrati. Konkretno, kod spoljašnje ravni za upravljanu
+bazu, svaki upit za jednu metriku na jednoj dimenziji u jednom vremenskom
+prozoru je jedan tarifiran poziv — cena raste sa proizvodom broja metrika,
+broja dimenzija po kojima se traže, i **koliko često se pitaju**, potpuno
+nezavisno od toga da li se vrednost od poslednjeg poziva uopšte promenila.
+
+Ova razlika je oblikovala dve odvojene odluke u implementaciji, ne jednu.
+Prva: umesto automatskog otkrivanja svih baza po tagu (što bi tiho
+umnožavalo broj poziva sa svakom novom bazom dodatom u budućnosti, bez
+ijedne eksplicitne odluke da se taj trošak prihvati), lista praćenih baza je
+**statička** — svaka nova baza ulazi u monitoring eksplicitnim dodavanjem
+posla, ne automatski. Cena ostaje predvidljiva; cena te predvidljivosti je
+da nova baza ne uđe u monitoring sama od sebe. Druga: kad je jedna grupa
+metrika bila skuplja nego što se opravdavalo njihovom stvarnom korisnošću,
+popravka nije bila brisanje metrika — bila je **produženje intervala
+između poziva**, sa istog skupa metrika, jer se cena diže sa učestalošću
+poziva jednako kao i sa brojem metrika. Za metriku čija podrazumevana
+granularnost na strani izvora već iznosi nekoliko minuta, traženje na
+svakih 60 sekundi ionako ne bi vratilo ništa novo — samo bi platilo za
+pitanje na koje odgovor još nije promenjen.
+
+### Kad je prozor upita uzan, sistem koji pitaš možda još nije stigao da odgovori
+
+Jedna metrika opterećenja procesora je, neposredno posle uvođenja nove grupe
+metrika, počela da se ponaša neobjašnjivo asimetrično: na jednoj replici baze
+podataka je bila potpuno normalna, na drugoj je povremeno padala na potpunu
+prazninu — ne na nulu, nego na **odsustvo tačke**, kao da ta replika u tom
+minutu uopšte nije postojala. Prva pretpostavka — da nešto specifično nije u
+redu baš sa tom replikom — bila je pogrešna.
+
+Stvaran uzrok nije imao nikakve veze sa bilo kojom replikom pojedinačno.
+Cloud servis koji izvor podataka meri objavljuje baš tu metriku sa dodatnim
+kašnjenjem u odnosu na trenutak koji opisuje — vrednost za minut *N* ponekad
+postane dostupna tek nešto kasnije od minuta *N*. Upit koji traži tačku u
+prozoru tačno onoliko širokom koliko iznosi podrazumevana granularnost te
+metrike je, statistički gledano, povremeno stizao **pre** nego što je
+vrednost uopšte objavljena — i mehanizam za povlačenje je, kad ne nađe
+nijednu tačku u traženom prozoru, to tumačio kao "ova serija u ovom trenutku
+ne postoji," ne kao "vrednost još nije stigla." Asimetrija između replika
+nije bila stvarna razlika u sistemu — bila je razlika u tome koliko se često
+tajming svake replike slučajno poklapao sa ivicom prozora.
+
+Popravka nije dirala ništa na strani izvora — proširen je **prozor upita**,
+znatno preko podrazumevane granularnosti metrike, tako da čak i kasno
+objavljena vrednost i dalje upadne unutar prozora koji se pretražuje. Serija
+je posle toga ostala kompletna na obe replike.
+
+Opšta pouka nadilazi CPU metriku ili ovaj konkretan servis: kod svakog
+povlačenja protiv tuđeg API-ja, prozor koji se pretražuje mora biti širi od
+podrazumevane granularnosti izvora, ne jednak njoj — inače svaki poziv nosi
+rizik da stigne tačno u procepu između trenutka na koji se pita i trenutka
+kad je odgovor stvarno objavljen, a taj procep se manifestuje kao potpuno
+odsustvo podatka, ne kao spora ili neobična vrednost, što ga čini lakim za
+pogrešno protumačiti kao stvaran otkaz posmatranog sistema.
+
+![Uzan prozor upita, jednak podrazumevanoj granularnosti izvora, povremeno stigne pre nego što je izvor objavio vrednost — povlačilac to tumači kao da serija ne postoji. Proširen prozor upita, preko podrazumevane granularnosti, uvek uhvati i kasno objavljenu vrednost.](diagrams/ch07-prozor-kasnjenje.png){: width="75%" }
+
 ## 7.3 Analitički deo — zašto ne postoji jedan univerzalni pull-obrazac
 
 ### Zvanično stanje: fokus je gotovo isključivo na push
@@ -172,6 +235,15 @@ te zaslepeo.**
   strukturno kašnjenje prihvatljivo za taj izvor — pull retko znači
   "u realnom vremenu", i alarmi moraju biti podešeni prema stvarnom kašnjenju,
   ne prema željenom.
+- Cena povlačenja kod merenog API-ja skalira sa brojem kombinacija
+  metrika×dimenzija puta učestalost pitanja, ne sa time da li se vrednost
+  promenila — drži spisak izvora statičkim umesto auto-otkrivanja, i kad
+  cena postane neproporcionalna vrednosti, prvo proširi interval, tek onda
+  razmatraj brisanje metrike.
+- Kad je prozor upita jednak podrazumevanoj granularnosti izvora, sistem koji
+  pitaš možda još nije objavio vrednost — puštač to čita kao "serija ne
+  postoji", ne kao "još nije stigla". Proširi prozor upita dobro iznad
+  nominalne granularnosti izvora umesto da menjaš sam izvor.
 
 ## 7.5 Vežba za čitaoca
 
