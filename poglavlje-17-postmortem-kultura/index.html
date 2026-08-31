@@ -1285,6 +1285,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#krajnji-slucaj-obrasca-cetiristo-sezdeset-devet-dana-tisine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Krajnji slučaj obrasca: četiristo šezdeset devet dana tišine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isti-alarm-tri-nepovezana-uzroka-opasnost-prvog-objasnjenja-koje-se-uklapa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Isti alarm, tri nepovezana uzroka — opasnost prvog objašnjenja koje se uklapa
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2320,6 +2342,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#krajnji-slucaj-obrasca-cetiristo-sezdeset-devet-dana-tisine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Krajnji slučaj obrasca: četiristo šezdeset devet dana tišine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isti-alarm-tri-nepovezana-uzroka-opasnost-prvog-objasnjenja-koje-se-uklapa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Isti alarm, tri nepovezana uzroka — opasnost prvog objašnjenja koje se uklapa
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2505,6 +2549,54 @@ srušio nijedan servis. Oba su bila, po sopstvenom priznanju napisanog
 postmortema, ozbiljnija za poverenje u sistem nego neki pravi, kratkotrajni
 ispad.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch17-tri-tipa.png" data-desc-position="bottom"><img alt="Postmortem je unazad usmeren; iz njega se distiluje runbook (unapred usmeren, za sledeći put) ili handoff (jednokratan zahtev upućen jednom vlasniku) — tri dokumenta, tri različita smera." src="../diagrams/ch17-tri-tipa.png" width="90%"></a></p>
+<h3 id="krajnji-slucaj-obrasca-cetiristo-sezdeset-devet-dana-tisine">Krajnji slučaj obrasca: četiristo šezdeset devet dana tišine</h3>
+<p>Vredi imenovati jedan konkretan zapis iz indeksa kao krajnju tačku obrasca
+opisanog iznad — ne zato što je tipičan, nego zato što pokazuje koliko
+daleko "alarm koji nedostaje" može da ode pre nego što ga neko primeti.
+Zakazan zadatak je otkazivao <strong>svaki put kad je pokrenut, bez izuzetka, četiri
+stotine šezdeset devet dana zaredom</strong>. Alarm koji je trebalo da javi taj
+otkaz nije nedostajao — bio je prisutan, uključen, i ispravno povezan.
+Problem je bio u prirodi samog mehanizma obaveštavanja: sistem šalje poruku
+na <strong>promenu</strong> stanja, ne dok stanje traje. Alarm je jednom, na sam dan kad
+je otkazivanje počelo, prešao iz "u redu" u "alarmira" i tom prilikom poslao
+tačno jedno obaveštenje. Pošto se stanje posle toga nikad nije vratilo u
+"u redu" (zadatak nikad nije uspeo), nije bilo nove promene stanja koja bi
+pokrenula drugu poruku — nijednu, sve to vreme.</p>
+<p>Otkriveno je potpuno slučajno, ne pretragom niti dashboard-om: neko je
+proveravao da li se stara verzija jednog alata bezbedno može ukloniti kao
+"verovatno mrtav kod", i primetio da broj poziva tog zadatka uopšte nije
+nula, iako bi trebalo da bude, prema pretpostavci da niko taj kod više ne
+koristi. Postmortem napisan o ovom nalazu nije stao na "popravimo ovaj
+jedan alarm" — pokrenuo je širi zamah: provera cele flote sličnih zadataka
+otkrila je još pet koji otkazuju bez ijednog alarma uopšte, i da većina
+zadataka u toj kategoriji nema nijedan mehanizam obaveštavanja koji bi
+preživeo baš ovaj obrazac (traje-ali-se-ne-menja). Postmortem koji otkrije
+jedan slučaj i pita "gde se još ovo krije" vredi mnogo više od onog koji
+zatvori samo taj jedan, imenovan slučaj.</p>
+<h3 id="isti-alarm-tri-nepovezana-uzroka-opasnost-prvog-objasnjenja-koje-se-uklapa">Isti alarm, tri nepovezana uzroka — opasnost prvog objašnjenja koje se uklapa</h3>
+<p>Jedna porodica zadataka je za mesec dana pokrenula alarm <strong>sedamdeset puta</strong>,
+svaki put istog oblika, svaki put na najvišem nivou ozbiljnosti, bez ijednog
+mehanizma za spajanje ponovljenih poruka — sedamdeset zasebnih poziva u
+kanal. Prva, sasvim razumna pretpostavka bila je da je reč o jednom uzroku
+koji se ponavlja. Istraga koja bi stala na prvo objašnjenje koje se uklopi
+u nekoliko primera bi lako promašila: kad je postmortem sistematski razložio
+svih sedamdeset poziva umesto da uzorkuje par njih, pokazalo se da iza
+identičnog oblika alarma stoje <strong>tri</strong> potpuno nepovezana uzroka — jedna
+greška u obradi podataka koja pogađa oko devet od deset slučajeva, sasvim
+druga, ređa klasa otkaza na nivou mrežne konekcije ka bazi, i jedan poziv
+koji uopšte nije pripadao ovoj porodici zadataka nego susednoj, sa spoljne
+platforme koja povlači stare zadatke iz pogona — slučajno poklapanje u
+vremenu koje je gotovo navelo istragu na pogrešan trag.</p>
+<p>Da je istraga stala posle prva dva ili tri pregledana slučaja, verovatno bi
+zaključila da postoji jedan dominantan uzrok i predložila jednu popravku —
+tehnički tačnu za većinu slučajeva, ali slepu za preostalu desetinu i za
+potpuno pogrešno pripisan poziv koji nije ni pripadao ovoj porodici. Pouka
+nije specifična za ovu porodicu zadataka: kad isti oblik alarma dolazi
+dovoljno često da bude ozbiljan trošak, vredi razložiti <strong>celu</strong> populaciju
+poziva, ne samo dovoljno njih da se prvo uverljivo objašnjenje potvrdi —
+identičan spoljašnji oblik alarma ne garantuje ni jedan zajednički uzrok
+iza njega, ni potpunu srodnost svih pojava.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch17-469-dana.png" data-desc-position="bottom"><img alt="Alarm ispravno prelazi u stanje alarmiranja i pošalje tačno jedno obaveštenje na sam dan otkaza — sistem obaveštava samo na promenu stanja, pa 469 dana neprekidnog, nepromenjenog otkazivanja posle toga ne šalje nijednu novu poruku. Otkriveno slučajno, tokom nevezanog zadatka." src="../diagrams/ch17-469-dana.png" width="85%"></a></p>
 <h2 id="173-analiticki-deo-zasto-je-niko-nije-kriv-teze-nego-sto-zvuci">17.3 Analitički deo — zašto je "niko nije kriv" teže nego što zvuči</h2>
 <h3 id="zvanicna-preporuka-blameless-kao-funkcionalni-zahtev-ne-ljubaznost">Zvanična preporuka: blameless kao funkcionalni zahtev, ne ljubaznost</h3>
 <p>Zvanična SRE praksa formuliše ovo direktno: ne možeš "popraviti" ljude, ali
@@ -2563,6 +2655,12 @@ sledeći.</strong></p>
   vidljivost od strane liderstva, redovna provera da li proces opterećuje
   tim, i indeks koji stvarno neko koristi, sve su neophodni da praksa
   preživi posle prvog entuzijazma.</li>
+<li>Kad postmortem otkrije jedan slučaj propuštenog alarma, proširi istragu
+  na celu srodnu flotu pre nego što proglasiš problem zatvorenim — jedan
+  nalaz retko je jedina instanca.</li>
+<li>Kad isti oblik alarma dolazi dovoljno često da postane ozbiljan trošak,
+  razloži celu populaciju poziva pre nego što prihvatiš prvo uverljivo
+  objašnjenje — identičan oblik ne garantuje jedan zajednički uzrok.</li>
 </ul>
 <h2 id="175-vezba-za-citaoca">17.5 Vežba za čitaoca</h2>
 <p>Pronađi poslednji incident u svom timu gde je nešto propušteno — ne pao
@@ -2600,7 +2698,7 @@ ne zna da se već jednom dogodio.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 10:36:33 UTC">31. avgust 2026.</span>
   </span>
 
     

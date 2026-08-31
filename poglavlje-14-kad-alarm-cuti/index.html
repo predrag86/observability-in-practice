@@ -1190,6 +1190,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#treca-studija-slucaja-kanal-kroz-koji-prolazi-bas-svaki-alarm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treća studija slučaja: kanal kroz koji prolazi baš svaki alarm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cetvrta-studija-slucaja-izvestaj-koji-cuti-kad-je-zdrav-i-kad-je-mrtav" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Četvrta studija slučaja: izveštaj koji ćuti kad je zdrav i kad je mrtav
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2298,6 +2320,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#treca-studija-slucaja-kanal-kroz-koji-prolazi-bas-svaki-alarm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treća studija slučaja: kanal kroz koji prolazi baš svaki alarm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cetvrta-studija-slucaja-izvestaj-koji-cuti-kad-je-zdrav-i-kad-je-mrtav" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Četvrta studija slučaja: izveštaj koji ćuti kad je zdrav i kad je mrtav
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2504,6 +2548,56 @@ kategoriju razloga.</p>
 kroz sedamnaest sati, svaki sam za sebe ispod praga mehanizma za
 sprečavanje spam-a, nijedan ikad poslat:</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-suppression.png" data-desc-position="bottom"><img alt="Devetnaest padova raspoređenih kroz sedamnaest sati — svaki potisnut, nijedan poslat, jer nijedan par padova nije dovoljno blizu u vremenu da zadovolji prag &quot;tri u trideset minuta&quot;." src="../diagrams/dashboard-suppression.png" width="95%"></a></p>
+<h3 id="treca-studija-slucaja-kanal-kroz-koji-prolazi-bas-svaki-alarm">Treća studija slučaja: kanal kroz koji prolazi baš svaki alarm</h3>
+<p>Revizija celog sistema alarmiranja otkrila je nešto nezavisno od prve dve
+studije slučaja, ali istog roda: <strong>svaki</strong> put kojim alarm putuje — bilo
+direktan infrastrukturni događaj (Put A iz Poglavlja 13), bilo signal
+izveden iz telemetrije (Put B) — na kraju završava u istom, jedinom kanalu
+za obaveštavanje. Nijedan alarm nije imao rezervni put. Iskren odgovor na
+pitanje "gde ću čuti ako taj kanal prestane da radi" bio je <strong>nigde</strong> — a to
+je tačno onaj oblik tišine kojim se ovo poglavlje bavi, samo pomeren jedan
+sloj više: ne pojedinačan alarm koji ćuti, nego <strong>mehanizam isporuke svih
+alarma</strong> koji može da ćuti a da niko to ne primeti, jer se kvar tog kanala
+manifestuje identično kao "trenutno nema ničega da se prijavi".</p>
+<p>Rešenje nije bilo dodati rezervni kanal svakom pojedinačnom alarmu — to bi
+dupliralo baš svaku poruku, svaki put, čineći rezervni kanal beskorisnim kao
+signal (postao bi ogledalo primarnog, ne upozorenje da je primarni pao).
+Umesto toga, rezervni kanal je namerno vezan <strong>isključivo</strong> za onaj uzak
+skup alarma čije paljenje samo po sebi znači "primarni kanal isporuke je
+prestao da radi" — ništa drugo. Prvi pokušaj ove promene je, iz razumljivog
+nagona da se "ništa ne promaši", greškom dodao rezervni kanal i na par
+običnih alarma — greška je primećena i ispravljena isti dan, jer bi u
+suprotnom rezervni kanal počeo da prima kopiju svega, gubeći baš ono
+svojstvo koje ga čini korisnim: da ćuti dok je sve u redu i progovori tačno
+onda kad primarni put ne može.</p>
+<p>Dodatna komplikacija: primarni kanal isporuke ima <strong>više nezavisnih puteva</strong>
+koji do njega vode, ne jedan, i svaki od njih otkazuje na drugačiji način —
+jedan detektor koji prati samo jedan od tih puteva ne vidi kvar na druga
+dva. Za jedan od ta tri puta nije se ni pronašao pouzdan način da se
+otkrije njegov kvar bez uvođenja potpuno nove, samostalne klase provere —
+odluka je bila da se taj gap <strong>svesno prihvati kao poznat, neotvoren rizik</strong>
+umesto da se prećutno pretpostavi da je pokriven, jer je prava opasnost baš
+u tome da neko poveruje da postoji zaštita koje zapravo nema.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch14-slack-spof.png" data-desc-position="bottom"><img alt="Prvi pokušaj je rezervni kanal (email) dodao na više alarma, duplirajući svaku poruku i čineći ga beskorisnim kao signal; usvojeno rešenje ga vezuje isključivo za alarme čije paljenje samo po sebi znači da je primarni kanal isporuke pao." src="../diagrams/ch14-slack-spof.png" width="80%"></a></p>
+<h3 id="cetvrta-studija-slucaja-izvestaj-koji-cuti-kad-je-zdrav-i-kad-je-mrtav">Četvrta studija slučaja: izveštaj koji ćuti kad je zdrav i kad je mrtav</h3>
+<p>Nedeljna, automatizovana provera koja upoređuje stvarno stanje flote sa
+očekivanom konfiguracijom šalje poruku <strong>samo kad pronađe nešto vredno
+pažnje</strong> — dizajn izabran namerno, jer bi izveštaj koji svake nedelje
+ponavlja iste, već prihvaćene nalaze ubrzo počeo da se ignoriše. Ta ista
+odluka nosi sopstvenu, suptilnu manu: kanal koji ćuti izgleda <strong>identično</strong>
+bilo da je flota zaista čista, bilo da je sama provera prestala da radi
+(pukla pre nego što je stigla da bilo šta ispita). "Nema poruke" iz oba
+razloga izgleda potpuno isto sa spoljašnje strane — ista tišina, dva
+suprotna uzroka.</p>
+<p>Popravka nije bila naterati proveru da uvek nešto pošalje (to bi poništilo
+baš onaj razlog zbog kog je "šalji samo kad ima nešto" uopšte uvedeno) —
+bila je dodati
+<strong>potpuno odvojen</strong> alarm koji prati da li sama provera uspešno završava
+svoje izvršavanje, nezavisno od toga šta provera pronađe. Ovo je ista klasa
+rešenja kao rezervni kanal iznad, samo primenjena na jedan nivo unutra: kad
+god mehanizam namerno ćuti dok je sve u redu, mora postojati odvojen signal
+koji dokazuje da je taj mehanizam uopšte živ — jer sam mehanizam, po
+dizajnu, ne može da posvedoči za sebe u trenutku kad je mrtav.</p>
 <h2 id="143-analiticki-deo-zasto-ovo-retko-pise-iko-drugi">14.3 Analitički deo — zašto ovo retko piše iko drugi</h2>
 <h3 id="mehanizam-za-sprecavanje-spam-a-kodira-pretpostavku-o-obliku-greske">Mehanizam za sprečavanje spam-a kodira pretpostavku o obliku greške</h3>
 <p>Vredi imenovati ono što obe studije slučaja zapravo pokazuju: svaki
@@ -2560,6 +2654,14 @@ izgleda sumnjivo, dok ispravan-ali-pogrešno-kalibrisan izgleda kao mir.</strong
   posle uvođenja (koliko poruka je nestalo, i za koje porodice) — ne
   pretpostavljaj da je pad broja poruka isto što i "sistem je postao
   zdraviji".</li>
+<li>Pitaj se iskreno gde ćeš čuti ako sam kanal kojim SVI alarmi putuju
+  prestane da radi — ako je odgovor "nigde", dodaj rezervni put vezan
+  isključivo za alarme čije paljenje znači da je primarni kanal pao, ne
+  za svaki alarm (to bi samo dupliralo sve, ne dodalo zaštitu).</li>
+<li>Kad mehanizam namerno ćuti dok je sve u redu (izveštaj koji šalje poruku
+  samo kad nešto pronađe), dodaj odvojen signal koji dokazuje da je sam
+  mehanizam živ — tišina zbog "sve je čisto" i tišina zbog "provera je
+  pukla" izgledaju identično spolja.</li>
 </ul>
 <h2 id="145-vezba-za-citaoca">14.5 Vežba za čitaoca</h2>
 <p>Pronađi u svom sistemu bilo koji mehanizam koji potiskuje ponovljene
@@ -2596,7 +2698,7 @@ ga sistem sam prijavi.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 10:26:52 UTC">31. avgust 2026.</span>
   </span>
 
     
