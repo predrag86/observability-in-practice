@@ -99,6 +99,54 @@ nisu stvarno izolovani, samo su tako predstavljeni radi jasnoće.
 
 ![Živ, rangiran spisak po domenu: glavni top spisak, "časna pomena" ispod praga kao izvor za promociju, i pun backlog kao skladište detalja — tri sloja, jedna disciplina brisanja kad je nešto stvarno završeno.](diagrams/ch27-tri-sloja.png){: width="88%" }
 
+### Domet štete se meri, ne pretpostavlja
+
+Prva od tri ose rangiranja — domet štete — zvuči kao nešto što se procenjuje
+na oko, iz naziva problema. Implementacija je na jednom konkretnom nalazu
+pokazala zašto to nije dovoljno. Baza za autentikaciju je bila u jednoj
+dostupnoj zoni, bez replike u drugoj — na prvi pogled uzak nalaz, "autentikacija
+može da otkaže." Rangiran kao osrednji ozbiljnost, jer "auth SPOF" zvuči kao
+nešto što pogađa prijavljivanje, ne ceo proizvod.
+
+Kad je neko stvarno napravio mapu koji API pozivi zavise od autentikacije —
+ne pretpostavku nego stvaran popis rutā i njihovih zavisnosti — pokazalo se
+da doslovno **svaki** API poziv prolazi kroz proveru protiv te baze, ne samo
+prijavljivanje. Domet štete se time promenio iz "auth ide dole" u "ceo
+proizvod ide dole," a popravka — dodavanje replike u drugoj zoni — je ostala
+ista, jeftina promena od nekoliko desetina dolara mesečno. Rangiranje se
+promenilo ne zato što je problem postao veći, nego zato što je tek merenje
+otkrilo koliko je oduvek bio veliki. Implementacija je ovo eksplicitno
+zapisala uz nalaz: procenjeni domet je bio pogrešan sve dok ga niko nije
+stvarno izmerio, i ta razlika je jeftina lekcija samo zato što je otkrivena
+pre incidenta, ne tokom njega.
+
+![Isti nalaz, ista popravka — ali domet štete se promenio od "auth ide dole" do "ceo proizvod ide dole" tek kad je neko stvarno popisao zavisnosti umesto da ih pretpostavi iz naziva problema.](diagrams/ch27-domet-stete.png){: width="82%" }
+
+### Obrisano tek kad merenje to potvrdi, ne kad kod uđe u granu
+
+Pravilo "briši stavku kad je završena" iz prethodnog odeljka zvuči
+jednostavno, ali implementacija je na jednom nalazu pokazala gde je stvarna
+granica "završeno." Performansni nalaz je opisivao da backend servis, na
+**svaki** zahtev sa osnovnom autentikacijom, iznova upituje servis za
+autentikaciju bez ikakvog keširanja — dodajući merljivo kašnjenje svakom
+takvom pozivu i opterećujući bazu koja stoji iza njega, istu onu iz
+prethodnog primera. Popravka je predložena, kod je napisan, pregledan, i
+**spojen** u razvojnu granu.
+
+Stavka je ostala na spisku. Ne zato što niko nije stigao da je obriše, nego
+zato što spojen kod u razvojnoj grani nije isto što i kod koji radi u
+produkciji — put od razvojne grane do produkcije prolazi kroz dodatne korake
+objavljivanja, i dok taj put nije pređen, teret na servisu za autentikaciju u
+produkciji ostaje nepromenjen. Svaka stavka na spisku nosi sopstveni **signal
+verifikacije** — konkretnu metriku koja dokazuje da je popravka stvarno
+promenila stanje sistema, ne samo da je kod stigao do glavne grane. Za ovaj
+nalaz, signal je bio pad stope poziva ka servisu za autentikaciju na delić
+prethodne vrednosti, izmeren posle objavljivanja u produkciju — tek tada je
+stavka stvarno obrisana sa spiska. Razlika između "kod je spojen" i "signal
+je izmeren" je razlika između dva različita, lako pobrkana značenja reči
+"završeno" — i implementacija namerno bira strože od ta dva kao uslov za
+brisanje.
+
 ## 27.3 Analitički deo — poznat obrazac iz upravljanja rizikom, primenjen dosledno
 
 ### Kombinacija dometa i verovatnoće je standardna, imenovana metodologija
@@ -193,6 +241,13 @@ listu korisnom umesto da postane još jedan dokument koji niko ne čita.
 - Vodi kratak, datiran zapis promena za svaki spisak — šta je dodato,
   šta uklonjeno, i zašto — da odgovor na "zašto je ovo bilo prioritet"
   postoji i meseci kasnije, umesto da se rekonstruiše iz sećanja.
+- Izmeri domet štete umesto da ga pretpostaviš iz naziva nalaza — uzak,
+  osrednje rangiran problem se ponekad pokaže kao nešto što pogađa ceo
+  sistem tek kad neko stvarno popiše zavisnosti, ne pre toga.
+- Definiši za svaku stavku na spisku konkretan signal verifikacije — metriku
+  koja dokazuje da je popravka promenila stanje produkcije — i briši stavku
+  tek kad je taj signal izmeren, ne kad je kod spojen u granu; "spojeno" i
+  "objavljeno u produkciju" nisu isto "završeno."
 
 ## 27.5 Vežba za čitaoca
 
