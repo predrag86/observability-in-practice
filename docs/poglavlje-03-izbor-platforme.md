@@ -92,6 +92,55 @@ Sve četiri komponente su, pojedinačno, **besplatan open-source softver** — o
 backup, nadogradnje, multi-tenant izolacija, 24/7 dežurstvo nad tuđom
 infrastrukturom. To je tačno ono što se u § 3.3 meri u dolarima.
 
+### Alarm koji stiže pre računa, ne posle njega
+
+Vredi razdvojiti trenutak "probila besplatni tier za jedan vikend" iz priče
+gore od uobičajene slike koju taj izraz priziva — nije otkriveno tako što je
+neko pogledao mesečni račun posle činjenice. Uhvaćeno je namenskim
+budžetskim alarmom sa eksplicitnim pragom (95% mesečnog budžeta), potpomognut
+još ranijim slojem — detektorom anomalija koji prati neobičnu *stopu rasta*
+potrošnje, ne samo apsolutni nivo, i time upozorava i pre nego što se pređe i
+sam prag.
+
+Model naplate iza toga je namerna odluka, ne slučajnost: prekoračenje na
+Grafana Cloud Pro tier-u nije tvrdo ograničenje — naplaćuje se po jedinici
+iznad uključene kvote plana. Taj izbor ("naplati, ne blokiraj upis") je tačno
+razlog zašto je incident bio preživljiv bez ijednog prekida — pipeline nikad
+nije prestao da prima podatke — ali je i razlog zašto je zahtevao brz,
+namenski ljudski odgovor umesto da bude samoograničavajući: neregulisan skok
+kardinalnosti se nastavlja kao rastući račun, ne kao mrtva cev koja bi na
+kraju sama prisilila pažnju kvarom koji se vidi.
+
+Alarm koji se okine na ukupnu potrošnju sam po sebi ne kaže koji je od dva
+sasvim različita uzroka odgovoran — skok u kardinalnosti metrika (broj
+jedinstvenih kombinacija labela) ili skok u obimu logova — a njih dvoje traže
+potpuno različite popravke. Zato runbook iza tog jednog alarma namerno grana
+dijagnozu na dva odvojena puta, umesto da pretpostavi koji je uzrok u
+pitanju. I sam prag od 95% nije bio zauvek fiksiran — već je ranije dvaput
+podizan, postepeno, kako je stvarna, organska potrošnja rasla — svaki put
+kao svesna, zabeležena odluka, ne kao neprimećeno širenje obima.
+
+![Budžetski alarm kao rano upozorenje pre nego što prekoračenje počne da se naplaćuje, i dijagnostičko grananje na dva različita moguća uzroka iza njega.](diagrams/ch03-alarm-pre-racuna.png){: width="76%" }
+
+### Zašto su pravila za budžetski alarm namerno van Terraform-a
+
+Pravila alarma koja hvataju baš ovaj scenario upravljaju se isključivo kroz
+sopstveni interfejs alata za upravljanje troškovima kod dobavljača, nikad
+kroz Terraform tima — i to je namerna, dokumentovana odluka, ne rupa koju
+niko još nije stigao da zatvori.
+
+Razlog: aplikacija za upravljanje troškovima sama interno rekoncilira
+sopstvena pravila alarma; da postoji paralelna kopija istog pravila u
+Terraform-u, alatka dobavljača bi je periodično prepisala ili tiho poništila,
+bez čistog signala ko je "pobedio" u tom sukobu vlasništva nad istim
+objektom. Ovo je konkretan primer šire poente ovog poglavlja o iznajmljivanju
+naspram građenja: iznajmljivanje platforme ne znači samo da ne održavaš njene
+servere — ume da znači i da prihvatiš da neke od njenih unutrašnjih
+konfiguracionih površina bezbedno mogu da žive samo unutar alata samog
+dobavljača, i da insistiranje da baš svaki deo upravljanog proizvoda bude pod
+sopstvenom IaC disciplinom može biti pogrešna odluka upravo zato što je to
+upravljan proizvod, sa sopstvenom logikom rekoncilijacije.
+
 ## 3.3 Analitički deo — šta zaista pokazuje poređenje cena
 
 ### Cenovnici, onakvi kakvi zaista jesu
@@ -209,6 +258,14 @@ hiljada hostova sa grafikona iznad, ne "firma ima više od pedeset zaposlenih".
 - Probijanje besplatnog tier-a nije poraz — to je signal da je sistem stigao
   do sledeće faze, i treba mu planiran odgovor (nadogradnja + kontrola
   kardinalnosti), ne panična migracija.
+- Budžetski alarm koji samo javlja "potrošeno je X%" nije dovoljan sam po
+  sebi — proveri da li runbook iza njega grana dijagnozu bar na "kardinalnost
+  metrika" naspram "obim logova", jer njih dvoje traže potpuno različite
+  popravke.
+- Ne insistiraj da baš svaki deo konfiguracije upravljane platforme živi u
+  tvom Terraform-u — ako platforma sama rekoncilira sopstvena pravila (kao
+  budžetski alarmi u alatu za upravljanje troškovima), paralelna IaC kopija
+  se tiho poništava, ne čuva.
 
 ## 3.5 Vežba za čitaoca
 
