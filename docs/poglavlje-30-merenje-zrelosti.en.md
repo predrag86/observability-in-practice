@@ -155,6 +155,54 @@ review — precisely because it was voluntary and recent.
 
 ![An alert ringing continuously for about ten weeks — the opposite case from "the alert that never rings": deliberately placed at the top of the findings list, because continuous ringing with no response says something about team discipline, not about the severity of the problem.](diagrams/dashboard-alert-streak.png){: width="92%" }
 
+### A trend measured on a short window can reverse with just a little more data
+
+One item from the previous review was flagged as something to watch, not
+as a confirmed problem: the rate of memory change for one service,
+measured over a seven-day window, showed a consistent rise that looked
+like a leak. The new review, only a few days later, repeated the same
+measurement with four additional days of data — and the trend
+**reversed**. What had looked like a consistent rise was, with a wider
+window, just part of a broader oscillating pattern; the value had, in the
+meantime, returned nearly to its starting point.
+
+This is a different kind of error from the one the section on retracted
+findings already names. The retracted findings from the previous section
+were wrong because of a wrong denominator or a point value cited as
+stable — here, the **direction** of change itself was mathematically
+correct as computed on the available data, and yet wrong as a conclusion,
+because the measurement window wasn't wide enough to distinguish a real
+trend from noise temporarily moving in the same direction. The review
+explicitly named this as a lesson for itself: when a finding is based on
+a derived rate of change (rather than a directly measured value), before
+declaring it a trend it's worth explicitly asking how many days of data
+stand behind it, and whether that same calculation, repeated with a
+window twice as wide, would give the same direction.
+
+![The same rate-of-change calculation, two measurement windows: seven days looks like a consistent leak, four more days of data show it was part of a broader oscillating pattern.](diagrams/ch30-kratak-prozor.png){: width="78%" }
+
+### When the measurement itself becomes part of the load it measures
+
+The review uncovered a cost nobody had directly connected to its cause,
+even though it was fully visible in the bill: a line item that grew month
+over month, arising because the team's own rules tracking the telemetry
+system's consumption **repeatedly scan** that same system to measure its
+consumption. The system that exists to measure the load becomes part of
+the load it measures — a self-induced loop that no previous review had
+recognized as a cost, because it looked like a normal part of the
+measurement infrastructure, not like a line item that belonged on the
+cost list.
+
+The point the review draws isn't "remove consumption measurement" —
+measuring consumption is a legitimate, necessary control. The point is
+that every mechanism observing a system should be treated as a
+**potential** consumer of that same system's resources, not as a neutral
+observer outside it, and periodically checked to see whether that has
+actually happened. Without that check, this kind of cost grows quietly,
+in the very cost category the mechanism itself is responsible for
+monitoring — the hardest place for anyone to notice the problem, because
+it's exactly the place that should be raising an alarm about itself.
+
 ## 30.3 Analytical section — why measuring maturity has to be a repeatable discipline
 
 Google's SRE Book frames monitoring measurement around four golden signals
@@ -244,6 +292,14 @@ skill still accurate" — measuring now, not trusting a record from before.
   direction — both go at the top of the list, not in a footnote.
 - Check whether last time's recommendations actually entered a system that
   compels action, or merely live in a document nobody tracks.
+- Before declaring a derived rate of change a trend, check how many days
+  of data stand behind it — a short window can show a consistent
+  direction that's actually part of a broader oscillating pattern, not a
+  real trend.
+- Treat every mechanism observing a system as a potential consumer of that
+  same system's resources, not as a neutral observer — a cost the
+  measurement itself causes grows hardest to notice exactly in the
+  category it's responsible for monitoring.
 
 ## 30.5 Exercise for the reader
 
