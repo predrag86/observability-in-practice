@@ -1,0 +1,64 @@
+/* Homepage hero: a full-bleed, near-full-viewport illustration that stays
+   pinned (background-attachment: fixed) while the header and page content
+   scroll over it — same feel as squidfunk's own mkdocs-material landing
+   page. Used only on the homepage, paired with `hide: [navigation, toc]`
+   in that page's front matter so there is no sidebar to collide with. */
+.hero {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: 0;
+  margin-bottom: 2rem;
+
+  min-height: 640px;
+  height: 82vh;
+
+  background-color: #f6f0e1;
+  background-image: url("../diagrams/hero-full.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+[data-md-color-scheme="slate"] .hero {
+  background-color: #17140f;
+  background-image: url("../diagrams/hero-full-dark.svg");
+}
+
+/* iOS Safari never honors background-attachment: fixed — fall back to a
+   normal scrolling background there rather than a broken/blank hero. */
+@supports (-webkit-touch-callout: none) {
+  .hero {
+    background-attachment: scroll;
+  }
+}
+
+.hero-content {
+  position: absolute;
+  left: 5vw;
+  bottom: 3rem;
+  z-index: 2;
+  max-width: 34rem;
+  padding: 1.75rem 2rem;
+  border-radius: 0.25rem;
+
+  background: color-mix(in srgb, var(--md-default-bg-color) 78%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.hero-content h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2.6rem;
+  line-height: 1.15;
+}
+
+.hero-content .hero-tagline {
+  margin: 0;
+  font-size: 1.15rem;
+  color: var(--md-default-fg-color--light);
+}
