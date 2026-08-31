@@ -148,6 +148,51 @@ dobrovoljno, bez spoljnog pritiska, ocenjena je kao najvredniji nalaz u
 
 ![Alarm koji zvoni neprekidno oko deset nedelja — suprotan slučaj od "alarm koji nikad ne zvoni": istaknut namerno na vrh liste nalaza, jer neprekidno zvonjenje bez odgovora govori o disciplini tima, ne o težini problema.](diagrams/dashboard-alert-streak.png){: width="92%" }
 
+### Trend izmeren na kratkom prozoru se može preokrenuti sa još malo podataka
+
+Jedna stavka iz prethodne revizije je bila označena kao nešto što treba
+pratiti, ne kao potvrđen problem: brzina promene memorije jednog servisa,
+izmerena nad sedmodnevnim prozorom, pokazivala je dosledan rast koji je
+ličio na curenje. Nova revizija, samo nekoliko dana kasnije, ponovila je
+isto merenje sa dodatna četiri dana podataka — i trend se **preokrenuo**.
+Ono što je izgledalo kao dosledan rast bilo je, sa širim prozorom, samo deo
+šireg oscilatornog obrasca; vrednost se u međuvremenu vratila skoro na
+polaznu tačku.
+
+Ovo je druga vrsta greške od one koju sekcija povučenih nalaza već imenuje.
+Povučeni nalazi iz prethodnog odeljka su bili pogrešni zbog pogrešnog
+imenioca ili tačkaste vrednosti citirane kao stabilne — ovde je sam
+**pravac** promene bio matematički tačan izračunat na dostupnim podacima, i
+ipak pogrešan kao zaključak, jer prozor merenja nije bio dovoljno širok da
+razlikuje pravi trend od šuma koji privremeno ide u istom pravcu. Revizija
+je ovo eksplicitno imenovala kao lekciju za sebe: kad je nalaz baziran na
+izvedenoj brzini promene (a ne na direktno izmerenoj vrednosti), pre nego
+što se proglasi trendom vredi eksplicitno pitati koliko dana podataka stoji
+iza njega, i da li bi taj isti izračun, ponovljen sa duplo širim prozorom,
+dao isti pravac.
+
+![Isti izračun brzine promene, dva prozora merenja: sedam dana liči na dosledno curenje, četiri dana više podataka pokazuju da je to bio deo šireg oscilatornog obrasca.](diagrams/ch30-kratak-prozor.png){: width="78%" }
+
+### Kad merenje samo postane deo tereta koji meri
+
+Revizija je otkrila trošak koji niko nije direktno povezao sa uzrokom, iako
+je bio potpuno vidljiv u računu: stavka koja je rasla iz meseca u mesec,
+nastala time što sopstvena pravila koja prate potrošnju sistema za
+telemetriju **iznova skeniraju** taj isti sistem da bi izmerila potrošnju.
+Sistem koji postoji da izmeri opterećenje sam postaje deo opterećenja koje
+meri — samo-uvedena petlja koju nijedna prethodna revizija nije prepoznala
+kao trošak, jer je izgledala kao normalan deo infrastrukture za merenje, ne
+kao stavka koja bi trebalo da bude na spisku troškova.
+
+Poenta koju revizija izvlači nije "ukloni merenje potrošnje" — merenje
+potrošnje je legitimna, potrebna kontrola. Poenta je da svaki mehanizam koji
+posmatra sistem treba tretirati kao **potencijalnog** potrošača resursa tog
+istog sistema, ne kao neutralnog posmatrača van njega, i periodično proveriti
+da li se to stvarno dogodilo. Bez te provere, ovakav trošak raste tiho, u
+istoj kategoriji troška koju je sam mehanizam zadužen da nadgleda —
+najteže mesto da neko primeti problem, jer je to tačno mesto koje bi
+trebalo da javi alarm na samog sebe.
+
 ## 30.3 Analitički deo — zašto merenje zrelosti mora biti ponovljiva disciplina
 
 Google-ov SRE Book uvodi merenje monitoringa oko četiri zlatna signala
@@ -235,6 +280,13 @@ veštine i dalje tačna" — merenje sada, ne verovanje u zapis od ranije.
   liste, ne u fusnotu.
 - Proveri da li su preporuke iz prošlog puta zaista ušle u sistem koji
   obavezuje na akciju, ili samo žive u dokumentu koji niko ne prati.
+- Pre nego što izvedenu brzinu promene proglasiš trendom, proveri koliko
+  dana podataka stoji iza nje — kratak prozor može pokazati dosledan
+  pravac koji je zapravo deo šireg oscilatornog obrasca, ne stvaran trend.
+- Tretiraj svaki mehanizam koji posmatra sistem kao potencijalnog
+  potrošača resursa tog istog sistema, ne kao neutralnog posmatrača —
+  trošak koji merenje samo izaziva raste najteže primetno tačno u
+  kategoriji koju je zaduženo da nadgleda.
 
 ## 30.5 Vežba za čitaoca
 
