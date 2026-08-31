@@ -130,6 +130,62 @@ of forgotten.
 
 ![A seductive but wrong signal: the derived 'environment unhealthiness' percentage looks like a serious outage, while the authoritative 5xx error rate from the load balancer shows that users barely felt anything at all — without this context, an agent would easily confirm the wrong diagnosis.](diagrams/dashboard-ebhealth-vs-5xx.png){: width="95%" }
 
+### False success: when the agent says "done" and nothing happened
+
+The implementation uncovered a mechanism more dangerous than an agent that
+misdiagnoses — an agent that **honestly** relays false information about
+its own action, because it has no way of knowing better itself. The tool
+that gives the agent access to the telemetry platform is deliberately
+configured read-only, enforced through the access token's own permission
+scope, not through a promise or an instruction in the prompt. When the
+agent, in a test, tries to delete an alerting rule with that token, the
+platform responds with a message saying the deletion **succeeded** — while
+in reality nothing changed. The agent honestly relays that message
+onward, because that's exactly what the tool returned to it.
+
+The sobering consequence, which the implementation explicitly names: the
+response "successfully deleted" looks **identical** regardless of whether
+the action was actually carried out or silently blocked. The agent has no
+way to internally distinguish the two outcomes — the difference exists
+only at the level of whether the token actually had write permission,
+information that's out of the agent's reach. This means the boundary "the
+agent may propose, not execute" must not rest on an instruction to the
+agent, nor on checking the agent's own report — it has to be enforced
+**externally**, at the level of the access permission scope itself,
+because that's the only place the difference between "blocked" and
+"executed" exists at all. Trusting the agent's report of what it did is,
+under this threat model, the wrong place to put trust.
+
+![A blocked write and a real write return an identical success message — the agent has no way to internally distinguish the two outcomes, so the "read-only" boundary must be enforced on the token's permission scope, not on trust in the agent's report.](diagrams/ch28-lazni-uspeh.png){: width="80%" }
+
+### The wrong store sounds like "no problem," not like an error
+
+The implementation documented a distinct error class, different from "the
+wrong counter in the same data store" from the third replay: here, the
+**entire wrong store** is queried, because some events structurally don't
+exist anywhere else. A concrete, measured example: an error reported by
+the traffic load balancer at the system's edge **never** reaches the
+backend service's own traces, because it happens at a layer the backend
+never sees — a trace query returns empty, not because there's no error,
+but because traces structurally cannot contain it. The same holds in the
+opposite direction: certain kinds of application crashes are recorded only
+in the infrastructure logging system, never in the centralized telemetry
+platform. Querying the wrong store doesn't return an error — it returns a
+convincing, empty zero, which reads as "no problem" exactly as
+convincingly as a genuine finding of no problem would look.
+
+The implementation adds a related, less obvious trap of the same origin: a
+percentile computed over a small number of requests is a mathematical
+artifact, not a measurement — a high percentile from only a handful of
+requests a day doesn't mean "slow endpoint," it means the sample lacks the
+statistical power for the percentile to say anything at all. The defense
+against both traps is the same: before trusting an empty or extreme
+result, check **which store could even contain** the requested event type
+at all, and **how many requests** stand behind a derived statistic like a
+percentile — both questions that generic observability knowledge doesn't
+automatically raise, but the specific context layer about this system
+should force.
+
 ## 28.3 Analytical section — external confirmation, and one sobering limit
 
 ### The protocol for connecting agents to telemetry is new, but already standardized
@@ -235,6 +291,14 @@ it is current, honest, and available at the right moment.
 - Keep the agent advisory for changes to system state — let it propose and
   explain, not execute — until enough trust and verification has been
   built for autonomous action to be justified.
+- Enforce the "read-only" boundary at the level of the access permission
+  scope itself, not at the level of an instruction to the agent — a
+  blocked write and a real write can look identical in the agent's
+  report, so trust in that report is not where that boundary can rest.
+- Before trusting an empty or extreme result, check whether the requested
+  event type could even exist in the store that was queried, and how many
+  requests stand behind a derived statistic like a percentile — both
+  traps return a convincing but wrong zero instead of an error message.
 
 ## 28.5 Exercise for the reader
 

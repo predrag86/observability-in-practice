@@ -101,6 +101,59 @@ over-applied where it's neither needed nor useful.
 
 ![The same session in the debugging panel, before and after: when both ends write the same form of keyed-hash pseudonym, joining by trace still works for diagnostics, but no longer reveals the real name and email.](diagrams/dashboard-pseudonymization.png){: width="95%" }
 
+### Parameter type as proof, not just a naming rule
+
+The distinction between "person identifiers" (never logged) and "resource
+identifiers" (legitimately logged) from the previous section sounds like a
+rule someone has to remember and disciplinedly apply to every new field.
+The implementation went a step further: instead of relying purely on
+naming discipline, it checked whether the parameter's **typing** itself
+structurally prevents the leak. Parameters that identify a resource (an
+asset identifier, a location identifier) are declared in the backend
+controller as strictly typed values (UUID, a decimal number) — meaning the
+request-handling framework **rejects** any call where someone tries to put
+free text, an email, or a token into that field. The rule "this field is
+safe to log" isn't just an agreement living in the team's heads here — it's
+**structurally impossible to violate otherwise**, because a malformed
+value never gets past request validation.
+
+This check also revealed the boundary of its own rule: two neighboring
+parameters in the same query set are plain text fields, not typed values,
+and their content is entirely in the hands of whoever sends the request —
+there's no type guarantee they won't contain something sensitive. The
+implementation **still** logs them (they haven't been declared person
+identifiers), but with an extra measure typed parameters don't need:
+encoding special characters before writing to the log, so free-text
+content can't inject a separator or newline and corrupt the structure of
+the log record itself. Two different guarantees for two different
+categories of parameters — one structural (type), one operational
+(encoding) — applied exactly where each makes sense.
+
+### Why the pseudonymization key deliberately never rotates
+
+Standard security hygiene calls for periodic rotation of secret keys — a
+rule that holds for passwords, API tokens, encryption keys. For the key
+driving the hash function behind pseudonyms, the implementation
+deliberately decided the **opposite**: the key stays stable, with no
+planned rotation. The reason isn't negligence but an explicit trade-off
+analysis. Rotating the key changes **every** pseudonym at once — every
+user gets a new pseudonym at the same instant, which breaks longitudinal
+analysis (a dashboard tracking the same user over time suddenly sees a
+"new" user) and requires reconciling the internal mapping table that ties
+pseudonyms to emails. By contrast, the benefit of rotation here is
+unusually small: the key doesn't protect the content itself (the email
+stays readable in the mapping table regardless of the key) — it only
+protects the **link** between the pseudonym and the email for anyone who
+sees the pseudonym without access to that table. If the mapping table is
+already compromised, rotating the key fixes nothing; if it isn't, a stable
+key opens no new risk that rotation would close. Security hygiene that
+makes sense for a password would here only introduce operational damage
+with no corresponding security benefit — the implementation recognized
+this instead of mechanically applying a general rule to a situation where
+it doesn't hold.
+
+![Why rotating the pseudonymization key wouldn't be a security gain here, only operational damage: the key protects the pseudonym↔email link, not the content itself, and a stable key opens no new risk that rotation would close.](diagrams/ch25-rotacija-kljuca.png){: width="80%" }
+
 ## 25.3 Analytical section — a known leakage pattern, with a precise name
 
 ### Pseudonymization remains personal data — and that changes the obligation
@@ -196,6 +249,14 @@ last place where two signals can meet.
   metrics and logging systems aren't architected for deletion by
   individual subject — waiting until a request actually arrives is too
   late to be designing the solution for the first time.
+- Whenever possible, rely on a parameter's type to structurally prevent a
+  leak, not just on a naming convention — and for fields that must stay
+  free text, add an operational measure (encoding) that typed fields
+  don't need.
+- Before applying a general security rule (like periodic key rotation) to
+  a new situation, check whether that rule's benefit actually applies
+  here — rotation that breaks longitudinal analysis with no corresponding
+  security gain is damage dressed up as hygiene.
 
 ## 25.5 Exercise for the reader
 
