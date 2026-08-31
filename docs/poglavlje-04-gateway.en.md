@@ -73,6 +73,98 @@ Instead of working around those constraints artificially, both components get
 their own narrow path straight to the cloud — and that's intentional, not an
 oversight. We'll come back to this principle in Chapter 7.
 
+### The "fill if missing" trap: when the gateway leaks its own identity onto someone else's telemetry
+
+The gateway has a built-in mechanism that, for every signal passing through
+it, fills in resource attributes (job identity, region, infrastructure type)
+**only if the sender hasn't set them itself** — it never overwrites what a
+sender has already provided. The idea is reasonable: some senders (the
+gateway itself, for instance, when it measures its own health) legitimately
+expect this mechanism to fill in their identity for them. The problem was
+that the same mechanism, in its first version, ran on a **shared path,
+downstream of every sender without distinction** — which meant that even for
+senders that simply never attempted to set their own resource attributes
+(one of the fleet's backend applications, a typical case), it silently
+filled the gap with **the gateway's own identity**: its task, its
+availability zone, its execution type.
+
+The concrete damage wasn't immediately obvious, because at the time every
+long-lived connection from that application stayed pinned to one and the
+same gateway instance — so the availability zone the application had
+"inherited" from the gateway looked stable, with no single application
+instance split across two zones at measurement time. But that availability
+zone had been promoted into a full-fledged label on that application's
+metrics — and every gateway redeploy (not the application's!) shifts which
+gateway instance a given connection lands on, silently **fragmenting the
+application's metric history** on a completely unrelated event. The same
+logic also corrupted the application's own identity in the observability
+platform — which changed every time the gateway restarted, even though the
+application itself was never touched.
+
+The first fix was the fastest one possible: a dedicated step was added,
+right before export, that explicitly **strips** those handful of
+gateway-specific attributes — but only for that one, already-affected
+application, by name. The fix was verified live and confirmed to have
+resolved exactly that case. What that fix didn't resolve: the identical
+problem still existed, unnoticed and untouched, for two other, unrelated
+senders — because the strip list was maintained by hand, by sender name,
+rather than being a structural change to the mechanism itself. Every
+subsequent affected sender would require its own manual addition to that
+list.
+
+The real fix, one release later, didn't add another name to the list — it
+changed **where** the fill-in mechanism ran at all. Instead of running
+downstream of every sender, it was narrowed to run only right at ingestion,
+and exclusively for the handful of sources the gateway *itself* hosts (its
+own self-measurement and a couple of direct integrations that pull data
+rather than push it) — before that data ever merges with the rest of the
+traffic. Every other sender now passes through the gateway completely
+untouched as far as identity goes, because the mechanism that would have
+touched it is no longer physically on its path. The by-name strip step was
+removed entirely — there's nothing left to strip.
+
+![Before the fix, the mechanism that fills in missing resource attributes runs downstream of every sender and leaks the gateway's own identity onto anyone who hasn't set it themselves. After the fix, that mechanism is narrowed to only the sources the gateway itself hosts, before merging with the rest of the traffic — every other sender passes through untouched.](diagrams/ch04-identitet-popuni-ako-nedostaje.png){: width="85%" }
+
+### Deleting a label and setting a new value aren't the same operation
+
+The same gateway has a second mechanism, entirely independent of the first,
+that on the metrics path collapses high-cardinality HTTP request attributes
+(path, client type, error message) into a smaller, bounded set — for the
+usual reason: those values would otherwise multiply the number of time
+series without a corresponding analytical payoff. The first version of this
+mechanism, in the same step, also **deleted** one specific resource
+attribute — the one that uniquely distinguishes one replica of a given
+backend application from another — treating it as just another
+high-cardinality dimension to drop.
+
+The effect in practice wasn't "less cardinality" — it was a **silent merge**
+of that application's multiple replicas into a **single** time series. With
+no remaining label to tell them apart, the observability platform started
+interpreting counter values arriving alternately from different replicas as
+one and the same counter — which, viewed through that single series, would
+occasionally **drop** instead of monotonically increasing (because replica B
+doesn't continue exactly where replica A left off). The rate-over-time
+function treats every counter drop as a process restart and compensates for
+the "lost" value by adding it back into the running total — turning one
+ordinary, alternating write from two healthy replicas into a massive,
+artificial spike. Measured: one specific alert tracking that exact rate, at
+the moment the problem was discovered, was reading a value on the order of a
+thousand times higher than the real one — while the real rate was calm and
+ordinary, the alert was reporting catastrophic traffic that didn't exist.
+
+The fix wasn't "don't touch that attribute" — it was the difference between
+deleting and **setting**: instead of removing the attribute and leaving the
+platform to derive some identity from whatever remained, the mechanism now
+explicitly **sets** that attribute to a value that's genuinely stable and
+unique per replica (something equivalent to the machine's own name, not a
+process identifier that changes on every restart), and only for that one
+application, not for all of them. The lesson generalizes beyond this one
+case: deleting a label a mechanism considers "too granular" and overwriting
+it with a stable replacement aren't the same operation, even when both
+remove the same original high-cardinality value — one silently merges series
+that should stay separate, the other keeps them separate while still
+bounding cardinality.
+
 ## 4.3 Analytical section — how others do it, and why we (partly) did it differently
 
 ### What the official documentation recommends
@@ -290,6 +382,16 @@ it can keep working when it goes down.
   an entire category of tooling (kernel-based network tools, operator
   agents) is either available or structurally inapplicable depending on
   that one answer, independent of the quality of the tool itself.
+- A "fill if missing" mechanism running on a shared path downstream of every
+  sender can silently leak the COLLECTOR'S OWN IDENTITY onto senders that
+  don't set their own attributes — narrow that mechanism's scope to the
+  sources the collector genuinely hosts itself, instead of adding a
+  per-sender deny-list after every case you discover.
+- Deleting a label and setting it to a stable replacement value aren't the
+  same operation, even when both remove the same high-cardinality value —
+  deletion without replacement risks silently merging multiple sources into
+  one series, with a counter that occasionally drops and falsely inflates
+  every rate-over-time that reads it.
 
 ## 4.5 Exercise for the reader
 

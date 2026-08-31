@@ -107,6 +107,75 @@ gateway, is identical regardless of where it came from. That's exactly the
 line at which this chapter's opening container analogy separates "what's
 inside" from "what the boundary looks like."
 
+### A failure right after rolling out OTel doesn't mean OTel caused it
+
+Rolling out instrumentation across an entire fleet of existing services
+carries its own risk: every subsequent failure gets automatically pinned on
+the newly added layer — and that reflex is a mistake about as often as it's
+useful. When one family of forecasting jobs moved to OTel (sidecar plus
+auto-instrumentation), the first CRITICAL alerts on the new revision looked
+exactly like an onboarding regression: jobs were exiting with code 1
+alongside their own application error, while `otel-sidecar` in the same run
+exited cleanly, with code 0. The error trace was a `ValueError` in the model
+code — "cannot reindex on an axis with duplicate labels" — and it only showed
+up on one specific branch, the ensemble model variant for one region, while
+the other two regional branches in the same run, on the same image, passed
+without error.
+
+Three independent facts cleared instrumentation of blame before anyone had to
+touch the rollout itself: first, the identical failure, the same error
+message, the same branch, had already been recorded three days earlier —
+before the new OTel revision even existed. Second, on the same image, in the
+same run, the other two branches passed without a single error. Third, the
+failure pattern was narrow in a way that tracked the *shape of the data*
+(only the ensemble model, only one region), not in a way that would track
+the *shape of instrumentation* (which would have hit all branches equally,
+or none). The real, positive effect of the onboarding was that the newly
+added per-job logs, searchable by job ID, made it possible to establish that
+the same failure had been repeating for four days straight — a diagnostic
+capability that didn't exist before instrumentation, applied to an error
+instrumentation didn't cause.
+
+![A failure arriving right after an OTel rollout looks like an instrumentation regression — but three independent pieces of evidence (the same failure existed earlier, other branches passed, the pattern tracks the shape of the data) rule out the overlay as the cause.](diagrams/ch02-dokaz-ne-vreme.png){: width="78%" }
+
+The point for this chapter's mental model: instrumentation adds visibility,
+it doesn't add new ways for application code to break. Proving that
+"temporal proximity" is still just proximity, not causation, requires the
+same evidentiary discipline regardless of whether the suspected new cause is
+a code deploy or an observability rollout — and an OTel rollout isn't exempt
+from that discipline just because it was "supposed to be safe."
+
+### Adding instrumentation can drag in damage that has nothing to do with telemetry
+
+The opposite case shows the other side of the same lesson: sometimes a
+failure *is* a direct consequence of an OTel rollout — but not of the
+instrumentation itself, rather of the mechanics used to roll it out. Turning
+on OTel across an existing fleet of scheduled jobs meant registering a new
+revision of each job's definition — cloning the old definition and adding a
+sidecar container. A job's temporary-disk allocation is declared as a field
+at the same level as the container list, not nested inside it — and the
+cloning process used for the OTel rollout didn't carry that neighboring
+field forward. Three jobs across the whole fleet had an explicitly set disk
+allocation larger than the default; all three were silently reset to the
+platform default the moment their OTel revision was registered.
+
+The concrete consequence: one of those three jobs (a large model-training
+job, running weekly) hit the default limit while writing large temporary
+files and failed with a "no space left on disk" error on its first run under
+the new revision — three days after registration, because that job only runs
+once a week. Onboarding verification checked telemetry health (collector
+reachable, zero export errors, series arriving) — not a field-by-field match
+of the job definition against the previous revision. Such a match would have
+caught the dropped field in a few seconds; a telemetry health check
+structurally cannot, because the dropped field has nothing to do with
+telemetry.
+
+Lesson: rolling out instrumentation across an existing fleet is a deploy
+change, with its own blast radius independent of what the instrumentation
+itself does — and checking whether the telemetry pipe works is a different
+question from checking whether the deploy carrying that pipe silently
+changed something unrelated.
+
 ## 2.3 Analytical section — why OTLP had to exist at all, and what "semantic conventions" actually mean
 
 ### The problem OpenTelemetry solved wasn't a lack of tools, but their incompatibility
@@ -209,6 +278,14 @@ reading it as a gap in the standard.
 - When a standard leaves something open (like the instrumentation mechanism
   per language), assume it's deliberate, and look for the reason before
   trying to "align" it for the sake of consistency.
+- When something breaks right after rolling out instrumentation, don't
+  automatically assume instrumentation is the cause — check whether the
+  same failure occurred before, and whether the failure pattern tracks the
+  shape of the data or the shape of the rollout.
+- When you roll out instrumentation across an existing fleet by cloning a
+  job's definition, compare the new definition field-by-field against the
+  old one — a telemetry-"healthy" rollout can silently delete something
+  that has nothing to do with telemetry.
 
 ## 2.5 Exercise for the reader
 

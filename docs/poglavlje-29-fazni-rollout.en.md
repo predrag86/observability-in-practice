@@ -151,6 +151,53 @@ one.
 
 ![Audit before shutting down the old alerting system: of 23 old alerts, 16 hadn't received a single data point in over a year — they looked "green" only because the absence of data had been interpreted as a normal state.](diagrams/dashboard-alarm-audit.png){: width="95%" }
 
+### Why a planned step is deliberately skipped, not added
+
+Not every change to a plan is adding a step. The original plan called for
+a dedicated mechanism inside the application itself that would, on process
+shutdown, manually capture and send the last data before the process
+actually died. When it came time for that step, the implementation
+deliberately **skipped** it — not forgot it, but explicitly decided not to
+do it, with the reason written down: the sidecar collector from the
+plan's other layer already solves the same problem more cleanly, because
+it holds spans while the process exits and is guaranteed a fixed time
+window before being forcibly killed. The manual mechanism inside the
+application would only have covered a narrow subset of the situations the
+sidecar collector already covers in full.
+
+What makes this decision discipline, not laziness, is that the exact
+condition under which the skipped step would still have to go back onto
+the plan was written down: if the sidecar collector's pilot finds that
+final data is still being lost in a measurable amount, the step comes
+back. The estimated worst case of loss without that step was small and
+named with a number, not "should be negligible." Skipping the step
+without this condition would be a hope; skipping it with this condition
+is a verifiable bet that automatically reverses the moment evidence says
+otherwise.
+
+![A skipped step with a written condition for its return: the estimated worst case is named with a number, and the plan automatically reverts to the step the moment the pilot shows measurable loss.](diagrams/ch29-preskocen-korak.png){: width="80%" }
+
+### When one bug turns into a systematic search for the same class
+
+While fixing one specific defect in one family of jobs — a format
+mismatch on row writes that caused silent failures — the implementation
+went a step further than the usual "fix and move on." Instead of limiting
+the fix to the spot where the bug was first noticed, someone checked
+whether the **same shape of bug** appeared anywhere else in the shared
+library used by the entire fleet. The search found the same bug at ten
+additional call sites, in completely different parts of the code, that
+nobody had reported because they hadn't manifested in the same visible
+way until then.
+
+This finding was folded into the plan as a precondition, not an
+afterthought: none of those ten sites is allowed to enter production
+instrumentation or be relied on under load until the fix is applied to
+all of them. The departure from the standard "report the bug, fix it,
+close it" flow is deliberate: when one concrete case is just a symptom of
+a broader pattern in shared code, treating that one case as isolated
+leaves the remaining ten waiting for their own incident before they get
+discovered.
+
 ## 29.3 Analytical section — when deviation from the plan is a sign of maturity, not weakness
 
 Industry practice around phased rollouts is, fortunately, well developed,
@@ -242,6 +289,14 @@ likely a sign that nobody actually looked at what was behind the wall.
 - Before shutting down an old system, audit it — how much of its "active"
   protection is actually a silent facade that hasn't received a single data
   point in years.
+- When you skip a planned step because another part of the plan already
+  covers it, write down the exact condition under which the step would
+  have to come back — skipping without that condition is a hope, skipping
+  with it is a verifiable bet.
+- When you fix a specific defect in shared code, check whether the same
+  bug class appears at other call sites before any of them enters
+  production under load — one reported case is often just the first
+  visible symptom of a broader pattern.
 
 ## 29.5 Exercise for the reader
 
