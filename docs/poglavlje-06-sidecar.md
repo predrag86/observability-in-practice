@@ -77,6 +77,76 @@ Ovaj obrazac, uveden u produkciju posle prvobitnog pilot-a na dva zadatka
   taj mehanizam postoji, tim bi zaključio da biblioteka "nema metrike", kad u
   stvari ima, samo indirektno.
 
+### Kad novi sidecar izgleda kao uzrok pada — tri činjenice koje su ga oslobodile
+
+Prvi talas kritičnih alarma posle uvođenja sidecar-a na jednu od batch flota
+izgledao je kao klasična regresija: zadaci su počeli da se gase sa greškom
+odmah po uvođenju nove verzije definicije zadatka, glavni kontejner je
+izlazio sa neuspešnim statusom dok je sidecar izlazio čisto. Prvi instinkt —
+"nova verzija je nešto pokvarila" — bio je pogrešan, i dokazano pogrešnim, ne
+samo pretpostavljeno.
+
+Tri nezavisne činjenice su oslobodile sidecar krivice. Prvo, identična greška
+sa identičnim porukama postojala je u logovima tri dana pre nego što je
+sidecar uopšte dodat — samo, pre toga, niko je nije mogao videti na jednom
+mestu po identifikatoru zadatka, jer platforma za posmatranje još nije imala
+uvid u tu flotu. Drugo, isti build, isto pokretanje modela, iste definicije
+zadatka — neke varijante posla su tog dana prošle bez greške, dok su druge,
+sa identičnim kontejnerskim otiskom, pale. Treće, greška je pogađala samo
+jednu uzano definisanu kombinaciju ulaznih parametara, ne flotu uopšte —
+oblik kvara vezan za podatke koje taj zadatak obrađuje, ne za infrastrukturu
+koja ga pokreće.
+
+Ironija je da je sam čin uvođenja sidecar-a taj problem prvi put učinio
+vidljivim kao **obrazac**, ne kao izolovan incident: pošto su logovi grešaka
+sad bili upitljivi po identifikatoru zadatka, tim je mogao da potvrdi da se
+identična greška ponavljala iz dana u dan, i time dokaže da je uzrok stariji
+od bilo koje promene te nedelje. Sidecar nije izazvao problem — otkrio je
+problem koji je već postojao, nevidljiv.
+
+Opšta pouka: prva sumnjiva promena posle bilo kakvog rollout-a je gotovo
+uvek sama ta promena, jer je najsvežija u sećanju — ali korelacija sa
+trenutkom uvođenja nije dokaz uzroka. Pre nego što se nova komponenta
+proglasi krivom, vredi proveriti da li isti simptom postoji i van njenog
+prisustva: u starijim logovima, na build-u koji je prethodio promeni, na
+uporedivim zadacima koji tu promenu još nisu dobili.
+
+### Flush prozor koji sidecar dobija ne pokriva ceo put
+
+Sidecar dobija eksplicitan, kratak prozor pre gašenja da isprazni sve što
+drži u sopstvenom baferu — to je opisano iznad, i tačno je, ali opisuje samo
+**polovinu** puta koji telemetrija prelazi između glavnog kontejnera i
+gateway-a.
+
+Put ima dva odvojena skoka. Prvi: glavni kontejner do sidecar-a, preko
+`localhost`. Drugi: sidecar do gateway-a, preko mreže. Prozor za gašenje koji
+ECS task definicija garantuje pokriva **samo drugi skok** — vreme koje
+sidecar dobija da isprazni ono što već drži pre nego što ga infrastruktura
+prekine. Ne garantuje ništa o prvom skoku: ako SDK u glavnom kontejneru
+koristi podrazumevani, **asinhroni** mehanizam za baferovanje raspona i
+log zapisa (šalje ih u pozadinskim, periodičnim talasima, ne odmah kako
+nastanu), i ako se ceo zadatak ugasi pre nego što taj mehanizam stigne do
+svog sledećeg periodičnog slanja, ono što je u tom trenutku u baferu
+glavnog kontejnera jednostavno nestaje zajedno sa procesom koji ga je
+proizveo — nezavisno od toga koliko dug prozor sidecar dobija, jer sidecar
+nikad nije ni video te podatke.
+
+Ovo najviše pogađa baš onu klasu zadataka za koju je sidecar obrazac
+prvenstveno i uveden: kratkotrajne, koji se gase sekundama posle pokretanja.
+Duže-živeći servis ima dovoljno vremena da periodično slanje prirodno
+stigne pre gašenja; zadatak koji traje par sekundi možda se ugasi pre nego
+što je i jedan ciklus baferovanja završen.
+
+Popravka nije u sidecar-u niti u dužini njegovog prozora za gašenje — mora
+ići na strani glavnog kontejnera: eksplicitno, sinhrono pražnjenje bafera pre
+izlaska iz procesa (ili prelazak na jednostavniji, sinhroni način slanja koji
+ne baferuje u pozadini), tako da ništa ne ostane neposlato u trenutku kad
+proces završi. Sidecar-ov prozor za gašenje i dalje ima svrhu — štiti drugi
+skok — ali ne može nadoknaditi ono što se izgubilo pre nego što je uopšte
+stiglo do njega.
+
+![Flush prozor koji sidecar dobija pre gašenja (stopTimeout) pokriva samo drugi skok — sidecar do gateway-a. Ne pokriva prvi skok — asinhroni bafer u glavnom kontejneru do sidecar-a preko localhost-a — koji se gubi bez traga ako se zadatak ugasi pre sledećeg periodičnog slanja.](diagrams/ch06-flush-prozor.png){: width="75%" }
+
 ## 6.3 Analitički deo — sidecar naspram agenta, i granica gde sidecar prestaje da se isplati
 
 ### Zašto sidecar, a ne node-agent, za ovu klasu opterećenja
@@ -154,6 +224,15 @@ tvrdnja prestaje da važi.**
 - Sidecar obrazac ima granicu skaliranja (linux-only, troškovi po-zadatku,
   drift konfiguracije) — znaj unapred na kom obimu bi tvoj sistem prešao tu
   granicu, umesto da to otkriješ kad već bude bolno.
+- Korelacija sa trenutkom uvođenja neke promene nije dokaz da je ta promena
+  uzrok — pre nego što je proglasiš krivom, proveri da li isti simptom
+  postoji i van njenog prisustva (stariji logovi, prethodni build, uporedivi
+  slučajevi koji promenu još nisu dobili).
+- Prozor za gašenje koji infrastruktura garantuje sidecar-u pokriva samo
+  skok od sidecar-a nadalje — ne garantuje ništa o asinhronom baferu u
+  glavnom kontejneru koji tek treba da stigne do sidecar-a preko localhost-a.
+  Za kratkotrajne procese, popravka mora ići na strani aplikacije: eksplicitno
+  pražnjenje bafera pre izlaska, ne oslanjanje na tuđi prozor za gašenje.
 
 ## 6.5 Vežba za čitaoca
 
