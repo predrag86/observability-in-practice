@@ -1,8 +1,25 @@
+---
+hide:
+  - navigation
+  - toc
+---
+
+<!-- Homepage hero: a raw HTML section with the H1 nested inside it,
+     for the full-bleed background image treatment. -->
+<!-- markdownlint-disable MD033 MD041 -->
+
+<div class="hero" markdown="1">
+<div class="hero-content" markdown="1">
+
 # Observability u praksi
 
-![Observability u praksi](diagrams/cover-emblem.png){: width="220" }
+OpenTelemetry i Grafana LGTM stack
+{: .hero-tagline }
 
-## OpenTelemetry i Grafana LGTM stack
+</div>
+</div>
+
+<!-- markdownlint-enable MD033 MD041 -->
 
 Knjiga strukturirana oko stvarne, višemesečne evolucije jednog produkcionog
 observability sistema implementiranog na nivou cele firme — portfelja koji
