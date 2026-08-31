@@ -79,6 +79,62 @@ the postmortem that inspired it.
 
 ![The entry runbook orients the reader (signature + at-a-glance), and only then does branching by symptom fingerprint lead to the specific runbook for that particular cause.](diagrams/ch16-runbook-flow.png){: width="90%" }
 
+### When the fingerprint isn't fine enough, the error doesn't go undetected — it goes to the wrong runbook
+
+It's worth naming the risk that "branching by symptom fingerprint" carries
+when the fingerprint is defined too coarsely: misrouting doesn't look like
+an absence of help, it looks like **wrong, but convincing** help. The
+scheduled-job fleet had, for a long time, only one entry runbook for every
+crash caused by a code exception, which branched at the level of "is input
+data missing" — fine enough for most cases, but not for a crash caused by a
+database connection drop. Such a crash, lacking its own fingerprint,
+consistently ended up in the runbook for delayed input data, where the
+on-call engineer read it as "the source is late" — a wrong diagnosis that
+**sounded** plausible, because the runbook for that was well-written and
+convincing, just for the wrong cause. Measurement showed the scale: all
+**six out of six** such crashes in the previous thirty days had been
+routed into that wrong runbook.
+
+The fix wasn't expanding the existing runbook with another branch inside
+itself — it was adding a **new, narrow fingerprint** that recognizes
+exactly the exception type characteristic of a connection drop (already
+distinguishable from the missing-data exception in the alert message
+itself) and automatically routes to its own, dedicated runbook. This is a
+distinction worth naming: branching by symptom fingerprint doesn't just
+protect against "text too long for the reader to have to filter through"
+(the reason named earlier in the chapter) — it also protects against an
+on-call engineer confidently carrying out the wrong procedure, believing
+they're in the right place because nothing told them otherwise. A runbook
+that doesn't exist is harmless — the reader knows there's no help. A
+runbook that **exists, but for the wrong cause**, is more dangerous,
+because it actively steers attention away from the real problem.
+
+![Coarse branching consistently routed database connection failures into the runbook for delayed input data — all 6 of 6 cases in a month were misread. Adding a dedicated fingerprint by exception type routes that failure into its own, correct runbook.](diagrams/ch16-pogresno-usmeravanje.png){: width="85%" }
+
+### A runbook that deliberately doesn't offer the fastest shortcut
+
+The runbook for recovering from a pile of same-kind failures (when one
+critical alert reports that further failures of the same error class are
+quietly being folded into it, instead of each sending its own message)
+contains something unusual for a document whose goal is speed: the
+**explicit absence** of an action for bulk-restarting all affected jobs at
+once, even though such an action would obviously be the fastest shortcut
+to recovering the whole group. The reason is a concrete, measured
+incident: one such bulk operation, in practice, once injected fifty-six
+failed runs into a single fifteen-minute window — the very tool meant for
+fast recovery had itself become the source of the burst it was supposed to
+prevent.
+
+The runbook, after that, explicitly walks through restarting group members
+**one at a time**, slower but safe, instead of offering the more
+convenient option that looks appealing exactly at the moment of pressure
+when the on-call engineer most wants to fix everything in one move. This
+is worth naming as a principle for writing runbooks in general: a runbook
+doesn't have to offer every technically possible shortcut — if a shortcut
+has already been proven dangerous once, deliberately leaving it out is
+information just as valuable as a step that **is** included, and it's
+worth writing down along with the reason, not just silently omitted.
+
 ## 16.3 Analytical section — why runbook structure isn't a stylistic choice
 
 ### The received wisdom: orientation before instruction
@@ -147,6 +203,14 @@ seconds, and nothing more.**
 - Organize runbooks by domain with a naming convention that carries
   information on its own (domain + symptom), so the right document can be
   found from the index, before it's even opened.
+- When you notice a symptom fingerprint is too coarse to cover several
+  fundamentally different causes, don't add another branch inside the same
+  runbook — add a new, narrow fingerprint and its own runbook; misdirected
+  confidence is more dangerous than an open admission that no runbook
+  exists.
+- If a shortcut in a runbook has already been proven, once, to cause more
+  harm than good, write down its deliberate omission and the reason —
+  don't rely on a reader under pressure avoiding it on their own.
 
 ## 16.5 Exercise for the reader
 

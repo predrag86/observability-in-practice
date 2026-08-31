@@ -108,6 +108,61 @@ instead of lagging behind for hours:
 
 ![The short window (5 min) reacts instantly and clears instantly; the long window (1 h) rises more slowly and falls more slowly — the combination delivers both fast detection and fast alert clearing.](diagrams/dashboard-burnrate.png){: width="95%" }
 
+### Why latency deliberately isn't part of this SLI
+
+It's worth naming a decision that's easy to overlook precisely because
+it's absent, not present: the SLO described above measures only
+availability (the ratio of successful requests to all requests),
+deliberately **not** latency, even though latency would, at first glance,
+seem an equally natural candidate for "is the service good enough." The
+reason lies in the shape of the application's own traffic: a handful of
+its endpoints run heavy reports and data exports, whose p95 response time
+is **structurally** high — not because something's broken, but because
+that work inherently takes that long. Had latency been included in the
+same SLO alongside availability, the budget would be spent every single
+day just from those endpoints' normal, expected operation, and a
+budget-based alert would constantly report false urgency for behavior that
+was never meant to be fixed.
+
+This is the same kind of decision as splitting thresholds for the same
+metric seen in Chapter 9 (synthetic probe versus RUM) — just applied one
+step earlier: there, the same metric was measured at two places with two
+thresholds; here, one dimension (latency) is **entirely excluded** from
+measurement rather than given its own threshold. When part of a system has
+a structurally different profile from the rest (a heavy report versus a
+light API call), the question isn't just "how do I calibrate the
+threshold for this," but, before that, "does this dimension even belong in
+this same budget at all." Latency for those endpoints still has its own
+place to be observed — just not in a budget that shares its fate with the
+availability of the entire application.
+
+### Two alerts, a deliberately overlapping zone
+
+An older, simple alert — a flat threshold on the current error rate, with
+no budget memory and no second window — continues to exist alongside the
+new, budget-aware alert described in this chapter, even though their
+alerting zones **overlap** at the fastest urgency level. The first
+instinct would be that the overlap is wasteful — two alerts for,
+apparently, the same thing. The implementation this book follows kept both
+deliberately, because they answer different questions: the old one asks
+"is the error rate RIGHT NOW above a line that should never be crossed,"
+an immediate symptom with no budget context at all; the new one asks "is
+the budget being spent at a rate that, if it continued, would seriously
+exhaust it before the period ends," a question that requires history, not
+just a moment.
+
+The overlap at the fastest level isn't a duplicate but two independent
+implementations looking at the same kind of serious failure from two
+angles — the same logic that, in Chapter 13, justifies why two
+structurally different alert paths don't merge into one mechanism, just
+applied within **one** domain instead of between two. Had the old alert
+been turned off the moment the new one was introduced, for the sake of
+tidiness, the system would have lost the simplicity and independence of
+the first signal — the one that doesn't depend on the budget math being
+correct in order to report that something is on fire right now.
+
+![The old, flat-threshold alert and the new, budget-aware alert deliberately overlap at the fastest urgency level — each answers a different question about the same failure, they aren't duplicates.](diagrams/ch15-dva-ugla.png){: width="80%" }
+
 ## 15.3 Analytical section — why multi-window isn't an arbitrary complication
 
 ### The official recommendation: why a single threshold is never enough
@@ -181,6 +236,14 @@ measures what it claims to measure.**
   identifier that keeps changing) in an SLI — aggregate them onto a
   stable label before computing, or use a recording rule that's resistant
   to that churn.
+- Before adding a dimension (latency, throughput) to an existing SLO,
+  check whether that dimension has a structurally different profile from
+  the rest of the system — if it does, it may not belong in the same
+  budget at all, not just need a different threshold.
+- Don't turn off a simple, older alert just because a new, more
+  sophisticated one covers the same zone — overlap at the most critical
+  level is independence, not waste, as long as each alert answers a
+  different question.
 
 ## 15.5 Exercise for the reader
 

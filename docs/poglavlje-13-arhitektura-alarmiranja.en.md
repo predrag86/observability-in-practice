@@ -131,6 +131,74 @@ consequence: apply changes when nothing in that group is firing if there's
 a choice, and warn the team in advance that a pair of messages will arrive
 if applying while something is already firing.
 
+### A frozen gauge: when a rule fires precisely because monitoring died
+
+A rule that computes **age** — current time minus a timestamp some pipeline
+writes — has a hidden flaw that only activates when two ingredients come
+together. The first ingredient: arithmetic over a stored timestamp. The
+second: an explicitly long lookback window in the query itself, wide
+enough to revive a data point that the observability platform would
+otherwise have long since dropped under its usual staleness policy.
+Neither ingredient is a problem on its own — a long lookback window is even
+**necessary** for sources that write infrequently (once every few hours,
+not per second), because without it the rule would see nothing at all. The
+combination of both ingredients is the problem: when the source feeding
+that timestamp dies, the last written value freezes forever — but time
+keeps flowing, so the gap between "now" and that frozen value grows without
+bound, until it crosses the rule's threshold. **The alert then fires
+because monitoring died, while the observed system is perfectly healthy,
+and nobody knows it, because the last known value still looks
+convincing.**
+
+The fix isn't shortening the lookback window — that would blind the rule to
+the slow sources that window existed to serve. The fix is to make the rule
+**conditional** on its own, independent measure of whether the source
+feeding that value is alive at all — if that gauge disappears, the whole
+expression should go empty (and thereby quiet) instead of continuing to
+compute age over dead data, and an alert about the dead collector should
+take over the signaling in its place. This creates a new obligation that's
+easy to overlook: whatever drives that "is the source alive" gauge now has
+the power to silence the rules it protects — so diagnostic collectors must
+report their own state on a completely separate signal from the data they
+deliver, or the same trap just moves one layer deeper.
+
+A systematic review of the entire rule book found that practically every
+rule using this pattern — arithmetic plus a long window — carries this
+risk, with one exception: a rule that checks a **raw** value (not an age
+computed from a timestamp) is structurally immune, because staleness only
+drops the series when the source goes quiet — a frozen *good* value can't
+cross a threshold defined as "the value is bad." It's worth explicitly
+asking, before adding any new rule of this shape: can this expression's
+value change while the pipeline behind it is already dead? If so, the rule
+must be conditioned on an independent, separate measure of that pipeline's
+health.
+
+![A collector that writes infrequently freezes its last value when it dies; time keeps flowing, the age of that value grows without bound, and the rule measuring age eventually fires — precisely because monitoring is dead, not because the observed system is broken.](diagrams/ch13-zamrznut-gauge.png){: width="85%" }
+
+### Notification time isn't the same as state-change time
+
+The notification policy on the observability platform's side (Path B)
+controls **when** a message actually gets sent, completely independent of
+the moment a rule's state changes. Grouping introduces a delay at both
+ends: a new alert waits a short window before its first send (so multiple
+simultaneous alerts merge into one message), but the surprising part is the
+other end — a **resolved** message isn't sent the instant the condition
+stops holding, it waits for the next grouping cycle, which can be several
+minutes later. A real condition almost always lasts far longer than that
+window, so this delay is practically invisible — it only becomes
+noticeable when someone deliberately tests a rule that fires and resolves
+within a couple of seconds, and sees the "resolved" message arrive several
+minutes after the actual moment of recovery, exactly as late as the
+grouping window is wide.
+
+This is a separate mechanism from the gotcha with applying changes to a
+rule group described above — there the cause is a configuration change,
+here the cause is a normal, built-in message-sending cadence — but the
+consequence is a similar kind of surprise: someone watching only the Slack
+channel, not the alert itself in the observability platform, might think
+recovery took longer than it did, or doubt the rule's accuracy, when the
+reason is simply the pace at which messages are grouped and sent.
+
 ## 13.3 Analytical section — why they don't merge into one mechanism
 
 ### The official recommendation: route by ownership, not by technology
@@ -211,6 +279,14 @@ one down with it.**
   `plan`/`apply` cycle — but expect editing a rule group to send a false
   "resolved, then firing again" pair for every rule currently firing in
   that group, not just the rule actually being changed.
+- Before adding a rule that computes age from a stored timestamp with a
+  long lookback window, ask: can this expression's value change while the
+  pipeline behind it is already dead? If so, condition the rule on an
+  independent, separate measure that pipeline is alive.
+- Don't measure recovery time by when the resolved message arrives in
+  Slack — notification grouping introduces delay on that end just as much
+  as at the start of alerting; the real moment of state change lives in
+  the rule itself, not in the message-delivery cadence.
 
 ## 13.5 Exercise for the reader
 
