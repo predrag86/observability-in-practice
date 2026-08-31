@@ -696,6 +696,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4.2 How it was actually done — a practical overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-fill-if-missing-trap-when-the-gateway-leaks-its-own-identity-onto-someone-elses-telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The "fill if missing" trap: when the gateway leaks its own identity onto someone else's telemetry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deleting-a-label-and-setting-a-new-value-arent-the-same-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deleting a label and setting a new value aren't the same operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2234,6 +2262,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4.2 How it was actually done — a practical overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-fill-if-missing-trap-when-the-gateway-leaks-its-own-identity-onto-someone-elses-telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The "fill if missing" trap: when the gateway leaks its own identity onto someone else's telemetry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deleting-a-label-and-setting-a-new-value-arent-the-same-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deleting a label and setting a new value aren't the same operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2424,6 +2480,88 @@ network; a user's browser will never have access to internal infrastructure).
 Instead of working around those constraints artificially, both components get
 their own narrow path straight to the cloud — and that's intentional, not an
 oversight. We'll come back to this principle in Chapter 7.</p>
+<h3 id="the-fill-if-missing-trap-when-the-gateway-leaks-its-own-identity-onto-someone-elses-telemetry">The "fill if missing" trap: when the gateway leaks its own identity onto someone else's telemetry</h3>
+<p>The gateway has a built-in mechanism that, for every signal passing through
+it, fills in resource attributes (job identity, region, infrastructure type)
+<strong>only if the sender hasn't set them itself</strong> — it never overwrites what a
+sender has already provided. The idea is reasonable: some senders (the
+gateway itself, for instance, when it measures its own health) legitimately
+expect this mechanism to fill in their identity for them. The problem was
+that the same mechanism, in its first version, ran on a <strong>shared path,
+downstream of every sender without distinction</strong> — which meant that even for
+senders that simply never attempted to set their own resource attributes
+(one of the fleet's backend applications, a typical case), it silently
+filled the gap with <strong>the gateway's own identity</strong>: its task, its
+availability zone, its execution type.</p>
+<p>The concrete damage wasn't immediately obvious, because at the time every
+long-lived connection from that application stayed pinned to one and the
+same gateway instance — so the availability zone the application had
+"inherited" from the gateway looked stable, with no single application
+instance split across two zones at measurement time. But that availability
+zone had been promoted into a full-fledged label on that application's
+metrics — and every gateway redeploy (not the application's!) shifts which
+gateway instance a given connection lands on, silently <strong>fragmenting the
+application's metric history</strong> on a completely unrelated event. The same
+logic also corrupted the application's own identity in the observability
+platform — which changed every time the gateway restarted, even though the
+application itself was never touched.</p>
+<p>The first fix was the fastest one possible: a dedicated step was added,
+right before export, that explicitly <strong>strips</strong> those handful of
+gateway-specific attributes — but only for that one, already-affected
+application, by name. The fix was verified live and confirmed to have
+resolved exactly that case. What that fix didn't resolve: the identical
+problem still existed, unnoticed and untouched, for two other, unrelated
+senders — because the strip list was maintained by hand, by sender name,
+rather than being a structural change to the mechanism itself. Every
+subsequent affected sender would require its own manual addition to that
+list.</p>
+<p>The real fix, one release later, didn't add another name to the list — it
+changed <strong>where</strong> the fill-in mechanism ran at all. Instead of running
+downstream of every sender, it was narrowed to run only right at ingestion,
+and exclusively for the handful of sources the gateway <em>itself</em> hosts (its
+own self-measurement and a couple of direct integrations that pull data
+rather than push it) — before that data ever merges with the rest of the
+traffic. Every other sender now passes through the gateway completely
+untouched as far as identity goes, because the mechanism that would have
+touched it is no longer physically on its path. The by-name strip step was
+removed entirely — there's nothing left to strip.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch04-identitet-popuni-ako-nedostaje.png" data-desc-position="bottom"><img alt="Before the fix, the mechanism that fills in missing resource attributes runs downstream of every sender and leaks the gateway's own identity onto anyone who hasn't set it themselves. After the fix, that mechanism is narrowed to only the sources the gateway itself hosts, before merging with the rest of the traffic — every other sender passes through untouched." src="../../diagrams/ch04-identitet-popuni-ako-nedostaje.png" width="85%"></a></p>
+<h3 id="deleting-a-label-and-setting-a-new-value-arent-the-same-operation">Deleting a label and setting a new value aren't the same operation</h3>
+<p>The same gateway has a second mechanism, entirely independent of the first,
+that on the metrics path collapses high-cardinality HTTP request attributes
+(path, client type, error message) into a smaller, bounded set — for the
+usual reason: those values would otherwise multiply the number of time
+series without a corresponding analytical payoff. The first version of this
+mechanism, in the same step, also <strong>deleted</strong> one specific resource
+attribute — the one that uniquely distinguishes one replica of a given
+backend application from another — treating it as just another
+high-cardinality dimension to drop.</p>
+<p>The effect in practice wasn't "less cardinality" — it was a <strong>silent merge</strong>
+of that application's multiple replicas into a <strong>single</strong> time series. With
+no remaining label to tell them apart, the observability platform started
+interpreting counter values arriving alternately from different replicas as
+one and the same counter — which, viewed through that single series, would
+occasionally <strong>drop</strong> instead of monotonically increasing (because replica B
+doesn't continue exactly where replica A left off). The rate-over-time
+function treats every counter drop as a process restart and compensates for
+the "lost" value by adding it back into the running total — turning one
+ordinary, alternating write from two healthy replicas into a massive,
+artificial spike. Measured: one specific alert tracking that exact rate, at
+the moment the problem was discovered, was reading a value on the order of a
+thousand times higher than the real one — while the real rate was calm and
+ordinary, the alert was reporting catastrophic traffic that didn't exist.</p>
+<p>The fix wasn't "don't touch that attribute" — it was the difference between
+deleting and <strong>setting</strong>: instead of removing the attribute and leaving the
+platform to derive some identity from whatever remained, the mechanism now
+explicitly <strong>sets</strong> that attribute to a value that's genuinely stable and
+unique per replica (something equivalent to the machine's own name, not a
+process identifier that changes on every restart), and only for that one
+application, not for all of them. The lesson generalizes beyond this one
+case: deleting a label a mechanism considers "too granular" and overwriting
+it with a stable replacement aren't the same operation, even when both
+remove the same original high-cardinality value — one silently merges series
+that should stay separate, the other keeps them separate while still
+bounding cardinality.</p>
 <h2 id="43-analytical-section-how-others-do-it-and-why-we-partly-did-it-differently">4.3 Analytical section — how others do it, and why we (partly) did it differently</h2>
 <h3 id="what-the-official-documentation-recommends">What the official documentation recommends</h3>
 <p>The OpenTelemetry project officially describes three (in practice four, if you
@@ -2622,6 +2760,16 @@ it can keep working when it goes down.</p>
   an entire category of tooling (kernel-based network tools, operator
   agents) is either available or structurally inapplicable depending on
   that one answer, independent of the quality of the tool itself.</li>
+<li>A "fill if missing" mechanism running on a shared path downstream of every
+  sender can silently leak the COLLECTOR'S OWN IDENTITY onto senders that
+  don't set their own attributes — narrow that mechanism's scope to the
+  sources the collector genuinely hosts itself, instead of adding a
+  per-sender deny-list after every case you discover.</li>
+<li>Deleting a label and setting it to a stable replacement value aren't the
+  same operation, even when both remove the same high-cardinality value —
+  deletion without replacement risks silently merging multiple sources into
+  one series, with a counter that occasionally drops and falsely inflates
+  every rate-over-time that reads it.</li>
 </ul>
 <h2 id="45-exercise-for-the-reader">4.5 Exercise for the reader</h2>
 <p>Draw a diagram of your own system as telemetry actually travels through it
@@ -2663,7 +2811,7 @@ gateway.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 30, 2026 07:46:32 UTC">August 30, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:30:20 UTC">August 31, 2026</span>
   </span>
 
     

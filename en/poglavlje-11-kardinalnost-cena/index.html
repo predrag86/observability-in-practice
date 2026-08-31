@@ -1039,6 +1039,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cardinality-that-deliberately-goes-back-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cardinality that deliberately goes back up
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-isnt-just-the-number-of-series-its-series-times-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost isn't just the number of series, it's series times frequency
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2342,6 +2364,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cardinality-that-deliberately-goes-back-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cardinality that deliberately goes back up
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-isnt-just-the-number-of-series-its-series-times-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost isn't just the number of series, it's series times frequency
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2615,6 +2659,68 @@ next item on the list (still unbuilt at the time of writing) is a histogram
 broken down by route for a couple of especially heavy endpoints, so that an
 exemplar from the top of a spike leads to a trace from that exact endpoint,
 not just any call to the same service at the same moment.</p>
+<h3 id="cardinality-that-deliberately-goes-back-up">Cardinality that deliberately goes back up</h3>
+<p>All four phases of the remediation plan from the previous section point in
+the same direction — fewer series. It's worth recording the opposite case
+too, because it's equally instructive: the moment the team <strong>deliberately
+increased</strong> cardinality, at the cost of a few dozen new series, because the
+series an earlier measure had saved was wrong, not just more expensive.</p>
+<p>An earlier cardinality-reduction measure had deleted the process-instance
+identifier (the attribute distinguishing replicas of the same service) from
+one frontend service's metrics — a reasonable saving at the moment it was
+introduced. The problem: that service runs in production across several
+concurrent replicas, and without instance identity, all replicas started
+writing to the <strong>same</strong> time series for a counter that accumulates since
+process startup. When two or more replicas write to the same cumulative
+series, that series occasionally goes backward (when a replica restarts and
+its counter starts again from zero) — and the standard rate-calculation
+function interprets every such drop as a restart and extrapolates it,
+instead of recognizing it as a mix of several independent counters. The
+result: an alert tracking the request rate one night read a value on the
+order of a thousand times higher than the real one — not as a brief spike,
+but persistently, until someone noticed the implausible figure.</p>
+<p>The fix wasn't reverting to the old, full-granularity identity — instead of
+the original attribute, a more stable one was set: derived from the
+hostname, unique per instance, but stable across restarts of the same
+instance (so a restart is still handled as a normal counter reset, not as a
+brand-new series). The measured cost of restoring identity was far smaller
+than expected — just under a hundred new series, under a dollar a month at
+the going per-thousand-series price — because each instance only serves a
+subset of total routes, not every route multiplied by the number of
+instances.</p>
+<p>The transferable lesson: cardinality that saves money and cardinality that
+protects <strong>accuracy</strong> aren't always the same attribute, and the difference
+doesn't show up until someone explicitly asks whether more than one process
+will write to the same series once identity is removed. The attribute
+distinguishing instances of the same service is exactly the attribute where
+the answer is almost always "yes."</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch11-identitet-brojaca.png" data-desc-position="bottom"><img alt="Deleting the instance identity saved series, but merged the cumulative counters of multiple replicas into one series — the rate function interpreted the drop as a restart and extrapolated it into an inaccurate, much larger value." src="../../diagrams/ch11-identitet-brojaca.png" width="78%"></a></p>
+<h3 id="cost-isnt-just-the-number-of-series-its-series-times-frequency">Cost isn't just the number of series, it's series times frequency</h3>
+<p>All four phases of the remediation plan and the example above look at cost
+through one variable — the number of <abbr title="Time series that are currently receiving data points.">active series</abbr>. The platform this book
+follows bills by a different, less obvious formula: the number of
+<strong>billable</strong> series equals the number of <abbr title="Time series that are currently receiving data points.">active series</abbr> multiplied by the
+ratio of the actual write frequency to the included frequency (one write
+per minute is included in the price; every write above that multiplies the
+bill, regardless of the <em>series</em> count staying unchanged).</p>
+<p>In one cost review, the measured aggregate write frequency across the
+entire account was around 1.5 writes per minute — above the included
+unit — and the cause wasn't the series count (those had already been
+carefully reviewed and trimmed), but a handful of infrastructure data
+sources that were still sending data every 20 to 30 seconds instead of
+every 60. The fix required deleting no series, no attribute, no dashboard at
+all — just adjusting the collection interval from 20-30 seconds to 60
+seconds at those points. No metric disappeared, only the time resolution
+was reduced, and every alert depending on those metrics still evaluates
+over a window of several minutes to several hours — coarse enough that the
+difference in resolution changes no outcome.</p>
+<p>The point for the reader: before reaching for cardinality reduction as the
+only lever, it's worth measuring the other variable in the same formula
+too — write frequency. For a system where a handful of sources send data
+more often than actually needed, that lever can be both larger and cheaper
+to apply than any individual measure against cardinality, because it
+requires no decision at all about which attribute is "useful enough" to
+keep.</p>
 <h2 id="113-analytical-section-why-cardinality-isnt-a-storage-detail">11.3 Analytical section — why cardinality isn't a "storage detail"</h2>
 <h3 id="the-official-recommendation-native-histograms-as-a-structural-solution">The official recommendation: native histograms as a structural solution</h3>
 <p>The Prometheus community (including its own documentation on histogram
@@ -2683,6 +2789,14 @@ at once.</strong></p>
   actual trace) rarely comes cheaper. But know in advance that exemplar
   retention is much shorter than metric retention: clicking an old point on
   a graph won't lead anywhere, and that's expected behavior, not a bug.</li>
+<li>Before deleting the attribute that distinguishes instances of the same
+  service to save on cardinality, check whether more than one process
+  would write to the same series without it — cumulative counters with
+  merged identity produce an inaccurate rate, not just a less detailed one.</li>
+<li>Measure write frequency per series too, not just the series count — the
+  platform bills their product, and adjusting the collection interval can
+  be a bigger and cheaper lever than any individual measure against
+  cardinality.</li>
 </ul>
 <h2 id="115-exercise-for-the-reader">11.5 Exercise for the reader</h2>
 <p>Run <code>count by (__name__)({__name__=~".+"})</code> (or the equivalent check in the
@@ -2720,7 +2834,7 @@ your candidate for the next unplanned jump in the bill.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 30, 2026 07:44:39 UTC">August 30, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:32:48 UTC">August 31, 2026</span>
   </span>
 
     

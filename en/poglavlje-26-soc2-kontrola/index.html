@@ -1715,6 +1715,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#an-automated-action-from-chat-the-token-permits-the-channel-restricts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        An automated action from chat: the token permits, the channel restricts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#least-privilege-for-services-isnt-the-same-as-least-privilege-for-people" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least privilege for services isn't the same as least privilege for people
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2342,6 +2364,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#an-automated-action-from-chat-the-token-permits-the-channel-restricts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        An automated action from chat: the token permits, the channel restricts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#least-privilege-for-services-isnt-the-same-as-least-privilege-for-people" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least privilege for services isn't the same as least privilege for people
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2556,6 +2600,61 @@ pseudonymized, while the actual telemetry still carries raw identity, that's
 a discrepancy the auditor uncovers and records as an exception — regardless
 of whether that area is even formally in the audit's scope.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch26-dvosmeran-odnos.png" data-desc-position="bottom"><img alt="Observability control as a two-way relationship: the alerting system is evidence of monitoring, but the telemetry that system carries is simultaneously confidential data that itself needs protection." src="../diagrams/ch26-dvosmeran-odnos.png" width="85%"></a></p>
+<h3 id="an-automated-action-from-chat-the-token-permits-the-channel-restricts">An automated action from chat: the token permits, the channel restricts</h3>
+<p>One control in the table deserves special attention because it shows how
+deep the analysis has to go once automation gains the ability to change
+system state, not just observe it. An alert in the job-failure channel
+carries a button that restarts a <strong>production</strong> job — a real write to
+infrastructure, triggered directly from a chat message. The mechanism
+reveals two separate layers of authorization, and the implementation
+explicitly named both, instead of treating "the button works" as a
+sufficient check.</p>
+<p>The first layer is a technically unavoidable trade-off: the trigger is a
+<strong>public</strong> URL with no request signing on the messaging platform's side,
+because that platform has no mechanism to sign a request using the
+standard cloud-access protocol. Instead, authenticity comes from the
+messaging platform's <strong>own</strong> HMAC signature on every request, with a
+window of a few minutes that prevents a captured message from being
+replayed later — and the mechanism deliberately <strong>rejects</strong> the request if
+the secret key for verifying the signature isn't configured, rather than
+letting the request through unchecked. The second layer is subtler: the
+messaging platform has no per-button approval mechanism — so <strong>the
+privacy of the channel itself</strong> is the only real access control. Whoever
+is a member of that channel can press the button; whoever isn't, doesn't
+see it at all. The formal permission list in the identity-management
+system is as narrow as possible (only one execution role is allowed to
+trigger the job, restricted to exactly three roles allowed to assign it) —
+but that list means nothing if channel membership isn't just as strictly
+controlled and regularly reviewed.</p>
+<p>This is exactly the kind of insight an honest internal table needs to
+capture: the control "who can trigger a production action" here is
+actually <strong>not one</strong> control but two — technical (signature, role,
+permission scope) and organizational (who's a channel member) — and only
+the first of the two is verifiable through code and infrastructure. The
+second depends on discipline around chat-channel membership, which is
+easier to forget to check regularly.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch26-lanac-ovlascenja.png" data-desc-position="bottom"><img alt="Two separate authorization layers for an action triggered from chat: the technical layer (signature, role, permission scope) is verifiable through code, while the organizational layer (channel membership) is the only real access control on the button." src="../../diagrams/ch26-lanac-ovlascenja.png" width="82%"></a></p>
+<h3 id="least-privilege-for-services-isnt-the-same-as-least-privilege-for-people">Least privilege for services isn't the same as least privilege for people</h3>
+<p>The same table shows a pattern that repeats across several rows: the
+machine side of access is often strictly, verifiably constrained, while
+the human side of the same system is completely undocumented. Access
+tokens for services that send telemetry live in a secrets vault, granted
+with the narrowest possible scope per purpose — this is a state that can
+be verified by reading configuration, and the implementation openly
+records it as <strong>in place</strong>. But exactly who has interactive access to the
+telemetry platform's own console, and with which role, isn't formally
+inventoried anywhere — this stays <strong>partial</strong>, not because access is
+necessarily too broad but because nobody can prove the opposite without an
+inventory.</p>
+<p>The point the implementation names: "access control" as a single line item
+on a control list is the wrong grain of measurement. It covers at least
+two independent questions — are machines restricted to what they need,
+and are people restricted to what they need — and an organization can
+have a fully accurate answer to one question while having no answer at all
+to the other. A table that records just one, combined score for "access"
+would hide exactly that distinction; a table that separates the machine
+row from the human row makes the gap visible instead of burying it behind
+the part that's already in order.</p>
 <h2 id="263-analytical-section-compliance-as-self-consistency-not-an-external-catalog">26.3 Analytical section — compliance as self-consistency, not an external catalog</h2>
 <h3 id="the-official-criteria-structure-confirms-the-two-layer-split">The official criteria structure confirms the two-layer split</h3>
 <p>The official trust criteria structure defines one mandatory category (the
@@ -2636,6 +2735,16 @@ question of whether the plan and reality tell the same story.</p>
 <li>Align retention and deletion practice with what you actually <strong>write</strong>
   that you do, not with what you'd ideally want to do — a gap becomes a
   finding only when the claim and reality diverge.</li>
+<li>When chat-based automation is allowed to change production state, name
+  both authorization layers separately — technical (signature, role,
+  permission scope) and organizational (who's a member of the channel
+  that sees the button) — because the first is verifiable through code,
+  and the second depends on discipline that's easy to forget.</li>
+<li>Don't record "access control" as one combined line item — separate the
+  machine side (tokens, permission scope) from the human side (who has
+  interactive access, with which role) — an organization often has an
+  accurate answer to one question while having none for the other, and a
+  combined score hides that gap.</li>
 </ul>
 <h2 id="265-exercise-for-the-reader">26.5 Exercise for the reader</h2>
 <p>Find one public claim your team or organization makes about how data is
@@ -2674,7 +2783,7 @@ a gap worth closing before someone else finds it.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:19:01 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:40:23 UTC">August 31, 2026</span>
   </span>
 
     

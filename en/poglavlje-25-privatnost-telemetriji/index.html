@@ -1698,6 +1698,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#parameter-type-as-proof-not-just-a-naming-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter type as proof, not just a naming rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-pseudonymization-key-deliberately-never-rotates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the pseudonymization key deliberately never rotates
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2364,6 +2386,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#parameter-type-as-proof-not-just-a-naming-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter type as proof, not just a naming rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-pseudonymization-key-deliberately-never-rotates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the pseudonymization key deliberately never rotates
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2591,6 +2635,53 @@ not who queried it) — a distinction that keeps pseudonymization from being
 over-applied where it's neither needed nor useful.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch25-linkage.png" data-desc-position="bottom"><img alt="The same trace links the pseudonymous identifier from the browser side with the real identity from the backend side — pseudonymity holds only until the two halves of the same trace are joined." src="../diagrams/ch25-linkage.png" width="90%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-pseudonymization.png" data-desc-position="bottom"><img alt="The same session in the debugging panel, before and after: when both ends write the same form of keyed-hash pseudonym, joining by trace still works for diagnostics, but no longer reveals the real name and email." src="../diagrams/dashboard-pseudonymization.png" width="95%"></a></p>
+<h3 id="parameter-type-as-proof-not-just-a-naming-rule">Parameter type as proof, not just a naming rule</h3>
+<p>The distinction between "person identifiers" (never logged) and "resource
+identifiers" (legitimately logged) from the previous section sounds like a
+rule someone has to remember and disciplinedly apply to every new field.
+The implementation went a step further: instead of relying purely on
+naming discipline, it checked whether the parameter's <strong>typing</strong> itself
+structurally prevents the leak. Parameters that identify a resource (an
+asset identifier, a location identifier) are declared in the backend
+controller as strictly typed values (UUID, a decimal number) — meaning the
+request-handling framework <strong>rejects</strong> any call where someone tries to put
+free text, an email, or a token into that field. The rule "this field is
+safe to log" isn't just an agreement living in the team's heads here — it's
+<strong>structurally impossible to violate otherwise</strong>, because a malformed
+value never gets past request validation.</p>
+<p>This check also revealed the boundary of its own rule: two neighboring
+parameters in the same query set are plain text fields, not typed values,
+and their content is entirely in the hands of whoever sends the request —
+there's no type guarantee they won't contain something sensitive. The
+implementation <strong>still</strong> logs them (they haven't been declared person
+identifiers), but with an extra measure typed parameters don't need:
+encoding special characters before writing to the log, so free-text
+content can't inject a separator or newline and corrupt the structure of
+the log record itself. Two different guarantees for two different
+categories of parameters — one structural (type), one operational
+(encoding) — applied exactly where each makes sense.</p>
+<h3 id="why-the-pseudonymization-key-deliberately-never-rotates">Why the pseudonymization key deliberately never rotates</h3>
+<p>Standard security hygiene calls for periodic rotation of secret keys — a
+rule that holds for passwords, API tokens, encryption keys. For the key
+driving the hash function behind pseudonyms, the implementation
+deliberately decided the <strong>opposite</strong>: the key stays stable, with no
+planned rotation. The reason isn't negligence but an explicit trade-off
+analysis. Rotating the key changes <strong>every</strong> pseudonym at once — every
+user gets a new pseudonym at the same instant, which breaks longitudinal
+analysis (a dashboard tracking the same user over time suddenly sees a
+"new" user) and requires reconciling the internal mapping table that ties
+pseudonyms to emails. By contrast, the benefit of rotation here is
+unusually small: the key doesn't protect the content itself (the email
+stays readable in the mapping table regardless of the key) — it only
+protects the <strong>link</strong> between the pseudonym and the email for anyone who
+sees the pseudonym without access to that table. If the mapping table is
+already compromised, rotating the key fixes nothing; if it isn't, a stable
+key opens no new risk that rotation would close. Security hygiene that
+makes sense for a password would here only introduce operational damage
+with no corresponding security benefit — the implementation recognized
+this instead of mechanically applying a general rule to a situation where
+it doesn't hold.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch25-rotacija-kljuca.png" data-desc-position="bottom"><img alt="Why rotating the pseudonymization key wouldn't be a security gain here, only operational damage: the key protects the pseudonym↔email link, not the content itself, and a stable key opens no new risk that rotation would close." src="../../diagrams/ch25-rotacija-kljuca.png" width="80%"></a></p>
 <h2 id="253-analytical-section-a-known-leakage-pattern-with-a-precise-name">25.3 Analytical section — a known leakage pattern, with a precise name</h2>
 <h3 id="pseudonymization-remains-personal-data-and-that-changes-the-obligation">Pseudonymization remains personal data — and that changes the obligation</h3>
 <p>The official guidance on pseudonymization is unambiguous: pseudonymized
@@ -2674,6 +2765,14 @@ last place where two signals can meet.</p>
   metrics and logging systems aren't architected for deletion by
   individual subject — waiting until a request actually arrives is too
   late to be designing the solution for the first time.</li>
+<li>Whenever possible, rely on a parameter's type to structurally prevent a
+  leak, not just on a naming convention — and for fields that must stay
+  free text, add an operational measure (encoding) that typed fields
+  don't need.</li>
+<li>Before applying a general security rule (like periodic key rotation) to
+  a new situation, check whether that rule's benefit actually applies
+  here — rotation that breaks longitudinal analysis with no corresponding
+  security gain is damage dressed up as hygiene.</li>
 </ul>
 <h2 id="255-exercise-for-the-reader">25.5 Exercise for the reader</h2>
 <p>Find one identifier in your system that's pseudonymized at a single point
@@ -2712,7 +2811,7 @@ of leak as in this chapter.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:19:01 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:40:23 UTC">August 31, 2026</span>
   </span>
 
     

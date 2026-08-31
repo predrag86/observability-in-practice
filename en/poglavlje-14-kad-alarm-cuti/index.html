@@ -1190,6 +1190,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#third-case-study-the-channel-every-single-alert-passes-through" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Third case study: the channel every single alert passes through
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fourth-case-study-a-report-that-stays-silent-when-healthy-and-when-dead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fourth case study: a report that stays silent when healthy and when dead
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2298,6 +2320,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#third-case-study-the-channel-every-single-alert-passes-through" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Third case study: the channel every single alert passes through
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fourth-case-study-a-report-that-stays-silent-when-healthy-and-when-dead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fourth case study: a report that stays silent when healthy and when dead
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2507,6 +2551,61 @@ changes for that category of reason.</p>
 failures spread across seventeen hours, each one individually under the
 anti-spam mechanism's threshold, none of them ever sent:</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-suppression.png" data-desc-position="bottom"><img alt="Nineteen failures spread across seventeen hours — each suppressed, none sent, because no pair of failures falls close enough together in time to satisfy the &quot;three in thirty minutes&quot; threshold." src="../diagrams/dashboard-suppression.png" width="95%"></a></p>
+<h3 id="third-case-study-the-channel-every-single-alert-passes-through">Third case study: the channel every single alert passes through</h3>
+<p>A review of the entire alerting system uncovered something independent of
+the first two case studies, but of the same kind: <strong>every</strong> path an alert
+travels — whether a direct infrastructure event (Path A from Chapter 13) or
+a signal derived from telemetry (Path B) — ends up in the same, single
+notification channel. No alert had a backup path. The honest answer to
+"where will I hear about it if that channel stops working" was
+<strong>nowhere</strong> — and that's exactly the kind of silence this chapter is about,
+just shifted one layer up: not a single alert going quiet, but the
+<strong>delivery mechanism for all alerts</strong> going quiet without anyone noticing,
+because a failure of that channel looks identical to "there's simply
+nothing to report right now."</p>
+<p>The fix wasn't adding a backup channel to every individual alert — that
+would duplicate literally every message, every time, making the backup
+channel useless as a signal (it would become a mirror of the primary, not
+a warning that the primary had failed). Instead, the backup channel is
+deliberately wired <strong>exclusively</strong> to that narrow set of alerts whose
+firing, by itself, means "the primary delivery channel has stopped
+working" — nothing else. The first attempt at this change, from an
+understandable instinct to "not miss anything," mistakenly added the
+backup channel to a couple of ordinary alerts too — the mistake was caught
+and fixed the same day, because otherwise the backup channel would have
+started receiving a copy of everything, losing exactly the property that
+makes it useful: staying quiet while everything is fine, and speaking up
+exactly when the primary path can't.</p>
+<p>An additional complication: the primary delivery channel has <strong>multiple
+independent paths</strong> leading to it, not one, and each fails in a different
+way — a single detector watching only one of those paths doesn't see a
+failure on the other two. For one of those three paths, no reliable way
+was even found to detect its failure without introducing an entirely new,
+standalone class of check — the decision was to <strong>consciously accept that
+gap as a known, unaddressed risk</strong> rather than silently assume it was
+covered, because the real danger lies exactly in someone believing a
+protection exists that actually doesn't.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch14-slack-spof.png" data-desc-position="bottom"><img alt="The first attempt added the backup channel (email) to multiple alerts, duplicating every message and making it useless as a signal; the adopted solution wires it exclusively to alerts whose firing, by itself, means the primary delivery channel is down." src="../../diagrams/ch14-slack-spof.png" width="80%"></a></p>
+<h3 id="fourth-case-study-a-report-that-stays-silent-when-healthy-and-when-dead">Fourth case study: a report that stays silent when healthy and when dead</h3>
+<p>A weekly, automated check that compares the fleet's actual state against
+its expected configuration sends a message <strong>only when it finds something
+worth attention</strong> — a design chosen deliberately, because a report
+repeating the same, already-acknowledged findings every week would quickly
+start getting ignored. That same decision carries its own, subtle flaw: a
+quiet channel looks <strong>identical</strong> whether the fleet is genuinely clean or
+the check itself has stopped working (broken before it got around to
+examining anything). "No message" looks exactly the same from the outside
+for both reasons — the same silence, two opposite causes.</p>
+<p>The fix wasn't forcing the check to always send something (that would undo
+the exact reason "send only when there's something" was introduced in the
+first place) — it was adding a <strong>completely separate</strong> alert that tracks
+whether the check itself successfully finishes running, independent of
+what the check finds. This is the same class of solution as the backup
+channel above, just applied one level inward: whenever a mechanism
+deliberately stays quiet while everything is fine, there has to be a
+separate signal proving that mechanism is alive at all — because the
+mechanism itself, by design, can't vouch for itself at the moment it's
+dead.</p>
 <h2 id="143-analytical-section-why-almost-nobody-else-writes-about-this">14.3 Analytical section — why almost nobody else writes about this</h2>
 <h3 id="an-anti-spam-mechanism-encodes-an-assumption-about-the-shape-of-failure">An anti-spam mechanism encodes an assumption about the shape of failure</h3>
 <p>It's worth naming what both case studies actually demonstrate: every
@@ -2568,6 +2667,16 @@ while correct-but-wrongly-calibrated looks like calm.</strong></p>
   its effect immediately after introducing it (how many messages
   disappeared, and for which families) — don't assume a drop in message
   count means "the system got healthier."</li>
+<li>Ask yourself honestly where you'll hear about it if the single channel
+  ALL alerts travel through stops working — if the answer is "nowhere,"
+  add a backup path wired exclusively to alerts whose firing means the
+  primary channel is down, not to every alert (that would just duplicate
+  everything, not add protection).</li>
+<li>When a mechanism deliberately stays quiet while everything is fine (a
+  report that only sends a message when it finds something), add a
+  separate signal proving the mechanism itself is alive — silence because
+  "everything's clean" and silence because "the check broke" look
+  identical from the outside.</li>
 </ul>
 <h2 id="145-exercise-for-the-reader">14.5 Exercise for the reader</h2>
 <p>Find any mechanism in your system that suppresses repeated alerts (<abbr title="Grouping repeated notifications about the same failure into a single record within a time window.">dedup</abbr>,
@@ -2604,7 +2713,7 @@ the system reporting it itself.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:10:00 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:37:02 UTC">August 31, 2026</span>
   </span>
 
     

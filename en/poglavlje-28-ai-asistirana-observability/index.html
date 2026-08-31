@@ -1793,6 +1793,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#false-success-when-the-agent-says-done-and-nothing-happened" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        False success: when the agent says "done" and nothing happened
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-wrong-store-sounds-like-no-problem-not-like-an-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The wrong store sounds like "no problem," not like an error
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2397,6 +2419,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#false-success-when-the-agent-says-done-and-nothing-happened" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        False success: when the agent says "done" and nothing happened
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-wrong-store-sounds-like-no-problem-not-like-an-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The wrong store sounds like "no problem," not like an error
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2662,6 +2706,55 @@ unrelated session, proved essential to keeping the document useful instead
 of forgotten.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch28-cetiri-replay.png" data-desc-position="bottom"><img alt="Four replayed incidents: two where the agent independently reached the correct diagnosis, one where a naive agent would have confidently gotten it wrong without the context layer, and one from the class of absence — where nothing reports incorrectly, but nothing reports at all." src="../diagrams/ch28-cetiri-replay.png" width="92%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-ebhealth-vs-5xx.png" data-desc-position="bottom"><img alt="A seductive but wrong signal: the derived 'environment unhealthiness' percentage looks like a serious outage, while the authoritative 5xx error rate from the load balancer shows that users barely felt anything at all — without this context, an agent would easily confirm the wrong diagnosis." src="../diagrams/dashboard-ebhealth-vs-5xx.png" width="95%"></a></p>
+<h3 id="false-success-when-the-agent-says-done-and-nothing-happened">False success: when the agent says "done" and nothing happened</h3>
+<p>The implementation uncovered a mechanism more dangerous than an agent that
+misdiagnoses — an agent that <strong>honestly</strong> relays false information about
+its own action, because it has no way of knowing better itself. The tool
+that gives the agent access to the telemetry platform is deliberately
+configured read-only, enforced through the access token's own permission
+scope, not through a promise or an instruction in the prompt. When the
+agent, in a test, tries to delete an alerting rule with that token, the
+platform responds with a message saying the deletion <strong>succeeded</strong> — while
+in reality nothing changed. The agent honestly relays that message
+onward, because that's exactly what the tool returned to it.</p>
+<p>The sobering consequence, which the implementation explicitly names: the
+response "successfully deleted" looks <strong>identical</strong> regardless of whether
+the action was actually carried out or silently blocked. The agent has no
+way to internally distinguish the two outcomes — the difference exists
+only at the level of whether the token actually had write permission,
+information that's out of the agent's reach. This means the boundary "the
+agent may propose, not execute" must not rest on an instruction to the
+agent, nor on checking the agent's own report — it has to be enforced
+<strong>externally</strong>, at the level of the access permission scope itself,
+because that's the only place the difference between "blocked" and
+"executed" exists at all. Trusting the agent's report of what it did is,
+under this threat model, the wrong place to put trust.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch28-lazni-uspeh.png" data-desc-position="bottom"><img alt="A blocked write and a real write return an identical success message — the agent has no way to internally distinguish the two outcomes, so the &quot;read-only&quot; boundary must be enforced on the token's permission scope, not on trust in the agent's report." src="../../diagrams/ch28-lazni-uspeh.png" width="80%"></a></p>
+<h3 id="the-wrong-store-sounds-like-no-problem-not-like-an-error">The wrong store sounds like "no problem," not like an error</h3>
+<p>The implementation documented a distinct error class, different from "the
+wrong counter in the same data store" from the third replay: here, the
+<strong>entire wrong store</strong> is queried, because some events structurally don't
+exist anywhere else. A concrete, measured example: an error reported by
+the traffic load balancer at the system's edge <strong>never</strong> reaches the
+backend service's own traces, because it happens at a layer the backend
+never sees — a trace query returns empty, not because there's no error,
+but because traces structurally cannot contain it. The same holds in the
+opposite direction: certain kinds of application crashes are recorded only
+in the infrastructure logging system, never in the centralized telemetry
+platform. Querying the wrong store doesn't return an error — it returns a
+convincing, empty zero, which reads as "no problem" exactly as
+convincingly as a genuine finding of no problem would look.</p>
+<p>The implementation adds a related, less obvious trap of the same origin: a
+percentile computed over a small number of requests is a mathematical
+artifact, not a measurement — a high percentile from only a handful of
+requests a day doesn't mean "slow endpoint," it means the sample lacks the
+statistical power for the percentile to say anything at all. The defense
+against both traps is the same: before trusting an empty or extreme
+result, check <strong>which store could even contain</strong> the requested event type
+at all, and <strong>how many requests</strong> stand behind a derived statistic like a
+percentile — both questions that generic observability knowledge doesn't
+automatically raise, but the specific context layer about this system
+should force.</p>
 <h2 id="283-analytical-section-external-confirmation-and-one-sobering-limit">28.3 Analytical section — external confirmation, and one sobering limit</h2>
 <h3 id="the-protocol-for-connecting-agents-to-telemetry-is-new-but-already-standardized">The protocol for connecting agents to telemetry is new, but already standardized</h3>
 <p>An open protocol that standardizes how AI agents access external tools and
@@ -2753,6 +2846,14 @@ it is current, honest, and available at the right moment.</p>
 <li>Keep the agent advisory for changes to system state — let it propose and
   explain, not execute — until enough trust and verification has been
   built for autonomous action to be justified.</li>
+<li>Enforce the "read-only" boundary at the level of the access permission
+  scope itself, not at the level of an instruction to the agent — a
+  blocked write and a real write can look identical in the agent's
+  report, so trust in that report is not where that boundary can rest.</li>
+<li>Before trusting an empty or extreme result, check whether the requested
+  event type could even exist in the store that was queried, and how many
+  requests stand behind a derived statistic like a percentile — both
+  traps return a convincing but wrong zero instead of an error message.</li>
 </ul>
 <h2 id="285-exercise-for-the-reader">28.5 Exercise for the reader</h2>
 <p>Take one genuinely resolved incident from your team's history, ideally one
@@ -2790,7 +2891,7 @@ written down, in advance, to stop it there?</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:19:01 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:40:23 UTC">August 31, 2026</span>
   </span>
 
     

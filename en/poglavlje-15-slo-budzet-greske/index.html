@@ -1218,6 +1218,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#why-latency-deliberately-isnt-part-of-this-sli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why latency deliberately isn't part of this SLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-alerts-a-deliberately-overlapping-zone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two alerts, a deliberately overlapping zone
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2298,6 +2320,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#why-latency-deliberately-isnt-part-of-this-sli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why latency deliberately isn't part of this SLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-alerts-a-deliberately-overlapping-zone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two alerts, a deliberately overlapping zone
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2512,6 +2556,54 @@ instantly, the long window rises more slowly and slowly "comes back
 down," which is why the alert clears quickly after a real recovery
 instead of lagging behind for hours:</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-burnrate.png" data-desc-position="bottom"><img alt="The short window (5 min) reacts instantly and clears instantly; the long window (1 h) rises more slowly and falls more slowly — the combination delivers both fast detection and fast alert clearing." src="../diagrams/dashboard-burnrate.png" width="95%"></a></p>
+<h3 id="why-latency-deliberately-isnt-part-of-this-sli">Why latency deliberately isn't part of this <abbr title="Service Level Indicator — a measurable signal, e.g. the percentage of successful requests.">SLI</abbr></h3>
+<p>It's worth naming a decision that's easy to overlook precisely because
+it's absent, not present: the <abbr title="Service Level Objective — a target value for a signal over time, e.g. 99.9%.">SLO</abbr> described above measures only
+availability (the ratio of successful requests to all requests),
+deliberately <strong>not</strong> latency, even though latency would, at first glance,
+seem an equally natural candidate for "is the service good enough." The
+reason lies in the shape of the application's own traffic: a handful of
+its endpoints run heavy reports and data exports, whose p95 response time
+is <strong>structurally</strong> high — not because something's broken, but because
+that work inherently takes that long. Had latency been included in the
+same <abbr title="Service Level Objective — a target value for a signal over time, e.g. 99.9%.">SLO</abbr> alongside availability, the budget would be spent every single
+day just from those endpoints' normal, expected operation, and a
+budget-based alert would constantly report false urgency for behavior that
+was never meant to be fixed.</p>
+<p>This is the same kind of decision as splitting thresholds for the same
+metric seen in Chapter 9 (synthetic probe versus RUM) — just applied one
+step earlier: there, the same metric was measured at two places with two
+thresholds; here, one dimension (latency) is <strong>entirely excluded</strong> from
+measurement rather than given its own threshold. When part of a system has
+a structurally different profile from the rest (a heavy report versus a
+light API call), the question isn't just "how do I calibrate the
+threshold for this," but, before that, "does this dimension even belong in
+this same budget at all." Latency for those endpoints still has its own
+place to be observed — just not in a budget that shares its fate with the
+availability of the entire application.</p>
+<h3 id="two-alerts-a-deliberately-overlapping-zone">Two alerts, a deliberately overlapping zone</h3>
+<p>An older, simple alert — a flat threshold on the current error rate, with
+no budget memory and no second window — continues to exist alongside the
+new, budget-aware alert described in this chapter, even though their
+alerting zones <strong>overlap</strong> at the fastest urgency level. The first
+instinct would be that the overlap is wasteful — two alerts for,
+apparently, the same thing. The implementation this book follows kept both
+deliberately, because they answer different questions: the old one asks
+"is the error rate RIGHT NOW above a line that should never be crossed,"
+an immediate symptom with no budget context at all; the new one asks "is
+the budget being spent at a rate that, if it continued, would seriously
+exhaust it before the period ends," a question that requires history, not
+just a moment.</p>
+<p>The overlap at the fastest level isn't a duplicate but two independent
+implementations looking at the same kind of serious failure from two
+angles — the same logic that, in Chapter 13, justifies why two
+structurally different alert paths don't merge into one mechanism, just
+applied within <strong>one</strong> domain instead of between two. Had the old alert
+been turned off the moment the new one was introduced, for the sake of
+tidiness, the system would have lost the simplicity and independence of
+the first signal — the one that doesn't depend on the budget math being
+correct in order to report that something is on fire right now.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch15-dva-ugla.png" data-desc-position="bottom"><img alt="The old, flat-threshold alert and the new, budget-aware alert deliberately overlap at the fastest urgency level — each answers a different question about the same failure, they aren't duplicates." src="../../diagrams/ch15-dva-ugla.png" width="80%"></a></p>
 <h2 id="153-analytical-section-why-multi-window-isnt-an-arbitrary-complication">15.3 Analytical section — why multi-window isn't an arbitrary complication</h2>
 <h3 id="the-official-recommendation-why-a-single-threshold-is-never-enough">The official recommendation: why a single threshold is never enough</h3>
 <p>Official SRE practice explicitly explains why a simple single-window
@@ -2577,6 +2669,14 @@ measures what it claims to measure.</strong></p>
   identifier that keeps changing) in an <abbr title="Service Level Indicator — a measurable signal, e.g. the percentage of successful requests.">SLI</abbr> — aggregate them onto a
   stable label before computing, or use a recording rule that's resistant
   to that churn.</li>
+<li>Before adding a dimension (latency, throughput) to an existing <abbr title="Service Level Objective — a target value for a signal over time, e.g. 99.9%.">SLO</abbr>,
+  check whether that dimension has a structurally different profile from
+  the rest of the system — if it does, it may not belong in the same
+  budget at all, not just need a different threshold.</li>
+<li>Don't turn off a simple, older alert just because a new, more
+  sophisticated one covers the same zone — overlap at the most critical
+  level is independence, not waste, as long as each alert answers a
+  different question.</li>
 </ul>
 <h2 id="155-exercise-for-the-reader">15.5 Exercise for the reader</h2>
 <p>Find an <abbr title="Service Level Objective — a target value for a signal over time, e.g. 99.9%.">SLO</abbr> alert in your own system and check: does it have only one
@@ -2614,7 +2714,7 @@ day tells you something that isn't true.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:10:00 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:37:02 UTC">August 31, 2026</span>
   </span>
 
     

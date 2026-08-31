@@ -1056,6 +1056,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cost-depends-on-a-nonlinear-threshold-not-linearly-on-percentage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost depends on a nonlinear threshold, not linearly on percentage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-counters-two-different-points-in-the-same-pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two counters, two different points in the same pipe
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2320,6 +2342,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cost-depends-on-a-nonlinear-threshold-not-linearly-on-percentage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost depends on a nonlinear threshold, not linearly on percentage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-counters-two-different-points-in-the-same-pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two counters, two different points in the same pipe
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2562,6 +2606,48 @@ retention rate began to drift from the expected value calculated from the
 configured policies, and it returned to the expected level only after the
 vendor explained the mechanism, not after anyone changed the configuration:</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-sampling.png" data-desc-position="bottom"><img alt="Trace retention rate, expected versus measured: a ten-day mismatch period was reported to the vendor, and the configuration was deliberately left unchanged until the mechanism was clarified." src="../diagrams/dashboard-sampling.png" width="95%"></a></p>
+<h3 id="cost-depends-on-a-nonlinear-threshold-not-linearly-on-percentage">Cost depends on a nonlinear threshold, not linearly on percentage</h3>
+<p>It's worth separating two questions that are easy to conflate when
+choosing the base probabilistic rate (currently 10%, previously 25%,
+mentioned in § 12.2): how much sampling is enough for diagnostic value, and
+how much sampling is enough to change the bill. The answer to the second
+question isn't linear with the percentage, and that changes which decision
+is actually cheap.</p>
+<p>The platform bills retained traces through three separate components
+(processing, writing, retention), each with its own included monthly
+quota. As long as the retained volume after sampling stays <strong>below</strong> that
+quota, the writing and retention components drop to zero — not because
+sampling is more aggressive, but because everything retained simply fits
+within the already-included allowance. Above that threshold, every
+additional percentage point of retention directly raises the bill. This
+means there's a point, measurable for a given traffic volume, below which
+lowering the base rate by another couple of percentage points saves almost
+nothing (it's already below the threshold), and above which the same move
+saves disproportionately much (it's crossing right over the threshold).</p>
+<p>One cost component, however, is completely independent of the percentage
+chosen: processing is billed on the raw input, <strong>before</strong> any retention
+decision, and grows with fleet volume regardless of how aggressive sampling
+ends up being. Sampling protects two of the three cost components, not all
+three — worth knowing in advance, rather than discovering it when the bill
+keeps rising after an aggressive cut to the base rate.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch12-prag-troska.png" data-desc-position="bottom"><img alt="Retention and write cost drop to zero below one measurable volume threshold, while processing cost stays independent of the sampling percentage because it's billed on the raw input, before the retention decision." src="../../diagrams/ch12-prag-troska.png" width="78%"></a></p>
+<h3 id="two-counters-two-different-points-in-the-same-pipe">Two counters, two different points in the same pipe</h3>
+<p>The measurement trap from § 12.2 (spanmetrics undercounts actual volume,
+and can't measure the savings downsampling brings) has a close relative, on
+a different pair of counters. The platform exposes two data-volume
+measurements that look like the same number measured twice — but they
+measure two different points along the path: one measures volume <strong>before</strong>
+the retention decision is made, the other measures what actually survived
+that decision and moved on toward storage.</p>
+<p>Dividing one by the other produces a nonsensical result the moment the
+direction gets mixed up — a figure above 100% "coverage" looks, at first
+glance, like a measurement error, when it's actually an artifact of
+dividing two numbers that measure different points in the pipeline, not the
+same moment twice. The rule that prevents this confusion is simple, but not
+obvious until you run into it live: the "pre-sampling" pair is used
+exclusively for calculating the drop rate, and the "post-sampling" pair
+exclusively for billable volume — the two are never divided by each other,
+even when their names sound interchangeable.</p>
 <h2 id="123-analytical-section-why-server-side-instead-of-collector-side">12.3 Analytical section — why server-side instead of collector-side</h2>
 <h3 id="the-official-distinction-where-the-decision-is-made-and-what-that-means-for-accuracy">The official distinction: where the decision is made, and what that means for accuracy</h3>
 <p>An independent survey of sampling strategies in the OpenTelemetry ecosystem
@@ -2631,6 +2717,14 @@ step; sampling that happens after full insight is a decision.</strong></p>
 <li>A dropped trace isn't permanently unavailable immediately, but the window
   is short (typically measured in hours, not days) — don't count on being
   able to go back to it later if you don't look right away.</li>
+<li>Before lowering the base sampling rate to save money, measure where the
+  nonlinear volume threshold sits for your traffic — below the threshold
+  savings are small, above it they're disproportionately large, and one
+  cost component (processing the raw input) never drops in either case.</li>
+<li>When the platform exposes a "before" and "after" counter pair for the
+  same point in the pipeline, never divide one by the other to get a
+  "coverage percentage" — each counter in the pair has exactly one purpose
+  (drop rate, or billable volume), not both.</li>
 </ul>
 <h2 id="125-exercise-for-the-reader">12.5 Exercise for the reader</h2>
 <p>Find out where in your system the trace sampling decision is made — at the
@@ -2668,7 +2762,7 @@ made before the error even existed?</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:01:52 UTC">August 31, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:32:48 UTC">August 31, 2026</span>
   </span>
 
     

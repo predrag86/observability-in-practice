@@ -1754,6 +1754,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#blast-radius-is-measured-not-assumed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blast radius is measured, not assumed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deleted-only-once-measurement-confirms-it-not-once-code-lands-on-a-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deleted only once measurement confirms it, not once code lands on a branch
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2364,6 +2386,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#blast-radius-is-measured-not-assumed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blast radius is measured, not assumed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deleted-only-once-measurement-confirms-it-not-once-code-lands-on-a-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deleted only once measurement confirms it, not once code lands on a branch
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2594,6 +2638,51 @@ item was discovered as a <strong>consequence</strong> of work on a completely di
 one — a signal that the domains aren't actually isolated, they're only
 presented that way for clarity.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch27-tri-sloja.png" data-desc-position="bottom"><img alt="A living, ranked list per domain: the main top list, &quot;honorable mention&quot; below the threshold as a source for promotion, and the full backlog as a store of detail — three layers, one discipline of deletion once something is actually finished." src="../diagrams/ch27-tri-sloja.png" width="88%"></a></p>
+<h3 id="blast-radius-is-measured-not-assumed">Blast radius is measured, not assumed</h3>
+<p>The first of the three ranking axes — <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr> — sounds like something
+eyeballed from the problem's title. The implementation showed, on one
+concrete finding, why that isn't enough. The authentication database sat
+in a single availability zone, with no replica in another — at first
+glance a narrow finding, "authentication can fail." Ranked as medium
+severity, because "auth SPOF" sounds like something that hits login, not
+the entire product.</p>
+<p>When someone actually mapped which API calls depend on authentication —
+not an assumption but an actual inventory of routes and their
+dependencies — it turned out that literally <strong>every</strong> API call goes
+through a check against that database, not just login. The <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr>
+thereby changed from "auth goes down" to "the entire product goes down,"
+while the fix — adding a replica in a second zone — stayed the same, a
+cheap change of a few tens of dollars a month. The ranking changed not
+because the problem got bigger, but because only the measurement revealed
+how big it had been all along. The implementation explicitly recorded
+this alongside the finding: the estimated <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr> was wrong until
+someone actually measured it, and that gap is a cheap lesson only because
+it was caught before an incident, not during one.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch27-domet-stete.png" data-desc-position="bottom"><img alt="The same finding, the same fix — but the blast radius changed from &quot;auth goes down&quot; to &quot;the entire product goes down&quot; only once someone actually inventoried the dependencies instead of assuming them from the problem's title." src="../../diagrams/ch27-domet-stete.png" width="82%"></a></p>
+<h3 id="deleted-only-once-measurement-confirms-it-not-once-code-lands-on-a-branch">Deleted only once measurement confirms it, not once code lands on a branch</h3>
+<p>The rule "delete an item once it's finished" from the previous section
+sounds simple, but the implementation showed, on one finding, exactly
+where the real boundary of "finished" sits. A performance finding
+described that a backend service, on <strong>every</strong> basic-auth request,
+re-queries the authentication service with no caching at all — adding
+measurable latency to every such call and loading the database behind it,
+the same one from the earlier example. A fix was proposed, code was
+written, reviewed, and <strong>merged</strong> into the development branch.</p>
+<p>The item stayed on the list. Not because nobody got around to deleting
+it, but because merged code on a development branch isn't the same as
+code running in production — the path from the development branch to
+production runs through additional release steps, and until that path is
+completed, the load on the authentication service in production stays
+unchanged. Every item on the list carries its own <strong>verification
+signal</strong> — a concrete metric proving the fix actually changed the
+system's state, not just that the code reached the main branch. For this
+finding, the signal was the call rate to the authentication service
+dropping to a fraction of its previous value, measured after the release
+to production — only then was the item actually deleted from the list.
+The difference between "the code is merged" and "the signal has been
+measured" is the difference between two distinct, easily conflated
+meanings of the word "finished" — and the implementation deliberately
+picks the stricter of the two as the condition for deletion.</p>
 <h2 id="273-analytical-section-a-familiar-pattern-from-risk-management-applied-consistently">27.3 Analytical section — a familiar pattern from risk management, applied consistently</h2>
 <h3 id="combining-reach-and-likelihood-is-a-standard-named-methodology">Combining reach and likelihood is a standard, named methodology</h3>
 <p>The dominant pattern in risk-assessment literature — security and project
@@ -2679,6 +2768,15 @@ reads.</p>
 <li>Keep a short, dated changelog for each list — what was added, what was
   removed, and why — so that the answer to "why was this a priority" still
   exists months later, instead of having to be reconstructed from memory.</li>
+<li>Measure <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr> instead of assuming it from a finding's title — a
+  narrow, medium-ranked problem sometimes turns out to hit the entire
+  system only once someone actually inventories the dependencies, not
+  before.</li>
+<li>Define a concrete verification signal for every item on the list — a
+  metric proving the fix actually changed production's state — and delete
+  the item only once that signal is measured, not once the code is merged
+  into a branch; "merged" and "released to production" aren't the same as
+  "finished."</li>
 </ul>
 <h2 id="275-exercise-for-the-reader">27.5 Exercise for the reader</h2>
 <p>Look at your team's backlog of findings — security, performance, or any
@@ -2718,7 +2816,7 @@ existing list is maintained.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 30, 2026 07:47:27 UTC">August 30, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:40:23 UTC">August 31, 2026</span>
   </span>
 
     

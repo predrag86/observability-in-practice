@@ -1960,6 +1960,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#a-trend-measured-on-a-short-window-can-reverse-with-just-a-little-more-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A trend measured on a short window can reverse with just a little more data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-the-measurement-itself-becomes-part-of-the-load-it-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When the measurement itself becomes part of the load it measures
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2369,6 +2391,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#a-trend-measured-on-a-short-window-can-reverse-with-just-a-little-more-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A trend measured on a short window can reverse with just a little more data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-the-measurement-itself-becomes-part-of-the-load-it-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When the measurement itself becomes part of the load it measures
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2580,6 +2624,47 @@ pressure, was rated the single most valuable finding in the whole
 review — precisely because it was voluntary and recent.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch30-ciklus-revizije.png" data-desc-position="bottom"><img alt="The cycle of periodic review: five passes, a confidence label per claim, a section of retracted findings at the top, and a comparison of recommendations against the actual work-tracking system." src="../diagrams/ch30-ciklus-revizije.png" width="92%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-alert-streak.png" data-desc-position="bottom"><img alt="An alert ringing continuously for about ten weeks — the opposite case from &quot;the alert that never rings&quot;: deliberately placed at the top of the findings list, because continuous ringing with no response says something about team discipline, not about the severity of the problem." src="../diagrams/dashboard-alert-streak.png" width="92%"></a></p>
+<h3 id="a-trend-measured-on-a-short-window-can-reverse-with-just-a-little-more-data">A trend measured on a short window can reverse with just a little more data</h3>
+<p>One item from the previous review was flagged as something to watch, not
+as a confirmed problem: the rate of memory change for one service,
+measured over a seven-day window, showed a consistent rise that looked
+like a leak. The new review, only a few days later, repeated the same
+measurement with four additional days of data — and the trend
+<strong>reversed</strong>. What had looked like a consistent rise was, with a wider
+window, just part of a broader oscillating pattern; the value had, in the
+meantime, returned nearly to its starting point.</p>
+<p>This is a different kind of error from the one the section on retracted
+findings already names. The retracted findings from the previous section
+were wrong because of a wrong denominator or a point value cited as
+stable — here, the <strong>direction</strong> of change itself was mathematically
+correct as computed on the available data, and yet wrong as a conclusion,
+because the measurement window wasn't wide enough to distinguish a real
+trend from noise temporarily moving in the same direction. The review
+explicitly named this as a lesson for itself: when a finding is based on
+a derived rate of change (rather than a directly measured value), before
+declaring it a trend it's worth explicitly asking how many days of data
+stand behind it, and whether that same calculation, repeated with a
+window twice as wide, would give the same direction.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch30-kratak-prozor.png" data-desc-position="bottom"><img alt="The same rate-of-change calculation, two measurement windows: seven days looks like a consistent leak, four more days of data show it was part of a broader oscillating pattern." src="../../diagrams/ch30-kratak-prozor.png" width="78%"></a></p>
+<h3 id="when-the-measurement-itself-becomes-part-of-the-load-it-measures">When the measurement itself becomes part of the load it measures</h3>
+<p>The review uncovered a cost nobody had directly connected to its cause,
+even though it was fully visible in the bill: a line item that grew month
+over month, arising because the team's own rules tracking the telemetry
+system's consumption <strong>repeatedly scan</strong> that same system to measure its
+consumption. The system that exists to measure the load becomes part of
+the load it measures — a self-induced loop that no previous review had
+recognized as a cost, because it looked like a normal part of the
+measurement infrastructure, not like a line item that belonged on the
+cost list.</p>
+<p>The point the review draws isn't "remove consumption measurement" —
+measuring consumption is a legitimate, necessary control. The point is
+that every mechanism observing a system should be treated as a
+<strong>potential</strong> consumer of that same system's resources, not as a neutral
+observer outside it, and periodically checked to see whether that has
+actually happened. Without that check, this kind of cost grows quietly,
+in the very cost category the mechanism itself is responsible for
+monitoring — the hardest place for anyone to notice the problem, because
+it's exactly the place that should be raising an alarm about itself.</p>
 <h2 id="303-analytical-section-why-measuring-maturity-has-to-be-a-repeatable-discipline">30.3 Analytical section — why measuring maturity has to be a repeatable discipline</h2>
 <p>Google's SRE Book frames monitoring measurement around four <abbr title="Latency, traffic, errors, saturation — the core four dimensions for judging a service's health.">golden signals</abbr>
 (latency, traffic, errors, saturation), but the key point of that chapter
@@ -2661,6 +2746,14 @@ skill still accurate" — measuring now, not trusting a record from before.</p>
   direction — both go at the top of the list, not in a footnote.</li>
 <li>Check whether last time's recommendations actually entered a system that
   compels action, or merely live in a document nobody tracks.</li>
+<li>Before declaring a derived rate of change a trend, check how many days
+  of data stand behind it — a short window can show a consistent
+  direction that's actually part of a broader oscillating pattern, not a
+  real trend.</li>
+<li>Treat every mechanism observing a system as a potential consumer of that
+  same system's resources, not as a neutral observer — a cost the
+  measurement itself causes grows hardest to notice exactly in the
+  category it's responsible for monitoring.</li>
 </ul>
 <h2 id="305-exercise-for-the-reader">30.5 Exercise for the reader</h2>
 <p>Take the last internal report, review, or audit your team wrote more than a
@@ -2697,7 +2790,7 @@ noticed had you not just checked?</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:23:38 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:42:34 UTC">August 31, 2026</span>
   </span>
 
     

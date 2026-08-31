@@ -562,6 +562,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="2.2 How it was actually done — a practical walkthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-failure-right-after-rolling-out-otel-doesnt-mean-otel-caused-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A failure right after rolling out OTel doesn't mean OTel caused it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-instrumentation-can-drag-in-damage-that-has-nothing-to-do-with-telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding instrumentation can drag in damage that has nothing to do with telemetry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2245,6 +2273,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="2.2 How it was actually done — a practical walkthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-failure-right-after-rolling-out-otel-doesnt-mean-otel-caused-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A failure right after rolling out OTel doesn't mean OTel caused it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-instrumentation-can-drag-in-damage-that-has-nothing-to-do-with-telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding instrumentation can drag in damage that has nothing to do with telemetry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2458,6 +2514,66 @@ reasons that language imposes. <strong>What</strong> telemetry means, once it re
 gateway, is identical regardless of where it came from. That's exactly the
 line at which this chapter's opening container analogy separates "what's
 inside" from "what the boundary looks like."</p>
+<h3 id="a-failure-right-after-rolling-out-otel-doesnt-mean-otel-caused-it">A failure right after rolling out OTel doesn't mean OTel caused it</h3>
+<p>Rolling out instrumentation across an entire fleet of existing services
+carries its own risk: every subsequent failure gets automatically pinned on
+the newly added layer — and that reflex is a mistake about as often as it's
+useful. When one family of forecasting jobs moved to OTel (sidecar plus
+auto-instrumentation), the first CRITICAL alerts on the new revision looked
+exactly like an onboarding regression: jobs were exiting with code 1
+alongside their own application error, while <code>otel-sidecar</code> in the same run
+exited cleanly, with code 0. The error trace was a <code>ValueError</code> in the model
+code — "cannot reindex on an axis with duplicate labels" — and it only showed
+up on one specific branch, the ensemble model variant for one region, while
+the other two regional branches in the same run, on the same image, passed
+without error.</p>
+<p>Three independent facts cleared instrumentation of blame before anyone had to
+touch the rollout itself: first, the identical failure, the same error
+message, the same branch, had already been recorded three days earlier —
+before the new OTel revision even existed. Second, on the same image, in the
+same run, the other two branches passed without a single error. Third, the
+failure pattern was narrow in a way that tracked the <em>shape of the data</em>
+(only the ensemble model, only one region), not in a way that would track
+the <em>shape of instrumentation</em> (which would have hit all branches equally,
+or none). The real, positive effect of the onboarding was that the newly
+added per-job logs, searchable by job ID, made it possible to establish that
+the same failure had been repeating for four days straight — a diagnostic
+capability that didn't exist before instrumentation, applied to an error
+instrumentation didn't cause.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch02-dokaz-ne-vreme.png" data-desc-position="bottom"><img alt="A failure arriving right after an OTel rollout looks like an instrumentation regression — but three independent pieces of evidence (the same failure existed earlier, other branches passed, the pattern tracks the shape of the data) rule out the overlay as the cause." src="../../diagrams/ch02-dokaz-ne-vreme.png" width="78%"></a></p>
+<p>The point for this chapter's mental model: instrumentation adds visibility,
+it doesn't add new ways for application code to break. Proving that
+"temporal proximity" is still just proximity, not causation, requires the
+same evidentiary discipline regardless of whether the suspected new cause is
+a code deploy or an observability rollout — and an OTel rollout isn't exempt
+from that discipline just because it was "supposed to be safe."</p>
+<h3 id="adding-instrumentation-can-drag-in-damage-that-has-nothing-to-do-with-telemetry">Adding instrumentation can drag in damage that has nothing to do with telemetry</h3>
+<p>The opposite case shows the other side of the same lesson: sometimes a
+failure <em>is</em> a direct consequence of an OTel rollout — but not of the
+instrumentation itself, rather of the mechanics used to roll it out. Turning
+on OTel across an existing fleet of scheduled jobs meant registering a new
+revision of each job's definition — cloning the old definition and adding a
+sidecar container. A job's temporary-disk allocation is declared as a field
+at the same level as the container list, not nested inside it — and the
+cloning process used for the OTel rollout didn't carry that neighboring
+field forward. Three jobs across the whole fleet had an explicitly set disk
+allocation larger than the default; all three were silently reset to the
+platform default the moment their OTel revision was registered.</p>
+<p>The concrete consequence: one of those three jobs (a large model-training
+job, running weekly) hit the default limit while writing large temporary
+files and failed with a "no space left on disk" error on its first run under
+the new revision — three days after registration, because that job only runs
+once a week. Onboarding verification checked telemetry health (collector
+reachable, zero export errors, series arriving) — not a field-by-field match
+of the job definition against the previous revision. Such a match would have
+caught the dropped field in a few seconds; a telemetry health check
+structurally cannot, because the dropped field has nothing to do with
+telemetry.</p>
+<p>Lesson: rolling out instrumentation across an existing fleet is a deploy
+change, with its own <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr> independent of what the instrumentation
+itself does — and checking whether the telemetry pipe works is a different
+question from checking whether the deploy carrying that pipe silently
+changed something unrelated.</p>
 <h2 id="23-analytical-section-why-otlp-had-to-exist-at-all-and-what-semantic-conventions-actually-mean">2.3 Analytical section — why OTLP had to exist at all, and what "<abbr title="Standardized attribute and metric names that OTel prescribes, e.g. http.status_code.">semantic conventions</abbr>" actually mean</h2>
 <h3 id="the-problem-opentelemetry-solved-wasnt-a-lack-of-tools-but-their-incompatibility">The problem OpenTelemetry solved wasn't a lack of tools, but their incompatibility</h3>
 <p>Before OpenTelemetry (born from the 2019 merger of two earlier projects,
@@ -2548,6 +2664,14 @@ reading it as a gap in the standard.</p>
 <li>When a standard leaves something open (like the instrumentation mechanism
   per language), assume it's deliberate, and look for the reason before
   trying to "align" it for the sake of consistency.</li>
+<li>When something breaks right after rolling out instrumentation, don't
+  automatically assume instrumentation is the cause — check whether the
+  same failure occurred before, and whether the failure pattern tracks the
+  shape of the data or the shape of the rollout.</li>
+<li>When you roll out instrumentation across an existing fleet by cloning a
+  job's definition, compare the new definition field-by-field against the
+  old one — a telemetry-"healthy" rollout can silently delete something
+  that has nothing to do with telemetry.</li>
 </ul>
 <h2 id="25-exercise-for-the-reader">2.5 Exercise for the reader</h2>
 <p>Take two services in your system written in different languages and compare
@@ -2587,7 +2711,7 @@ you try to build across both services.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 29, 2026 10:27:52 UTC">August 29, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:24:10 UTC">August 31, 2026</span>
   </span>
 
     

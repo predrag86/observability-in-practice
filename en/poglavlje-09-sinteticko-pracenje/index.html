@@ -850,6 +850,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#two-depths-of-the-same-probe-not-two-separate-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two depths of the same probe, not two separate alerts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-same-metric-two-different-thresholds-because-they-dont-answer-the-same-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The same metric, two different thresholds, because they don't answer the same question
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2254,6 +2276,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#two-depths-of-the-same-probe-not-two-separate-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two depths of the same probe, not two separate alerts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-same-metric-two-different-thresholds-because-they-dont-answer-the-same-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The same metric, two different thresholds, because they don't answer the same question
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2475,6 +2519,58 @@ already forced into a test once, on the basic HTTP probes in this
 implementation, when an over-broad multi-region setup triggered an
 unplanned budget overage and had to be trimmed down to a single location at
 a longer interval.</p>
+<h3 id="two-depths-of-the-same-probe-not-two-separate-alerts">Two depths of the same probe, not two separate alerts</h3>
+<p>The basic availability probe from the previous section isn't always just one
+probe — in the implementation this book follows, the same public
+application has <strong>two</strong> HTTP probes, deliberately aimed at two different
+depths of the system. The shallow probe hits the root path and checks only
+whether the application's shell responds at all — and that can be true even
+when the backend part of the system is completely unhealthy, because static
+shell content is often served by a layer in front of the application
+itself. The deep probe hits a dedicated endpoint that, instead of just
+returning "OK," <strong>actually executes</strong> a limited query against the database
+the application depends on, and returns an error if that query fails.</p>
+<p>The difference in depth isn't cosmetic — it's diagnostic information in
+itself, with no additional investigation step. If the shallow probe passes
+while the deep one fails, the conclusion is immediate: the application is
+reachable, the problem is in the database behind it. If both pass, but the
+third probe layer from the previous section — the one with a real browser —
+still fails, the conclusion is again immediate: the failure is purely on
+the client side, neither the application nor the database has anything to
+do with it. This is the same logic already at work for probes distributed
+across multiple geographic locations (when one region stays silent while
+the others work, it narrows down to a network problem in that region) —
+just applied to a different axis: probe depth instead of geography. The
+pattern of which layer fails is a diagnosis in itself.</p>
+<p>The deep probe also carries its own cost worth acknowledging: since it
+actually executes a query, its response time tracks database latency, not
+just network latency to the application — which means that probe's timeout
+must be wider than the shallow probe's, otherwise every occasional slow
+query (not a real outage) will falsely trigger an alert meant to catch
+actual failures.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch09-slojevi-otkaza.png" data-desc-position="bottom"><img alt="Three probe layers, each testing a different depth of the system: the shallow probe checks only whether the shell responds, the deep probe checks whether the database behind the application actually works, the rendering probe checks whether the page actually displays. The pattern of which layer passes and which fails is the diagnosis itself." src="../../diagrams/ch09-slojevi-otkaza.png" width="85%"></a></p>
+<h3 id="the-same-metric-two-different-thresholds-because-they-dont-answer-the-same-question">The same metric, two different thresholds, because they don't answer the same question</h3>
+<p>The synthetic layer with a real browser from the previous section doesn't
+just measure whether the page displays — it also measures the same
+perceived-performance metrics (largest contentful paint, layout stability)
+that RUM from Chapter 8 already tracks for real users. At first glance that
+sounds like duplicating the same signal twice. In the implementation this
+book follows, the threshold for that synthetic check is deliberately set
+far stricter than RUM's threshold for a "bad" experience — because the
+synthetic probe always renders the same, lightweight, unauthenticated home
+page, with a stable baseline time far below RUM's "bad" cutoff; any
+significant deviation from that stable baseline is a <strong>regression</strong>, not
+merely a "bad experience."</p>
+<p>The two checks therefore answer different questions, even though they
+measure a metric with the same name: the synthetic probe asks "did
+something just break relative to yesterday," RUM asks "is the actual
+experience of real users, across the full diversity of their networks and
+devices, currently acceptable." If the synthetic probe were given the same,
+wide RUM threshold, it would lose its purpose as an early regression
+signal — a real failure would have to get bad enough to cross a threshold
+calibrated for chaotic real traffic before the synthetic probe would even
+report it, even though on its own stable baseline it would have recognized
+it much earlier.</p>
 <h2 id="93-analytical-section-why-synthetic-monitoring-isnt-poor-mans-rum">9.3 Analytical section — why synthetic monitoring isn't "poor man's RUM"</h2>
 <h3 id="synthetic-and-rum-solve-different-problems-not-the-same-problem-two-different-ways">Synthetic and RUM solve different problems, not the same problem two different ways</h3>
 <p>Independent comparisons of RUM and synthetic monitoring (including
@@ -2550,6 +2646,16 @@ watching, someone still knows.</strong></p>
   separate from real RUM traffic and at a minimal footprint (one location,
   infrequent interval) — it's the most expensive layer of synthetic
   monitoring.</li>
+<li>When you have a probe that actually executes a query (not just checks
+  that a service responds), give it a wider timeout than the shallow
+  probe's — its response time tracks the latency of whatever it's
+  querying, not just the network latency to the application.</li>
+<li>When the same metric exists in both a synthetic probe and RUM, don't give
+  them the same threshold — a synthetic probe on a stable, lightweight
+  baseline needs a strict threshold for early regression, RUM on chaotic
+  real traffic needs a wider threshold for a genuinely bad experience;
+  using the same threshold in both places defeats the purpose of one of
+  them.</li>
 </ul>
 <h2 id="95-exercise-for-the-reader">9.5 Exercise for the reader</h2>
 <p>Imagine your system stops working at three in the morning, in a time zone
@@ -2588,7 +2694,7 @@ described in this chapter.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 30, 2026 07:45:54 UTC">August 30, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:30:20 UTC">August 31, 2026</span>
   </span>
 
     

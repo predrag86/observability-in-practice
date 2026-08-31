@@ -1235,6 +1235,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#when-the-fingerprint-isnt-fine-enough-the-error-doesnt-go-undetected-it-goes-to-the-wrong-runbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When the fingerprint isn't fine enough, the error doesn't go undetected — it goes to the wrong runbook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-runbook-that-deliberately-doesnt-offer-the-fastest-shortcut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A runbook that deliberately doesn't offer the fastest shortcut
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2276,6 +2298,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#when-the-fingerprint-isnt-fine-enough-the-error-doesnt-go-undetected-it-goes-to-the-wrong-runbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When the fingerprint isn't fine enough, the error doesn't go undetected — it goes to the wrong runbook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-runbook-that-deliberately-doesnt-offer-the-fastest-shortcut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A runbook that deliberately doesn't offer the fastest shortcut
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2465,6 +2509,55 @@ advance, and that procedure becomes a runbook — but the runbook itself
 afterward stands independently, with no need for the reader to first read
 the postmortem that inspired it.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch16-runbook-flow.png" data-desc-position="bottom"><img alt="The entry runbook orients the reader (signature + at-a-glance), and only then does branching by symptom fingerprint lead to the specific runbook for that particular cause." src="../diagrams/ch16-runbook-flow.png" width="90%"></a></p>
+<h3 id="when-the-fingerprint-isnt-fine-enough-the-error-doesnt-go-undetected-it-goes-to-the-wrong-runbook">When the fingerprint isn't fine enough, the error doesn't go undetected — it goes to the wrong runbook</h3>
+<p>It's worth naming the risk that "branching by symptom fingerprint" carries
+when the fingerprint is defined too coarsely: misrouting doesn't look like
+an absence of help, it looks like <strong>wrong, but convincing</strong> help. The
+scheduled-job fleet had, for a long time, only one entry runbook for every
+crash caused by a code exception, which branched at the level of "is input
+data missing" — fine enough for most cases, but not for a crash caused by a
+database connection drop. Such a crash, lacking its own fingerprint,
+consistently ended up in the runbook for delayed input data, where the
+on-call engineer read it as "the source is late" — a wrong diagnosis that
+<strong>sounded</strong> plausible, because the runbook for that was well-written and
+convincing, just for the wrong cause. Measurement showed the scale: all
+<strong>six out of six</strong> such crashes in the previous thirty days had been
+routed into that wrong runbook.</p>
+<p>The fix wasn't expanding the existing runbook with another branch inside
+itself — it was adding a <strong>new, narrow fingerprint</strong> that recognizes
+exactly the exception type characteristic of a connection drop (already
+distinguishable from the missing-data exception in the alert message
+itself) and automatically routes to its own, dedicated runbook. This is a
+distinction worth naming: branching by symptom fingerprint doesn't just
+protect against "text too long for the reader to have to filter through"
+(the reason named earlier in the chapter) — it also protects against an
+on-call engineer confidently carrying out the wrong procedure, believing
+they're in the right place because nothing told them otherwise. A runbook
+that doesn't exist is harmless — the reader knows there's no help. A
+runbook that <strong>exists, but for the wrong cause</strong>, is more dangerous,
+because it actively steers attention away from the real problem.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch16-pogresno-usmeravanje.png" data-desc-position="bottom"><img alt="Coarse branching consistently routed database connection failures into the runbook for delayed input data — all 6 of 6 cases in a month were misread. Adding a dedicated fingerprint by exception type routes that failure into its own, correct runbook." src="../../diagrams/ch16-pogresno-usmeravanje.png" width="85%"></a></p>
+<h3 id="a-runbook-that-deliberately-doesnt-offer-the-fastest-shortcut">A runbook that deliberately doesn't offer the fastest shortcut</h3>
+<p>The runbook for recovering from a pile of same-kind failures (when one
+critical alert reports that further failures of the same error class are
+quietly being folded into it, instead of each sending its own message)
+contains something unusual for a document whose goal is speed: the
+<strong>explicit absence</strong> of an action for bulk-restarting all affected jobs at
+once, even though such an action would obviously be the fastest shortcut
+to recovering the whole group. The reason is a concrete, measured
+incident: one such bulk operation, in practice, once injected fifty-six
+failed runs into a single fifteen-minute window — the very tool meant for
+fast recovery had itself become the source of the burst it was supposed to
+prevent.</p>
+<p>The runbook, after that, explicitly walks through restarting group members
+<strong>one at a time</strong>, slower but safe, instead of offering the more
+convenient option that looks appealing exactly at the moment of pressure
+when the on-call engineer most wants to fix everything in one move. This
+is worth naming as a principle for writing runbooks in general: a runbook
+doesn't have to offer every technically possible shortcut — if a shortcut
+has already been proven dangerous once, deliberately leaving it out is
+information just as valuable as a step that <strong>is</strong> included, and it's
+worth writing down along with the reason, not just silently omitted.</p>
 <h2 id="163-analytical-section-why-runbook-structure-isnt-a-stylistic-choice">16.3 Analytical section — why runbook structure isn't a stylistic choice</h2>
 <h3 id="the-received-wisdom-orientation-before-instruction">The received wisdom: orientation before instruction</h3>
 <p>Independent surveys of runbook-writing practice consistently state that a
@@ -2525,6 +2618,14 @@ seconds, and nothing more.</strong></p>
 <li>Organize runbooks by domain with a naming convention that carries
   information on its own (domain + symptom), so the right document can be
   found from the index, before it's even opened.</li>
+<li>When you notice a symptom fingerprint is too coarse to cover several
+  fundamentally different causes, don't add another branch inside the same
+  runbook — add a new, narrow fingerprint and its own runbook; misdirected
+  confidence is more dangerous than an open admission that no runbook
+  exists.</li>
+<li>If a shortcut in a runbook has already been proven, once, to cause more
+  harm than good, write down its deliberate omission and the reason —
+  don't rely on a reader under pressure avoiding it on their own.</li>
 </ul>
 <h2 id="165-exercise-for-the-reader">16.5 Exercise for the reader</h2>
 <p>Take any document in your system that you call a "runbook" and check the
@@ -2562,7 +2663,7 @@ use it at three in the morning.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:10:00 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:37:02 UTC">August 31, 2026</span>
   </span>
 
     

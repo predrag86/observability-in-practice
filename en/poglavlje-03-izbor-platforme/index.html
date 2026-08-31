@@ -579,6 +579,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="3.2 How it was actually done — a practical walkthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#an-alarm-that-arrives-before-the-bill-not-after-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        An alarm that arrives before the bill, not after it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-budget-alarm-rules-are-deliberately-kept-out-of-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the budget-alarm rules are deliberately kept out of Terraform
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2223,6 +2251,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="3.2 How it was actually done — a practical walkthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#an-alarm-that-arrives-before-the-bill-not-after-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        An alarm that arrives before the bill, not after it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-budget-alarm-rules-are-deliberately-kept-out-of-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the budget-alarm rules are deliberately kept out of Terraform
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2445,6 +2501,48 @@ you pay for with Grafana Cloud isn't the software — it's the <em>operation</em
 scaling, backups, upgrades, multi-tenant isolation, 24/7 on-call over
 someone else's infrastructure. That's exactly what § 3.3 measures in
 dollars.</p>
+<h3 id="an-alarm-that-arrives-before-the-bill-not-after-it">An alarm that arrives before the bill, not after it</h3>
+<p>It's worth separating the "blew through the free <abbr title="A classification of alerts by severity that determines dedup and notification routing.">tier</abbr> in a single weekend"
+moment in the story above from the usual picture that phrase conjures — it
+wasn't discovered by someone looking at the monthly bill after the fact. It
+was caught by a dedicated budget alarm with an explicit threshold (95% of
+the monthly budget), backed by an even earlier layer — an anomaly detector
+that tracks an unusual <em>rate of growth</em> in spend, not just the absolute
+level, and so warns even before the threshold itself is crossed.</p>
+<p>The billing model behind this is a deliberate decision, not an accident:
+going over on the Grafana Cloud Pro <abbr title="A classification of alerts by severity that determines dedup and notification routing.">tier</abbr> isn't a hard cap — it's billed per
+unit above the plan's included quota. That choice ("bill, don't block the
+write") is exactly why the incident was survivable with zero downtime — the
+pipeline never stopped accepting data — but it's also why it required a
+fast, dedicated human response instead of being self-limiting: an unchecked
+cardinality spike continues as a growing bill, not as a dead pipe that would
+eventually force attention through a visible failure on its own.</p>
+<p>An alarm that fires on total spend by itself doesn't say which of two quite
+different causes is responsible — a spike in metric cardinality (the number
+of unique label combinations) or a spike in log volume — and the two require
+completely different fixes. That's why the runbook behind that one alarm
+deliberately branches diagnosis into two separate paths, instead of assuming
+which cause is at play. And the 95% threshold itself wasn't fixed forever —
+it had already been raised twice before, gradually, as real, organic spend
+grew — each time as a conscious, documented decision, not as unnoticed scope
+creep.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch03-alarm-pre-racuna.png" data-desc-position="bottom"><img alt="A budget alarm as an early warning before overage starts being billed, and the diagnostic branch into two different possible causes behind it." src="../../diagrams/ch03-alarm-pre-racuna.png" width="76%"></a></p>
+<h3 id="why-the-budget-alarm-rules-are-deliberately-kept-out-of-terraform">Why the budget-alarm rules are deliberately kept out of Terraform</h3>
+<p>The alarm rules that catch exactly this scenario are managed solely through
+the vendor's own cost-management tool interface, never through the team's
+Terraform — and that's a deliberate, documented decision, not a gap nobody's
+gotten around to closing.</p>
+<p>The reason: the cost-management application internally reconciles its own
+alarm rules; if a parallel copy of the same rule existed in Terraform, the
+vendor's tool would periodically overwrite it or silently revert it, with no
+clean signal of who "won" that ownership conflict over the same object. This
+is a concrete instance of this chapter's broader point about leasing versus
+building: leasing a platform doesn't just mean you don't maintain its
+servers — it can also mean accepting that some of its internal configuration
+surfaces can safely live only inside the vendor's own tool, and that
+insisting every single piece of a managed product live under your own IaC
+discipline can be the wrong call precisely because it's a managed product,
+with its own reconciliation logic.</p>
 <h2 id="33-analytical-section-what-the-price-comparison-actually-shows">3.3 Analytical section — what the price comparison actually shows</h2>
 <h3 id="price-lists-as-they-really-are">Price lists, as they really are</h3>
 <p>Observability platform pricing is deliberately hard to compare directly —
@@ -2580,6 +2678,14 @@ from the chart above, not "the company has more than fifty employees."</p>
 <li>Blowing through a free <abbr title="A classification of alerts by severity that determines dedup and notification routing.">tier</abbr> isn't a defeat — it's a signal the system has
   reached its next phase, and needs a planned response (upgrade + cardinality
   control), not a panicked migration.</li>
+<li>A budget alarm that only reports "X% spent" isn't enough on its own —
+  check whether the runbook behind it branches diagnosis into at least
+  "metric cardinality" versus "log volume," since the two require
+  completely different fixes.</li>
+<li>Don't insist that every single piece of a managed platform's configuration
+  live in your Terraform — if the platform reconciles its own rules (like
+  budget alarms in a cost-management tool), a parallel IaC copy gets
+  silently reverted, not preserved.</li>
 </ul>
 <h2 id="35-exercise-for-the-reader">3.5 Exercise for the reader</h2>
 <p>Take your system's current (or planned) telemetry volume — number of
@@ -2622,7 +2728,7 @@ risk, regulatory requirement, existing team expertise).</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 29, 2026 10:27:52 UTC">August 29, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:24:10 UTC">August 31, 2026</span>
   </span>
 
     
