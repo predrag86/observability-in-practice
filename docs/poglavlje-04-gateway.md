@@ -69,6 +69,93 @@ internoj infrastrukturi). Umesto da se ta ograničenja zaobilaze veštački, obe
 komponente dobijaju sopstveni, uzak put direktno do cloud-a — i to je namerno,
 ne previd. Vratićemo se na ovaj princip u Poglavlju 7.
 
+### Zamka "popuni ako nedostaje": kad gateway svoj identitet procuri na tuđu telemetriju
+
+Gateway ima ugrađen mehanizam koji, za svaki signal koji kroz njega prođe,
+popunjava resursne atribute (identitet zadatka, region, tip infrastrukture)
+**samo ako ih pošiljalac sam nije postavio** — nikad ne prepisuje ono što je
+pošiljalac već naveo. Zamisao je razumna: neki pošiljaoci (na primer sam
+gateway, kad meri sopstveno zdravlje) legitimno očekuju da im ovaj mehanizam
+popuni identitet umesto njih. Problem je što isti mehanizam, u svojoj prvoj
+verziji, radio je na **deljenoj putanji, nizvodno od svakog pošiljaoca bez
+razlike** — što znači da je i za pošiljaoce koji jednostavno nikad nisu ni
+pokušali da postave sopstvene resursne atribute (jedna od backend aplikacija u
+floti, tipičan slučaj), prazninu tiho popunjavao **identitetom samog
+gateway-a**: njegov zadatak, njegova zona dostupnosti, njegov tip izvršavanja.
+
+Konkretna šteta nije bila odmah očigledna, jer se u tom trenutku svaka
+dugo-živeća konekcija te aplikacije držala vezana za jednu te istu gateway
+instancu — pa je zona dostupnosti koju je aplikacija "nasledila" od gateway-a
+izgledala stabilna, ni jedna instanca aplikacije nije bila razdvojena preko
+dve zone u trenutku merenja. Ali ta zona dostupnosti je bila promovisana u
+punopravnu oznaku na metrikama te aplikacije — a svaki redeploy gateway-a (ne
+aplikacije!) premešta koju instancu gateway-a neka konekcija pogađa, i time
+tiho **fragmentiše istoriju metrika aplikacije** na potpuno nepovezanom
+događaju. Ista logika je pokvarila i identitet same aplikacije u platformi za
+posmatranje — koji se menjao svaki put kad se gateway iznova pokrene, iako se
+aplikacija uopšte nije dirala.
+
+Prva popravka je bila najbrža moguća: dodat je poseban korak, odmah pre
+izvoza, koji eksplicitno **briše** tih nekoliko gateway-specifičnih atributa,
+ali samo za tu jednu, već pogođenu aplikaciju, po imenu. Popravka je
+verifikovana uživo i potvrđeno je da je rešila tačno taj slučaj. Ono što ta
+popravka nije rešila: identičan problem je i dalje postojao, neopažen i
+nedirnut, kod još dva druga, nepovezana pošiljaoca — jer je lista za brisanje
+bila ručno održavana po imenu pošiljaoca, ne strukturna izmena mehanizma
+samog. Svaki naredni pogođen pošiljalac bi zahtevao svoj sopstveni, ručni
+dodatak na tu listu.
+
+Prava popravka, jedno izdanje kasnije, nije dodala još jedno ime na listu —
+promenila je **gde** taj mehanizam za popunjavanje uopšte radi. Umesto da
+radi nizvodno od svakog pošiljaoca, sužen je da radi samo odmah po prijemu, i
+to isključivo za onu šačicu izvora koje gateway *sam* hostuje (sopstveno
+samo-merenje i par direktnih integracija koje povlače podatke, a ne guraju
+ih) — pre nego što se ti podaci uopšte spoje sa ostatkom saobraćaja. Svaki
+drugi pošiljalac sad prolazi kroz gateway potpuno nedirnut po pitanju
+identiteta, jer mehanizam koji bi ga dirnuo više fizički nije na njegovom
+putu. Korak za brisanje po imenu je u potpunosti uklonjen — više nema šta da
+se briše.
+
+![Pre popravke, mehanizam koji popunjava nedostajuće resursne atribute radi nizvodno od svakog pošiljaoca i procuri sopstveni identitet gateway-a na svakog ko ga sam nije postavio. Posle popravke, taj mehanizam je sužen samo na izvore koje gateway sâm hostuje, pre spajanja sa ostatkom saobraćaja — svaki drugi pošiljalac prolazi nedirnut.](diagrams/ch04-identitet-popuni-ako-nedostaje.png){: width="85%" }
+
+### Brisanje oznake i postavljanje na novu vrednost nisu ista operacija
+
+Na istom gateway-u postoji i drugi mehanizam, potpuno nezavisan od prvog, koji
+na putanji za metrike svodi visoko-kardinalne atribute HTTP zahteva (putanju,
+tip klijenta, poruku greške) na manji, ograničen skup — sve iz istog razloga
+kao i uvek: te vrednosti bi inače multiplikovale broj vremenskih serija bez
+odgovarajuće analitičke vrednosti. Prva verzija ovog mehanizma je, u istom
+koraku, **brisala** i jedan poseban resursni atribut — onaj koji jedinstveno
+razlikuje repliku jedne konkretne backend aplikacije od druge — tretirajući
+ga kao još jednu visoko-kardinalnu dimenziju za odbacivanje.
+
+Efekat u praksi nije bio "manje kardinalnosti" — bio je **tih spoj** više
+replika te aplikacije u **jednu jedinu** vremensku seriju. Bez ijedne preostale
+oznake koja bi ih razlikovala, platforma za posmatranje je vrednosti
+brojača koje stižu naizmenično od različite replike počela da tumači kao
+jedan te isti, jedinstveni brojač — koji, gledano kroz tu jednu seriju,
+povremeno **opada** umesto da monotono raste (jer replika B ne nastavlja
+tačno odatle gde je stala replika A). Funkcija za računanje stope preko
+vremena tretira svaki pad brojača kao restart procesa i nadoknađuje
+"izgubljenu" vrednost dodavanjem nazad u ukupan zbir — što jedan običan,
+naizmeničan upis od dve zdrave replike pretvara u ogroman, veštački skok.
+Izmereno: jedan konkretan alarm, koji je pratio baš tu stopu, u trenutku kad
+je problem otkriven čitao je vrednost reda veličine hiljadu puta veću od
+stvarne — dok je stvarna stopa bila mirna i uobičajena, alarm je prijavljivao
+katastrofalan saobraćaj koji nije postojao.
+
+Popravka nije bila "ne diraj taj atribut" — bila je razlika između brisanja i
+**postavljanja**: umesto da se atribut ukloni i prepusti platformi da sama
+izvede neki identitet iz onoga što ostane, mehanizam sad eksplicitno
+**postavlja** taj atribut na vrednost koja je stvarno stabilna i jedinstvena
+po replici (nešto ekvivalentno imenu same mašine, ne identifikatoru procesa
+koji se menja pri svakom restartu), i to samo za tu jednu aplikaciju, ne za
+sve. Pouka je opštija od ovog jednog slučaja: brisanje oznake koju mehanizam
+smatra "previše granularnom" i njeno prepisivanje stabilnom zamenom nisu ista
+operacija, čak i kad obe uklanjaju istu, originalnu visoko-kardinalnu
+vrednost — jedna tiho spaja serije koje treba da ostanu razdvojene, druga ih
+drži razdvojenim dok i dalje ograničava kardinalnost.
+
 ## 4.3 Analitički deo — kako to rade drugi, i zašto smo (delimično) drugačije
 
 ### Šta zvanična dokumentacija preporučuje
@@ -270,6 +357,16 @@ radi kada ono padne.
   — cela kategorija alata (mrežni alati zasnovani na jezgru, operatorski
   agenti) je dostupna ili strukturno neprimenljiva u zavisnosti od tog
   jednog odgovora, nezavisno od kvaliteta samog alata.
+- Mehanizam "popuni ako nedostaje" na deljenoj putanji nizvodno od svakog
+  pošiljaoca može tiho procureti IDENTITET SAMOG KOLEKTORA na pošiljaoce koji
+  ne postavljaju sopstvene atribute — suzi obim tog mehanizma na izvore koje
+  kolektor stvarno sâm hostuje, umesto da dodaješ deny-listu po pošiljaocu
+  posle svakog otkrivenog slučaja.
+- Brisanje oznake i postavljanje na stabilnu zamensku vrednost nisu ista
+  operacija, čak i kad obe uklanjaju istu visoko-kardinalnu vrednost —
+  brisanje bez zamene rizikuje tih spoj više izvora u jednu seriju, sa
+  brojačem koji povremeno opada i lažno napumpava svaku stopu-preko-vremena
+  koja ga čita.
 
 ## 4.5 Vežba za čitaoca
 
