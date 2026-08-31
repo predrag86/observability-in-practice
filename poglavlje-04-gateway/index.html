@@ -696,6 +696,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4.2 Kako je to urađeno — praktičan pregled">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#zamka-popuni-ako-nedostaje-kad-gateway-svoj-identitet-procuri-na-tuu-telemetriju" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zamka "popuni ako nedostaje": kad gateway svoj identitet procuri na tuđu telemetriju
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brisanje-oznake-i-postavljanje-na-novu-vrednost-nisu-ista-operacija" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brisanje oznake i postavljanje na novu vrednost nisu ista operacija
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2234,6 +2262,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4.2 Kako je to urađeno — praktičan pregled">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#zamka-popuni-ako-nedostaje-kad-gateway-svoj-identitet-procuri-na-tuu-telemetriju" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zamka "popuni ako nedostaje": kad gateway svoj identitet procuri na tuđu telemetriju
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brisanje-oznake-i-postavljanje-na-novu-vrednost-nisu-ista-operacija" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brisanje oznake i postavljanje na novu vrednost nisu ista operacija
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2420,6 +2476,83 @@ nije u istoj virtuelnoj mreži; browser korisnika nikad neće imati pristup
 internoj infrastrukturi). Umesto da se ta ograničenja zaobilaze veštački, obe
 komponente dobijaju sopstveni, uzak put direktno do cloud-a — i to je namerno,
 ne previd. Vratićemo se na ovaj princip u Poglavlju 7.</p>
+<h3 id="zamka-popuni-ako-nedostaje-kad-gateway-svoj-identitet-procuri-na-tuu-telemetriju">Zamka "popuni ako nedostaje": kad gateway svoj identitet procuri na tuđu telemetriju</h3>
+<p>Gateway ima ugrađen mehanizam koji, za svaki signal koji kroz njega prođe,
+popunjava resursne atribute (identitet zadatka, region, tip infrastrukture)
+<strong>samo ako ih pošiljalac sam nije postavio</strong> — nikad ne prepisuje ono što je
+pošiljalac već naveo. Zamisao je razumna: neki pošiljaoci (na primer sam
+gateway, kad meri sopstveno zdravlje) legitimno očekuju da im ovaj mehanizam
+popuni identitet umesto njih. Problem je što isti mehanizam, u svojoj prvoj
+verziji, radio je na <strong>deljenoj putanji, nizvodno od svakog pošiljaoca bez
+razlike</strong> — što znači da je i za pošiljaoce koji jednostavno nikad nisu ni
+pokušali da postave sopstvene resursne atribute (jedna od backend aplikacija u
+floti, tipičan slučaj), prazninu tiho popunjavao <strong>identitetom samog
+gateway-a</strong>: njegov zadatak, njegova zona dostupnosti, njegov tip izvršavanja.</p>
+<p>Konkretna šteta nije bila odmah očigledna, jer se u tom trenutku svaka
+dugo-živeća konekcija te aplikacije držala vezana za jednu te istu gateway
+instancu — pa je zona dostupnosti koju je aplikacija "nasledila" od gateway-a
+izgledala stabilna, ni jedna instanca aplikacije nije bila razdvojena preko
+dve zone u trenutku merenja. Ali ta zona dostupnosti je bila promovisana u
+punopravnu oznaku na metrikama te aplikacije — a svaki redeploy gateway-a (ne
+aplikacije!) premešta koju instancu gateway-a neka konekcija pogađa, i time
+tiho <strong>fragmentiše istoriju metrika aplikacije</strong> na potpuno nepovezanom
+događaju. Ista logika je pokvarila i identitet same aplikacije u platformi za
+posmatranje — koji se menjao svaki put kad se gateway iznova pokrene, iako se
+aplikacija uopšte nije dirala.</p>
+<p>Prva popravka je bila najbrža moguća: dodat je poseban korak, odmah pre
+izvoza, koji eksplicitno <strong>briše</strong> tih nekoliko gateway-specifičnih atributa,
+ali samo za tu jednu, već pogođenu aplikaciju, po imenu. Popravka je
+verifikovana uživo i potvrđeno je da je rešila tačno taj slučaj. Ono što ta
+popravka nije rešila: identičan problem je i dalje postojao, neopažen i
+nedirnut, kod još dva druga, nepovezana pošiljaoca — jer je lista za brisanje
+bila ručno održavana po imenu pošiljaoca, ne strukturna izmena mehanizma
+samog. Svaki naredni pogođen pošiljalac bi zahtevao svoj sopstveni, ručni
+dodatak na tu listu.</p>
+<p>Prava popravka, jedno izdanje kasnije, nije dodala još jedno ime na listu —
+promenila je <strong>gde</strong> taj mehanizam za popunjavanje uopšte radi. Umesto da
+radi nizvodno od svakog pošiljaoca, sužen je da radi samo odmah po prijemu, i
+to isključivo za onu šačicu izvora koje gateway <em>sam</em> hostuje (sopstveno
+samo-merenje i par direktnih integracija koje povlače podatke, a ne guraju
+ih) — pre nego što se ti podaci uopšte spoje sa ostatkom saobraćaja. Svaki
+drugi pošiljalac sad prolazi kroz gateway potpuno nedirnut po pitanju
+identiteta, jer mehanizam koji bi ga dirnuo više fizički nije na njegovom
+putu. Korak za brisanje po imenu je u potpunosti uklonjen — više nema šta da
+se briše.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch04-identitet-popuni-ako-nedostaje.png" data-desc-position="bottom"><img alt="Pre popravke, mehanizam koji popunjava nedostajuće resursne atribute radi nizvodno od svakog pošiljaoca i procuri sopstveni identitet gateway-a na svakog ko ga sam nije postavio. Posle popravke, taj mehanizam je sužen samo na izvore koje gateway sâm hostuje, pre spajanja sa ostatkom saobraćaja — svaki drugi pošiljalac prolazi nedirnut." src="../diagrams/ch04-identitet-popuni-ako-nedostaje.png" width="85%"></a></p>
+<h3 id="brisanje-oznake-i-postavljanje-na-novu-vrednost-nisu-ista-operacija">Brisanje oznake i postavljanje na novu vrednost nisu ista operacija</h3>
+<p>Na istom gateway-u postoji i drugi mehanizam, potpuno nezavisan od prvog, koji
+na putanji za metrike svodi visoko-kardinalne atribute HTTP zahteva (putanju,
+tip klijenta, poruku greške) na manji, ograničen skup — sve iz istog razloga
+kao i uvek: te vrednosti bi inače multiplikovale broj vremenskih serija bez
+odgovarajuće analitičke vrednosti. Prva verzija ovog mehanizma je, u istom
+koraku, <strong>brisala</strong> i jedan poseban resursni atribut — onaj koji jedinstveno
+razlikuje repliku jedne konkretne backend aplikacije od druge — tretirajući
+ga kao još jednu visoko-kardinalnu dimenziju za odbacivanje.</p>
+<p>Efekat u praksi nije bio "manje kardinalnosti" — bio je <strong>tih spoj</strong> više
+replika te aplikacije u <strong>jednu jedinu</strong> vremensku seriju. Bez ijedne preostale
+oznake koja bi ih razlikovala, platforma za posmatranje je vrednosti
+brojača koje stižu naizmenično od različite replike počela da tumači kao
+jedan te isti, jedinstveni brojač — koji, gledano kroz tu jednu seriju,
+povremeno <strong>opada</strong> umesto da monotono raste (jer replika B ne nastavlja
+tačno odatle gde je stala replika A). Funkcija za računanje stope preko
+vremena tretira svaki pad brojača kao restart procesa i nadoknađuje
+"izgubljenu" vrednost dodavanjem nazad u ukupan zbir — što jedan običan,
+naizmeničan upis od dve zdrave replike pretvara u ogroman, veštački skok.
+Izmereno: jedan konkretan alarm, koji je pratio baš tu stopu, u trenutku kad
+je problem otkriven čitao je vrednost reda veličine hiljadu puta veću od
+stvarne — dok je stvarna stopa bila mirna i uobičajena, alarm je prijavljivao
+katastrofalan saobraćaj koji nije postojao.</p>
+<p>Popravka nije bila "ne diraj taj atribut" — bila je razlika između brisanja i
+<strong>postavljanja</strong>: umesto da se atribut ukloni i prepusti platformi da sama
+izvede neki identitet iz onoga što ostane, mehanizam sad eksplicitno
+<strong>postavlja</strong> taj atribut na vrednost koja je stvarno stabilna i jedinstvena
+po replici (nešto ekvivalentno imenu same mašine, ne identifikatoru procesa
+koji se menja pri svakom restartu), i to samo za tu jednu aplikaciju, ne za
+sve. Pouka je opštija od ovog jednog slučaja: brisanje oznake koju mehanizam
+smatra "previše granularnom" i njeno prepisivanje stabilnom zamenom nisu ista
+operacija, čak i kad obe uklanjaju istu, originalnu visoko-kardinalnu
+vrednost — jedna tiho spaja serije koje treba da ostanu razdvojene, druga ih
+drži razdvojenim dok i dalje ograničava kardinalnost.</p>
 <h2 id="43-analiticki-deo-kako-to-rade-drugi-i-zasto-smo-delimicno-drugacije">4.3 Analitički deo — kako to rade drugi, i zašto smo (delimično) drugačije</h2>
 <h3 id="sta-zvanicna-dokumentacija-preporucuje">Šta zvanična dokumentacija preporučuje</h3>
 <p>OpenTelemetry projekat ima zvanično opisana tri (u praksi četiri, ako se ubroji
@@ -2602,6 +2735,16 @@ radi kada ono padne.</p>
   — cela kategorija alata (mrežni alati zasnovani na jezgru, operatorski
   agenti) je dostupna ili strukturno neprimenljiva u zavisnosti od tog
   jednog odgovora, nezavisno od kvaliteta samog alata.</li>
+<li>Mehanizam "popuni ako nedostaje" na deljenoj putanji nizvodno od svakog
+  pošiljaoca može tiho procureti IDENTITET SAMOG KOLEKTORA na pošiljaoce koji
+  ne postavljaju sopstvene atribute — suzi obim tog mehanizma na izvore koje
+  kolektor stvarno sâm hostuje, umesto da dodaješ deny-listu po pošiljaocu
+  posle svakog otkrivenog slučaja.</li>
+<li>Brisanje oznake i postavljanje na stabilnu zamensku vrednost nisu ista
+  operacija, čak i kad obe uklanjaju istu visoko-kardinalnu vrednost —
+  brisanje bez zamene rizikuje tih spoj više izvora u jednu seriju, sa
+  brojačem koji povremeno opada i lažno napumpava svaku stopu-preko-vremena
+  koja ga čita.</li>
 </ul>
 <h2 id="45-vezba-za-citaoca">4.5 Vežba za čitaoca</h2>
 <p>Nacrtaj dijagram sopstvenog sistema onako kako telemetrija danas putuje —
@@ -2642,7 +2785,7 @@ radi. Ako je odgovor na (3) "niko, dok neko ne primeti da nešto drugo ne
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 06:47:06 UTC">30. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 06:12:42 UTC">31. avgust 2026.</span>
   </span>
 
     

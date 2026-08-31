@@ -724,6 +724,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="5.2 Kako je to urađeno — praktičan pregled">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kad-dva-odvojena-mehanizma-za-pseudonimizaciju-ne-znaju-jedno-za-drugo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad dva odvojena mehanizma za pseudonimizaciju ne "znaju" jedno za drugo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kad-se-dijagnoza-pokvari-ispod-tebe-isti-simptom-promenjen-uzrok" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad se dijagnoza pokvari ispod tebe: isti simptom, promenjen uzrok
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2223,6 +2251,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="5.2 Kako je to urađeno — praktičan pregled">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kad-dva-odvojena-mehanizma-za-pseudonimizaciju-ne-znaju-jedno-za-drugo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad dva odvojena mehanizma za pseudonimizaciju ne "znaju" jedno za drugo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kad-se-dijagnoza-pokvari-ispod-tebe-isti-simptom-promenjen-uzrok" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad se dijagnoza pokvari ispod tebe: isti simptom, promenjen uzrok
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2409,6 +2465,91 @@ Cloud-u — bez toga, taj podatak bi postojao samo u aplikacionim logovima, van
 domašaja trejsova i metrika izvedenih iz njih (<abbr title="Metrike izvedene iz raspona (traces) pre bilo kakvog uzorkovanja.">span metrics</abbr>, obrađeno u
 Poglavlju 6).</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch5-instrumentation.png" data-desc-position="bottom"><img alt="Auto-instrumentacija (Java agent, Python SDK+shim) pokriva sve što je strukturno vidljivo iz poznatih biblioteka; jedina ručna tačka je ekstrakcija identiteta pozivaoca u zajedničkom middleware sloju, bez obzira kojim od tri kanala je identitet stigao." src="../diagrams/ch5-instrumentation.png" width="92%"></a></p>
+<h3 id="kad-dva-odvojena-mehanizma-za-pseudonimizaciju-ne-znaju-jedno-za-drugo">Kad dva odvojena mehanizma za pseudonimizaciju ne "znaju" jedno za drugo</h3>
+<p>Frontend deo sistema (obrađen detaljno u Poglavlju 8) je namerno projektovan
+da nikad ne šalje stvaran identitet korisnika u sopstvenu telemetriju — nosi
+samo pseudonimni, tehnički ID sesije, bez imena ili email adrese. Backend
+middleware opisan iznad radi suprotno: ekstrahuje <strong>stvaran</strong> identitet
+pozivaoca (email adresu), jer je to bilo najjednostavnije i najkorisnije za
+debug uživo — "koji korisnik je pogodio ovaj spor endpoint" je odmah čitljiv
+upit bez dodatnog koraka.</p>
+<p>Oba dizajna su, pojedinačno, razumna. Problem je ono što ih spaja bez da iko
+to eksplicitno odluči: propagacija konteksta traga. Kad zahtev pokrenut u
+browseru stigne do backend-a, standardni mehanizam za povezivanje raspona
+(trace context propagation) automatski spaja frontend raspon i backend raspon
+u <strong>isti</strong> trag — i to je poenta cele arhitekture posmatranja, ne greška.
+Ali to znači da spojeni trag sad nosi i pseudonimni ID sa frontend strane
+<em>i</em> stvaran email sa backend strane, na istom, povezanom putu — dva
+navodno nezavisna polja privatnosti, spojena kroz mehanizam koji nema
+pojma da privatnost uopšte postoji kao briga.</p>
+<p>Ovo nije bila teorijska zabrinutost: izmereno je direktno na jednoj stvarnoj
+sesiji da je pseudonimni ID korisnika sa frontend strane, praćen kroz spojeni
+trag, u velikoj većini povezanih backend raspona razotkrio potpuno konkretnu,
+stvarnu email adresu tog istog korisnika — frontend dizajn za privatnost je
+radio tačno kako je zamišljeno, ali ga je backend deo istog spojenog traga
+tiho poništavao.</p>
+<p>Identifikovana popravka (u trenutku pisanja još nije sprovedena) ne menja
+frontend uopšte — menja samo <em>kako</em> backend middleware postavlja identitet:
+umesto sirove email adrese, izvodi stabilan, nereverzibilan pseudonim
+(ključem potpisan HMAC nad normalizovanom email adresom, tako da isti
+korisnik uvek dobija isti pseudonim, ali se iz pseudonima ne može izvesti
+email bez tajnog ključa). Ostatak middleware-a — koji od tri kanala je
+identitet doneo, koja uloga i obim su mu dodeljeni — ostaje potpuno
+nepromenjen. Za retke slučajeve kad je nekom stvarno potreban obrnut upit
+(pseudonim → email), predviđen je zaseban, ograničen endpoint sa sopstvenom
+autorizacijom i audit logom — razrešavanje identiteta je samo po sebi
+osetljiva radnja, ne nusprodukt čitanja dashboard-a.</p>
+<p>Opšta pouka nadilazi ovaj jedan slučaj: kad dva servisa nezavisno odluče kako
+će štititi identitet u sopstvenoj telemetriji, mehanizam koji ih automatski
+povezuje (propagacija konteksta traga, ali i deljeni dashboard, deljeni
+identifikator korisnika u logovima) briše granicu između njih bez upozorenja.
+Privatnost telemetrije se mora proveravati na nivou <strong>spojenog</strong> puta kroz
+sistem, ne po servisu pojedinačno — jedan servis koji "radi sve kako treba"
+ne znači ništa ako sused na drugom kraju istog traga otkriva ono što je prvi
+sakrio.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch05-pseudonimizacija-preko-granice.png" data-desc-position="bottom"><img alt="Trenutno stanje: frontend nosi pseudonimni ID, ali backend middleware iz 5.2 na istom, povezanom tragu stavlja stvaran email — spojen trag je de-anonimizovan. Identifikovana popravka (nije sprovedena) menja samo backend stranu: isti korisnik dobija isti stabilan pseudonim, spojen trag ostaje pseudoniman od kraja do kraja." src="../diagrams/ch05-pseudonimizacija-preko-granice.png" width="80%"></a></p>
+<h3 id="kad-se-dijagnoza-pokvari-ispod-tebe-isti-simptom-promenjen-uzrok">Kad se dijagnoza pokvari ispod tebe: isti simptom, promenjen uzrok</h3>
+<p>Lako je pretpostaviti da "auto-instrumentacija je uključena" znači da sva tri
+signala (trejsovi, metrike, logovi) automatski rade za taj servis, i da će
+tako i ostati. Stvaran slučaj u jednoj od batch flota u implementaciji
+pokazuje zašto ni jedna od te dve pretpostavke nije pouzdana: promenljiva
+okruženja koja uključuje izvoz logova bila je eksplicitno postavljena,
+potvrđena u definiciji zadatka, i ništa u konfiguraciji nije ukazivalo na
+problem — a ipak, nijedan log red iz te flote u tom trenutku nije stizao u
+platformu za posmatranje.</p>
+<p>Uzrok, dijagnostikovan u tom trenutku: biblioteka za automatsku
+instrumentaciju tog jezika je, u verziji koja je tada bila u upotrebi, imala
+poseban modul za standardni modul za logovanje — ali taj modul je radio samo
+jednu stvar, ubacivao je identifikator trenutnog raspona u već formatiran
+tekst log linije, tako da se log može kasnije ručno povezati sa trejsom po
+tom identifikatoru. Nije dodavao prijemnik koji bi log zapise zaista slao ka
+platformi za posmatranje kao posebne, strukturisane zapise. Popravka je
+zavedena kao poznat, čekajući zadatak — ručno dodavanje desetak linija koda
+koje bi tu vezu uspostavile.</p>
+<p>Ono što se dogodilo posle je i sama pouka: ta ručna popravka nikad nije ni
+morala da se napiše. Nekoliko meseci kasnije, biblioteka je rutinski
+nadograđena iz sasvim drugog razloga, nevezanog za ovaj problem — a nova
+verzija je, kao sporednu posledicu, počela sama da prikači prijemnik za
+strukturisane zapise na podrazumevani sistem za logovanje, čim je ta ista
+promenljiva okruženja prisutna. Većina flote je počela da šalje logove u
+platformu za posmatranje bez ijedne izmene koda, bez da je iko to tražio kao
+cilj nadogradnje.</p>
+<p>Kad je tim, u sledećoj reviziji, ponovo prošao kroz staru listu flota koje
+"ne šalju logove," otkrio je da je stara dijagnoza — "biblioteka nema tu
+funkcionalnost" — u međuvremenu postala pogrešna za skoro sve flote na listi,
+ali <strong>ne za sve</strong>. Šačica preostalih flota je i dalje pokazivala identičan
+spoljašnji simptom (nema logova u platformi za posmatranje), ali uzrok više
+nije bio isti: te flote su izrazito kratkotrajne, i njihov proces se gasi pre
+nego što interni bafer stigne da isprazni ono što je nakupio — mehanizam koji
+detaljno objašnjava sledeće poglavlje. Isti simptom, potpuno druga
+dijagnoza, samo par meseci kasnije.</p>
+<p>Opšta pouka: dijagnostikovan uzrok ima rok trajanja. Biblioteke od kojih
+zavisi auto-instrumentacija menjaju verzije, ponekad tiho popravljajući staru
+klasu greške kao sporedan efekat izmene koja uopšte nije ciljala taj problem
+— dok identičan spoljašnji simptom, "nema podataka," u međuvremenu počne da
+ga proizvodi potpuno drugačiji mehanizam. Pre nego što se stara dijagnoza
+ponovo iskoristi kao objašnjenje, vredi je proveriti nanovo — ne pretpostaviti
+da razlog koji je važio pre par meseci i dalje važi danas.</p>
 <h2 id="53-analiticki-deo-kada-rucna-instrumentacija-zaista-vredi-truda">5.3 Analitički deo — kada ručna instrumentacija zaista vredi truda</h2>
 <h3 id="sta-auto-instrumentacija-strukturno-ne-moze-da-vidi">Šta auto-instrumentacija strukturno ne može da vidi</h3>
 <p>Nezavisne analize ovog izbora (uključujući Elastic-ov vodič za dobru praksu
@@ -2480,6 +2621,16 @@ je to jedan detalj za tvoj sistem.</p>
   uvek znak da vreme ide na pogrešno mesto.</li>
 <li>Ručna instrumentacija koja nije jeftina za održavanje neće biti održavana —
   planiraj je tako od početka, ne kao naknadnu nadu.</li>
+<li>Kad dva servisa nezavisno štite identitet u sopstvenoj telemetriji (npr.
+  frontend šalje pseudonim, backend šalje pravi identitet), proveri privatnost
+  na nivou SPOJENOG traga kroz propagaciju konteksta, ne po servisu posebno —
+  mehanizam koji ih automatski povezuje ne zna da privatnost postoji kao briga.</li>
+<li>Ne pretpostavljaj da jednom dijagnostikovan uzrok i dalje važi — biblioteke
+  od kojih zavisi auto-instrumentacija menjaju verzije, ponekad tiho
+  popravljajući staru grešku kao sporedan efekat nepovezane izmene, dok
+  identičan spoljašnji simptom ("nema podataka") u međuvremenu počne da ga
+  proizvodi sasvim drugi mehanizam; proveri dijagnozu nanovo pre nego što je
+  ponovo iskoristiš kao objašnjenje.</li>
 </ul>
 <h2 id="55-vezba-za-citaoca">5.5 Vežba za čitaoca</h2>
 <p>Pronađi jedan endpoint ili zadatak u svom sistemu gde bi, usred incidenta,
@@ -2517,7 +2668,7 @@ može da stigne.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="26. avgust 2026. 15:47:41 UTC">26. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 06:17:49 UTC">31. avgust 2026.</span>
   </span>
 
     

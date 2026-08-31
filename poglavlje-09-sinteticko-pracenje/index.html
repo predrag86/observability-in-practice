@@ -850,6 +850,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#dve-dubine-iste-probe-ne-dva-odvojena-alarma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dve dubine iste probe, ne dva odvojena alarma
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ista-metrika-dva-razlicita-praga-jer-ne-odgovaraju-na-isto-pitanje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ista metrika, dva različita praga, jer ne odgovaraju na isto pitanje
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2254,6 +2276,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#dve-dubine-iste-probe-ne-dva-odvojena-alarma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dve dubine iste probe, ne dva odvojena alarma
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ista-metrika-dva-razlicita-praga-jer-ne-odgovaraju-na-isto-pitanje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ista metrika, dva različita praga, jer ne odgovaraju na isto pitanje
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2464,6 +2508,52 @@ množe trošak, ne samo preciznost — već je jednom primoran na test kod
 osnovnih HTTP probi u ovoj implementaciji, kad je prekomerna multi-regionalna
 postavka izazvala neplanirano prekoračenje budžeta i morala biti svedena na
 jednu lokaciju sa ređim intervalom.</p>
+<h3 id="dve-dubine-iste-probe-ne-dva-odvojena-alarma">Dve dubine iste probe, ne dva odvojena alarma</h3>
+<p>Osnovna dostupnost-proba iz prethodnog odeljka nije uvek samo jedna proba —
+u implementaciji koju knjiga prati, ista javna aplikacija ima <strong>dve</strong> HTTP
+probe, namerno usmerene na dve različite dubine sistema. Plitka proba gađa
+koreni put i proverava samo da li šelj aplikacije uopšte odgovara — a to
+može da bude tačno čak i kad je pozadinski deo sistema potpuno nezdrav, jer
+statički sadržaj šelja često servira sloj ispred same aplikacije. Duboka
+proba gađa poseban endpoint koji, umesto da samo vrati "u redu", <strong>stvarno
+izvrši</strong> ograničen upit ka bazi podataka na kojoj aplikacija zavisi i vrati
+grešku ako taj upit ne uspe.</p>
+<p>Razlika u dubini nije kozmetička — ona je sama dijagnostička informacija, bez
+ijednog dodatnog koraka istrage. Ako plitka proba prolazi dok duboka pada,
+zaključak je momentalan: aplikacija je dostupna, problem je u bazi podataka
+iza nje. Ako obe prolaze, a treći sloj probe iz prethodnog odeljka — ona sa
+pravim browser-om — ipak padne, zaključak je opet momentalan: kvar je
+isključivo na strani klijenta, ni aplikacija ni baza nemaju veze s tim. Ovo
+je ista logika koja već radi za probe raspoređene po više geografskih
+lokacija (kad jedan region ćuti dok ostali rade, sužava se na mrežni
+problem tog regiona) — samo primenjena na drugu osu: dubinu provere umesto
+geografije. Obrazac otkaza kroz slojeve je dijagnoza sama po sebi.</p>
+<p>Duboka proba nosi i sopstvenu cenu koju treba priznati: pošto stvarno izvrši
+upit, njeno vreme odziva prati latenciju baze, ne samo mrežnu latenciju do
+aplikacije — što znači da vremenski limit te probe mora biti širi od limita
+plitke probe, inače će svaki povremeni spor upit (ne stvaran otkaz) lažno
+okinuti alarm namenjen otkrivanju pravih otkaza.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch09-slojevi-otkaza.png" data-desc-position="bottom"><img alt="Tri sloja probe, svaki testira drugu dubinu sistema: plitka proba samo da li šelj odgovara, duboka proba da li baza iza aplikacije zaista radi, proba sa renderovanjem da li se stranica stvarno prikazuje. Obrazac koji sloj prolazi a koji pada je sama dijagnoza." src="../diagrams/ch09-slojevi-otkaza.png" width="85%"></a></p>
+<h3 id="ista-metrika-dva-razlicita-praga-jer-ne-odgovaraju-na-isto-pitanje">Ista metrika, dva različita praga, jer ne odgovaraju na isto pitanje</h3>
+<p>Sintetički sloj sa pravim browser-om iz prethodnog odeljka ne meri samo da
+li se stranica prikazuje — meri i iste metrike percepcije performansi
+(najveći sadržajni prikaz, stabilnost layout-a) koje RUM iz Poglavlja 8 već
+prati kod stvarnih korisnika. Na prvi pogled to zvuči kao dupliranje istog
+signala dva puta. U implementaciji koju knjiga prati, prag za tu sintetičku
+proveru je namerno postavljen mnogo strože od RUM-ovog praga za "loše"
+iskustvo — jer sintetička proba uvek renderuje istu, laganu, neautentikovanu
+početnu stranicu, sa stabilnim osnovnim vremenom mnogo ispod RUM granice za
+"loše"; svako značajno odstupanje od te stabilne osnove je <strong>regresija</strong>,
+ne samo "loše iskustvo".</p>
+<p>Dve provere zato odgovaraju na različita pitanja, iako mere istoimenu
+metriku: sintetička proba pita "da li se nešto upravo pokvarilo u odnosu na
+juče", RUM pita "da li je iskustvo stvarnih korisnika, u svoj svojoj
+raznovrsnosti mreža i uređaja, trenutno prihvatljivo". Da je sintetičkoj
+probi dodeljen isti, širok RUM prag, izgubila bi svrhu kao rani signal
+regresije — pravi kvar bi morao da postane dovoljno loš da pređe prag
+kalibrisan za haotičan stvaran saobraćaj pre nego što bi ga sintetička
+proba uopšte prijavila, iako bi ga na sopstvenoj, stabilnoj osnovi
+prepoznala mnogo ranije.</p>
 <h2 id="93-analiticki-deo-zasto-sinteticko-pracenje-nije-rum-za-siromasne">9.3 Analitički deo — zašto sintetičko praćenje nije "RUM za siromašne"</h2>
 <h3 id="sinteticko-i-rum-resavaju-razlicite-probleme-ne-isti-problem-na-dva-nacina">Sintetičko i RUM rešavaju različite probleme, ne isti problem na dva načina</h3>
 <p>Nezavisna poređenja RUM-a i sintetičkog praćenja (uključujući ClickHouse-ov i
@@ -2530,6 +2620,14 @@ kada problem postoji baš u trenutku kad niko ne gleda, neko ipak zna.</strong><
   stranica prazna, i nijedna server-side proba to ne vidi. Drži tu probu
   odvojenu od stvarnog RUM toka i na minimalnom otisku (jedna lokacija, redak
   interval) — ona je najskuplji sloj sintetičkog praćenja.</li>
+<li>Kad imaš probu koja stvarno izvršava upit (ne samo proverava da servis
+  odgovara), daj joj širi vremenski limit od plitke probe — njeno vreme
+  odziva prati latenciju onoga što upituje, ne samo mrežnu latenciju do
+  aplikacije.</li>
+<li>Kad ista metrika postoji i u sintetičkoj probi i u RUM-u, ne daj im isti
+  prag — sintetička proba na stabilnoj, laganoj osnovi treba strog prag za
+  ranu regresiju, RUM na haotičnom stvarnom saobraćaju treba širi prag za
+  stvarno loše iskustvo; isti prag na oba mesta gubi svrhu jednog od njih.</li>
 </ul>
 <h2 id="95-vezba-za-citaoca">9.5 Vežba za čitaoca</h2>
 <p>Zamisli da tvoj sistem prestane da radi u tri ujutru u vremenskoj zoni gde
@@ -2567,7 +2665,7 @@ saobraćaja, to je znak da ti nedostaje sloj opisan u ovom poglavlju.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 06:45:14 UTC">30. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 06:37:04 UTC">31. avgust 2026.</span>
   </span>
 
     

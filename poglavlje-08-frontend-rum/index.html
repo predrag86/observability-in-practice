@@ -808,6 +808,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="8.2 Kako je to urađeno — praktičan pregled">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kad-je-izgradnja-tiha-o-sopstvenom-neuspehu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad je izgradnja tiha o sopstvenom neuspehu
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kad-procentil-laze-jer-uzorka-premalo-ima" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad procentil laže jer uzorka premalo ima
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2223,6 +2251,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="8.2 Kako je to urađeno — praktičan pregled">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kad-je-izgradnja-tiha-o-sopstvenom-neuspehu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad je izgradnja tiha o sopstvenom neuspehu
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kad-procentil-laze-jer-uzorka-premalo-ima" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad procentil laže jer uzorka premalo ima
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2429,6 +2485,59 @@ ne proširenje postojeće funkcije koja trejsove nikad nije ni videla.</p>
 umesto jedne linije, jer prosek ili čak medijana lako sakriju baš onaj deo
 korisnika koji ima najgore iskustvo:</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-rum.png" data-desc-position="bottom"><img alt="LCP praćen po percentilima: p50 i p75 ostaju stabilni, ali p95 pokazuje jasnu regresiju jednog dana — signal koji bi prosek sakrio, jer pogađa samo deo saobraćaja (tipično jedan geografski region ili tip uređaja)." src="../diagrams/dashboard-rum.png" width="95%"></a></p>
+<h3 id="kad-je-izgradnja-tiha-o-sopstvenom-neuspehu">Kad je izgradnja tiha o sopstvenom neuspehu</h3>
+<p>Prvi pokušaj puštanja frontend telemetrije u probni okvir je, po svakoj
+standardnoj proveri, prošao besprekorno: build je prošao, testovi su bili
+zeleni, isporučena aplikacija je vraćala HTTP 200 i radila potpuno identično
+za korisnika kao i pre. Ni jedna od tih provera nije otkrila da isporučeni
+paket <strong>uopšte ne sadrži poziv inicijalizacije SDK-a za telemetriju</strong> — build
+je pokrenut iz starije verzije izvornog koda, snimljene pre nego što je kod
+za instrumentaciju uopšte ušao u granu iz koje se gradi. Aplikacija je radila
+identično jer telemetrija nikad ne utiče na to kako aplikacija izgleda ili
+funkcioniše za korisnika — samo na to da li nešto stiže na drugi kraj, van
+vidokruga bilo koje provere koja gleda samo isporučenu stranicu.</p>
+<p>Otkriveno je tek eksplicitnom, posebno osmišljenom proverom: pretraživanjem
+<strong>samog isporučenog, već izgrađenog JavaScript paketa</strong> (ne izvornog koda,
+nego artefakta koji je stvarno otišao na server) u potrazi za imenom funkcije
+koju SDK poziva pri inicijalizaciji, i nezavisno, proverom da li se naziv tog
+frontend servisa uopšte pojavljuje u sistemu za skladištenje telemetrije —
+makar sa nula tačaka podataka. Obe provere su rađene <strong>posle</strong> što je svaka
+standardna provera već proglasila isporuku uspešnom. Dodatna zamka koja je
+uz put otkrivena: postoji i poseban, potpuno odvojen sistem koji takođe
+gradi frontend paket radi sopstvene provere ispravnosti koda, ali taj
+artefakt niko nikad stvarno ne isporučuje — laka greška bi bila pretpostaviti
+da "taj build prolazi" znači "isporučeni build je instrumentisan", kad su to
+u stvarnosti dva potpuno nezavisna artefakta.</p>
+<p>Opšta pouka: prisustvo SDK-a za telemetriju je nevidljivo za svaku
+uobičajenu proveru zdravlja isporuke — build koji prolazi, testove koji su
+zeleni, HTTP 200, aplikaciju koja radi. Jedini način da se otkrije njegovo
+odsustvo je eksplicitna provera koja gleda baš taj kod u baš tom isporučenom
+artefaktu, ili proverava da li se očekivani signal uopšte pojavio nizvodno —
+a takva provera se retko radi sama od sebe, mora biti dodata namerno.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch08-tiha-praznina.png" data-desc-position="bottom"><img alt="Standardne provere isporuke (build, testovi, HTTP 200) ne gledaju telemetrijski kod — isporučeni paket može biti izgrađen iz stare verzije izvora, bez inicijalizacije SDK-a, a da nijedna od njih to ne primeti. Otkriva se tek eksplicitnom proverom isporučenog artefakta i nizvodne telemetrije." src="../diagrams/ch08-tiha-praznina.png" width="80%"></a></p>
+<h3 id="kad-procentil-laze-jer-uzorka-premalo-ima">Kad procentil laže jer uzorka premalo ima</h3>
+<p>Interni alat sa relativno malim brojem korisnika generiše, pokazalo se posle
+puštanja u produkciju, samo dvanaestak do trinaestak merenja Core Web
+Vitals-a <strong>dnevno</strong> — a alarm koji prati regresiju gleda <strong>p75 preko
+kliznog prozora od 24 sata</strong>. Na toj količini uzoraka, jedna jedina
+neuobičajeno spora sesija — korisnik na slaboj mreži, na starijem uređaju,
+u pozadinskom tabu-u — može sama da pomeri p75 cele grupe iz "dobrog" u
+"loš" opseg, bez ijedne stvarne promene u aplikaciji koja bi to opravdala.</p>
+<p>Zato prvi korak u odgovoru na taj alarm nije istraživanje šta se u
+aplikaciji promenilo — nego provera <strong>da li uzorak uopšte ima dovoljno
+tačaka da se procentilu veruje</strong>. Alarm eksplicitno zahteva minimalan broj
+merenja u prozoru pre nego što uopšte razmotri okidanje, upravo zato što je
+poznato da na ovom nivou saobraćaja procentil sam po sebi nije pouzdan
+signal ispod tog praga.</p>
+<p>Ovo produbljuje princip već pomenut ranije u poglavlju — da RUM ima slepu
+tačku kad saobraćaja uopšte nema. Ovde je slepa tačka suptilnija: alarm
+<strong>jeste</strong> opalio, procentil <strong>jeste</strong> izračunat, ali sam broj — bez
+konteksta koliko je tačaka ušlo u njegov obračun — može da liči na stvarnu
+regresiju dok je zapravo statistički artefakt premalog uzorka. Tretiranje
+svakog alarma zasnovanog na procentilu kao apsolutne istine, bez pitanja
+"na koliko tačaka je ovo izračunato", je greška koja se ne vidi dok se
+prvi lažni alarm ne istraži do kraja i ne otkrije da iza njega stoji jedna
+jedina sesija.</p>
 <h2 id="83-analiticki-deo-zasto-direktna-veza-nije-kompromis-nego-zahtev-i-sta-znaci-kad-jedan-filter-nije-dovoljan">8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad "jedan filter" nije dovoljan</h2>
 <h3 id="zasto-zvanicna-arhitektura-rum-a-skoro-uvek-ide-direktno-u-cloud">Zašto zvanična arhitektura RUM-a skoro uvek ide direktno u cloud</h3>
 <p>Nezavisni pregledi RUM arhitekture dosledno navode da browser telemetrija
@@ -2495,6 +2604,14 @@ eksplicitnu proveru."</strong></p>
   to je razlog da postoji Poglavlje 9.</li>
 <li>Posle svakog "dodao sam filter za X", eksplicitno pitaj: kroz koje sve
   puteve X uopšte može da izađe, i da li ih je filter zaista sve pokrio.</li>
+<li>Nijedna standardna provera isporuke (build, testovi, HTTP status,
+  vizuelni rad aplikacije) ne otkriva odsustvo telemetrijskog koda — dodaj
+  eksplicitnu proveru koja gleda sam isporučeni artefakt ili potvrđuje da
+  se očekivani servis pojavio nizvodno.</li>
+<li>Pre nego što alarmu zasnovanom na procentilu poveruješ kao stvarnom
+  signalu, proveri koliko je tačaka ušlo u obračun — na niskom saobraćaju
+  jedna sesija može da pomeri p75 iz "dobrog" u "loš" opseg bez ijedne
+  stvarne promene u sistemu.</li>
 </ul>
 <h2 id="85-vezba-za-citaoca">8.5 Vežba za čitaoca</h2>
 <p>Uzmi bilo koju biblioteku ili SDK u svom sistemu koja šalje podatke ka
@@ -2534,7 +2651,7 @@ tebe.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 06:43:59 UTC">30. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 06:33:46 UTC">31. avgust 2026.</span>
   </span>
 
     
