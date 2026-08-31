@@ -145,6 +145,49 @@ nije bila.
 
 ![Revizija pre gašenja starog sistema alarmiranja: od 23 stara alarma, 16 nije primilo nijednu tačku podataka preko godinu dana — izgledali su "zeleno" samo zato što je odsustvo podataka bilo protumačeno kao normalno stanje.](diagrams/dashboard-alarm-audit.png){: width="95%" }
 
+### Zašto se planiran korak namerno preskače, ne dodaje
+
+Ne svaka promena plana je dodavanje koraka. Originalni plan je predviđao
+poseban mehanizam u samoj aplikaciji koji bi, pri gašenju procesa, ručno
+uhvatio i poslao poslednje podatke pre nego što proces stvarno umre. Kad je
+došlo vreme za taj korak, implementacija ga je svesno **preskočila** — ne
+zaboravila, nego eksplicitno odlučila da ga ne radi, sa zapisanim razlogom:
+bočni kolektor iz drugog sloja plana već rešava isti problem čistije, jer
+zadržava raspone dok proces izlazi i garantovan mu je fiksan vremenski
+prozor pre prisilnog gašenja. Ručni mehanizam u aplikaciji bi pokrivao samo
+uzak podskup situacija koje bočni kolektor već pokriva u celini.
+
+Ono što ovu odluku čini disciplinom, ne lenjošću, jeste da je zapisan
+tačan uslov pod kojim bi se preskočeni korak ipak morao vratiti na plan:
+ako pilot bočnog kolektora otkrije da se poslednji podaci ipak gube u
+merljivoj količini, korak se vraća. Procenjen najgori slučaj gubitka bez
+tog koraka je bio mali i imenovan brojkom, ne "trebalo bi da bude
+zanemarljivo". Preskakanje koraka bez ovog uslova bi bilo nadanje;
+preskakanje sa njim je proverljiva opklada koja se automatski poništava
+čim dokaz kaže suprotno.
+
+![Preskočen korak sa zapisanim uslovom za povratak: procenjen najgori slučaj je imenovan brojkom, a plan se automatski vraća na korak čim pilot pokaže merljiv gubitak.](diagrams/ch29-preskocen-korak.png){: width="80%" }
+
+### Kad se jedna greška pretvori u sistematsku pretragu iste klase
+
+Tokom popravke jednog specifičnog kvara u jednoj porodici zadataka —
+neusklađenost formata pri upisu redova koja je uzrokovala tihe otkaze —
+implementacija je otišla korak dalje od uobičajenog "popravi i nastavi".
+Umesto da se popravka ograniči na mesto gde je greška prvi put uočena,
+neko je proverio da li se **isti oblik greške** pojavljuje bilo gde
+drugde u deljenoj biblioteci koju koristi cela flota. Pretraga je pronašla
+istu grešku na deset dodatnih mesta poziva, u potpuno različitim delovima
+koda, koje niko nije prijavio jer se do sad nisu manifestovale na isti
+vidljiv način.
+
+Ovaj nalaz je ubačen u plan kao preduslov, ne kao naknadna napomena:
+nijedan od tih deset mesta ne sme ući u produkcionu instrumentaciju niti se
+osloniti pod opterećenjem dok se popravka ne primeni na sve njih. Razlika u
+odnosu na standardni tok "prijavi grešku, popravi, zatvori" je namerna: kad
+je jedan konkretan slučaj samo simptom šireg obrasca u deljenom kodu,
+tretiranje tog jednog slučaja kao izolovanog ostavlja preostalih deset da
+čekaju sopstveni incident da bi bili otkriveni.
+
 ## 29.3 Analitički deo — kad je odstupanje od plana znak zrelosti, ne slabosti
 
 Industrijska praksa oko faznih rollout-a je, na sreću, dobro razrađena, i
@@ -231,6 +274,13 @@ gledao šta je iza zida.
   ceo mehanizam — ne samo prag.
 - Pre gašenja starog sistema, revidiraj ga — koliko od "aktivne" zaštite
   je zapravo tiha fasada koja godinama nije primila nijedan podatak.
+- Kad preskačeš planiran korak jer ga drugi deo plana već pokriva, zapiši
+  tačan uslov pod kojim bi se korak morao vratiti — preskakanje bez tog
+  uslova je nadanje, preskakanje sa njim je proverljiva opklada.
+- Kad popravljaš konkretan kvar u deljenom kodu, proveri da li se ista
+  klasa greške pojavljuje na drugim mestima poziva pre nego što ijedno od
+  njih uđe u produkciju pod opterećenjem — jedan prijavljen slučaj je često
+  samo prvi vidljivi simptom šireg obrasca.
 
 ## 29.5 Vežba za čitaoca
 
