@@ -83,6 +83,65 @@ trust in the system than some actual, short-lived outage.
 
 ![A postmortem looks backward; from it you distill a runbook (forward-looking, for next time) or a handoff (a one-time request handed to a single owner) — three documents, three different directions.](diagrams/ch17-tri-tipa.png){: width="90%" }
 
+### The extreme case of the pattern: four hundred sixty-nine days of silence
+
+It's worth naming one specific entry from the index as the extreme
+endpoint of the pattern described above — not because it's typical, but
+because it shows how far a "missing alert" can go before anyone notices. A
+scheduled job failed **every single time it ran, without exception, for
+four hundred sixty-nine days straight**. The alert meant to report that
+failure wasn't missing — it was present, enabled, and correctly wired. The
+problem lay in the nature of the notification mechanism itself: the
+system sends a message on a state **change**, not for as long as a state
+persists. The alert transitioned once, on the very day the failures began,
+from "OK" to "firing," and on that occasion sent exactly one notification.
+Since the state never returned to "OK" afterward (the job never
+succeeded), there was no further state change to trigger a second
+message — not one, the whole time.
+
+It was discovered entirely by accident, not through a search or a
+dashboard: someone was checking whether an old version of a tool could
+safely be removed as "probably dead code," and noticed that the call count
+for that job wasn't zero at all, when it should have been, under the
+assumption that nobody used that code anymore. The postmortem written
+about this finding didn't stop at "let's fix this one alert" — it
+triggered a broader push: a review of the entire fleet of similar jobs
+uncovered five more that were failing with no alert at all, and that most
+jobs in that category had no notification mechanism that would survive
+exactly this pattern (persists-but-doesn't-change). A postmortem that
+finds one case and asks "where else is this hiding" is worth far more than
+one that closes just that one, named case.
+
+### The same alert, three unrelated causes — the danger of the first explanation that fits
+
+One family of jobs triggered an alert **seventy times** in a month, every
+time in the same shape, every time at the highest severity level, with no
+mechanism at all for merging repeated messages — seventy separate calls
+into the channel. The first, entirely reasonable assumption was that a
+single cause was repeating. An investigation that stopped at the first
+explanation that fit a handful of examples would easily have missed it:
+when the postmortem systematically broke down all seventy calls instead of
+sampling a few of them, it turned out that **three** completely unrelated
+causes stood behind the identical alert shape — one data-processing bug
+affecting about nine out of ten cases, a separate, rarer class of failure
+at the database network-connection level, and one call that didn't belong
+to this job family at all but to a neighboring one, from an external
+platform that pulls stale jobs out of rotation — a coincidental overlap in
+timing that nearly sent the investigation down the wrong track.
+
+Had the investigation stopped after the first two or three cases
+reviewed, it would likely have concluded there was one dominant cause and
+proposed a single fix — technically correct for most cases, but blind to
+the remaining tenth and to the completely misattributed call that didn't
+even belong to this family. The lesson isn't specific to this job family:
+when the same alert shape comes often enough to become a serious cost,
+it's worth breaking down the **entire** population of calls, not just
+enough of them to confirm the first plausible explanation — an identical
+external alert shape guarantees neither one shared cause behind it, nor
+that every occurrence is fully related.
+
+![The alert correctly transitions into the firing state and sends exactly one notification on the day of the failure — the system only notifies on a state change, so 469 days of continuous, unchanged failure afterward send no further message. Discovered by accident, during an unrelated task.](diagrams/ch17-469-dana.png){: width="85%" }
+
 ## 17.3 Analytical section — why "no one's at fault" is harder than it sounds
 
 ### The official recommendation: blameless as a functional requirement, not courtesy
@@ -151,6 +210,13 @@ looks for the system prevents the next one.**
   principle — visibility from leadership, regular checks on whether the
   process is a burden on the team, and an index someone actually uses are
   all necessary for the practice to survive past the initial enthusiasm.
+- When a postmortem uncovers one case of a missed alert, expand the
+  investigation to the entire related fleet before declaring the problem
+  closed — one finding is rarely the only instance.
+- When the same alert shape comes often enough to become a serious cost,
+  break down the entire population of calls before accepting the first
+  plausible explanation — an identical shape doesn't guarantee one shared
+  cause.
 
 ## 17.5 Exercise for the reader
 
