@@ -1960,6 +1960,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#trend-izmeren-na-kratkom-prozoru-se-moze-preokrenuti-sa-jos-malo-podataka" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trend izmeren na kratkom prozoru se može preokrenuti sa još malo podataka
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kad-merenje-samo-postane-deo-tereta-koji-meri" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad merenje samo postane deo tereta koji meri
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2369,6 +2391,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#trend-izmeren-na-kratkom-prozoru-se-moze-preokrenuti-sa-jos-malo-podataka" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trend izmeren na kratkom prozoru se može preokrenuti sa još malo podataka
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kad-merenje-samo-postane-deo-tereta-koji-meri" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad merenje samo postane deo tereta koji meri
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2573,6 +2617,44 @@ dobrovoljno, bez spoljnog pritiska, ocenjena je kao najvredniji nalaz u
 čitavoj reviziji — upravo zato što je dobrovoljna i nedavna.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch30-ciklus-revizije.png" data-desc-position="bottom"><img alt="Ciklus periodične revizije: pet prolaza, oznaka pouzdanosti po tvrdnji, sekcija povučenih nalaza na vrhu, i poređenje preporuka protiv stvarnog sistema za praćenje rada." src="../diagrams/ch30-ciklus-revizije.png" width="92%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-alert-streak.png" data-desc-position="bottom"><img alt="Alarm koji zvoni neprekidno oko deset nedelja — suprotan slučaj od &quot;alarm koji nikad ne zvoni&quot;: istaknut namerno na vrh liste nalaza, jer neprekidno zvonjenje bez odgovora govori o disciplini tima, ne o težini problema." src="../diagrams/dashboard-alert-streak.png" width="92%"></a></p>
+<h3 id="trend-izmeren-na-kratkom-prozoru-se-moze-preokrenuti-sa-jos-malo-podataka">Trend izmeren na kratkom prozoru se može preokrenuti sa još malo podataka</h3>
+<p>Jedna stavka iz prethodne revizije je bila označena kao nešto što treba
+pratiti, ne kao potvrđen problem: brzina promene memorije jednog servisa,
+izmerena nad sedmodnevnim prozorom, pokazivala je dosledan rast koji je
+ličio na curenje. Nova revizija, samo nekoliko dana kasnije, ponovila je
+isto merenje sa dodatna četiri dana podataka — i trend se <strong>preokrenuo</strong>.
+Ono što je izgledalo kao dosledan rast bilo je, sa širim prozorom, samo deo
+šireg oscilatornog obrasca; vrednost se u međuvremenu vratila skoro na
+polaznu tačku.</p>
+<p>Ovo je druga vrsta greške od one koju sekcija povučenih nalaza već imenuje.
+Povučeni nalazi iz prethodnog odeljka su bili pogrešni zbog pogrešnog
+imenioca ili tačkaste vrednosti citirane kao stabilne — ovde je sam
+<strong>pravac</strong> promene bio matematički tačan izračunat na dostupnim podacima, i
+ipak pogrešan kao zaključak, jer prozor merenja nije bio dovoljno širok da
+razlikuje pravi trend od šuma koji privremeno ide u istom pravcu. Revizija
+je ovo eksplicitno imenovala kao lekciju za sebe: kad je nalaz baziran na
+izvedenoj brzini promene (a ne na direktno izmerenoj vrednosti), pre nego
+što se proglasi trendom vredi eksplicitno pitati koliko dana podataka stoji
+iza njega, i da li bi taj isti izračun, ponovljen sa duplo širim prozorom,
+dao isti pravac.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch30-kratak-prozor.png" data-desc-position="bottom"><img alt="Isti izračun brzine promene, dva prozora merenja: sedam dana liči na dosledno curenje, četiri dana više podataka pokazuju da je to bio deo šireg oscilatornog obrasca." src="../diagrams/ch30-kratak-prozor.png" width="78%"></a></p>
+<h3 id="kad-merenje-samo-postane-deo-tereta-koji-meri">Kad merenje samo postane deo tereta koji meri</h3>
+<p>Revizija je otkrila trošak koji niko nije direktno povezao sa uzrokom, iako
+je bio potpuno vidljiv u računu: stavka koja je rasla iz meseca u mesec,
+nastala time što sopstvena pravila koja prate potrošnju sistema za
+telemetriju <strong>iznova skeniraju</strong> taj isti sistem da bi izmerila potrošnju.
+Sistem koji postoji da izmeri opterećenje sam postaje deo opterećenja koje
+meri — samo-uvedena petlja koju nijedna prethodna revizija nije prepoznala
+kao trošak, jer je izgledala kao normalan deo infrastrukture za merenje, ne
+kao stavka koja bi trebalo da bude na spisku troškova.</p>
+<p>Poenta koju revizija izvlači nije "ukloni merenje potrošnje" — merenje
+potrošnje je legitimna, potrebna kontrola. Poenta je da svaki mehanizam koji
+posmatra sistem treba tretirati kao <strong>potencijalnog</strong> potrošača resursa tog
+istog sistema, ne kao neutralnog posmatrača van njega, i periodično proveriti
+da li se to stvarno dogodilo. Bez te provere, ovakav trošak raste tiho, u
+istoj kategoriji troška koju je sam mehanizam zadužen da nadgleda —
+najteže mesto da neko primeti problem, jer je to tačno mesto koje bi
+trebalo da javi alarm na samog sebe.</p>
 <h2 id="303-analiticki-deo-zasto-merenje-zrelosti-mora-biti-ponovljiva-disciplina">30.3 Analitički deo — zašto merenje zrelosti mora biti ponovljiva disciplina</h2>
 <p>Google-ov SRE Book uvodi merenje monitoringa oko četiri zlatna signala
 (kašnjenje, saobraćaj, greške, zasićenje), ali ključna poenta tog
@@ -2652,6 +2734,13 @@ veštine i dalje tačna" — merenje sada, ne verovanje u zapis od ranije.</p>
   liste, ne u fusnotu.</li>
 <li>Proveri da li su preporuke iz prošlog puta zaista ušle u sistem koji
   obavezuje na akciju, ili samo žive u dokumentu koji niko ne prati.</li>
+<li>Pre nego što izvedenu brzinu promene proglasiš trendom, proveri koliko
+  dana podataka stoji iza nje — kratak prozor može pokazati dosledan
+  pravac koji je zapravo deo šireg oscilatornog obrasca, ne stvaran trend.</li>
+<li>Tretiraj svaki mehanizam koji posmatra sistem kao potencijalnog
+  potrošača resursa tog istog sistema, ne kao neutralnog posmatrača —
+  trošak koji merenje samo izaziva raste najteže primetno tačno u
+  kategoriji koju je zaduženo da nadgleda.</li>
 </ul>
 <h2 id="305-vezba-za-citaoca">30.5 Vežba za čitaoca</h2>
 <p>Uzmi poslednji interni izveštaj, reviziju ili audit koji je tvoj tim
@@ -2688,7 +2777,7 @@ Ako ne, da li bi to neko primetio da nisi upravo proverio?</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="26. avgust 2026. 16:32:41 UTC">26. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 11:58:47 UTC">31. avgust 2026.</span>
   </span>
 
     

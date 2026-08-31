@@ -1910,6 +1910,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#zasto-se-planiran-korak-namerno-preskace-ne-dodaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zašto se planiran korak namerno preskače, ne dodaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kad-se-jedna-greska-pretvori-u-sistematsku-pretragu-iste-klase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad se jedna greška pretvori u sistematsku pretragu iste klase
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2325,6 +2347,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#zasto-se-planiran-korak-namerno-preskace-ne-dodaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zašto se planiran korak namerno preskače, ne dodaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kad-se-jedna-greska-pretvori-u-sistematsku-pretragu-iste-klase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad se jedna greška pretvori u sistematsku pretragu iste klase
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2529,6 +2573,42 @@ uklanjanje fasade koja je godinama izgledala kao zaštita dok to odavno
 nije bila.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch29-vremenska-linija.png" data-desc-position="bottom"><img alt="Vremenska linija faznog rollout-a: numerisan plan, stvarnost koja otkriva propust koji alarm nije uhvatio, dva ubačena koraka, premešten redosled i zamenjen mehanizam alarmiranja, sa najkritičnijim delom flote namerno na kraju." src="../diagrams/ch29-vremenska-linija.png" width="95%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-alarm-audit.png" data-desc-position="bottom"><img alt="Revizija pre gašenja starog sistema alarmiranja: od 23 stara alarma, 16 nije primilo nijednu tačku podataka preko godinu dana — izgledali su &quot;zeleno&quot; samo zato što je odsustvo podataka bilo protumačeno kao normalno stanje." src="../diagrams/dashboard-alarm-audit.png" width="95%"></a></p>
+<h3 id="zasto-se-planiran-korak-namerno-preskace-ne-dodaje">Zašto se planiran korak namerno preskače, ne dodaje</h3>
+<p>Ne svaka promena plana je dodavanje koraka. Originalni plan je predviđao
+poseban mehanizam u samoj aplikaciji koji bi, pri gašenju procesa, ručno
+uhvatio i poslao poslednje podatke pre nego što proces stvarno umre. Kad je
+došlo vreme za taj korak, implementacija ga je svesno <strong>preskočila</strong> — ne
+zaboravila, nego eksplicitno odlučila da ga ne radi, sa zapisanim razlogom:
+bočni kolektor iz drugog sloja plana već rešava isti problem čistije, jer
+zadržava raspone dok proces izlazi i garantovan mu je fiksan vremenski
+prozor pre prisilnog gašenja. Ručni mehanizam u aplikaciji bi pokrivao samo
+uzak podskup situacija koje bočni kolektor već pokriva u celini.</p>
+<p>Ono što ovu odluku čini disciplinom, ne lenjošću, jeste da je zapisan
+tačan uslov pod kojim bi se preskočeni korak ipak morao vratiti na plan:
+ako pilot bočnog kolektora otkrije da se poslednji podaci ipak gube u
+merljivoj količini, korak se vraća. Procenjen najgori slučaj gubitka bez
+tog koraka je bio mali i imenovan brojkom, ne "trebalo bi da bude
+zanemarljivo". Preskakanje koraka bez ovog uslova bi bilo nadanje;
+preskakanje sa njim je proverljiva opklada koja se automatski poništava
+čim dokaz kaže suprotno.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch29-preskocen-korak.png" data-desc-position="bottom"><img alt="Preskočen korak sa zapisanim uslovom za povratak: procenjen najgori slučaj je imenovan brojkom, a plan se automatski vraća na korak čim pilot pokaže merljiv gubitak." src="../diagrams/ch29-preskocen-korak.png" width="80%"></a></p>
+<h3 id="kad-se-jedna-greska-pretvori-u-sistematsku-pretragu-iste-klase">Kad se jedna greška pretvori u sistematsku pretragu iste klase</h3>
+<p>Tokom popravke jednog specifičnog kvara u jednoj porodici zadataka —
+neusklađenost formata pri upisu redova koja je uzrokovala tihe otkaze —
+implementacija je otišla korak dalje od uobičajenog "popravi i nastavi".
+Umesto da se popravka ograniči na mesto gde je greška prvi put uočena,
+neko je proverio da li se <strong>isti oblik greške</strong> pojavljuje bilo gde
+drugde u deljenoj biblioteci koju koristi cela flota. Pretraga je pronašla
+istu grešku na deset dodatnih mesta poziva, u potpuno različitim delovima
+koda, koje niko nije prijavio jer se do sad nisu manifestovale na isti
+vidljiv način.</p>
+<p>Ovaj nalaz je ubačen u plan kao preduslov, ne kao naknadna napomena:
+nijedan od tih deset mesta ne sme ući u produkcionu instrumentaciju niti se
+osloniti pod opterećenjem dok se popravka ne primeni na sve njih. Razlika u
+odnosu na standardni tok "prijavi grešku, popravi, zatvori" je namerna: kad
+je jedan konkretan slučaj samo simptom šireg obrasca u deljenom kodu,
+tretiranje tog jednog slučaja kao izolovanog ostavlja preostalih deset da
+čekaju sopstveni incident da bi bili otkriveni.</p>
 <h2 id="293-analiticki-deo-kad-je-odstupanje-od-plana-znak-zrelosti-ne-slabosti">29.3 Analitički deo — kad je odstupanje od plana znak zrelosti, ne slabosti</h2>
 <p>Industrijska praksa oko faznih rollout-a je, na sreću, dobro razrađena, i
 gotovo svaka preporuka potvrđuje intuiciju izvođača koji renovira kuću:
@@ -2606,6 +2686,13 @@ gledao šta je iza zida.</p>
   ceo mehanizam — ne samo prag.</li>
 <li>Pre gašenja starog sistema, revidiraj ga — koliko od "aktivne" zaštite
   je zapravo tiha fasada koja godinama nije primila nijedan podatak.</li>
+<li>Kad preskačeš planiran korak jer ga drugi deo plana već pokriva, zapiši
+  tačan uslov pod kojim bi se korak morao vratiti — preskakanje bez tog
+  uslova je nadanje, preskakanje sa njim je proverljiva opklada.</li>
+<li>Kad popravljaš konkretan kvar u deljenom kodu, proveri da li se ista
+  klasa greške pojavljuje na drugim mestima poziva pre nego što ijedno od
+  njih uđe u produkciju pod opterećenjem — jedan prijavljen slučaj je često
+  samo prvi vidljivi simptom šireg obrasca.</li>
 </ul>
 <h2 id="295-vezba-za-citaoca">29.5 Vežba za čitaoca</h2>
 <p>Pronađi u istoriji sopstvenog tima jedan slučaj gde je plan promenjen
@@ -2643,7 +2730,7 @@ sopstvenog sećanja?</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 11:57:00 UTC">31. avgust 2026.</span>
   </span>
 
     
