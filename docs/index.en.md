@@ -1,8 +1,25 @@
+---
+hide:
+  - navigation
+  - toc
+---
+
+<!-- Homepage hero: a raw HTML section with the H1 nested inside it,
+     for the full-bleed background image treatment. -->
+<!-- markdownlint-disable MD033 MD041 -->
+
+<div class="hero" markdown="1">
+<div class="hero-content" markdown="1">
+
 # Observability in Practice
 
-![Observability in Practice](diagrams/cover-emblem.png){: width="220" }
+OpenTelemetry and the Grafana LGTM stack
+{: .hero-tagline }
 
-## OpenTelemetry and the Grafana LGTM stack
+</div>
+</div>
+
+<!-- markdownlint-enable MD033 MD041 -->
 
 A book structured around the real, multi-month evolution of a production
 observability system implemented company-wide — a portfolio spanning dozens
