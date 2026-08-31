@@ -1715,6 +1715,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#automatizovana-akcija-iz-chat-a-token-dozvoljava-kanal-ogranicava" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatizovana akcija iz chat-a: token dozvoljava, kanal ograničava
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#least-privilege-za-servise-nije-isto-sto-i-least-privilege-za-ljude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least-privilege za servise nije isto što i least-privilege za ljude
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2342,6 +2364,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#automatizovana-akcija-iz-chat-a-token-dozvoljava-kanal-ogranicava" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatizovana akcija iz chat-a: token dozvoljava, kanal ograničava
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#least-privilege-za-servise-nije-isto-sto-i-least-privilege-za-ljude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least-privilege za servise nije isto što i least-privilege za ljude
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2553,6 +2597,55 @@ minimizuju ili pseudonimizuju, a stvarna telemetrija i dalje nosi sirov
 identitet, to je razlika koju revizor otkriva i beleži kao izuzetak — bez
 obzira na to da li je ta oblast uopšte formalno u obimu revizije.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch26-dvosmeran-odnos.png" data-desc-position="bottom"><img alt="Kontrola posmatranja kao dvosmeran odnos: sistem alarmiranja je dokaz nadzora, ali telemetrija koju taj sistem nosi je istovremeno i poverljiv podatak koji sam treba zaštitu." src="../diagrams/ch26-dvosmeran-odnos.png" width="85%"></a></p>
+<h3 id="automatizovana-akcija-iz-chat-a-token-dozvoljava-kanal-ogranicava">Automatizovana akcija iz chat-a: token dozvoljava, kanal ograničava</h3>
+<p>Jedna kontrola u tabeli zaslužuje poseban osvrt jer pokazuje koliko duboko
+mora ići analiza kad automatizacija dobije mogućnost da menja stanje sistema,
+ne samo da ga posmatra. Alarm u kanalu za otkaze zadataka nosi dugme koje
+pokreće <strong>produkcioni</strong> zadatak iznova — pravo pisanje u infrastrukturu,
+pokrenuto direktno iz chat poruke. Mehanizam otkriva dva odvojena sloja
+ovlašćenja, i implementacija je eksplicitno imenovala oba, umesto da tretira
+"dugme radi" kao dovoljnu proveru.</p>
+<p>Prvi sloj je tehnički neizbežan kompromis: okidač je <strong>javni</strong> URL bez
+potpisivanja zahteva na strani platforme za razmenu poruka, jer ta platforma
+nema mehanizam da potpiše zahtev standardnim protokolom za pristup oblaku.
+Umesto toga, autentičnost dolazi od <strong>sopstvenog</strong> HMAC potpisa platforme za
+razmenu poruka na svakom zahtevu, sa vremenskim prozorom od nekoliko minuta
+koji sprečava da neko snimljenu poruku pošalje ponovo kasnije — i mehanizam
+namerno <strong>odbija</strong> zahtev ako tajni ključ za proveru potpisa nije podešen,
+umesto da propusti zahtev bez provere. Drugi sloj je suptilniji: platforma za
+razmenu poruka nema mehanizam za odobrenje na nivou pojedinačnog dugmeta — pa
+je <strong>privatnost samog kanala</strong> jedina stvarna kontrola pristupa. Ko god je
+član tog kanala može da pritisne dugme; ko nije, ne vidi ga uopšte. Formalna
+lista ovlašćenja u sistemu za upravljanje identitetom je najuža moguća (samo
+jedna izvršna funkcija sme da pokrene zadatak, sa ulogom ograničenom na tačno
+tri uloge kojima sme da je dodeli) — ali ta lista ništa ne znači ako
+članstvo u kanalu nije isto tako strogo kontrolisano i redovno pregledano.</p>
+<p>Ovo je tačno vrsta uvida koji iskrena interna tabela treba da uhvati: kontrola
+"ko sme da pokrene produkcionu akciju" ovde zapravo <strong>nije jedna</strong> kontrola
+nego dve — tehnička (potpis, uloga, opseg dozvola) i organizaciona (ko je
+član kanala) — i samo prva od te dve je proverljiva kroz kod i infrastrukturu.
+Druga zavisi od discipline oko članstva u chat kanalu, što je lakše
+zaboraviti da se redovno proveri.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch26-lanac-ovlascenja.png" data-desc-position="bottom"><img alt="Dva odvojena sloja ovlašćenja za akciju pokrenutu iz chat-a: tehnički sloj (potpis, uloga, opseg dozvola) je proverljiv kroz kod, dok je organizacioni sloj (članstvo u kanalu) jedina stvarna kontrola pristupa dugmetu." src="../diagrams/ch26-lanac-ovlascenja.png" width="82%"></a></p>
+<h3 id="least-privilege-za-servise-nije-isto-sto-i-least-privilege-za-ljude">Least-privilege za servise nije isto što i least-privilege za ljude</h3>
+<p>Ista tabela pokazuje obrazac koji se ponavlja kroz više redova: mašinska
+strana pristupa je često strogo, proverljivo ograničena, dok je ljudska
+strana istog sistema potpuno nedokumentovana. Pristupni tokeni servisa koji
+šalju telemetriju žive u trezoru za tajne, dodeljeni sa najužim mogućim
+opsegom po nameni — ovo je stanje koje se može proveriti čitanjem
+konfiguracije, i implementacija ga otvoreno beleži kao <strong>na mestu</strong>. Ali ko
+tačno ima interaktivan pristup samoj konzoli platforme za telemetriju, i sa
+kojom ulogom, nije nigde formalno popisano — ovo ostaje <strong>delimično</strong>, ne
+zato što je pristup nužno prevelik nego zato što niko ne može da dokaže
+suprotno bez popisa.</p>
+<p>Poenta koju implementacija imenuje: "kontrola pristupa" kao jedna stavka na
+listi kontrola je pogrešno zrnasta jedinica merenja. Ona pokriva najmanje dva
+nezavisna pitanja — da li su mašine ograničene na ono što im treba, i da li
+su ljudi ograničeni na ono što im treba — i organizacija može imati potpuno
+tačan odgovor na jedno pitanje dok nema nikakav odgovor na drugo. Tabela koja
+beleži samo jednu, zbirnu ocenu za "pristup" bi sakrila tačno tu razliku;
+tabela koja razdvaja mašinski i ljudski red čini prazninu vidljivom umesto da
+je zamagli iza dela koji je već u redu.</p>
 <h2 id="263-analiticki-deo-usaglasenost-kao-samo-doslednost-ne-spoljni-katalog">26.3 Analitički deo — usaglašenost kao samo-doslednost, ne spoljni katalog</h2>
 <h3 id="zvanicna-struktura-kriterijuma-potvruje-dvoslojnu-podelu">Zvanična struktura kriterijuma potvrđuje dvoslojnu podelu</h3>
 <p>Zvanična struktura kriterijuma poverenja definiše jednu obaveznu kategoriju
@@ -2630,6 +2723,14 @@ govore istu priču.</p>
 <li>Uskladi retenciju i praksu brisanja sa onim što stvarno <strong>pišeš</strong> da
   radiš, ne sa onim što bi u idealnom svetu trebalo da radiš — praznina
   postaje nalaz samo kad tvrdnja i stvarnost krenu različitim putem.</li>
+<li>Kad automatizacija iz chat-a sme da menja stanje produkcije, imenuj oba
+  sloja ovlašćenja odvojeno — tehnički (potpis, uloga, opseg dozvola) i
+  organizacioni (ko je član kanala koji vidi dugme) — jer prvi je proverljiv
+  kroz kod, a drugi zavisi od discipline koja se lako zaboravi.</li>
+<li>Ne beleži "kontrolu pristupa" kao jednu zbirnu stavku — razdvoji mašinsku
+  stranu (tokeni, opseg dozvola) od ljudske strane (ko ima interaktivan
+  pristup, sa kojom ulogom) — organizacija često ima tačan odgovor na jedno
+  pitanje dok nema nikakav na drugo, i zbirna ocena tu razliku sakriva.</li>
 </ul>
 <h2 id="265-vezba-za-citaoca">26.5 Vežba za čitaoca</h2>
 <p>Pronađi jednu javnu tvrdnju tvog tima ili organizacije o tome kako se
@@ -2668,7 +2769,7 @@ to je razlika koju vredi zatvoriti pre nego što je neko drugi otkrije.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 11:39:18 UTC">31. avgust 2026.</span>
   </span>
 
     

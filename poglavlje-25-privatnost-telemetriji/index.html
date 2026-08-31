@@ -1698,6 +1698,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#tip-parametra-kao-dokaz-ne-samo-pravilo-po-nazivu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tip parametra kao dokaz, ne samo pravilo po nazivu
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zasto-se-pseudonimizacioni-kljuc-namerno-nikad-ne-rotira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zašto se pseudonimizacioni ključ namerno nikad ne rotira
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2364,6 +2386,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#tip-parametra-kao-dokaz-ne-samo-pravilo-po-nazivu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tip parametra kao dokaz, ne samo pravilo po nazivu
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zasto-se-pseudonimizacioni-kljuc-namerno-nikad-ne-rotira" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zašto se pseudonimizacioni ključ namerno nikad ne rotira
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2585,6 +2629,48 @@ kojim je upit izvršen</strong> (koji se namerno i dalje beleže, jer identifiku
 pseudonimizacija preterano primeni tamo gde nije ni potrebna ni korisna.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch25-linkage.png" data-desc-position="bottom"><img alt="Isti trejs spaja pseudonimni identifikator sa strane pregledača i pravi identitet sa strane backend-a — pseudonimnost drži samo dok se dva dela istog trejsa ne povežu." src="../diagrams/ch25-linkage.png" width="90%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-pseudonymization.png" data-desc-position="bottom"><img alt="Ista sesija u panelu za otklanjanje grešaka, pre i posle: kad oba kraja pišu isti oblik ključem-zaštićenog pseudonima, spajanje po trejsu i dalje radi za dijagnostiku, ali više ne otkriva pravo ime i email." src="../diagrams/dashboard-pseudonymization.png" width="95%"></a></p>
+<h3 id="tip-parametra-kao-dokaz-ne-samo-pravilo-po-nazivu">Tip parametra kao dokaz, ne samo pravilo po nazivu</h3>
+<p>Razlika između "identifikatora osobe" (nikad beleženih) i "identifikatora
+resursa" (legitimno beleženih) iz prethodnog odeljka zvuči kao pravilo koje
+neko mora da pamti i primenjuje disciplinovano na svako novo polje. Implementacija
+je otišla korak dalje: umesto da se osloni samo na disciplinu imenovanja,
+proverila je da li sama <strong>tipizacija</strong> parametra strukturno sprečava curenje.
+Parametri koji identifikuju resurs (identifikator imovine, identifikator
+lokacije) su u backend kontroleru deklarisani kao strogo tipizovani vrednosti
+(UUID, decimalni broj) — što znači da okvir za obradu zahteva <strong>odbija</strong> svaki
+poziv gde bi neko pokušao da u to polje ubaci slobodan tekst, email ili token.
+Pravilo "ovo polje je bezbedno za beleženje" ovde nije samo dogovor u glavama
+tima — ono je <strong>strukturno neizvodljivo drugačije</strong>, jer pogrešan oblik
+vrednosti nikad ne stigne dalje od validacije zahteva.</p>
+<p>Ova provera je otkrila i granicu sopstvenog pravila: dva susedna parametra u
+istom skupu upita su obična tekstualna polja, ne tipizovane vrednosti, i
+njihov sadržaj je potpuno u rukama onoga ko šalje zahtev — nema tipske
+garancije da neće sadržati nešto osetljivo. Implementacija ih <strong>i dalje</strong>
+beleži (nisu proglašeni identifikatorima osobe), ali sa dodatnom merom koju
+tipizovani parametri ne trebaju: enkodiranje specijalnih karaktera pre upisa u
+log, tako da sadržaj slobodnog teksta ne može da ubaci separator ili novi red
+i naruši strukturu samog log zapisa. Dve različite garancije za dve različite
+kategorije parametara — jedna strukturna (tip), jedna operativna (enkodiranje)
+— primenjene tačno tamo gde svaka ima smisla.</p>
+<h3 id="zasto-se-pseudonimizacioni-kljuc-namerno-nikad-ne-rotira">Zašto se pseudonimizacioni ključ namerno nikad ne rotira</h3>
+<p>Uobičajena bezbednosna higijena nalaže periodičnu rotaciju tajnih ključeva —
+pravilo koje važi za lozinke, API tokene, enkripcione ključeve. Za ključ koji
+pokreće heš funkciju za pseudonime, implementacija je svesno odlučila
+<strong>suprotno</strong>: ključ ostaje stabilan, bez planirane rotacije. Razlog nije
+nemar nego eksplicitna analiza kompromisa. Rotacija ključa menja <strong>svaki</strong>
+pseudonim odjednom — svaki korisnik dobija novi pseudonim istog trenutka, što
+kida longitudinalnu analizu (dashboard koji prati istog korisnika kroz vreme
+odjednom vidi "novog" korisnika) i zahteva usklađivanje interne mapione
+tabele koja pseudonime vezuje za email. Nasuprot tome, dobit od rotacije je
+ovde neobično mala: ključ ne štiti sam sadržaj (email ostaje čitljiv u
+mapionoj tabeli bez obzira na ključ) — štiti samo <strong>vezu</strong> između pseudonima
+i emaila za svakog ko vidi pseudonim bez pristupa toj tabeli. Ako je mapiona
+tabela već kompromitovana, rotacija ključa ništa ne popravlja; ako nije,
+stabilan ključ ne otvara novi rizik koji rotacija zatvara. Bezbednosna
+higijena koja ima smisla za lozinku ovde bi samo unela operativnu štetu bez
+odgovarajuće bezbednosne dobiti — implementacija je to prepoznala umesto da
+mehanički primeni opšte pravilo na situaciju gde ono ne važi.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch25-rotacija-kljuca.png" data-desc-position="bottom"><img alt="Zašto rotacija pseudonimizacionog ključa ovde ne bi bila bezbednosna dobit, samo operativna šteta: ključ štiti vezu pseudonim↔email, ne sam sadržaj, i stabilan ključ ne otvara novi rizik koji bi rotacija zatvorila." src="../diagrams/ch25-rotacija-kljuca.png" width="80%"></a></p>
 <h2 id="253-analiticki-deo-poznat-obrazac-curenja-sa-preciznim-imenom">25.3 Analitički deo — poznat obrazac curenja, sa preciznim imenom</h2>
 <h3 id="pseudonimizacija-ostaje-licni-podatak-i-to-menja-obavezu">Pseudonimizacija ostaje lični podatak — i to menja obavezu</h3>
 <p>Zvanična smernica o pseudonimizaciji je nedvosmislena: pseudonimizovan
@@ -2665,6 +2751,14 @@ sastati.</p>
   za metrike i logove nije arhitektonski projektovana za brisanje po
   pojedinačnom subjektu — čekanje da zahtev stvarno stigne je prekasno da
   se prvi put smišlja rešenje.</li>
+<li>Kad god je moguće, oslanjaj se na tip parametra da strukturno sprečiš
+  curenje, ne samo na dogovor o imenovanju — a za polja koja moraju ostati
+  slobodan tekst, dodaj operativnu meru (enkodiranje) koju tipizovana polja
+  ne trebaju.</li>
+<li>Pre nego što primeniš opšte bezbednosno pravilo (poput periodične rotacije
+  ključa) na novu situaciju, proveri da li dobit tog pravila stvarno važi
+  ovde — rotacija koja kida longitudinalnu analizu bez odgovarajuće
+  bezbednosne dobiti je šteta obučena kao higijena.</li>
 </ul>
 <h2 id="255-vezba-za-citaoca">25.5 Vežba za čitaoca</h2>
 <p>Pronađi jedan identifikator u tvom sistemu koji je pseudonimizovan na
@@ -2703,7 +2797,7 @@ kao u ovom poglavlju.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 11:37:17 UTC">31. avgust 2026.</span>
   </span>
 
     
