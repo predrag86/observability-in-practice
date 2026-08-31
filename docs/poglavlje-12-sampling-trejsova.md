@@ -125,6 +125,52 @@ mehanizam, ne pošto je neko promenio konfiguraciju:
 
 ![Stopa zadržavanja trejsova, očekivano naspram izmerenog: desetodnevni period neslaganja je prijavljen dobavljaču i konfiguracija namerno nije menjana dok mehanizam nije razjašnjen.](diagrams/dashboard-sampling.png){: width="95%" }
 
+### Trošak zavisi od nelinearnog praga, ne linearno od procenta
+
+Vredi razdvojiti dva pitanja koja se lako mešaju kad se bira bazna
+probabilistička stopa (trenutno 10%, ranije 25%, pomenuto u § 12.2): koliko
+sampling-a je dovoljno za dijagnostičku vrednost, i koliko sampling-a je
+dovoljno da promeni račun. Odgovor na drugo pitanje nije linearan sa
+procentom, i to menja koja je odluka zapravo jeftina.
+
+Platforma naplaćuje zadržane trejsove kroz tri odvojene komponente (obrada,
+upis, zadržavanje), svaku sa sopstvenom uključenom kvotom po mesecu. Dok god
+zadržana zapremina posle sampling-a ostaje **ispod** te kvote, komponente
+upisa i zadržavanja padaju na nulu — ne zato što je sampling agresivniji,
+nego zato što sve što se zadrži jednostavno stane u već uključeni prostor.
+Iznad tog praga, svaki dodatni procenat zadržavanja direktno diže račun.
+Ovo znači da postoji tačka, izmeriva za konkretnu zapreminu saobraćaja,
+ispod koje spuštanje bazne stope za još par procenata ne štedi skoro ništa
+(već je ispod praga), a iznad koje isti potez štedi neproporcionalno mnogo
+(upravo prelazi prag).
+
+Jedna komponenta cene je, međutim, potpuno nezavisna od procenta koji se
+bira: obrada se naplaćuje na sirov ulaz, **pre** bilo kakve odluke o
+zadržavanju, i raste sa obimom flote bez obzira koliko agresivan sampling
+bude. Sampling štiti dve od tri komponente cene, ne sve tri — vredi to
+znati unapred, umesto da se otkrije kad račun i dalje raste posle
+agresivnog spuštanja bazne stope.
+
+![Trošak zadržavanja i upisa pada na nulu ispod jednog izmerivog praga zapremine, dok trošak obrade ostaje nezavisan od procenta sampling-a jer se naplaćuje na sirov ulaz, pre odluke o zadržavanju.](diagrams/ch12-prag-troska.png){: width="78%" }
+
+### Dva brojača, dve različite tačke u istoj cevi
+
+Zamka merenja iz § 12.2 (spanmetrics potcenjuje stvaran obim, i ne može da
+izmeri uštedu koju downsampling donosi) ima blizak rođak, na drugom paru
+brojača. Platforma izlaže dva merenja obima podataka koja izgledaju kao ista
+brojka izmerena dva puta — a mere dve različite tačke u toku: jedno meri
+zapreminu **pre** nego što je odluka o zadržavanju doneta, drugo meri ono
+što je iz te odluke stvarno preživelo i otišlo dalje ka skladištu.
+
+Deljenje jednog brojkom drugog daje besmislen rezultat čim se pomeša
+smer — brojka veća od 100% "pokrivenosti" na prvi pogled izgleda kao greška
+u merenju, a zapravo je artefakt deljenja dva broja koja mere različite
+tačke u pipeline-u, ne isti trenutak dva puta. Pravilo koje sprečava ovu
+zabunu je jednostavno, ali nije očigledno dok se ne naiđe na nju uživo: par
+"pre sampling-a" koristi se isključivo za računanje stope odbacivanja, a par
+"posle sampling-a" isključivo za naplativu zapreminu — ta dva se nikad ne
+dele jedno drugim, čak i kad im imena zvuče zamenljivo.
+
 ## 12.3 Analitički deo — zašto server-side umesto collector-side
 
 ### Zvanična razlika: gde se donosi odluka i šta to znači za tačnost
@@ -199,6 +245,14 @@ posle punog uvida je odluka.**
 - Odbačen trejs nije trajno nedostupan odmah, ali prozor je kratak (tipično
   merljiv u satima, ne danima) — ne oslanjaj se na mogućnost da ćeš mu se
   vratiti kasnije ako ga odmah ne pogledaš.
+- Pre nego što spustiš baznu stopu sampling-a da bi uštedeo, izmeri gde je
+  nelinearan prag zapremine za tvoj obim saobraćaja — ispod praga uštede su
+  male, iznad njega neproporcionalno velike, i jedna komponenta cene
+  (obrada sirovog ulaza) ne pada ni u jednom slučaju.
+- Kad platforma izlaže par brojača "pre" i "posle" iste tačke u pipeline-u,
+  nikad ih ne deli jedan drugim da bi se dobila "procenat pokrivenosti" —
+  svaki brojač u paru ima tačno jednu namenu (stopa odbacivanja, ili
+  naplativa zapremina), ne obe.
 
 ## 12.5 Vežba za čitaoca
 

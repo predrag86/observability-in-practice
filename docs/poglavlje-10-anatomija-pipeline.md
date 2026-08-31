@@ -81,6 +81,54 @@ koje su čekale u istom paketu. Posle ovog incidenta, eksplicitna gornja
 granica veličine po poruci je dodata u `filter` stanicu — predaleko niz
 lanac je bilo prekasno.
 
+### Zaštita koja ne pokriva svaki ulaz u cev
+
+Vredi zumirati na jednu naizgled sitnu, ali važnu nijansu prve stanice iz
+prethodnog pregleda: `memory_limiter` je namerno prva stanica upravo zato
+da bi backpressure stigao pre nego što bilo šta nizvodno potroši memoriju
+na podatak koji će ionako biti odbačen — ali "prva stanica u lancu" ne znači
+i "jedini put kojim podatak ulazi u proces". Dva izvora podataka (izvoznik
+metrika ka platformi za praćenje troška, i samo-merenje gateway-a o
+sopstvenom radu) ulaze u pipeline direktno na `batch` stanici, ne na ulazu
+gde sedi `memory_limiter` — što znači da njihov doprinos potrošnji memorije
+uopšte nije pod zaštitom prve stanice, bez obzira što je ta stanica prva za
+sav ostali saobraćaj.
+
+Posledica je konkretan, merljiv dijagnostički obrazac: kad gateway padne sa
+greškom "nema više memorije", prva provera nije da li je `memory_limiter`
+zakazao, nego da li je brojač odbijenih zapisa uopšte porastao pre pada.
+Ako **jeste** rastao, limiter je radio tačno svoj posao — samo nije mogao da
+prati tempo, i pravo rešenje je nizvodno (ili više memorije). Ako brojač
+odbijanja ostane na nuli sve do pada, to je znak da je nešto potrošilo
+memoriju **mimo** limiterovog knjigovodstva — sumnjiv je poslednji dodat
+deo konfiguracije, ne sama stanica čiji je posao da spreči baš ovaj ishod.
+Razlika između ta dva slučaja se ne vidi ni na jednom dashboard-u dok se
+neko eksplicitno ne seti da uporedi ta dva broja.
+
+![memory_limiter je prva stanica u lancu za sav uobičajen saobraćaj, ali dva izvora podataka ulaze direktno na batch stanicu, mimo njegove zaštite — otud dva različita dijagnostička obrasca za isti pad.](diagrams/ch10-limiter-zaobilazak.png){: width="78%" }
+
+### Cev koja "radi" a ipak tiho izgubi jedan signal
+
+Redosled stanica nije jedini način na koji pipeline može da otkaže tiho.
+Svaka stanica mora eksplicitno da prosledi **sva tri tipa signala**
+(metrike, logove, tragove) na ulaz sledeće stanice — a propuštanje jednog
+tipa ne ruši proces, ne baca grešku, i alarm za pad zadatka nikad neće
+opaliti za to, jer proces ostaje živ i zdrav po svakoj metrici koju taj
+alarm prati. Deploy koji "uspe" po svakoj standardnoj proveri može tiho
+izgubiti baš logove, dok metrike i tragovi nastavljaju normalno.
+
+U implementaciji koju knjiga prati postoji svega nekoliko namernih izuzetaka
+od pravila "sve tri niti signala idu dalje" — jedna stanica koja namerno
+cilja samo metrike (agregacija visoko-kardinalnih HTTP atributa iz
+Poglavlja 11), i dve koje namerno ciljaju samo tragove (redakcija i
+normalizacija iz § 10.2 gore). Ta lista izuzetaka je eksplicitno zapisana i
+kratka baš zato da bi svaki NOVI izuzetak upadao u oči kao odstupanje koje
+treba objasniti, ne kao još jedna stavka na već dugačkoj, nejasnoj listi.
+Praktična posledica za svakog ko dodaje novu stanicu u lanac: proveri da li
+si zaboravio da povežeš jedan od tri izlaza na ulaz sledeće stanice pre
+deploy-a, jer posle deploy-a jedini način da se to otkrije jeste da neko
+eksplicitno primeti da nedostaje baš onaj tip podatka koji mu je trebao.
+
 ## 10.3 Analitički deo — zašto redosled nije stilska odluka
 
 ### Zvanična preporuka o redosledu procesora
@@ -155,6 +203,14 @@ stanici koja je pomerena, nego na svakoj stanici posle nje.
   — jedan preveliki zapis ne sme moći da povuče hiljadu ispravnih sa sobom.
 - Ne izmišljaj priču o odstupanju od standarda tamo gde standard već rešava
   problem dobro — prepoznaj kad je "sledi recept" ispravan odgovor.
+- Kad gateway padne sa greškom "nema više memorije", prvo proveri da li je
+  brojač odbijenih zapisa rastao pre pada — ako nije, sumnjaj na deo
+  konfiguracije koji ulazi u pipeline mimo prve stanice, ne na samu tu
+  stanicu.
+- Kad dodaješ novu stanicu u pipeline, eksplicitno proveri da li si povezao
+  sva tri tipa signala (metrike, logove, tragove) na ulaz sledeće stanice —
+  nedostajuća veza ne ruši proces i nijedan alarm za pad zadatka je neće
+  uhvatiti.
 
 ## 10.5 Vežba za čitaoca
 
