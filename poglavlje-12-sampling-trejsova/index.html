@@ -2522,9 +2522,12 @@ stope:</p>
 <li><strong>Spori trejsovi</strong> — latencija iznad definisanog praga se zadržava, jer
   performansni problemi retko ostave trag ijednim drugim putem osim kroz sam
   trejs.</li>
-<li><strong>Anomalije</strong> — platforma koristi model zasnovan na mašinskom učenju da
-  prepozna trejsove koji strukturno odstupaju od uobičajenog obrasca za taj
-  servis, čak i kad nemaju eksplicitnu grešku ili visoku latenciju.</li>
+<li><strong>Raznovrsnost obrazaca</strong> — bar jedan trejs po jedinstvenom otisku
+  (kombinacija servisa, rute i ishoda) unutar prozora se zadržava, bez obzira
+  na baznu stopu — tako da nagli talas gotovo identičnih zahteva (recimo,
+  ista greška koja se ponovi hiljadu puta u par minuta) ostavi bar jednog
+  predstavnika, umesto da probabilistička stopa nasumično zadrži šaku kopija
+  istog obrasca ili nijednu.</li>
 </ul>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch12-sampling-policy.png" data-desc-position="bottom"><img alt="Odluka o zadržavanju trejsa: drop politike su apsolutan veto i evaluiraju se prve; keep politike rade po OR logici sa efektivno nasumičnim redosledom; tek ako nijedna ne odluči, na red dolazi bazna probabilistička stopa." src="../diagrams/ch12-sampling-policy.png" width="88%"></a></p>
 <h3 id="kako-se-pravila-zapravo-evaluiraju-i-zasto-je-ovo-iznenaenje">Kako se pravila zapravo evaluiraju — i zašto je ovo iznenađenje</h3>
@@ -2642,12 +2645,12 @@ zahteva manje resursa na strani kolektora, ali strukturno ne može da
 garantuje "zadrži svaki trejs sa greškom" — u trenutku kad se odluka donosi,
 greška možda još nije ni nastala.</p>
 <p>Adaptivni sampling koji koristi platforma u implementaciji koju knjiga prati
-je oblik <abbr title="Odluka o zadržavanju raspona donosi se nakon što se ceo raspon završi.">tail sampling</abbr>-a, sa dodatom adaptivnom komponentom (ML-zasnovano
-prepoznavanje anomalija, dinamičko podešavanje baznog procenta). Ovo je,
-zvanično, tačno ona kategorija problema za koju <abbr title="Odluka o zadržavanju raspona donosi se nakon što se ceo raspon završi.">tail sampling</abbr> postoji: sistem
-gde su retki, ali kritični trejsovi (greške, anomalije) tačno oni koje head
-sampling najlakše promaši, jer njihova "vrednost" nije poznata u trenutku
-kad head sampling mora da odluči.</p>
+je oblik <abbr title="Odluka o zadržavanju raspona donosi se nakon što se ceo raspon završi.">tail sampling</abbr>-a, sa dodatom adaptivnom komponentom (pravilo za
+raznovrsnost obrazaca iz § 12.2, dinamičko podešavanje baznog procenta). Ovo
+je, zvanično, tačno ona kategorija problema za koju <abbr title="Odluka o zadržavanju raspona donosi se nakon što se ceo raspon završi.">tail sampling</abbr> postoji:
+sistem gde su retki, ali kritični trejsovi (greške, retki obrasci) tačno oni
+koje head sampling najlakše promaši, jer njihova "vrednost" nije poznata u
+trenutku kad head sampling mora da odluči.</p>
 <h3 id="zasto-ne-na-nivou-gateway-a-cena-koju-bi-self-managed-tail-sampling-nosio">Zašto ne na nivou gateway-a — cena koju bi self-managed <abbr title="Odluka o zadržavanju raspona donosi se nakon što se ceo raspon završi.">tail sampling</abbr> nosio</h3>
 <p>Implementacija je razmatrala i eksplicitno odbacila alternativu:
 samostalno-upravljan <abbr title="Odluka o zadržavanju raspona donosi se nakon što se ceo raspon završi.">tail sampling</abbr> procesor na samom gateway-u, umesto
@@ -2681,7 +2684,7 @@ posle punog uvida je odluka.</strong></p>
 <h2 id="124-skupljena-pravila-iz-ovog-poglavlja">12.4 Skupljena pravila iz ovog poglavlja</h2>
 <ul>
 <li>Kad god je moguće, donesi sampling odluku posle punog sakupljanja trejsa
-  (<abbr title="Odluka o zadržavanju raspona donosi se nakon što se ceo raspon završi.">tail sampling</abbr>), ne pre — greške i anomalije su retko poznate u trenutku
+  (<abbr title="Odluka o zadržavanju raspona donosi se nakon što se ceo raspon završi.">tail sampling</abbr>), ne pre — greške i retki obrasci su retko poznati u trenutku
   kad head sampling mora da odluči.</li>
 <li>Zapamti da su politike odbacivanja apsolutan veto, a politike zadržavanja
   rade po OR logici sa efektivno nasumičnim redosledom evaluacije — ne
@@ -2740,7 +2743,7 @@ postojala?</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 12:50:53 UTC">31. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 13:01:52 UTC">31. avgust 2026.</span>
   </span>
 
     
