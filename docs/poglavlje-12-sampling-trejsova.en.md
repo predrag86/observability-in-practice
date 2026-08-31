@@ -139,6 +139,56 @@ vendor explained the mechanism, not after anyone changed the configuration:
 
 ![Trace retention rate, expected versus measured: a ten-day mismatch period was reported to the vendor, and the configuration was deliberately left unchanged until the mechanism was clarified.](diagrams/dashboard-sampling.png){: width="95%" }
 
+### Cost depends on a nonlinear threshold, not linearly on percentage
+
+It's worth separating two questions that are easy to conflate when
+choosing the base probabilistic rate (currently 10%, previously 25%,
+mentioned in § 12.2): how much sampling is enough for diagnostic value, and
+how much sampling is enough to change the bill. The answer to the second
+question isn't linear with the percentage, and that changes which decision
+is actually cheap.
+
+The platform bills retained traces through three separate components
+(processing, writing, retention), each with its own included monthly
+quota. As long as the retained volume after sampling stays **below** that
+quota, the writing and retention components drop to zero — not because
+sampling is more aggressive, but because everything retained simply fits
+within the already-included allowance. Above that threshold, every
+additional percentage point of retention directly raises the bill. This
+means there's a point, measurable for a given traffic volume, below which
+lowering the base rate by another couple of percentage points saves almost
+nothing (it's already below the threshold), and above which the same move
+saves disproportionately much (it's crossing right over the threshold).
+
+One cost component, however, is completely independent of the percentage
+chosen: processing is billed on the raw input, **before** any retention
+decision, and grows with fleet volume regardless of how aggressive sampling
+ends up being. Sampling protects two of the three cost components, not all
+three — worth knowing in advance, rather than discovering it when the bill
+keeps rising after an aggressive cut to the base rate.
+
+![Retention and write cost drop to zero below one measurable volume threshold, while processing cost stays independent of the sampling percentage because it's billed on the raw input, before the retention decision.](diagrams/ch12-prag-troska.png){: width="78%" }
+
+### Two counters, two different points in the same pipe
+
+The measurement trap from § 12.2 (spanmetrics undercounts actual volume,
+and can't measure the savings downsampling brings) has a close relative, on
+a different pair of counters. The platform exposes two data-volume
+measurements that look like the same number measured twice — but they
+measure two different points along the path: one measures volume **before**
+the retention decision is made, the other measures what actually survived
+that decision and moved on toward storage.
+
+Dividing one by the other produces a nonsensical result the moment the
+direction gets mixed up — a figure above 100% "coverage" looks, at first
+glance, like a measurement error, when it's actually an artifact of
+dividing two numbers that measure different points in the pipeline, not the
+same moment twice. The rule that prevents this confusion is simple, but not
+obvious until you run into it live: the "pre-sampling" pair is used
+exclusively for calculating the drop rate, and the "post-sampling" pair
+exclusively for billable volume — the two are never divided by each other,
+even when their names sound interchangeable.
+
 ## 12.3 Analytical section — why server-side instead of collector-side
 
 ### The official distinction: where the decision is made, and what that means for accuracy
@@ -217,6 +267,14 @@ step; sampling that happens after full insight is a decision.**
 - A dropped trace isn't permanently unavailable immediately, but the window
   is short (typically measured in hours, not days) — don't count on being
   able to go back to it later if you don't look right away.
+- Before lowering the base sampling rate to save money, measure where the
+  nonlinear volume threshold sits for your traffic — below the threshold
+  savings are small, above it they're disproportionately large, and one
+  cost component (processing the raw input) never drops in either case.
+- When the platform exposes a "before" and "after" counter pair for the
+  same point in the pipeline, never divide one by the other to get a
+  "coverage percentage" — each counter in the pair has exactly one purpose
+  (drop rate, or billable volume), not both.
 
 ## 12.5 Exercise for the reader
 
