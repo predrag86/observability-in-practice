@@ -44,9 +44,12 @@ stope:
 - **Spori trejsovi** — latencija iznad definisanog praga se zadržava, jer
   performansni problemi retko ostave trag ijednim drugim putem osim kroz sam
   trejs.
-- **Anomalije** — platforma koristi model zasnovan na mašinskom učenju da
-  prepozna trejsove koji strukturno odstupaju od uobičajenog obrasca za taj
-  servis, čak i kad nemaju eksplicitnu grešku ili visoku latenciju.
+- **Raznovrsnost obrazaca** — bar jedan trejs po jedinstvenom otisku
+  (kombinacija servisa, rute i ishoda) unutar prozora se zadržava, bez obzira
+  na baznu stopu — tako da nagli talas gotovo identičnih zahteva (recimo,
+  ista greška koja se ponovi hiljadu puta u par minuta) ostavi bar jednog
+  predstavnika, umesto da probabilistička stopa nasumično zadrži šaku kopija
+  istog obrasca ili nijednu.
 
 ![Odluka o zadržavanju trejsa: drop politike su apsolutan veto i evaluiraju se prve; keep politike rade po OR logici sa efektivno nasumičnim redosledom; tek ako nijedna ne odluči, na red dolazi bazna probabilistička stopa.](diagrams/ch12-sampling-policy.png){: width="88%" }
 
@@ -186,12 +189,12 @@ garantuje "zadrži svaki trejs sa greškom" — u trenutku kad se odluka donosi,
 greška možda još nije ni nastala.
 
 Adaptivni sampling koji koristi platforma u implementaciji koju knjiga prati
-je oblik tail sampling-a, sa dodatom adaptivnom komponentom (ML-zasnovano
-prepoznavanje anomalija, dinamičko podešavanje baznog procenta). Ovo je,
-zvanično, tačno ona kategorija problema za koju tail sampling postoji: sistem
-gde su retki, ali kritični trejsovi (greške, anomalije) tačno oni koje head
-sampling najlakše promaši, jer njihova "vrednost" nije poznata u trenutku
-kad head sampling mora da odluči.
+je oblik tail sampling-a, sa dodatom adaptivnom komponentom (pravilo za
+raznovrsnost obrazaca iz § 12.2, dinamičko podešavanje baznog procenta). Ovo
+je, zvanično, tačno ona kategorija problema za koju tail sampling postoji:
+sistem gde su retki, ali kritični trejsovi (greške, retki obrasci) tačno oni
+koje head sampling najlakše promaši, jer njihova "vrednost" nije poznata u
+trenutku kad head sampling mora da odluči.
 
 ### Zašto ne na nivou gateway-a — cena koju bi self-managed tail sampling nosio
 
@@ -231,7 +234,7 @@ posle punog uvida je odluka.**
 ## 12.4 Skupljena pravila iz ovog poglavlja
 
 - Kad god je moguće, donesi sampling odluku posle punog sakupljanja trejsa
-  (tail sampling), ne pre — greške i anomalije su retko poznate u trenutku
+  (tail sampling), ne pre — greške i retki obrasci su retko poznati u trenutku
   kad head sampling mora da odluči.
 - Zapamti da su politike odbacivanja apsolutan veto, a politike zadržavanja
   rade po OR logici sa efektivno nasumičnim redosledom evaluacije — ne
