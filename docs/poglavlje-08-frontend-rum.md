@@ -102,6 +102,68 @@ korisnika koji ima najgore iskustvo:
 
 ![LCP praćen po percentilima: p50 i p75 ostaju stabilni, ali p95 pokazuje jasnu regresiju jednog dana — signal koji bi prosek sakrio, jer pogađa samo deo saobraćaja (tipično jedan geografski region ili tip uređaja).](diagrams/dashboard-rum.png){: width="95%" }
 
+### Kad je izgradnja tiha o sopstvenom neuspehu
+
+Prvi pokušaj puštanja frontend telemetrije u probni okvir je, po svakoj
+standardnoj proveri, prošao besprekorno: build je prošao, testovi su bili
+zeleni, isporučena aplikacija je vraćala HTTP 200 i radila potpuno identično
+za korisnika kao i pre. Ni jedna od tih provera nije otkrila da isporučeni
+paket **uopšte ne sadrži poziv inicijalizacije SDK-a za telemetriju** — build
+je pokrenut iz starije verzije izvornog koda, snimljene pre nego što je kod
+za instrumentaciju uopšte ušao u granu iz koje se gradi. Aplikacija je radila
+identično jer telemetrija nikad ne utiče na to kako aplikacija izgleda ili
+funkcioniše za korisnika — samo na to da li nešto stiže na drugi kraj, van
+vidokruga bilo koje provere koja gleda samo isporučenu stranicu.
+
+Otkriveno je tek eksplicitnom, posebno osmišljenom proverom: pretraživanjem
+**samog isporučenog, već izgrađenog JavaScript paketa** (ne izvornog koda,
+nego artefakta koji je stvarno otišao na server) u potrazi za imenom funkcije
+koju SDK poziva pri inicijalizaciji, i nezavisno, proverom da li se naziv tog
+frontend servisa uopšte pojavljuje u sistemu za skladištenje telemetrije —
+makar sa nula tačaka podataka. Obe provere su rađene **posle** što je svaka
+standardna provera već proglasila isporuku uspešnom. Dodatna zamka koja je
+uz put otkrivena: postoji i poseban, potpuno odvojen sistem koji takođe
+gradi frontend paket radi sopstvene provere ispravnosti koda, ali taj
+artefakt niko nikad stvarno ne isporučuje — laka greška bi bila pretpostaviti
+da "taj build prolazi" znači "isporučeni build je instrumentisan", kad su to
+u stvarnosti dva potpuno nezavisna artefakta.
+
+Opšta pouka: prisustvo SDK-a za telemetriju je nevidljivo za svaku
+uobičajenu proveru zdravlja isporuke — build koji prolazi, testove koji su
+zeleni, HTTP 200, aplikaciju koja radi. Jedini način da se otkrije njegovo
+odsustvo je eksplicitna provera koja gleda baš taj kod u baš tom isporučenom
+artefaktu, ili proverava da li se očekivani signal uopšte pojavio nizvodno —
+a takva provera se retko radi sama od sebe, mora biti dodata namerno.
+
+![Standardne provere isporuke (build, testovi, HTTP 200) ne gledaju telemetrijski kod — isporučeni paket može biti izgrađen iz stare verzije izvora, bez inicijalizacije SDK-a, a da nijedna od njih to ne primeti. Otkriva se tek eksplicitnom proverom isporučenog artefakta i nizvodne telemetrije.](diagrams/ch08-tiha-praznina.png){: width="80%" }
+
+### Kad procentil laže jer uzorka premalo ima
+
+Interni alat sa relativno malim brojem korisnika generiše, pokazalo se posle
+puštanja u produkciju, samo dvanaestak do trinaestak merenja Core Web
+Vitals-a **dnevno** — a alarm koji prati regresiju gleda **p75 preko
+kliznog prozora od 24 sata**. Na toj količini uzoraka, jedna jedina
+neuobičajeno spora sesija — korisnik na slaboj mreži, na starijem uređaju,
+u pozadinskom tabu-u — može sama da pomeri p75 cele grupe iz "dobrog" u
+"loš" opseg, bez ijedne stvarne promene u aplikaciji koja bi to opravdala.
+
+Zato prvi korak u odgovoru na taj alarm nije istraživanje šta se u
+aplikaciji promenilo — nego provera **da li uzorak uopšte ima dovoljno
+tačaka da se procentilu veruje**. Alarm eksplicitno zahteva minimalan broj
+merenja u prozoru pre nego što uopšte razmotri okidanje, upravo zato što je
+poznato da na ovom nivou saobraćaja procentil sam po sebi nije pouzdan
+signal ispod tog praga.
+
+Ovo produbljuje princip već pomenut ranije u poglavlju — da RUM ima slepu
+tačku kad saobraćaja uopšte nema. Ovde je slepa tačka suptilnija: alarm
+**jeste** opalio, procentil **jeste** izračunat, ali sam broj — bez
+konteksta koliko je tačaka ušlo u njegov obračun — može da liči na stvarnu
+regresiju dok je zapravo statistički artefakt premalog uzorka. Tretiranje
+svakog alarma zasnovanog na procentilu kao apsolutne istine, bez pitanja
+"na koliko tačaka je ovo izračunato", je greška koja se ne vidi dok se
+prvi lažni alarm ne istraži do kraja i ne otkrije da iza njega stoji jedna
+jedina sesija.
+
 ## 8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad "jedan filter" nije dovoljan
 
 ### Zašto zvanična arhitektura RUM-a skoro uvek ide direktno u cloud
@@ -177,6 +239,14 @@ eksplicitnu proveru."**
   to je razlog da postoji Poglavlje 9.
 - Posle svakog "dodao sam filter za X", eksplicitno pitaj: kroz koje sve
   puteve X uopšte može da izađe, i da li ih je filter zaista sve pokrio.
+- Nijedna standardna provera isporuke (build, testovi, HTTP status,
+  vizuelni rad aplikacije) ne otkriva odsustvo telemetrijskog koda — dodaj
+  eksplicitnu proveru koja gleda sam isporučeni artefakt ili potvrđuje da
+  se očekivani servis pojavio nizvodno.
+- Pre nego što alarmu zasnovanom na procentilu poveruješ kao stvarnom
+  signalu, proveri koliko je tačaka ušlo u obračun — na niskom saobraćaju
+  jedna sesija može da pomeri p75 iz "dobrog" u "loš" opseg bez ijedne
+  stvarne promene u sistemu.
 
 ## 8.5 Vežba za čitaoca
 
