@@ -85,6 +85,69 @@ of whether that area is even formally in the audit's scope.
 
 ![Observability control as a two-way relationship: the alerting system is evidence of monitoring, but the telemetry that system carries is simultaneously confidential data that itself needs protection.](diagrams/ch26-dvosmeran-odnos.png){: width="85%" }
 
+### An automated action from chat: the token permits, the channel restricts
+
+One control in the table deserves special attention because it shows how
+deep the analysis has to go once automation gains the ability to change
+system state, not just observe it. An alert in the job-failure channel
+carries a button that restarts a **production** job — a real write to
+infrastructure, triggered directly from a chat message. The mechanism
+reveals two separate layers of authorization, and the implementation
+explicitly named both, instead of treating "the button works" as a
+sufficient check.
+
+The first layer is a technically unavoidable trade-off: the trigger is a
+**public** URL with no request signing on the messaging platform's side,
+because that platform has no mechanism to sign a request using the
+standard cloud-access protocol. Instead, authenticity comes from the
+messaging platform's **own** HMAC signature on every request, with a
+window of a few minutes that prevents a captured message from being
+replayed later — and the mechanism deliberately **rejects** the request if
+the secret key for verifying the signature isn't configured, rather than
+letting the request through unchecked. The second layer is subtler: the
+messaging platform has no per-button approval mechanism — so **the
+privacy of the channel itself** is the only real access control. Whoever
+is a member of that channel can press the button; whoever isn't, doesn't
+see it at all. The formal permission list in the identity-management
+system is as narrow as possible (only one execution role is allowed to
+trigger the job, restricted to exactly three roles allowed to assign it) —
+but that list means nothing if channel membership isn't just as strictly
+controlled and regularly reviewed.
+
+This is exactly the kind of insight an honest internal table needs to
+capture: the control "who can trigger a production action" here is
+actually **not one** control but two — technical (signature, role,
+permission scope) and organizational (who's a channel member) — and only
+the first of the two is verifiable through code and infrastructure. The
+second depends on discipline around chat-channel membership, which is
+easier to forget to check regularly.
+
+![Two separate authorization layers for an action triggered from chat: the technical layer (signature, role, permission scope) is verifiable through code, while the organizational layer (channel membership) is the only real access control on the button.](diagrams/ch26-lanac-ovlascenja.png){: width="82%" }
+
+### Least privilege for services isn't the same as least privilege for people
+
+The same table shows a pattern that repeats across several rows: the
+machine side of access is often strictly, verifiably constrained, while
+the human side of the same system is completely undocumented. Access
+tokens for services that send telemetry live in a secrets vault, granted
+with the narrowest possible scope per purpose — this is a state that can
+be verified by reading configuration, and the implementation openly
+records it as **in place**. But exactly who has interactive access to the
+telemetry platform's own console, and with which role, isn't formally
+inventoried anywhere — this stays **partial**, not because access is
+necessarily too broad but because nobody can prove the opposite without an
+inventory.
+
+The point the implementation names: "access control" as a single line item
+on a control list is the wrong grain of measurement. It covers at least
+two independent questions — are machines restricted to what they need,
+and are people restricted to what they need — and an organization can
+have a fully accurate answer to one question while having no answer at all
+to the other. A table that records just one, combined score for "access"
+would hide exactly that distinction; a table that separates the machine
+row from the human row makes the gap visible instead of burying it behind
+the part that's already in order.
+
 ## 26.3 Analytical section — compliance as self-consistency, not an external catalog
 
 ### The official criteria structure confirms the two-layer split
@@ -177,6 +240,16 @@ question of whether the plan and reality tell the same story.
 - Align retention and deletion practice with what you actually **write**
   that you do, not with what you'd ideally want to do — a gap becomes a
   finding only when the claim and reality diverge.
+- When chat-based automation is allowed to change production state, name
+  both authorization layers separately — technical (signature, role,
+  permission scope) and organizational (who's a member of the channel
+  that sees the button) — because the first is verifiable through code,
+  and the second depends on discipline that's easy to forget.
+- Don't record "access control" as one combined line item — separate the
+  machine side (tokens, permission scope) from the human side (who has
+  interactive access, with which role) — an organization often has an
+  accurate answer to one question while having none for the other, and a
+  combined score hides that gap.
 
 ## 26.5 Exercise for the reader
 

@@ -104,6 +104,58 @@ presented that way for clarity.
 
 ![A living, ranked list per domain: the main top list, "honorable mention" below the threshold as a source for promotion, and the full backlog as a store of detail — three layers, one discipline of deletion once something is actually finished.](diagrams/ch27-tri-sloja.png){: width="88%" }
 
+### Blast radius is measured, not assumed
+
+The first of the three ranking axes — blast radius — sounds like something
+eyeballed from the problem's title. The implementation showed, on one
+concrete finding, why that isn't enough. The authentication database sat
+in a single availability zone, with no replica in another — at first
+glance a narrow finding, "authentication can fail." Ranked as medium
+severity, because "auth SPOF" sounds like something that hits login, not
+the entire product.
+
+When someone actually mapped which API calls depend on authentication —
+not an assumption but an actual inventory of routes and their
+dependencies — it turned out that literally **every** API call goes
+through a check against that database, not just login. The blast radius
+thereby changed from "auth goes down" to "the entire product goes down,"
+while the fix — adding a replica in a second zone — stayed the same, a
+cheap change of a few tens of dollars a month. The ranking changed not
+because the problem got bigger, but because only the measurement revealed
+how big it had been all along. The implementation explicitly recorded
+this alongside the finding: the estimated blast radius was wrong until
+someone actually measured it, and that gap is a cheap lesson only because
+it was caught before an incident, not during one.
+
+![The same finding, the same fix — but the blast radius changed from "auth goes down" to "the entire product goes down" only once someone actually inventoried the dependencies instead of assuming them from the problem's title.](diagrams/ch27-domet-stete.png){: width="82%" }
+
+### Deleted only once measurement confirms it, not once code lands on a branch
+
+The rule "delete an item once it's finished" from the previous section
+sounds simple, but the implementation showed, on one finding, exactly
+where the real boundary of "finished" sits. A performance finding
+described that a backend service, on **every** basic-auth request,
+re-queries the authentication service with no caching at all — adding
+measurable latency to every such call and loading the database behind it,
+the same one from the earlier example. A fix was proposed, code was
+written, reviewed, and **merged** into the development branch.
+
+The item stayed on the list. Not because nobody got around to deleting
+it, but because merged code on a development branch isn't the same as
+code running in production — the path from the development branch to
+production runs through additional release steps, and until that path is
+completed, the load on the authentication service in production stays
+unchanged. Every item on the list carries its own **verification
+signal** — a concrete metric proving the fix actually changed the
+system's state, not just that the code reached the main branch. For this
+finding, the signal was the call rate to the authentication service
+dropping to a fraction of its previous value, measured after the release
+to production — only then was the item actually deleted from the list.
+The difference between "the code is merged" and "the signal has been
+measured" is the difference between two distinct, easily conflated
+meanings of the word "finished" — and the implementation deliberately
+picks the stricter of the two as the condition for deletion.
+
 ## 27.3 Analytical section — a familiar pattern from risk management, applied consistently
 
 ### Combining reach and likelihood is a standard, named methodology
@@ -201,6 +253,15 @@ reads.
 - Keep a short, dated changelog for each list — what was added, what was
   removed, and why — so that the answer to "why was this a priority" still
   exists months later, instead of having to be reconstructed from memory.
+- Measure blast radius instead of assuming it from a finding's title — a
+  narrow, medium-ranked problem sometimes turns out to hit the entire
+  system only once someone actually inventories the dependencies, not
+  before.
+- Define a concrete verification signal for every item on the list — a
+  metric proving the fix actually changed production's state — and delete
+  the item only once that signal is measured, not once the code is merged
+  into a branch; "merged" and "released to production" aren't the same as
+  "finished."
 
 ## 27.5 Exercise for the reader
 
