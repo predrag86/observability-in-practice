@@ -97,6 +97,55 @@ umesto da satima kasni:
 
 ![Kratak prozor (5 min) trenutno reaguje i trenutno se gasi; dug prozor (1 h) sporije raste i sporije opada — kombinacija daje i brzo otkrivanje i brzo gašenje alarma.](diagrams/dashboard-burnrate.png){: width="95%" }
 
+### Zašto latencija namerno nije deo ovog SLI-ja
+
+Vredi imenovati odluku koja se lako previdi jer je odsutna, ne prisutna:
+SLO opisan iznad meri samo dostupnost (odnos uspešnih naspram svih zahteva),
+namerno **ne** i latenciju, iako bi latencija na prvi pogled delovala kao
+jednako prirodan kandidat za "da li je usluga dovoljno dobra". Razlog je
+oblik saobraćaja same aplikacije: nekoliko njenih endpoint-a rade teške
+izveštaje i izvoze podataka, čije p95 vreme odziva je **strukturno** visoko
+— ne zato što je nešto pokvareno, nego zato što taj posao suštinski traje.
+Da je latencija uključena u isti SLO uz dostupnost, budžet bi se trošio
+svakog dana samo od normalnog, očekivanog rada tih endpoint-a, i alarm
+zasnovan na budžetu bi neprestano javljao lažnu hitnost za ponašanje koje
+nikad nije bilo namera da se popravi.
+
+Ovo je ista vrsta odluke kao razdvajanje pragova za istu metriku viđeno u
+Poglavlju 9 (sintetička proba naspram RUM-a) — samo primenjena jedan korak
+ranije: tamo se ista metrika merila na dva mesta sa dva praga, ovde se jedna
+dimenzija (latencija) **potpuno isključuje** iz merenja umesto da joj se
+traži poseban prag. Kad neki deo sistema ima strukturno drugačiji profil od
+ostatka (teški izveštaj naspram lakog API poziva), pitanje nije samo "kako
+kalibrisati prag za ovo" nego, pre toga, "da li ova dimenzija uopšte pripada
+ovom istom budžetu". Latencija tih endpoint-a i dalje ima sopstveno mesto za
+posmatranje — samo ne u budžetu koji deli sudbinu sa dostupnošću cele
+aplikacije.
+
+### Dva alarma, namerno preklapajuća zona
+
+Stariji, jednostavan alarm — ravan prag na trenutnoj stopi grešaka, bez
+pamćenja budžeta niti drugog prozora — nastavlja da postoji uz novi,
+budžetom-svesni alarm opisan u ovom poglavlju, iako se njihove zone
+alarmiranja **preklapaju** na najbržem nivou hitnosti. Prvi nagon bi bio da
+je preklapanje rasipanje — dva alarma za, izgleda, istu stvar. Implementacija
+koju knjiga prati je zadržala oba namerno, jer odgovaraju na različita
+pitanja: stari pita "da li je stopa grešaka OVOG TRENUTKA iznad granice
+koju nikad ne treba preći", trenutan simptom bez ikakvog konteksta o budžetu;
+novi pita "da li se budžet troši brzinom koja bi ga, da potraje, ozbiljno
+iscrpela pre kraja perioda", pitanje koje zahteva istoriju, ne samo trenutak.
+
+Preklapanje na najbržem nivou nije duplikat nego dve nezavisne implementacije
+koje gledaju istu vrstu ozbiljnog otkaza iz dva ugla — ista logika koja u
+Poglavlju 13 opravdava zašto se dva strukturno različita puta za alarme ne
+stapaju u jedan mehanizam, samo primenjena unutar **jednog** domena umesto
+između dva. Da je stari alarm ugašen čim je novi uveden, radi urednosti,
+sistem bi izgubio jednostavnost i nezavisnost prvog signala — onog koji ne
+zavisi od ispravnosti budžetske matematike da bi javio da nešto gori upravo
+sad.
+
+![Stari, ravan prag i novi, budžetom-svesni alarm namerno se preklapaju na najbržem nivou hitnosti — svaki odgovara na drugo pitanje o istom otkazu, ne dupliraju se.](diagrams/ch15-dva-ugla.png){: width="80%" }
+
 ## 15.3 Analitički deo — zašto multi-window nije proizvoljna komplikacija
 
 ### Zvanična preporuka: zašto jedan prag nikad nije dovoljan
@@ -163,6 +212,13 @@ rešava ga tek pošto je neko proverio da signal koji se meri zaista meri ono
 - Izbegavaj rate/increase upite preko labela sa visokim obrtom (identifikator
   instance koja se stalno menja) u SLI-ju — agregiraj ih na stabilnu labelu
   pre računanja ili koristi recording rule otporan na taj obrt.
+- Pre dodavanja dimenzije (latencija, propusnost) u postojeći SLO, proveri
+  da li ta dimenzija ima strukturno drugačiji profil od ostatka sistema —
+  ako da, možda joj mesto uopšte nije u istom budžetu, ne samo u drugom
+  pragu.
+- Ne gasi jednostavan, stariji alarm samo zato što novi, sofisticiraniji
+  pokriva istu zonu — preklapanje na najkritičnijem nivou je nezavisnost,
+  ne rasipanje, sve dok svaki alarm odgovara na drugo pitanje.
 
 ## 15.5 Vežba za čitaoca
 

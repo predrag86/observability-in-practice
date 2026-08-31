@@ -73,6 +73,58 @@ prvo pročita postmortem koji ga je inspirisao.
 
 ![Ulazni runbook orijentiše čitaoca (potpis + at-a-glance), a tek zatim grananje po otisku simptoma vodi do specifičnog runbook-a za taj konkretan uzrok.](diagrams/ch16-runbook-flow.png){: width="90%" }
 
+### Kad otisak nije dovoljno fin, greška ne ostaje neotkrivena — ide u pogrešan runbook
+
+Vredi imenovati rizik koji "grananje po otisku simptoma" nosi kad je otisak
+definisan previše grubo: pogrešno usmeravanje ne izgleda kao odsustvo
+pomoći, izgleda kao **pogrešna, ali uverljiva** pomoć. Flota zakazanih
+zadataka je dugo imala samo jedan ulazni runbook za sve padove uzrokovane
+izuzetkom u kodu, koji je grananje radilo na nivou "da li nedostaje ulazni
+podatak" — dovoljno fino za većinu slučajeva, ali ne i za pad izazvan
+prekidom konekcije ka bazi podataka. Takav pad je, u odsustvu sopstvenog
+otiska, dosledno završavao u runbook-u za kašnjenje ulaznih podataka, gde ga
+je dežurni inženjer čitao kao "izvor kasni" — pogrešna dijagnoza koja je
+**zvučala** verovatno, jer je runbook za to bio dobro napisan i ubedljiv, samo
+za pogrešan uzrok. Merenje je pokazalo razmere: svih **šest od šest** takvih
+padova u prethodnih trideset dana bilo je usmereno u taj pogrešan runbook.
+
+Popravka nije bila proširiti postojeći runbook dodatnom granom unutar sebe —
+bila je dodati **nov, uzak fingerprint** koji prepoznaje baš tip izuzetka
+karakterističan za prekid konekcije (razlikuje se od izuzetka za nedostajući
+podatak već u samoj poruci alarma) i automatski usmerava na sopstveni,
+namenski runbook. Ovo je razlika vredna imenovanja: grananje po otisku
+simptoma ne štiti samo od "predugačkog teksta koji čitalac mora da filtrira"
+(razlog naveden ranije u poglavlju) — štiti i od toga da dežurni inženjer
+samopouzdano sprovede pogrešnu proceduru, verujući da je na pravom mestu jer
+mu to niko nije osporio. Runbook koji ne postoji je bezopasan — čitalac zna
+da nema pomoći. Runbook koji **postoji, ali za pogrešan uzrok**, je opasniji,
+jer aktivno usmerava pažnju dalje od stvarnog problema.
+
+![Grubo grananje je otkaz konekcije ka bazi dosledno usmeravalo u runbook za kašnjenje ulaznih podataka — svih 6 od 6 slučajeva u mesec dana pogrešno pročitano. Dodavanje posebnog otiska po tipu izuzetka usmerava takav otkaz u sopstveni, tačan runbook.](diagrams/ch16-pogresno-usmeravanje.png){: width="85%" }
+
+### Runbook koji namerno ne nudi najbržu prečicu
+
+Runbook za oporavak od gomile istovrsnih otkaza (kad jedan kritičan alarm
+javlja da se dalji otkazi iste klase greške tiho pripajaju njemu, umesto da
+svaki šalje sopstvenu poruku) sadrži nešto neuobičajeno za dokument čiji je
+cilj brzina: **eksplicitno odsustvo** akcije za grupno ponovno pokretanje
+svih pogođenih zadataka odjednom, iako bi takva akcija bila očigledno
+najbrža prečica do oporavka cele grupe. Razlog je konkretan, izmeren
+incident: jedna takva grupna operacija je jednom, u praksi, ubacila
+pedeset šest neuspelih pokretanja u jedan prozor od petnaest minuta —
+sopstveni alat za brz oporavak je sam postao izvor naleta koji je trebalo
+da spreči.
+
+Runbook posle toga eksplicitno vodi kroz ponovno pokretanje **jednog po
+jednog** člana grupe, sporije ali bezbedno, umesto da ponudi udobniju
+opciju koja izgleda privlačno baš u trenutku pritiska kad dežurni inženjer
+najviše želi da sve reši jednim potezom. Ovo je vredno imenovati kao princip
+za pisanje runbook-a uopšte: runbook ne mora da ponudi svaku tehnički moguću
+prečicu — ako je neka prečica već jednom dokazano opasna, njeno namerno
+izostavljanje je jednako vredna informacija kao i korak koji **jeste**
+uključen, i vredi je zapisati zajedno sa razlogom, ne samo prećutno
+izostaviti.
+
 ## 16.3 Analitički deo — zašto struktura runbook-a nije stilski izbor
 
 ### Zvanična preporuka: orijentacija pre instrukcije
@@ -137,6 +189,13 @@ sekundi, i ništa više.**
 - Organizuj runbook-ove po domenu sa konvencijom imenovanja koja nosi
   informaciju samu po sebi (domen + simptom), tako da se pravi dokument
   nađe iz indeksa, pre nego što se uopšte otvori.
+- Kad primetiš da je otisak simptoma prezasnovan da pokrije više suštinski
+  različitih uzroka, ne dodaj još jednu granu unutar istog runbook-a —
+  dodaj nov, uzak otisak i sopstveni runbook; pogrešno usmereno poverenje
+  je opasnije od otvorenog priznanja da runbook ne postoji.
+- Ako neka prečica u runbook-u već jednom dokazano izazove veću štetu nego
+  korist, zapiši njeno namerno izostavljanje i razlog — ne oslanjaj se da
+  će je čitalac pod pritiskom sam izbeći.
 
 ## 16.5 Vežba za čitaoca
 
