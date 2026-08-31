@@ -83,6 +83,76 @@ that no "quickstart" documentation mentions:
   that this mechanism exists, a team would conclude the library "has no
   metrics," when in fact it does, just indirectly.
 
+### When a new sidecar looks like the cause of a failure — three facts that cleared it
+
+The first wave of critical alerts after rolling out the sidecar on one of the
+batch fleets looked like a classic regression: jobs started shutting down
+with an error right after the new job-definition revision was introduced,
+the main container exited with a failed status while the sidecar exited
+clean. The first instinct — "the new revision broke something" — was wrong,
+and proven wrong, not merely assumed.
+
+Three independent facts cleared the sidecar of blame. First, the identical
+error, with identical messages, existed in the logs three days before the
+sidecar was even added — only, before that, nobody could see it in one place
+by job identifier, because the observability platform didn't yet have
+visibility into that fleet. Second, the same build, the same model run, the
+same job definitions — some variants of the job passed without error that
+day, while others, with an identical container image, failed. Third, the
+error only affected one narrowly defined combination of input parameters,
+not the fleet in general — a failure shape tied to the data that job
+processes, not to the infrastructure running it.
+
+The irony is that the very act of rolling out the sidecar made this problem
+visible as a **pattern** for the first time, not as an isolated incident:
+because error logs were now queryable by job identifier, the team could
+confirm the identical error had been recurring day after day, proving the
+cause predated any change made that week. The sidecar didn't cause the
+problem — it uncovered a problem that already existed, invisible.
+
+General lesson: the first suspicious change after any rollout is almost
+always the rollout itself, because it's freshest in memory — but correlation
+with the moment of introduction isn't proof of cause. Before declaring a new
+component guilty, it's worth checking whether the same symptom exists
+outside its presence too: in older logs, on the build that preceded the
+change, on comparable jobs that haven't received that change yet.
+
+### The flush window the sidecar gets doesn't cover the whole path
+
+The sidecar gets an explicit, short window before shutdown to flush whatever
+it's holding in its own buffer — that's described above, and it's accurate,
+but it describes only **half** of the path telemetry travels between the
+main container and the gateway.
+
+The path has two separate hops. First: the main container to the sidecar,
+over `localhost`. Second: the sidecar to the gateway, over the network. The
+shutdown window the ECS task definition guarantees covers **only the second
+hop** — the time the sidecar gets to flush what it's already holding before
+the infrastructure kills it. It guarantees nothing about the first hop: if
+the SDK in the main container uses the default, **asynchronous** buffering
+mechanism for spans and log records (sending them in periodic background
+batches, not immediately as they're created), and if the whole job shuts
+down before that mechanism reaches its next periodic send, whatever is
+sitting in the main container's buffer at that moment simply disappears
+along with the process that produced it — regardless of how long a window
+the sidecar gets, because the sidecar never even saw that data.
+
+This hits hardest exactly the class of jobs the sidecar pattern was
+primarily introduced for: short-lived ones that shut down seconds after
+starting. A longer-lived service has enough time for periodic sending to
+naturally happen before shutdown; a job that runs for a couple of seconds
+might shut down before even one buffering cycle completes.
+
+The fix isn't in the sidecar or in the length of its shutdown window — it
+has to happen on the main-container side: explicit, synchronous buffer
+flushing before the process exits (or switching to a simpler, synchronous
+sending mode that doesn't buffer in the background), so nothing is left
+unsent at the moment the process ends. The sidecar's shutdown window still
+serves a purpose — it protects the second hop — but it can't recover what
+was lost before it ever reached the sidecar at all.
+
+![The flush window the sidecar gets before shutdown (stopTimeout) covers only the second hop — sidecar to gateway. It doesn't cover the first hop — the asynchronous buffer in the main container to the sidecar over localhost — which is lost without a trace if the job shuts down before the next periodic send.](diagrams/ch06-flush-prozor.png){: width="75%" }
+
 ## 6.3 Analytical section — sidecar versus agent, and the boundary where sidecar stops paying off
 
 ### Why sidecar, not node-agent, for this class of workload
@@ -166,6 +236,16 @@ recognizing at what scale that claim stops holding.**
 - The sidecar pattern has a scaling boundary (Linux-only, per-job costs,
   configuration drift) — know in advance at what scale your system would
   cross that boundary, instead of discovering it once it's already painful.
+- Correlation with the moment a change was introduced isn't proof that
+  change is the cause — before declaring it guilty, check whether the same
+  symptom exists outside its presence too (older logs, the previous build,
+  comparable cases that haven't received the change yet).
+- The shutdown window infrastructure guarantees the sidecar covers only the
+  hop from the sidecar onward — it guarantees nothing about the
+  asynchronous buffer in the main container that still has to reach the
+  sidecar over localhost. For short-lived processes, the fix has to happen
+  on the application side: explicit buffer flushing before exit, not
+  relying on someone else's shutdown window.
 
 ## 6.5 Exercise for the reader
 

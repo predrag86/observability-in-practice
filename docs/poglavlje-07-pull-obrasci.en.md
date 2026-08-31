@@ -112,6 +112,73 @@ All three patterns, side by side:
 
 ![Three pull-based patterns by level of control: two independent layers for a managed database, an agent-that-pushes for a self-managed cluster, and a direct pull bypassing the gateway for an external SaaS.](diagrams/ch7-pull-obrasci.png){: width="98%" }
 
+### The cost of pulling is measured per call, not per data point
+
+With push, the marginal cost of an extra signal is roughly linear with data
+volume — one extra span is one extra span, regardless of where it came
+from. Pulling against a managed cloud service's API has a completely
+different economic shape: the vendor bills **per call**, not by the value
+that call returns. Concretely, for the external layer on the managed
+database, every query for one metric on one dimension in one time window is
+one billed call — the cost scales with the product of the number of
+metrics, the number of dimensions queried by, and **how often they're
+asked**, entirely independent of whether the value has changed since the
+last call at all.
+
+This difference shaped two separate decisions in the implementation, not
+one. First: instead of automatically discovering every database by tag
+(which would silently multiply the number of calls with every new database
+added in the future, with no single explicit decision to accept that cost),
+the list of monitored databases is **static** — every new database enters
+monitoring by an explicit job addition, not automatically. The cost stays
+predictable; the cost of that predictability is that a new database doesn't
+enter monitoring on its own. Second: when one group of metrics was more
+expensive than its actual usefulness justified, the fix wasn't deleting
+metrics — it was **lengthening the interval between calls**, on the same set
+of metrics, because cost rises with call frequency just as much as with the
+number of metrics. For a metric whose default granularity at the source
+already runs several minutes, asking every 60 seconds wouldn't return
+anything new anyway — it would just pay for a question whose answer hadn't
+changed yet.
+
+### When the query window is narrow, the system you're asking may not have answered yet
+
+One CPU-load metric, right after a new metric group was introduced, started
+behaving inexplicably asymmetrically: on one database replica it was
+perfectly normal, on the other it would occasionally drop to a complete
+gap — not to zero, but to an **absence of a data point**, as if that replica
+hadn't existed at all for that minute. The first assumption — that something
+specific was wrong with that particular replica — was wrong.
+
+The real cause had nothing to do with any replica individually. The cloud
+service measuring the data source publishes that specific metric with
+additional delay relative to the moment it describes — the value for minute
+*N* sometimes doesn't become available until somewhat after minute *N*. A
+query asking for a data point in a window exactly as wide as that metric's
+default granularity would, statistically, occasionally arrive **before** the
+value had even been published — and the pull mechanism, finding no data
+point in the requested window, interpreted that as "this series doesn't
+exist right now," not as "the value hasn't arrived yet." The asymmetry
+between replicas wasn't a real difference in the system — it was a
+difference in how often each replica's timing happened to line up with the
+edge of the window.
+
+The fix didn't touch anything on the source side — the **query window** was
+widened, well beyond the metric's default granularity, so that even a
+late-published value still lands inside the window being searched. The
+series stayed complete on both replicas after that.
+
+The general lesson goes beyond this CPU metric or this particular service:
+for every pull against someone else's API, the window being searched must be
+wider than the source's default granularity, not equal to it — otherwise
+every call carries the risk of landing exactly in the gap between the
+moment being asked about and the moment the answer was actually published,
+and that gap manifests as a complete absence of data, not as a slow or
+unusual value, which makes it easy to misread as a real failure of the
+observed system.
+
+![A narrow query window, equal to the source's default granularity, occasionally arrives before the source has published the value — the puller interprets that as the series not existing. A widened query window, beyond the default granularity, always catches even a late-published value.](diagrams/ch07-prozor-kasnjenje.png){: width="75%" }
+
 ## 7.3 Analytical section — why there's no single universal pull-based pattern
 
 ### The official state of things: focus is almost entirely on push
@@ -187,6 +254,16 @@ that source has of failing in a way that would blind you.**
   in your head) what structural latency is acceptable for that source — pull
   rarely means "real time," and alerts have to be tuned to the actual
   latency, not the desired one.
+- The cost of pulling against a metered API scales with the number of
+  metric×dimension combinations times how often they're asked, not with
+  whether the value changed — keep the source list static instead of
+  auto-discovering, and when cost becomes disproportionate to value, widen
+  the interval first, only then consider deleting the metric.
+- When the query window equals the source's default granularity, the system
+  you're asking may not have published the value yet — the puller reads
+  that as "series doesn't exist," not as "hasn't arrived yet." Widen the
+  query window well beyond the source's nominal granularity instead of
+  changing the source itself.
 
 ## 7.5 Exercise for the reader
 
