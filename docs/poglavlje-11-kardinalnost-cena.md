@@ -173,6 +173,73 @@ histogram raščlanjen po ruti za par posebno teških endpoint-a, tako da
 exemplar sa vrha skoka vodi ka trejsu zaista tog endpoint-a, ne bilo kog
 poziva istog servisa u istom trenutku.
 
+### Kardinalnost koja se namerno vraća nazad
+
+Sve četiri faze plana sanacije iz prethodnog dela idu u istom pravcu —
+manje serija. Vredi zabeležiti i suprotan slučaj, jer je jednako poučan:
+trenutak kad je tim **namerno povećao** kardinalnost, po ceni od par
+desetina novih serija, zato što je serija koju je ranija mera uštedela bila
+pogrešna, ne samo skuplja.
+
+Ranija mera za smanjenje kardinalnosti brisala je identifikator instance
+procesa (atribut koji razlikuje replike istog servisa) sa metrika jednog
+front-end servisa — razumna ušteda u trenutku kad je uvedena. Problem: taj
+servis se u produkciji izvršava kroz nekoliko istovremenih replika, i bez
+identiteta instance, sve replike su počele da pišu u **istu** vremensku
+seriju za brojač koji se akumulira od pokretanja procesa. Kad dve ili više
+replika pišu u istu kumulativnu seriju, ta serija povremeno ide unazad (kad
+neka replika restartuje i njen brojač krene ponovo od nule) — a standardna
+funkcija za izračunavanje stope tumači svaki takav pad kao restart i
+ekstrapolira ga, umesto da vidi da je u pitanju mešavina više nezavisnih
+brojača. Rezultat: alarm koji prati stopu zahteva je jedne noći pročitao
+vrednost reda veličine hiljadu puta veću od stvarne — ne kao kratak skok,
+nego trajno, sve dok neko nije primetio neverovatnu brojku.
+
+Popravka nije bila vraćanje na staru, punu granularnost identiteta —
+umesto originalnog atributa, postavljen je stabilniji: izveden iz naziva
+hosta, jedinstven po instanci, ali stabilan i preko restarta iste instance
+(tako da restart ostaje obrađen kao normalan reset brojača, ne kao
+potpuno nova serija). Izmerena cena vraćanja identiteta bila je mnogo manja
+od očekivane — nešto ispod stotinu novih serija, ispod dolara mesečno po
+važećoj ceni po hiljadi serija — jer svaka instanca opslužuje samo podskup
+ukupnih ruta, ne sve rute pomnožene brojem instanci.
+
+Prenosiva lekcija: kardinalnost koja štedi novac i kardinalnost koja štiti
+**tačnost** nisu uvek isti atribut, a razlika se ne vidi dok neko eksplicitno
+ne postavi pitanje da li će više od jednog procesa pisati u istu seriju
+kad se identitet ukloni. Atribut koji razlikuje instance istog servisa je
+tačno onaj atribut kod koga je odgovor skoro uvek "da".
+
+![Brisanje identiteta instance je uštedelo serije, ali je spojilo kumulativne brojače više replika u jednu seriju — funkcija za stopu je pad protumačila kao restart i ekstrapolirala ga na netačnu, mnogo veću vrednost.](diagrams/ch11-identitet-brojaca.png){: width="78%" }
+
+### Cena nije samo broj serija, nego serija puta učestalost
+
+Sve četiri faze plana sanacije i primer iznad gledaju na cenu kroz jednu
+promenljivu — broj aktivnih serija. Platforma koju knjiga prati naplaćuje
+po drugoj, manje očiglednoj formuli: broj **naplativih** serija jednak je
+broju aktivnih serija pomnoženom odnosom stvarne učestalosti upisa i
+uključene učestalosti (jedan upis po minuti je uključen u cenu; svaki upis
+iznad toga množi račun, bez obzira što broj *serija* ostaje nepromenjen).
+
+U jednoj reviziji troška, izmerena agregatna učestalost upisa preko celog
+naloga bila je oko 1,5 upisa po minuti — iznad uključene jedinice — a uzrok
+nije bio u broju serija (te su već bile detaljno pregledane i podrezane),
+nego u nekoliko infrastrukturnih izvora podataka koji su i dalje slali
+podatke na svakih 20 do 30 sekundi, umesto na svakih 60. Rešenje nije
+zahtevalo brisanje nijedne serije, nijednog atributa, nijednog dashboard-a
+— samo podešavanje intervala prikupljanja sa 20-30 sekundi na 60 sekundi na
+tim mestima. Nijedna metrika nije nestala, samo je vremenska rezolucija
+smanjena, a svaki alarm koji zavisi od tih metrika i dalje evaluira preko
+prozora od nekoliko minuta do nekoliko sati — dovoljno grubo da razlika u
+rezoluciji ne menja nijedan ishod.
+
+Poenta za čitaoca: pre nego što se krene u redukciju kardinalnosti kao
+jedini lever, vredi izmeriti i drugu promenljivu u istoj formuli —
+učestalost upisa. Za sistem gde nekoliko izvora šalje podatke češće nego
+što je stvarno potrebno, taj lever ume da bude i veći i jeftiniji za
+primenu od bilo koje pojedinačne mere protiv kardinalnosti, jer ne zahteva
+da se bilo šta odluči o tome koji je atribut "dovoljno koristan" da ostane.
+
 ## 11.3 Analitički deo — zašto kardinalnost nije "detalj skladištenja"
 
 ### Zvanična preporuka: nativni histogrami kao strukturno rešenje
@@ -245,6 +312,14 @@ odjednom.**
   jeftinije. Ali unapred znaj da je retencija exemplar-a mnogo kraća od
   retencije same metrike: klik na staru tačku na grafiku neće voditi nigde,
   i to nije kvar nego očekivano ponašanje.
+- Pre brisanja atributa koji razlikuje instance istog servisa radi uštede na
+  kardinalnosti, proveri da li više od jednog procesa piše u istu seriju bez
+  njega — kumulativni brojači sa spojenim identitetom daju netačnu, ne samo
+  manje detaljnu, stopu.
+- Meri i učestalost upisa po seriji, ne samo broj serija — platforma
+  naplaćuje njihov proizvod, i podešavanje intervala prikupljanja ume da
+  bude veći i jeftiniji lever od bilo koje pojedinačne mere protiv
+  kardinalnosti.
 
 ## 11.5 Vežba za čitaoca
 
