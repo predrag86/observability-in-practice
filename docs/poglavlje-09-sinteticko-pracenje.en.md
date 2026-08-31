@@ -117,6 +117,66 @@ implementation, when an over-broad multi-region setup triggered an
 unplanned budget overage and had to be trimmed down to a single location at
 a longer interval.
 
+### Two depths of the same probe, not two separate alerts
+
+The basic availability probe from the previous section isn't always just one
+probe — in the implementation this book follows, the same public
+application has **two** HTTP probes, deliberately aimed at two different
+depths of the system. The shallow probe hits the root path and checks only
+whether the application's shell responds at all — and that can be true even
+when the backend part of the system is completely unhealthy, because static
+shell content is often served by a layer in front of the application
+itself. The deep probe hits a dedicated endpoint that, instead of just
+returning "OK," **actually executes** a limited query against the database
+the application depends on, and returns an error if that query fails.
+
+The difference in depth isn't cosmetic — it's diagnostic information in
+itself, with no additional investigation step. If the shallow probe passes
+while the deep one fails, the conclusion is immediate: the application is
+reachable, the problem is in the database behind it. If both pass, but the
+third probe layer from the previous section — the one with a real browser —
+still fails, the conclusion is again immediate: the failure is purely on
+the client side, neither the application nor the database has anything to
+do with it. This is the same logic already at work for probes distributed
+across multiple geographic locations (when one region stays silent while
+the others work, it narrows down to a network problem in that region) —
+just applied to a different axis: probe depth instead of geography. The
+pattern of which layer fails is a diagnosis in itself.
+
+The deep probe also carries its own cost worth acknowledging: since it
+actually executes a query, its response time tracks database latency, not
+just network latency to the application — which means that probe's timeout
+must be wider than the shallow probe's, otherwise every occasional slow
+query (not a real outage) will falsely trigger an alert meant to catch
+actual failures.
+
+![Three probe layers, each testing a different depth of the system: the shallow probe checks only whether the shell responds, the deep probe checks whether the database behind the application actually works, the rendering probe checks whether the page actually displays. The pattern of which layer passes and which fails is the diagnosis itself.](diagrams/ch09-slojevi-otkaza.png){: width="85%" }
+
+### The same metric, two different thresholds, because they don't answer the same question
+
+The synthetic layer with a real browser from the previous section doesn't
+just measure whether the page displays — it also measures the same
+perceived-performance metrics (largest contentful paint, layout stability)
+that RUM from Chapter 8 already tracks for real users. At first glance that
+sounds like duplicating the same signal twice. In the implementation this
+book follows, the threshold for that synthetic check is deliberately set
+far stricter than RUM's threshold for a "bad" experience — because the
+synthetic probe always renders the same, lightweight, unauthenticated home
+page, with a stable baseline time far below RUM's "bad" cutoff; any
+significant deviation from that stable baseline is a **regression**, not
+merely a "bad experience."
+
+The two checks therefore answer different questions, even though they
+measure a metric with the same name: the synthetic probe asks "did
+something just break relative to yesterday," RUM asks "is the actual
+experience of real users, across the full diversity of their networks and
+devices, currently acceptable." If the synthetic probe were given the same,
+wide RUM threshold, it would lose its purpose as an early regression
+signal — a real failure would have to get bad enough to cross a threshold
+calibrated for chaotic real traffic before the synthetic probe would even
+report it, even though on its own stable baseline it would have recognized
+it much earlier.
+
 ## 9.3 Analytical section — why synthetic monitoring isn't "poor man's RUM"
 
 ### Synthetic and RUM solve different problems, not the same problem two different ways
@@ -201,6 +261,16 @@ watching, someone still knows.**
   separate from real RUM traffic and at a minimal footprint (one location,
   infrequent interval) — it's the most expensive layer of synthetic
   monitoring.
+- When you have a probe that actually executes a query (not just checks
+  that a service responds), give it a wider timeout than the shallow
+  probe's — its response time tracks the latency of whatever it's
+  querying, not just the network latency to the application.
+- When the same metric exists in both a synthetic probe and RUM, don't give
+  them the same threshold — a synthetic probe on a stable, lightweight
+  baseline needs a strict threshold for early regression, RUM on chaotic
+  real traffic needs a wider threshold for a genuinely bad experience;
+  using the same threshold in both places defeats the purpose of one of
+  them.
 
 ## 9.5 Exercise for the reader
 

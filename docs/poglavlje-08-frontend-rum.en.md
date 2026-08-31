@@ -111,6 +111,71 @@ worst experience:
 
 ![LCP tracked by percentile: p50 and p75 stay stable, but p95 shows a clear regression on one day — a signal an average would hide, because it hits only a portion of traffic (typically one geographic region or device type).](diagrams/dashboard-rum.png){: width="95%" }
 
+### When the build stays silent about its own failure
+
+The first attempt to ship frontend telemetry into the trial environment
+passed, by every standard check, flawlessly: the build passed, tests were
+green, the shipped application returned HTTP 200 and worked completely
+identically for the user as before. None of those checks caught that the
+shipped bundle **contained no telemetry SDK initialization call at all** —
+the build had been run from an older version of the source code,
+snapshotted before the instrumentation code had even landed on the branch it
+was built from. The application behaved identically because telemetry never
+affects how the application looks or functions for the user — only whether
+anything arrives at the other end, outside the view of any check that only
+looks at the delivered page.
+
+It was only caught by an explicit, purpose-built check: searching **the
+shipped, already-built JavaScript bundle itself** (not the source code, but
+the artifact that actually went to the server) for the name of the function
+the SDK calls on initialization, and, separately, checking whether that
+frontend service's name shows up at all in the telemetry storage system —
+even with zero data points. Both checks were run **after** every standard
+check had already declared the release successful. An additional trap
+discovered along the way: there's also a separate, entirely distinct system
+that also builds a frontend bundle for its own code-correctness check, but
+nobody ever actually ships that artifact — an easy mistake would be
+assuming "that build passes" means "the shipped build is instrumented,"
+when in reality those are two entirely independent artifacts.
+
+General lesson: the presence of the telemetry SDK is invisible to every
+ordinary release health check — a passing build, green tests, HTTP 200, a
+working application. The only way to catch its absence is an explicit check
+that looks at exactly that code in exactly that shipped artifact, or
+verifies whether the expected signal actually showed up downstream — and
+such a check is rarely run on its own; it has to be added deliberately.
+
+![Standard release checks (build, tests, HTTP 200) don't look at telemetry code — the shipped bundle can be built from an old version of the source, with no SDK initialization, and none of them will notice. It's only caught by an explicit check of the shipped artifact and downstream telemetry.](diagrams/ch08-tiha-praznina.png){: width="80%" }
+
+### When a percentile lies because the sample is too small
+
+An internal tool with a relatively small number of users turned out, after
+going live in production, to generate only about a dozen or thirteen Core
+Web Vitals measurements **per day** — while the alert tracking regression
+watches **p75 over a rolling 24-hour window**. At that sample size, a single
+unusually slow session — a user on a weak network, on an older device, in a
+background tab — can shift the whole group's p75 from the "good" range into
+the "bad" range on its own, with no real change in the application to
+justify it.
+
+So the first step in responding to that alert isn't investigating what
+changed in the application — it's checking **whether the sample even has
+enough data points for the percentile to be trusted**. The alert explicitly
+requires a minimum number of measurements in the window before it even
+considers firing, precisely because it's known that at this level of
+traffic a percentile on its own isn't a reliable signal below that
+threshold.
+
+This deepens a principle already mentioned earlier in the chapter — that RUM
+has a blind spot when there's no traffic at all. Here the blind spot is
+subtler: the alert **did** fire, the percentile **was** computed, but the
+number itself — without the context of how many points went into computing
+it — can look like a real regression when it's actually a statistical
+artifact of too small a sample. Treating every percentile-based alert as
+absolute truth, without asking "how many points was this computed from," is
+a mistake that stays invisible until the first false alarm gets
+investigated all the way through and turns out to rest on a single session.
+
 ## 8.3 Analytical section — why a direct connection isn't a compromise but a requirement, and what it means when "one filter" isn't enough
 
 ### Why the standard RUM architecture almost always goes directly to the cloud
@@ -191,6 +256,14 @@ and does each one of them have its own, explicit check."**
 - After every "I added a filter for X," explicitly ask: through which paths
   can X possibly leave at all, and did the filter actually cover every one
   of them.
+- No standard release check (build, tests, HTTP status, visible application
+  behavior) catches the absence of telemetry code — add an explicit check
+  that looks at the shipped artifact itself or confirms the expected
+  service shows up downstream.
+- Before trusting a percentile-based alert as a real signal, check how many
+  points went into computing it — at low traffic, a single session can
+  shift p75 from the "good" range into the "bad" range with no real change
+  in the system.
 
 ## 8.5 Exercise for the reader
 
