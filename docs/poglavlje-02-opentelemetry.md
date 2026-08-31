@@ -99,6 +99,73 @@ gateway, identično je bez obzira odakle je došla. To je tačno linija na kojoj
 kontejner iz uvoda ovog poglavlja razdvaja "šta je unutra" od "kako izgleda
 granica".
 
+### Kvar odmah posle uvođenja OTel-a ne znači da ga je OTel izazvao
+
+Uvođenje instrumentacije preko cele flote postojećih servisa nosi sopstveni
+rizik da se svaki naredni kvar automatski pripiše novododatom sloju — a taj
+refleks je greška podjednako često koliko je i koristan. Kad je jedna
+porodica prognostičkih zadataka prešla na OTel (sidecar plus
+auto-instrumentacija), prvi CRITICAL alarmi na novoj reviziji izgledali su
+tačno kao regresija onboarding-a: zadaci su izlazili sa kodom 1 uz sopstvenu
+grešku aplikacije, dok je `otel-sidecar` u istom pokretanju izlazio čisto, sa
+kodom 0. Trag greške je bio `ValueError` u modelskom kodu — "cannot reindex
+on an axis with duplicate labels" — i javljao se samo na jednoj konkretnoj
+grani, ansambl varijanti modela za jedan region, dok su druge dve regionalne
+grane u istom pokretanju, na istom image-u, prošle bez greške.
+
+Tri nezavisne činjenice su oslobodile instrumentaciju krivice pre nego što je
+iko dirao sam rollout: prvo, identičan kvar, ista poruka greške, ista grana,
+već je bio zabeležen tri dana ranije — pre nego što je nova OTel revizija
+uopšte postojala. Drugo, na istom image-u, u istom pokretanju, ostale dve
+grane su prošle bez ijedne greške. Treće, obrazac kvara je bio uzan na način
+koji prati *oblik podataka* (samo ansambl model, samo jedan region), ne na
+način koji bi pratio *oblik instrumentacije* (što bi pogodilo sve grane
+podjednako, ili nijednu). Pravi, pozitivan efekat onboarding-a bio je u tome
+što su tek novododati logovi po zadatku, dostupni za pretragu po ID-u
+zadatka, omogućili da se ustanovi da se isti kvar ponavlja četiri dana
+zaredom — dijagnostička sposobnost koja pre instrumentacije nije postojala,
+na grešci koju instrumentacija nije izazvala.
+
+![Kvar koji stiže odmah posle OTel rollout-a liči na regresiju instrumentacije — ali tri nezavisna dokaza (isti kvar postojao ranije, druge grane prošle, obrazac prati oblik podataka) isključuju overlay kao uzrok.](diagrams/ch02-dokaz-ne-vreme.png){: width="78%" }
+
+Poenta za mentalni model ovog poglavlja: instrumentacija dodaje vidljivost,
+ne dodaje nove načine da aplikativni kod pukne. Dokazivanje da je "vremenska
+bliskost" i dalje samo bliskost, ne uzročnost, zahteva istu disciplinu dokaza
+bez obzira da li je sumnjivi novi uzrok deploy koda ili rollout
+observability-ja — a OTel rollout nije izuzet iz te discipline samo zato što
+je "trebalo da bude bezbedan".
+
+### Dodavanje instrumentacije ume da povuče štetu koja nema veze sa telemetrijom
+
+Suprotan slučaj pokazuje drugu stranu iste lekcije: nekad kvar *jeste*
+direktna posledica OTel rollout-a — ali ne same instrumentacije, nego
+mehanike kojom je uvedena. Uključivanje OTel-a preko postojeće flote
+zakazanih zadataka značilo je registrovanje nove revizije definicije svakog
+zadatka — kloniranje stare definicije i dodavanje sidecar kontejnera.
+Alokacija privremenog diska za zadatak deklariše se kao polje na istom nivou
+kao lista kontejnera, ne unutar nje — a proces kloniranja korišćen za OTel
+rollout to susedno polje nije preneo dalje. Tri zadatka u celoj floti su
+imala eksplicitno postavljenu veću alokaciju diska od podrazumevane; sva tri
+su tiho vraćena na podrazumevanu vrednost platforme u trenutku kad je
+registrovana njihova OTel revizija.
+
+Konkretna posledica: jedan od ta tri zadatka (veliki posao treniranja
+modela, nedeljne učestalosti) udario je u podrazumevani limit dok je
+upisivao velike privremene fajlove i pao sa greškom "nema više prostora na
+disku" na svom prvom pokretanju na novoj reviziji — tri dana posle
+registracije, jer se taj zadatak pokreće samo jednom nedeljno. Verifikacija
+onboarding-a je proveravala zdravlje telemetrije (kolektor dostupan, nula
+grešaka pri izvozu, serije stižu) — ne poklapanje definicije zadatka sa
+prethodnom revizijom, polje po polje. Takvo poklapanje bi izbačeno polje
+otkrilo za par sekundi; provera zdravlja telemetrije to strukturno ne može,
+jer izbačeno polje nema nikakve veze sa telemetrijom.
+
+Lekcija: uvođenje instrumentacije preko postojeće flote je promena
+deploy-a, sa sopstvenim dometom štete nezavisnim od toga šta sama
+instrumentacija radi — a provera da li telemetrijska cev radi jeste drugo
+pitanje od provere da li je deploy koji tu cev nosi tiho promenio nešto
+nepovezano.
+
 ## 2.3 Analitički deo — zašto je OTLP uopšte morao da postoji, i šta znače "semantičke konvencije"
 
 ### Problem koji je OpenTelemetry rešavao nije bio nedostatak alata, nego njihova nekompatibilnost
@@ -194,6 +261,13 @@ odluku, pre nego što se protumači kao nedostatak standarda.
 - Kad standard ostavlja nešto otvoreno (kao mehanizam instrumentacije po
   jeziku), pretpostavi da je to namerno, i traži razlog pre nego što
   pokušaš da to "poravnaš" radi doslednosti.
+- Kad se nešto pokvari odmah posle uvođenja instrumentacije, ne pretpostavljaj
+  automatski da je instrumentacija uzrok — proveri da li se isti kvar javljao
+  i pre, i da li obrazac kvara prati oblik podataka ili oblik rollout-a.
+- Kad instrumentaciju uvodiš preko postojeće flote kloniranjem definicije
+  zadatka, uporedi novu definiciju polje-po-polje sa starom — telemetrijski
+  "zdrav" rollout ume da tiho izbriše nešto što nema nikakve veze sa
+  telemetrijom.
 
 ## 2.5 Vežba za čitaoca
 
