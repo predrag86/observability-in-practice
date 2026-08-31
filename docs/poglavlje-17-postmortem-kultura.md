@@ -78,6 +78,61 @@ ispad.
 
 ![Postmortem je unazad usmeren; iz njega se distiluje runbook (unapred usmeren, za sledeći put) ili handoff (jednokratan zahtev upućen jednom vlasniku) — tri dokumenta, tri različita smera.](diagrams/ch17-tri-tipa.png){: width="90%" }
 
+### Krajnji slučaj obrasca: četiristo šezdeset devet dana tišine
+
+Vredi imenovati jedan konkretan zapis iz indeksa kao krajnju tačku obrasca
+opisanog iznad — ne zato što je tipičan, nego zato što pokazuje koliko
+daleko "alarm koji nedostaje" može da ode pre nego što ga neko primeti.
+Zakazan zadatak je otkazivao **svaki put kad je pokrenut, bez izuzetka, četiri
+stotine šezdeset devet dana zaredom**. Alarm koji je trebalo da javi taj
+otkaz nije nedostajao — bio je prisutan, uključen, i ispravno povezan.
+Problem je bio u prirodi samog mehanizma obaveštavanja: sistem šalje poruku
+na **promenu** stanja, ne dok stanje traje. Alarm je jednom, na sam dan kad
+je otkazivanje počelo, prešao iz "u redu" u "alarmira" i tom prilikom poslao
+tačno jedno obaveštenje. Pošto se stanje posle toga nikad nije vratilo u
+"u redu" (zadatak nikad nije uspeo), nije bilo nove promene stanja koja bi
+pokrenula drugu poruku — nijednu, sve to vreme.
+
+Otkriveno je potpuno slučajno, ne pretragom niti dashboard-om: neko je
+proveravao da li se stara verzija jednog alata bezbedno može ukloniti kao
+"verovatno mrtav kod", i primetio da broj poziva tog zadatka uopšte nije
+nula, iako bi trebalo da bude, prema pretpostavci da niko taj kod više ne
+koristi. Postmortem napisan o ovom nalazu nije stao na "popravimo ovaj
+jedan alarm" — pokrenuo je širi zamah: provera cele flote sličnih zadataka
+otkrila je još pet koji otkazuju bez ijednog alarma uopšte, i da većina
+zadataka u toj kategoriji nema nijedan mehanizam obaveštavanja koji bi
+preživeo baš ovaj obrazac (traje-ali-se-ne-menja). Postmortem koji otkrije
+jedan slučaj i pita "gde se još ovo krije" vredi mnogo više od onog koji
+zatvori samo taj jedan, imenovan slučaj.
+
+### Isti alarm, tri nepovezana uzroka — opasnost prvog objašnjenja koje se uklapa
+
+Jedna porodica zadataka je za mesec dana pokrenula alarm **sedamdeset puta**,
+svaki put istog oblika, svaki put na najvišem nivou ozbiljnosti, bez ijednog
+mehanizma za spajanje ponovljenih poruka — sedamdeset zasebnih poziva u
+kanal. Prva, sasvim razumna pretpostavka bila je da je reč o jednom uzroku
+koji se ponavlja. Istraga koja bi stala na prvo objašnjenje koje se uklopi
+u nekoliko primera bi lako promašila: kad je postmortem sistematski razložio
+svih sedamdeset poziva umesto da uzorkuje par njih, pokazalo se da iza
+identičnog oblika alarma stoje **tri** potpuno nepovezana uzroka — jedna
+greška u obradi podataka koja pogađa oko devet od deset slučajeva, sasvim
+druga, ređa klasa otkaza na nivou mrežne konekcije ka bazi, i jedan poziv
+koji uopšte nije pripadao ovoj porodici zadataka nego susednoj, sa spoljne
+platforme koja povlači stare zadatke iz pogona — slučajno poklapanje u
+vremenu koje je gotovo navelo istragu na pogrešan trag.
+
+Da je istraga stala posle prva dva ili tri pregledana slučaja, verovatno bi
+zaključila da postoji jedan dominantan uzrok i predložila jednu popravku —
+tehnički tačnu za većinu slučajeva, ali slepu za preostalu desetinu i za
+potpuno pogrešno pripisan poziv koji nije ni pripadao ovoj porodici. Pouka
+nije specifična za ovu porodicu zadataka: kad isti oblik alarma dolazi
+dovoljno često da bude ozbiljan trošak, vredi razložiti **celu** populaciju
+poziva, ne samo dovoljno njih da se prvo uverljivo objašnjenje potvrdi —
+identičan spoljašnji oblik alarma ne garantuje ni jedan zajednički uzrok
+iza njega, ni potpunu srodnost svih pojava.
+
+![Alarm ispravno prelazi u stanje alarmiranja i pošalje tačno jedno obaveštenje na sam dan otkaza — sistem obaveštava samo na promenu stanja, pa 469 dana neprekidnog, nepromenjenog otkazivanja posle toga ne šalje nijednu novu poruku. Otkriveno slučajno, tokom nevezanog zadatka.](diagrams/ch17-469-dana.png){: width="85%" }
+
 ## 17.3 Analitički deo — zašto je "niko nije kriv" teže nego što zvuči
 
 ### Zvanična preporuka: blameless kao funkcionalni zahtev, ne ljubaznost
@@ -144,6 +199,12 @@ sledeći.**
   vidljivost od strane liderstva, redovna provera da li proces opterećuje
   tim, i indeks koji stvarno neko koristi, sve su neophodni da praksa
   preživi posle prvog entuzijazma.
+- Kad postmortem otkrije jedan slučaj propuštenog alarma, proširi istragu
+  na celu srodnu flotu pre nego što proglasiš problem zatvorenim — jedan
+  nalaz retko je jedina instanca.
+- Kad isti oblik alarma dolazi dovoljno često da postane ozbiljan trošak,
+  razloži celu populaciju poziva pre nego što prihvatiš prvo uverljivo
+  objašnjenje — identičan oblik ne garantuje jedan zajednički uzrok.
 
 ## 17.5 Vežba za čitaoca
 

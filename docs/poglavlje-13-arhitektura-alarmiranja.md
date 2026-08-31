@@ -120,6 +120,71 @@ promene kad ništa u toj grupi ne alarmira ako postoji izbor, i unapred
 najaviti timu da će par poruka doći ako se primenjuje dok nešto već
 alarmira.
 
+### Zamrznut gauge: kad pravilo alarmira baš zato što je monitoring umro
+
+Pravilo koje računa **starost** — trenutno vreme minus vremenska oznaka koju
+neki cevovod upisuje — ima skrivenu manu koja se aktivira tek kad se dva
+sastojka nađu zajedno. Prvi sastojak: aritmetika nad sačuvanom vremenskom
+oznakom. Drugi: eksplicitno dug prozor pretrage u samom upitu, dovoljno širok
+da oživi tačku podataka koju bi observability platforma inače, po svojoj
+uobičajenoj politici zastarevanja, davno odbacila. Nijedan sastojak sam za
+sebe nije problem — dug prozor pretrage je čak i **neophodan** za izvore koji
+pišu retko (jednom u nekoliko sati, ne na sekund), jer bez njega pravilo ne bi
+videlo baš ništa. Kombinacija oba sastojka jeste problem: kad izvor koji
+puni tu vremensku oznaku umre, poslednja upisana vrednost se zamrzava
+zauvek — ali vreme i dalje teče, pa razlika između "sada" i te zamrznute
+vrednosti raste bez granice, dok ne pređe prag pravila. **Alarm se tada pali
+zato što je monitoring umro, dok je sistem koji se posmatra potpuno zdrav
+i niko to ne zna jer poslednja poznata vrednost izgleda uverljivo.**
+
+Popravka nije skraćivanje prozora pretrage — to bi pravilo oslepelo za
+spore izvore koje je taj prozor postojao da opsluži. Popravka je da se
+pravilo **uslovi** na sopstvenu, nezavisnu meru da li je izvor koji tu
+vrednost puni uopšte živ — ako taj gauge nestane, ceo izraz treba da se
+isprazni (i time miruje) umesto da nastavi da računa starost nad mrtvim
+podatkom, a alarm o mrtvom kolektoru treba da preuzme signalizaciju umesto
+njega. Ovo otvara novu obavezu koju je lako prevideti: šta god pokreće taj
+"da li je izvor živ" gauge sad ima moć da utiša pravila koja štiti — pa
+dijagnostički kolektori moraju da prijavljuju sopstveno stanje na potpuno
+odvojenom signalu od podataka koje isporučuju, inače se ista zamka samo
+premešta jedan sloj dublje.
+
+Sistematska provera cele knjige pravila otkrila je da praktično svako
+pravilo koje koristi ovaj obrazac aritmetike i dugog prozora nosi ovaj
+rizik osim jednog izuzetka: pravilo koje proverava **golu** vrednost (ne
+starost izračunatu od vremenske oznake) je strukturno imuno, jer
+zastarevanje samo odbacuje seriju kad izvor umukne — smrznuta *dobra*
+vrednost ne može da preskoči prag koji je definisan kao "vrednost je loša".
+Vredi eksplicitno postaviti pitanje pre dodavanja svakog novog pravila
+ovog oblika: može li ovaj izraz da promeni vrednost dok je cevovod iza
+njega već mrtav? Ako da, pravilo mora biti uslovljeno na zdravlje tog
+cevovoda.
+
+![Kolektor koji retko piše zamrzava poslednju vrednost kad umre; vreme i dalje teče, starost te vrednosti raste bez granice, i pravilo koje meri starost se na kraju pali — baš zato što je monitoring mrtav, ne zato što je posmatrani sistem u kvaru.](diagrams/ch13-zamrznut-gauge.png){: width="85%" }
+
+### Vreme obaveštenja nije isto što i vreme promene stanja
+
+Politika obaveštavanja na strani observability platforme (Put B) upravlja
+**kada** se poruka zaista pošalje, potpuno nezavisno od trenutka kad se
+stanje pravila promeni. Grupisanje uvodi kašnjenje na oba kraja: novo
+alarmiranje čeka kratak prozor pre prvog slanja (da bi se više istovremenih
+alarma spojilo u jednu poruku), ali iznenađujući deo je drugi kraj —
+poruka o **razrešenju** se ne šalje u trenutku kad uslov prestane da važi,
+nego čeka sledeći ciklus grupisanja, koji može biti nekoliko minuta kasnije.
+Stvaran uslov gotovo uvek traje mnogo duže od tog prozora, pa je ovo
+kašnjenje u praksi nevidljivo — postaje upadljivo tek kad neko namerno
+testira pravilo koje se pali i razrešava za par sekundi, i vidi da poruka
+"razrešeno" stiže tek nekoliko minuta posle stvarnog trenutka oporavka,
+tačno onoliko kasnije koliko iznosi prozor grupisanja.
+
+Ovo je odvojen mehanizam od gotcha-e sa primenom promena na grupu pravila
+opisane iznad — tamo je uzrok promena konfiguracije, ovde je uzrok normalan,
+ugrađen ritam slanja poruka — ali posledica je slična vrsta iznenađenja:
+osoba koja gleda samo Slack kanal, ne i sam alarm u observability platformi,
+može da pomisli da je oporavak kasnio duže nego što jeste, ili da posumnja
+u tačnost pravila, kad je razlog samo u tempu kojim se poruke grupišu i
+šalju.
+
 ## 13.3 Analitički deo — zašto se ne stapaju u jedan mehanizam
 
 ### Zvanična preporuka: rutiranje po vlasništvu, ne po tehnologiji
@@ -195,6 +260,14 @@ drugi sa sobom.**
   da izmena grupe pravila pošalje lažan par "razrešeno pa ponovo aktivno"
   za svako trenutno aktivno pravilo u toj grupi, ne samo za pravilo koje se
   zapravo menja.
+- Pre nego što dodaš pravilo koje računa starost od sačuvane vremenske
+  oznake sa dugim prozorom pretrage, postavi pitanje: može li ovaj izraz
+  da promeni vrednost dok je cevovod iza njega već mrtav? Ako da, uslovi
+  pravilo na nezavisnu, odvojenu meru da je taj cevovod živ.
+- Ne meri vreme oporavka po trenutku kad stigne poruka o razrešenju u
+  Slack-u — grupisanje obaveštenja uvodi kašnjenje na tom kraju jednako
+  kao i na početku alarmiranja; stvaran trenutak promene stanja živi u
+  samom pravilu, ne u tempu isporuke poruke.
 
 ## 13.5 Vežba za čitaoca
 
