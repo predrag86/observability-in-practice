@@ -95,6 +95,54 @@ pseudonimizacija preterano primeni tamo gde nije ni potrebna ni korisna.
 
 ![Ista sesija u panelu za otklanjanje grešaka, pre i posle: kad oba kraja pišu isti oblik ključem-zaštićenog pseudonima, spajanje po trejsu i dalje radi za dijagnostiku, ali više ne otkriva pravo ime i email.](diagrams/dashboard-pseudonymization.png){: width="95%" }
 
+### Tip parametra kao dokaz, ne samo pravilo po nazivu
+
+Razlika između "identifikatora osobe" (nikad beleženih) i "identifikatora
+resursa" (legitimno beleženih) iz prethodnog odeljka zvuči kao pravilo koje
+neko mora da pamti i primenjuje disciplinovano na svako novo polje. Implementacija
+je otišla korak dalje: umesto da se osloni samo na disciplinu imenovanja,
+proverila je da li sama **tipizacija** parametra strukturno sprečava curenje.
+Parametri koji identifikuju resurs (identifikator imovine, identifikator
+lokacije) su u backend kontroleru deklarisani kao strogo tipizovani vrednosti
+(UUID, decimalni broj) — što znači da okvir za obradu zahteva **odbija** svaki
+poziv gde bi neko pokušao da u to polje ubaci slobodan tekst, email ili token.
+Pravilo "ovo polje je bezbedno za beleženje" ovde nije samo dogovor u glavama
+tima — ono je **strukturno neizvodljivo drugačije**, jer pogrešan oblik
+vrednosti nikad ne stigne dalje od validacije zahteva.
+
+Ova provera je otkrila i granicu sopstvenog pravila: dva susedna parametra u
+istom skupu upita su obična tekstualna polja, ne tipizovane vrednosti, i
+njihov sadržaj je potpuno u rukama onoga ko šalje zahtev — nema tipske
+garancije da neće sadržati nešto osetljivo. Implementacija ih **i dalje**
+beleži (nisu proglašeni identifikatorima osobe), ali sa dodatnom merom koju
+tipizovani parametri ne trebaju: enkodiranje specijalnih karaktera pre upisa u
+log, tako da sadržaj slobodnog teksta ne može da ubaci separator ili novi red
+i naruši strukturu samog log zapisa. Dve različite garancije za dve različite
+kategorije parametara — jedna strukturna (tip), jedna operativna (enkodiranje)
+— primenjene tačno tamo gde svaka ima smisla.
+
+### Zašto se pseudonimizacioni ključ namerno nikad ne rotira
+
+Uobičajena bezbednosna higijena nalaže periodičnu rotaciju tajnih ključeva —
+pravilo koje važi za lozinke, API tokene, enkripcione ključeve. Za ključ koji
+pokreće heš funkciju za pseudonime, implementacija je svesno odlučila
+**suprotno**: ključ ostaje stabilan, bez planirane rotacije. Razlog nije
+nemar nego eksplicitna analiza kompromisa. Rotacija ključa menja **svaki**
+pseudonim odjednom — svaki korisnik dobija novi pseudonim istog trenutka, što
+kida longitudinalnu analizu (dashboard koji prati istog korisnika kroz vreme
+odjednom vidi "novog" korisnika) i zahteva usklađivanje interne mapione
+tabele koja pseudonime vezuje za email. Nasuprot tome, dobit od rotacije je
+ovde neobično mala: ključ ne štiti sam sadržaj (email ostaje čitljiv u
+mapionoj tabeli bez obzira na ključ) — štiti samo **vezu** između pseudonima
+i emaila za svakog ko vidi pseudonim bez pristupa toj tabeli. Ako je mapiona
+tabela već kompromitovana, rotacija ključa ništa ne popravlja; ako nije,
+stabilan ključ ne otvara novi rizik koji rotacija zatvara. Bezbednosna
+higijena koja ima smisla za lozinku ovde bi samo unela operativnu štetu bez
+odgovarajuće bezbednosne dobiti — implementacija je to prepoznala umesto da
+mehanički primeni opšte pravilo na situaciju gde ono ne važi.
+
+![Zašto rotacija pseudonimizacionog ključa ovde ne bi bila bezbednosna dobit, samo operativna šteta: ključ štiti vezu pseudonim↔email, ne sam sadržaj, i stabilan ključ ne otvara novi rizik koji bi rotacija zatvorila.](diagrams/ch25-rotacija-kljuca.png){: width="80%" }
+
 ## 25.3 Analitički deo — poznat obrazac curenja, sa preciznim imenom
 
 ### Pseudonimizacija ostaje lični podatak — i to menja obavezu
@@ -187,6 +235,14 @@ sastati.
   za metrike i logove nije arhitektonski projektovana za brisanje po
   pojedinačnom subjektu — čekanje da zahtev stvarno stigne je prekasno da
   se prvi put smišlja rešenje.
+- Kad god je moguće, oslanjaj se na tip parametra da strukturno sprečiš
+  curenje, ne samo na dogovor o imenovanju — a za polja koja moraju ostati
+  slobodan tekst, dodaj operativnu meru (enkodiranje) koju tipizovana polja
+  ne trebaju.
+- Pre nego što primeniš opšte bezbednosno pravilo (poput periodične rotacije
+  ključa) na novu situaciju, proveri da li dobit tog pravila stvarno važi
+  ovde — rotacija koja kida longitudinalnu analizu bez odgovarajuće
+  bezbednosne dobiti je šteta obučena kao higijena.
 
 ## 25.5 Vežba za čitaoca
 
