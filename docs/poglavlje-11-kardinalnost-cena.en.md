@@ -188,6 +188,78 @@ broken down by route for a couple of especially heavy endpoints, so that an
 exemplar from the top of a spike leads to a trace from that exact endpoint,
 not just any call to the same service at the same moment.
 
+### Cardinality that deliberately goes back up
+
+All four phases of the remediation plan from the previous section point in
+the same direction — fewer series. It's worth recording the opposite case
+too, because it's equally instructive: the moment the team **deliberately
+increased** cardinality, at the cost of a few dozen new series, because the
+series an earlier measure had saved was wrong, not just more expensive.
+
+An earlier cardinality-reduction measure had deleted the process-instance
+identifier (the attribute distinguishing replicas of the same service) from
+one frontend service's metrics — a reasonable saving at the moment it was
+introduced. The problem: that service runs in production across several
+concurrent replicas, and without instance identity, all replicas started
+writing to the **same** time series for a counter that accumulates since
+process startup. When two or more replicas write to the same cumulative
+series, that series occasionally goes backward (when a replica restarts and
+its counter starts again from zero) — and the standard rate-calculation
+function interprets every such drop as a restart and extrapolates it,
+instead of recognizing it as a mix of several independent counters. The
+result: an alert tracking the request rate one night read a value on the
+order of a thousand times higher than the real one — not as a brief spike,
+but persistently, until someone noticed the implausible figure.
+
+The fix wasn't reverting to the old, full-granularity identity — instead of
+the original attribute, a more stable one was set: derived from the
+hostname, unique per instance, but stable across restarts of the same
+instance (so a restart is still handled as a normal counter reset, not as a
+brand-new series). The measured cost of restoring identity was far smaller
+than expected — just under a hundred new series, under a dollar a month at
+the going per-thousand-series price — because each instance only serves a
+subset of total routes, not every route multiplied by the number of
+instances.
+
+The transferable lesson: cardinality that saves money and cardinality that
+protects **accuracy** aren't always the same attribute, and the difference
+doesn't show up until someone explicitly asks whether more than one process
+will write to the same series once identity is removed. The attribute
+distinguishing instances of the same service is exactly the attribute where
+the answer is almost always "yes."
+
+![Deleting the instance identity saved series, but merged the cumulative counters of multiple replicas into one series — the rate function interpreted the drop as a restart and extrapolated it into an inaccurate, much larger value.](diagrams/ch11-identitet-brojaca.png){: width="78%" }
+
+### Cost isn't just the number of series, it's series times frequency
+
+All four phases of the remediation plan and the example above look at cost
+through one variable — the number of active series. The platform this book
+follows bills by a different, less obvious formula: the number of
+**billable** series equals the number of active series multiplied by the
+ratio of the actual write frequency to the included frequency (one write
+per minute is included in the price; every write above that multiplies the
+bill, regardless of the *series* count staying unchanged).
+
+In one cost review, the measured aggregate write frequency across the
+entire account was around 1.5 writes per minute — above the included
+unit — and the cause wasn't the series count (those had already been
+carefully reviewed and trimmed), but a handful of infrastructure data
+sources that were still sending data every 20 to 30 seconds instead of
+every 60. The fix required deleting no series, no attribute, no dashboard at
+all — just adjusting the collection interval from 20-30 seconds to 60
+seconds at those points. No metric disappeared, only the time resolution
+was reduced, and every alert depending on those metrics still evaluates
+over a window of several minutes to several hours — coarse enough that the
+difference in resolution changes no outcome.
+
+The point for the reader: before reaching for cardinality reduction as the
+only lever, it's worth measuring the other variable in the same formula
+too — write frequency. For a system where a handful of sources send data
+more often than actually needed, that lever can be both larger and cheaper
+to apply than any individual measure against cardinality, because it
+requires no decision at all about which attribute is "useful enough" to
+keep.
+
 ## 11.3 Analytical section — why cardinality isn't a "storage detail"
 
 ### The official recommendation: native histograms as a structural solution
@@ -264,6 +336,14 @@ at once.**
   actual trace) rarely comes cheaper. But know in advance that exemplar
   retention is much shorter than metric retention: clicking an old point on
   a graph won't lead anywhere, and that's expected behavior, not a bug.
+- Before deleting the attribute that distinguishes instances of the same
+  service to save on cardinality, check whether more than one process
+  would write to the same series without it — cumulative counters with
+  merged identity produce an inaccurate rate, not just a less detailed one.
+- Measure write frequency per series too, not just the series count — the
+  platform bills their product, and adjusting the collection interval can
+  be a bigger and cheaper lever than any individual measure against
+  cardinality.
 
 ## 11.5 Exercise for the reader
 
