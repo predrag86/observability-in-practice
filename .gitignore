@@ -451,3 +451,8 @@ node_modules/
 # KubeCon 2027 CFP prep materials — draft talk proposals, not ready for the
 # public repo yet. Kept locally only.
 /kubecon/
+
+# Desktop app's auto-saved chat-attachment folder — must never be committed,
+# it can silently pick up drafts (like the kubecon/ prep materials) that
+# aren't meant for the public repo.
+/Claude outputs/
