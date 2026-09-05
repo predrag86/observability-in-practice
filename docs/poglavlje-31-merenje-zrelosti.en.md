@@ -1,4 +1,4 @@
-# Chapter 30 — Measuring the maturity of your own program
+# Chapter 31 — Measuring the maturity of your own program
 
 A pilot doesn't fly for years on the strength of one passed exam. Every few
 months, no matter how many hours they've logged or how confident they feel,
@@ -19,7 +19,7 @@ of writing. The only way to know is periodic, disciplined measurement
 against living reality — and, harder to accept, a willingness to admit when
 a past measurement was wrong.
 
-## 30.1 The question this chapter answers
+## 31.1 The question this chapter answers
 
 How do you periodically measure the maturity of your own observability
 program, rather than simply trusting the last written record of how it
@@ -27,7 +27,7 @@ works? And what do you do when a measurement reveals that a previous
 measurement was wrong — do you quietly correct the error, or do you
 publicly acknowledge it, along with the reason it happened?
 
-## 30.2 How it was done — a practical overview
+## 31.2 How it was done — a practical overview
 
 ### A review done in passes, not in one reading
 
@@ -203,7 +203,7 @@ in the very cost category the mechanism itself is responsible for
 monitoring — the hardest place for anyone to notice the problem, because
 it's exactly the place that should be raising an alarm about itself.
 
-## 30.3 Analytical section — why measuring maturity has to be a repeatable discipline
+## 31.3 Analytical section — why measuring maturity has to be a repeatable discipline
 
 Google's SRE Book frames monitoring measurement around four golden signals
 (latency, traffic, errors, saturation), but the key point of that chapter
@@ -276,7 +276,7 @@ know nothing about their current state. The check exists precisely because
 it's the only honest answer to the question "is my own assessment of my
 skill still accurate" — measuring now, not trusting a record from before.
 
-## 30.4 Rules collected from this chapter
+## 31.4 Rules collected from this chapter
 
 - Run periodic reviews in passes that include direct verification against
   the live platform, not just reading existing documentation.
@@ -301,7 +301,7 @@ skill still accurate" — measuring now, not trusting a record from before.
   measurement itself causes grows hardest to notice exactly in the
   category it's responsible for monitoring.
 
-## 30.5 Exercise for the reader
+## 31.5 Exercise for the reader
 
 Take the last internal report, review, or audit your team wrote more than a
 month ago. Pick three concrete numbers from it and verify them right now,

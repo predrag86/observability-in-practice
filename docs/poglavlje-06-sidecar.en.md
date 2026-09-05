@@ -49,7 +49,7 @@ telemetry would simply vanish along with the container that produced them.
 ![The job and its sidecar share the same ECS/Fargate task — they start and shut down together; the sidecar gets a short flush window before shutdown to drain its buffer to the central gateway.](diagrams/ch6-sidecar.png){: width="85%" }
 
 This pattern, brought into production after an initial pilot on two jobs
-(covered in detail in Chapter 29), surfaced a catalog of real-world pitfalls
+(covered in detail in Chapter 30), surfaced a catalog of real-world pitfalls
 that no "quickstart" documentation mentions:
 
 - **The sidecar doesn't set `service.name` on its own.** Unlike a

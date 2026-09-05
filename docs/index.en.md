@@ -60,7 +60,7 @@ OpenTelemetry isn't necessary — it's explained starting in Chapter 2.
 | [Part IV](poglavlje-13-arhitektura-alarmiranja.md) | Alerting, SLOs, and incident response |
 | [Part V](poglavlje-18-baze-podataka.md) | Observability by domain — databases, clusters, network, batch/ETL, Snowflake |
 | [Part VI](poglavlje-25-privatnost-telemetriji.md) | Governance, compliance, and maturity |
-| [Part VII](poglavlje-29-fazni-rollout.md) | Maturing the program |
+| [Part VII](poglavlje-30-fazni-rollout.md) | Maturing the program |
 | [Appendices](dodatak-a-promql-logql-recepti.md) | PromQL/LogQL recipes, glossary, onboarding checklist, templates |
 
 Every standard chapter follows the same shape: an opening analogy from

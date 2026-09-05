@@ -59,7 +59,7 @@ nije neophodno — objašnjava se od Poglavlja 2.
 | [Deo IV](poglavlje-13-arhitektura-alarmiranja.md) | Alarmiranje, SLO i odgovor na incidente |
 | [Deo V](poglavlje-18-baze-podataka.md) | Observability po domenima — baze, klasteri, mreža, batch/ETL, Snowflake |
 | [Deo VI](poglavlje-25-privatnost-telemetriji.md) | Upravljanje, usklađenost i zrelost |
-| [Deo VII](poglavlje-29-fazni-rollout.md) | Sazrevanje programa |
+| [Deo VII](poglavlje-30-fazni-rollout.md) | Sazrevanje programa |
 | [Dodaci](dodatak-a-promql-logql-recepti.md) | PromQL/LogQL recepti, rečnik pojmova, checklist, šabloni |
 
 Svako standardno poglavlje prati isti oblik: uvodna analogija iz stvarnog

@@ -115,7 +115,7 @@ Jobs in this fleet, when they run, run as ordinary instances of the same
 container infrastructure that carries the rest of the system — there's
 no separate, dedicated infrastructure just for batch work. The practical
 consequence: the general, per-family, aggregated alert on a non-zero
-exit code, described in Chapter 29, automatically covers this fleet too,
+exit code, described in Chapter 30, automatically covers this fleet too,
 without a single line of code written specifically for it. This was
 confirmed live on the very same day the capacity source order was
 changed — a real, interrupted job on the older, less reliable source was
