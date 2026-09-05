@@ -1,4 +1,4 @@
-# Poglavlje 30 — Merenje zrelosti sopstvenog programa
+# Poglavlje 31 — Merenje zrelosti sopstvenog programa
 
 Pilot ne leti godinama na osnovu jednog položenog ispita. Svakih nekoliko
 meseci, bez obzira na to koliko sati je uleteo i koliko se oseća sigurno,
@@ -18,14 +18,14 @@ sazna je periodično, disciplinovano merenje protiv žive stvarnosti — i,
 što je teže prihvatiti, spremnost da se prizna kad je prošlo merenje bilo
 pogrešno.
 
-## 30.1 Pitanje na koje ovo poglavlje odgovara
+## 31.1 Pitanje na koje ovo poglavlje odgovara
 
 Kako periodično meriti zrelost sopstvenog observability programa, a ne
 samo verovati poslednjem zapisu o tome kako on radi? I šta raditi kad
 merenje otkrije da je prethodno merenje bilo pogrešno — da li se ta
 greška tiho ispravi, ili se javno prizna, sa razlogom zašto je nastala?
 
-## 30.2 Kako je to urađeno — praktičan pregled
+## 31.2 Kako je to urađeno — praktičan pregled
 
 ### Revizija u prolazima, ne u jednom čitanju
 
@@ -193,7 +193,7 @@ istoj kategoriji troška koju je sam mehanizam zadužen da nadgleda —
 najteže mesto da neko primeti problem, jer je to tačno mesto koje bi
 trebalo da javi alarm na samog sebe.
 
-## 30.3 Analitički deo — zašto merenje zrelosti mora biti ponovljiva disciplina
+## 31.3 Analitički deo — zašto merenje zrelosti mora biti ponovljiva disciplina
 
 Google-ov SRE Book uvodi merenje monitoringa oko četiri zlatna signala
 (kašnjenje, saobraćaj, greške, zasićenje), ali ključna poenta tog
@@ -264,7 +264,7 @@ zapravo znao ništa o svom trenutnom stanju. Provera postoji upravo zato
 što je jedini pošten odgovor na pitanje "da li je moja procena sopstvene
 veštine i dalje tačna" — merenje sada, ne verovanje u zapis od ranije.
 
-## 30.4 Skupljena pravila iz ovog poglavlja
+## 31.4 Skupljena pravila iz ovog poglavlja
 
 - Radi periodičnu reviziju u prolazima koji uključuju direktnu proveru
   protiv žive platforme, ne samo čitanje postojeće dokumentacije.
@@ -288,7 +288,7 @@ veštine i dalje tačna" — merenje sada, ne verovanje u zapis od ranije.
   trošak koji merenje samo izaziva raste najteže primetno tačno u
   kategoriji koju je zaduženo da nadgleda.
 
-## 30.5 Vežba za čitaoca
+## 31.5 Vežba za čitaoca
 
 Uzmi poslednji interni izveštaj, reviziju ili audit koji je tvoj tim
 napisao pre više od mesec dana. Izaberi tri konkretne brojke iz njega i

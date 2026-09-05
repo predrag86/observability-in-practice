@@ -4,7 +4,7 @@ This list distills the sequence that proved sound across the whole book —
 from the first line of instrumentation to the first alert and the first
 runbook — into a form you can apply directly to the next service that needs
 onboarding. It isn't meant to be followed linearly without thinking; as
-Chapter 29 showed, reality will raise questions this list doesn't anticipate.
+Chapter 30 showed, reality will raise questions this list doesn't anticipate.
 Use it as a starting point, not a contract.
 
 ## Phase 0 — Before a single line of code is written
@@ -15,7 +15,7 @@ Use it as a starting point, not a contract.
   assume the existing recipe will "just work."
 - [ ] Assess this service's blast radius relative to the services already
   onboarded — this determines WHERE in the sequence it belongs (the rule
-  from Chapter 29: the most critical part of the system goes LAST, as
+  from Chapter 30: the most critical part of the system goes LAST, as
   policy, not as an exception).
 - [ ] Check whether the central gateway has capacity for a new sender
   WITHOUT degrading existing ones — if not, gateway autoscaling/capacity
@@ -86,7 +86,7 @@ Use it as a starting point, not a contract.
 
 ## Phase 6 — Periodic review (not a one-time event)
 
-- [ ] This service enters the next periodic program review (Chapter 30)
+- [ ] This service enters the next periodic program review (Chapter 31)
   just like any other — there's no such thing as "onboarded once, done
   forever."
 - [ ] If this service's alert is ever silent longer than its expected

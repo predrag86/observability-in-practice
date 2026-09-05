@@ -1,4 +1,4 @@
-# Poglavlje 31 — Zaključak: skupljena pravila
+# Poglavlje 32 — Zaključak: skupljena pravila
 
 Avion nosi dva potpuno različita sistema za beleženje sopstvenog stanja
 — instrumenti u kokpitu koji odgovaraju na pitanja postavljena unapred,
@@ -6,7 +6,7 @@ i crna kutija koja ne zna šta će pokvariti let, ali garantuje da će, kad
 se to dogodi, dokaz postojati. Tom razlikom je ova knjiga počela, jer je
 to razlika koja menja šta se gradi prvo.
 
-Trideset poglavlja kasnije, vredi reći jasno šta se od tada nije
+Trideset i jedno poglavlje kasnije, vredi reći jasno šta se od tada nije
 promenilo: ni jedan alat, ni jedan dashboard, ni jedna arhitektura
 opisana u ovoj knjizi nije vredna sama po sebi. Vredna je jedino onoliko
 koliko pouzdano odgovara na pitanje koje niko nije znao da postavi

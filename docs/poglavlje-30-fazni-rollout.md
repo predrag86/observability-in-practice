@@ -1,4 +1,4 @@
-# Poglavlje 29 — Kako izgleda fazni rollout u realnom vremenu
+# Poglavlje 30 — Kako izgleda fazni rollout u realnom vremenu
 
 Kad se stara kuća renovira, prvi plan uvek pretpostavlja zid kao ravnu,
 poznatu površinu — ovde ide nov razvod struje, tu novi vod za vodu, ovamo
@@ -19,7 +19,7 @@ je takav program dobro vođen nije "da li se plan promenio", nego "da li
 su promene bile odgovor na stvarne dokaze, u pravom trenutku, dokumentovane
 tako da neko ko dođe kasnije razume zašto".
 
-## 29.1 Pitanje na koje ovo poglavlje odgovara
+## 30.1 Pitanje na koje ovo poglavlje odgovara
 
 Kako izgleda, iznutra, program koji uvodi observability preko desetina
 servisa istovremeno — ne kao gotova arhitektura opisana unazad, nego kao
@@ -28,7 +28,7 @@ informacijama? I kako se razlikuje odstupanje od plana koje je znak lošeg
 planiranja od odstupanja koje je znak da plan ispravno reaguje na ono što
 je upravo otkriveno?
 
-## 29.2 Kako je to urađeno — praktičan pregled
+## 30.2 Kako je to urađeno — praktičan pregled
 
 ### Plan sa četiri sloja i redosledom koji se objavljuje unapred
 
@@ -188,7 +188,7 @@ je jedan konkretan slučaj samo simptom šireg obrasca u deljenom kodu,
 tretiranje tog jednog slučaja kao izolovanog ostavlja preostalih deset da
 čekaju sopstveni incident da bi bili otkriveni.
 
-## 29.3 Analitički deo — kad je odstupanje od plana znak zrelosti, ne slabosti
+## 30.3 Analitički deo — kad je odstupanje od plana znak zrelosti, ne slabosti
 
 Industrijska praksa oko faznih rollout-a je, na sreću, dobro razrađena, i
 gotovo svaka preporuka potvrđuje intuiciju izvođača koji renovira kuću:
@@ -259,7 +259,7 @@ rešiti na licu mesta. Plan koji se nikad ne menja pod pritiskom
 stvarnosti nije znak discipline. Verovatnije je znak da niko nije zaista
 gledao šta je iza zida.
 
-## 29.4 Skupljena pravila iz ovog poglavlja
+## 30.4 Skupljena pravila iz ovog poglavlja
 
 - Objavi redosled unapred kao numerisan, uslovljen spisak — to čini svako
   buduće odstupanje vidljivim i objašnjivim, umesto tiho preformulisanim.
@@ -282,7 +282,7 @@ gledao šta je iza zida.
   njih uđe u produkciju pod opterećenjem — jedan prijavljen slučaj je često
   samo prvi vidljivi simptom šireg obrasca.
 
-## 29.5 Vežba za čitaoca
+## 30.5 Vežba za čitaoca
 
 Pronađi u istoriji sopstvenog tima jedan slučaj gde je plan promenjen
 usred izvršenja. Da li je ta promena bila zapisana negde sa razlogom, ili

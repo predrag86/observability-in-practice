@@ -1,4 +1,4 @@
-# Chapter 29 — What a phased rollout looks like in real time
+# Chapter 30 — What a phased rollout looks like in real time
 
 When an old house is renovated, the first plan always assumes the wall is a
 flat, known surface — new wiring goes here, a new water line there, a
@@ -21,7 +21,7 @@ isn't "did the plan change," but "were the changes a response to real
 evidence, at the right moment, documented so that someone arriving later
 understands why."
 
-## 29.1 The question this chapter answers
+## 30.1 The question this chapter answers
 
 What does it look like, from the inside, when a program rolls out
 observability across dozens of services at once — not as a finished
@@ -30,7 +30,7 @@ under real-time pressure, with incomplete information? And how do you tell
 a deviation from plan that signals bad planning apart from a deviation that
 signals the plan correctly responding to what has just been discovered?
 
-## 29.2 How it was done — a practical walkthrough
+## 30.2 How it was done — a practical walkthrough
 
 ### A four-layer plan, with the order published in advance
 
@@ -198,7 +198,7 @@ a broader pattern in shared code, treating that one case as isolated
 leaves the remaining ten waiting for their own incident before they get
 discovered.
 
-## 29.3 Analytical section — when deviation from the plan is a sign of maturity, not weakness
+## 30.3 Analytical section — when deviation from the plan is a sign of maturity, not weakness
 
 Industry practice around phased rollouts is, fortunately, well developed,
 and nearly every recommendation confirms the intuition of the contractor
@@ -272,7 +272,7 @@ they walled up a problem that needed fixing on the spot. A plan that never
 changes under pressure from reality isn't a sign of discipline. It's more
 likely a sign that nobody actually looked at what was behind the wall.
 
-## 29.4 Rules collected from this chapter
+## 30.4 Rules collected from this chapter
 
 - Publish the order in advance as a numbered, conditioned list — that makes
   every future deviation visible and explainable, instead of quietly
@@ -298,7 +298,7 @@ likely a sign that nobody actually looked at what was behind the wall.
   production under load — one reported case is often just the first
   visible symptom of a broader pattern.
 
-## 29.5 Exercise for the reader
+## 30.5 Exercise for the reader
 
 Find one case in your own team's history where the plan changed
 mid-execution. Was that change written down somewhere with a reason, or did
