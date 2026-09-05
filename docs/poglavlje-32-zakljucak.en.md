@@ -1,4 +1,4 @@
-# Chapter 31 — Conclusion: rules collected
+# Chapter 32 — Conclusion: rules collected
 
 An aircraft carries two entirely different systems for recording its own
 state — the cockpit instrumentation, which answers questions asked in
@@ -7,7 +7,7 @@ but guarantees that when it does, the evidence will exist. That's the
 difference this book began with, because it's the difference that changes
 what gets built first.
 
-Thirty chapters later, it's worth saying plainly what hasn't changed since
+Thirty-one chapters later, it's worth saying plainly what hasn't changed since
 then: not one tool, not one dashboard, not one architecture described in
 this book is valuable on its own. It's valuable only to the degree that it
 reliably answers a question nobody knew to ask in advance. Cockpit

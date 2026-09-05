@@ -138,11 +138,12 @@ nav:
       - poglavlje-26-soc2-kontrola.md
       - poglavlje-27-prioritizacija.md
       - poglavlje-28-ai-asistirana-observability.md
+      - poglavlje-29-cicd-infrastruktura.md
   - "Deo VII":
       - deo-7-uvod.md
-      - poglavlje-29-fazni-rollout.md
-      - poglavlje-30-merenje-zrelosti.md
-      - poglavlje-31-zakljucak.md
+      - poglavlje-30-fazni-rollout.md
+      - poglavlje-31-merenje-zrelosti.md
+      - poglavlje-32-zakljucak.md
   - Dodaci:
       - dodatak-a-promql-logql-recepti.md
       - dodatak-b-recnik-pojmova.md

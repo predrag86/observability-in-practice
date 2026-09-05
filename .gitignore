@@ -447,3 +447,7 @@ node_modules/
 # source, which IS tracked).
 /pdf-build/
 /pdf/
+
+# KubeCon 2027 CFP prep materials — draft talk proposals, not ready for the
+# public repo yet. Kept locally only.
+/kubecon/

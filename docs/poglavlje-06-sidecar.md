@@ -45,7 +45,7 @@ kontejnerom koji ih je proizveo.
 ![Zadatak i sidecar dele isti ECS/Fargate task — pokreću se i gase zajedno; sidecar dobija kratak flush prozor pre gašenja da isprazni bafer ka centralnom gateway-u.](diagrams/ch6-sidecar.png){: width="85%" }
 
 Ovaj obrazac, uveden u produkciju posle prvobitnog pilot-a na dva zadatka
-(razrađeno u Poglavlju 29), otkrio je katalog stvarnih zamki koje nijedna
+(razrađeno u Poglavlju 30), otkrio je katalog stvarnih zamki koje nijedna
 "quickstart" dokumentacija ne pominje:
 
 - **Sidecar ne postavlja `service.name` sam od sebe.** Za razliku od

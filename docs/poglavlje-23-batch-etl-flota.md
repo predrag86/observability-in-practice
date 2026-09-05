@@ -107,7 +107,7 @@ Zadaci u ovoj floti, kad se izvršavaju, rade kao obične instance iste
 kontejnerske infrastrukture koja nosi i ostatak sistema — nema posebne,
 odvojene infrastrukture samo za batch posao. Praktična posledica: opšti,
 po-porodici skupljen alarm na izlazni kod različit od nule, opisan u
-Poglavlju 29, automatski pokriva i ovu flotu, bez ijedne linije koda
+Poglavlju 30, automatski pokriva i ovu flotu, bez ijedne linije koda
 napisane posebno za nju. Ovo je potvrđeno uživo istog dana kad je
 redosled izvora kapaciteta promenjen — stvaran, prekinut zadatak na
 starom, manje pouzdanom izvoru je uhvaćen i prijavljen tim istim, opštim

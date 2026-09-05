@@ -4,7 +4,7 @@ Ova lista destiluje redosled koji se pokazao ispravnim kroz celu knjigu —
 od prve linije instrumentacije do prvog alarma i prvog runbook-a — u
 oblik koji se može direktno primeniti na sledeći servis koji treba
 uključiti. Nije zamišljena da se sprovede linearno bez razmišljanja;
-kao što je Poglavlje 29 pokazalo, stvarnost će otvoriti pitanja koja
+kao što je Poglavlje 30 pokazalo, stvarnost će otvoriti pitanja koja
 ovaj spisak ne predviđa. Koristi je kao polaznu tačku, ne kao ugovor.
 
 ## Faza 0 — Pre nego što se napiše ijedna linija koda
@@ -14,7 +14,7 @@ ovaj spisak ne predviđa. Koristi je kao polaznu tačku, ne kao ugovor.
   recept? Ako nov recept — planiraj dodatno vreme za pilot, ne pretpostavi
   da će postojeći recept "samo raditi".
 - [ ] Proceni radijus dejstva ovog servisa u odnosu na već onboardovane —
-  ovo određuje GDE u redosledu dolazi (Pravilo iz Poglavlja 29: najkritičniji
+  ovo određuje GDE u redosledu dolazi (Pravilo iz Poglavlja 30: najkritičniji
   deo sistema dolazi POSLEDNJI, kao politika, ne izuzetak).
 - [ ] Proveri da li centralni prolaz (gateway) ima kapacitet za novog
   pošiljaoca BEZ degradacije postojećih — ako ne, autoskaliranje/kapacitet
