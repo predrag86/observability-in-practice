@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en" class="no-js"><head>
+<!DOCTYPE html><html lang="sr" class="no-js"><head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,35 +7,35 @@
       
       
       
-        <link rel="canonical" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-30-merenje-zrelosti/">
+        <link rel="canonical" href="https://predrag86.github.io/observability-in-practice/poglavlje-30-fazni-rollout/">
       
       
-        <link rel="prev" href="../poglavlje-29-fazni-rollout/">
+        <link rel="prev" href="../deo-7-uvod/">
       
       
-        <link rel="next" href="../poglavlje-31-zakljucak/">
+        <link rel="next" href="../poglavlje-31-merenje-zrelosti/">
       
       
         
-          <link rel="alternate" href="../../poglavlje-30-merenje-zrelosti/" hreflang="sr">
+          <link rel="alternate" href="./" hreflang="sr">
         
-          <link rel="alternate" href="./" hreflang="en">
+          <link rel="alternate" href="../en/poglavlje-30-fazni-rollout/" hreflang="en">
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Chapter 30 — Measuring the maturity of your own program - Observability in Practice</title>
+        <title>Poglavlje 30 — Kako izgleda fazni rollout u realnom vremenu - Observability u praksi</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -54,9 +54,9 @@
       
     
     
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -71,7 +71,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://predrag86.github.io/observability-in-practice/diagrams/og-image.png">
 
-  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
             html.glightbox-open { overflow: initial; height: 100%; }
             .gslide-title { margin-top: 0px; user-select: text; }
             .gslide-desc { color: #666; user-select: text; }
@@ -100,8 +100,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#chapter-30-measuring-the-maturity-of-your-own-program" class="md-skip">
-          Skip to content
+        <a href="#poglavlje-30-kako-izgleda-fazni-rollout-u-realnom-vremenu" class="md-skip">
+          Idi na tekst
         </a>
       
     </div>
@@ -115,8 +115,8 @@
   
 
 <header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../" title="Observability in Practice" class="md-header__button md-logo" aria-label="Observability in Practice" data-md-component="logo">
+  <nav class="md-header__inner md-grid" aria-label="Zaglavlje">
+    <a href=".." title="Observability u praksi" class="md-header__button md-logo" aria-label="Observability u praksi" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
@@ -130,13 +130,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Observability in Practice
+            Observability u praksi
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Chapter 30 — Measuring the maturity of your own program
+              Poglavlje 30 — Kako izgleda fazni rollout u realnom vremenu
             
           </span>
         </div>
@@ -176,20 +176,20 @@
       <div class="md-header__option">
   <div class="md-select">
     
-    <button class="md-header__button md-icon" aria-label="Select language">
+    <button class="md-header__button md-icon" aria-label="Izaberi jezik">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
     </button>
     <div class="md-select__inner">
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="../../poglavlje-30-merenje-zrelosti/" hreflang="sr" class="md-select__link">
+            <a href="./" hreflang="sr" class="md-select__link">
               Srpski
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="./" hreflang="en" class="md-select__link">
+            <a href="../en/poglavlje-30-fazni-rollout/" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
@@ -210,16 +210,16 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <input type="text" class="md-search__input" name="query" aria-label="Pretraga" placeholder="Pretraga" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
       </label>
-      <nav class="md-search__options" aria-label="Search">
+      <nav class="md-search__options" aria-label="Pretraga">
         
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Očisti" aria-label="Očisti" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
         </button>
@@ -232,7 +232,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            Initializing search
+            Inicijalizujem pretragu
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -244,7 +244,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/predrag86/observability-in-practice" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/predrag86/observability-in-practice" title="Idi u repozitorijum" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
@@ -278,19 +278,19 @@
 
 
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigacija" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../" title="Observability in Practice" class="md-nav__button md-logo" aria-label="Observability in Practice" data-md-component="logo">
+    <a href=".." title="Observability u praksi" class="md-nav__button md-logo" aria-label="Observability u praksi" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 
     </a>
-    Observability in Practice
+    Observability u praksi
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/predrag86/observability-in-practice" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/predrag86/observability-in-practice" title="Idi u repozitorijum" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
@@ -310,14 +310,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Home
+    Naslovna
   
 
     
@@ -344,7 +344,7 @@
   <span class="md-ellipsis">
     
   
-    Introduction
+    Uvod
   
 
     
@@ -389,7 +389,7 @@
   <span class="md-ellipsis">
     
   
-    Part I
+    Deo I
   
 
     
@@ -405,7 +405,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Part I
+    Deo I
   
 
           </label>
@@ -425,7 +425,7 @@
   <span class="md-ellipsis">
     
   
-    Part I — Fundamentals
+    Deo I — Osnove
   
 
     
@@ -453,7 +453,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 1 — What observability is, and what's just monitoring with a new name
+    Poglavlje 1 — Šta je observability, a šta je samo monitoring sa novim imenom
   
 
     
@@ -481,7 +481,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 2 — OpenTelemetry: a mental model before the first line of code
+    Poglavlje 2 — OpenTelemetry: mentalni model pre prve linije koda
   
 
     
@@ -509,7 +509,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 3 — Choosing a platform: why Grafana Cloud
+    Poglavlje 3 — Izbor platforme: zašto Grafana Cloud
   
 
     
@@ -562,7 +562,7 @@
   <span class="md-ellipsis">
     
   
-    Part II
+    Deo II
   
 
     
@@ -578,7 +578,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Part II
+    Deo II
   
 
           </label>
@@ -598,7 +598,7 @@
   <span class="md-ellipsis">
     
   
-    Part II — Telemetry-collection architecture
+    Deo II — Arhitektura prikupljanja telemetrije
   
 
     
@@ -626,7 +626,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 4 — The gateway pattern: a central point for telemetry
+    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
   
 
     
@@ -654,7 +654,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 5 — Instrumenting the application: two strategies
+    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
   
 
     
@@ -682,7 +682,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 6 — Containerized/batch workloads: the sidecar pattern
+    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
   
 
     
@@ -710,7 +710,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 7 — When you can't instrument the source: pull-based patterns
+    Poglavlje 7 — Kada ne možeš da instrumentiraš izvor: pull-obrasci
   
 
     
@@ -738,7 +738,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 8 — Frontend / RUM observability
+    Poglavlje 8 — Frontend / RUM observability
   
 
     
@@ -766,7 +766,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 9 — Synthetic (Black-Box) Monitoring
+    Poglavlje 9 — Sintetičko (black-box) praćenje
   
 
     
@@ -819,7 +819,7 @@
   <span class="md-ellipsis">
     
   
-    Part III
+    Deo III
   
 
     
@@ -835,7 +835,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Part III
+    Deo III
   
 
           </label>
@@ -855,7 +855,7 @@
   <span class="md-ellipsis">
     
   
-    Part III — Processing, cardinality, and cost
+    Deo III — Obrada, kardinalnost i troškovi
   
 
     
@@ -883,7 +883,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
+    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
   
 
     
@@ -911,7 +911,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 11 — Cardinality and cost: how a system naturally outgrows its budget
+    Poglavlje 11 — Kardinalnost i cena: kako sistem prirodno naraste iznad budžeta
   
 
     
@@ -939,7 +939,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
+    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
   
 
     
@@ -992,7 +992,7 @@
   <span class="md-ellipsis">
     
   
-    Part IV
+    Deo IV
   
 
     
@@ -1008,7 +1008,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Part IV
+    Deo IV
   
 
           </label>
@@ -1028,7 +1028,7 @@
   <span class="md-ellipsis">
     
   
-    Part IV — Alerting, SLOs, and incident response
+    Deo IV — Alarmiranje, SLO i odgovor na incidente
   
 
     
@@ -1056,7 +1056,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 13 — Alerting architecture: two paths, one destination channel
+    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
   
 
     
@@ -1084,7 +1084,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
+    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
   
 
     
@@ -1112,7 +1112,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 15 — SLOs and error-budget-based alerts
+    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
   
 
     
@@ -1140,7 +1140,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 16 — Runbooks: from alert to resolution
+    Poglavlje 16 — Runbook-ovi: od alarma do rešenja
   
 
     
@@ -1168,7 +1168,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 17 — Postmortem culture
+    Poglavlje 17 — Postmortem kultura
   
 
     
@@ -1221,7 +1221,7 @@
   <span class="md-ellipsis">
     
   
-    Part V
+    Deo V
   
 
     
@@ -1237,7 +1237,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Part V
+    Deo V
   
 
           </label>
@@ -1257,7 +1257,7 @@
   <span class="md-ellipsis">
     
   
-    Part V — Domain case studies
+    Deo V — Domenske studije slučaja
   
 
     
@@ -1285,7 +1285,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 18 — Databases (managed, RDS/Aurora-type)
+    Poglavlje 18 — Baze podataka (upravljane, tipa RDS/Aurora)
   
 
     
@@ -1313,7 +1313,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 19 — Self-managed distributed systems (a Dremio-style cluster)
+    Poglavlje 19 — Samostalno upravljani distribuirani sistemi (klaster tipa Dremio)
   
 
     
@@ -1341,7 +1341,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 20 — Authentication and IAM (a Keycloak-type system)
+    Poglavlje 20 — Autentikacija i IAM (sistem tipa Keycloak)
   
 
     
@@ -1369,7 +1369,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 21 — Hosts and servers as machines
+    Poglavlje 21 — Hostovi i serveri kao mašine
   
 
     
@@ -1397,7 +1397,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 22 — The network as its own observation plane
+    Poglavlje 22 — Mreža kao posebna ravan posmatranja
   
 
     
@@ -1425,7 +1425,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 23 — The batch/ETL job fleet
+    Poglavlje 23 — Batch/ETL flota zadataka
   
 
     
@@ -1453,7 +1453,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 24 — Observing a service that isn't ours (the Snowflake kind)
+    Poglavlje 24 — Posmatranje servisa koji nije naš (tipa Snowflake)
   
 
     
@@ -1506,7 +1506,7 @@
   <span class="md-ellipsis">
     
   
-    Part VI
+    Deo VI
   
 
     
@@ -1522,7 +1522,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Part VI
+    Deo VI
   
 
           </label>
@@ -1542,7 +1542,7 @@
   <span class="md-ellipsis">
     
   
-    Part VI — Governance, compliance, and maturity
+    Deo VI — Upravljanje, usklađenost i zrelost
   
 
     
@@ -1570,7 +1570,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 25 — Privacy in telemetry
+    Poglavlje 25 — Privatnost u telemetriji
   
 
     
@@ -1598,7 +1598,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 26 — Observability as a compliance control (a SOC 2 example)
+    Poglavlje 26 — Observability kao kontrola usklađenosti (SOC 2 primer)
   
 
     
@@ -1626,7 +1626,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 27 — Prioritization: cost, performance, reliability, security
+    Poglavlje 27 — Prioritizacija: cena, performanse, pouzdanost, bezbednost
   
 
     
@@ -1654,7 +1654,35 @@
   <span class="md-ellipsis">
     
   
-    Chapter 28 — AI-assisted observability: an agent that reads telemetry
+    Poglavlje 28 — AI-asistirana observability: agent koji čita telemetriju
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-29-cicd-infrastruktura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 29 — CI/CD za infrastrukturu: kad dve revizije tiho krenu različitim putem
   
 
     
@@ -1707,7 +1735,7 @@
   <span class="md-ellipsis">
     
   
-    Part VII
+    Deo VII
   
 
     
@@ -1723,7 +1751,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Part VII
+    Deo VII
   
 
           </label>
@@ -1743,35 +1771,7 @@
   <span class="md-ellipsis">
     
   
-    Part VII — The program matures
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../poglavlje-29-fazni-rollout/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Chapter 29 — What a phased rollout looks like in real time
+    Deo VII — Sazrevanje programa
   
 
     
@@ -1808,7 +1808,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 30 — Measuring the maturity of your own program
+    Poglavlje 30 — Kako izgleda fazni rollout u realnom vremenu
   
 
     
@@ -1826,7 +1826,7 @@
   <span class="md-ellipsis">
     
   
-    Chapter 30 — Measuring the maturity of your own program
+    Poglavlje 30 — Kako izgleda fazni rollout u realnom vremenu
   
 
     
@@ -1838,7 +1838,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+<nav class="md-nav md-nav--secondary" aria-label="Sadržaj">
   
   
   
@@ -1847,15 +1847,15 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      Sadržaj
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#301-the-question-this-chapter-answers" class="md-nav__link">
+  <a href="#301-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
     <span class="md-ellipsis">
       
-        30.1 The question this chapter answers
+        30.1 Pitanje na koje ovo poglavlje odgovara
       
     </span>
   </a>
@@ -1863,22 +1863,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#302-how-it-was-done-a-practical-overview" class="md-nav__link">
+  <a href="#302-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
     <span class="md-ellipsis">
       
-        30.2 How it was done — a practical overview
+        30.2 Kako je to urađeno — praktičan pregled
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="30.2 How it was done — a practical overview">
+    <nav class="md-nav" aria-label="30.2 Kako je to urađeno — praktičan pregled">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-review-done-in-passes-not-in-one-reading" class="md-nav__link">
+  <a href="#plan-sa-cetiri-sloja-i-redosledom-koji-se-objavljuje-unapred" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A review done in passes, not in one reading
+        Plan sa četiri sloja i redosledom koji se objavljuje unapred
       
     </span>
   </a>
@@ -1886,10 +1886,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#a-confidence-label-on-every-claim" class="md-nav__link">
+  <a href="#trenutak-kad-je-stvarnost-prva-prijavila-gresku" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A confidence label on every claim
+        Trenutak kad je stvarnost prva prijavila grešku
       
     </span>
   </a>
@@ -1897,10 +1897,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#a-section-that-openly-admits-what-was-wrong-last-time" class="md-nav__link">
+  <a href="#odluka-da-se-redosled-promeni-i-zasto-je-to-bila-prava-odluka" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A section that openly admits what was wrong last time
+        Odluka da se redosled promeni — i zašto je to bila prava odluka
       
     </span>
   </a>
@@ -1908,10 +1908,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#the-case-where-the-fix-had-already-been-shipped-and-nobody-checked" class="md-nav__link">
+  <a href="#kad-se-ceo-mehanizam-pokaze-pogresnim-ne-samo-lose-podesenim" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The case where the fix had already been shipped, and nobody checked
+        Kad se ceo mehanizam pokaže pogrešnim, ne samo loše podešenim
       
     </span>
   </a>
@@ -1919,10 +1919,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#an-alert-that-has-been-ringing-for-ten-weeks-and-nobody-fixes-it" class="md-nav__link">
+  <a href="#ko-dolazi-poslednji-i-zasto-je-to-pravilo-ne-izuzetak" class="md-nav__link">
     <span class="md-ellipsis">
       
-        An alert that has been ringing for ten weeks and nobody fixes it
+        Ko dolazi poslednji, i zašto je to pravilo, ne izuzetak
       
     </span>
   </a>
@@ -1930,10 +1930,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#measuring-documentation-decay-as-a-number-not-an-impression" class="md-nav__link">
+  <a href="#revizija-pre-brisanja-starog-sistema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Measuring documentation decay as a number, not an impression
+        Revizija pre brisanja starog sistema
       
     </span>
   </a>
@@ -1941,10 +1941,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#comparing-last-passs-recommendations-against-actual-tracking" class="md-nav__link">
+  <a href="#zasto-se-planiran-korak-namerno-preskace-ne-dodaje" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Comparing last pass's recommendations against actual tracking
+        Zašto se planiran korak namerno preskače, ne dodaje
       
     </span>
   </a>
@@ -1952,32 +1952,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#what-the-review-praised" class="md-nav__link">
+  <a href="#kad-se-jedna-greska-pretvori-u-sistematsku-pretragu-iste-klase" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What the review praised
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#a-trend-measured-on-a-short-window-can-reverse-with-just-a-little-more-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A trend measured on a short window can reverse with just a little more data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#when-the-measurement-itself-becomes-part-of-the-load-it-measures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When the measurement itself becomes part of the load it measures
+        Kad se jedna greška pretvori u sistematsku pretragu iste klase
       
     </span>
   </a>
@@ -1990,22 +1968,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#303-analytical-section-why-measuring-maturity-has-to-be-a-repeatable-discipline" class="md-nav__link">
+  <a href="#303-analiticki-deo-kad-je-odstupanje-od-plana-znak-zrelosti-ne-slabosti" class="md-nav__link">
     <span class="md-ellipsis">
       
-        30.3 Analytical section — why measuring maturity has to be a repeatable discipline
+        30.3 Analitički deo — kad je odstupanje od plana znak zrelosti, ne slabosti
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="30.3 Analytical section — why measuring maturity has to be a repeatable discipline">
+    <nav class="md-nav" aria-label="30.3 Analitički deo — kad je odstupanje od plana znak zrelosti, ne slabosti">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#counterfactual-scenario-had-the-review-not-re-measured-everything" class="md-nav__link">
+  <a href="#kontrafakticki-scenario-da-je-plan-sproveden-bukvalno" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Counterfactual scenario — had the review not re-measured everything
+        Kontrafaktički scenario — da je plan sproveden bukvalno
       
     </span>
   </a>
@@ -2018,10 +1996,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#304-rules-collected-from-this-chapter" class="md-nav__link">
+  <a href="#304-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
     <span class="md-ellipsis">
       
-        30.4 Rules collected from this chapter
+        30.4 Skupljena pravila iz ovog poglavlja
       
     </span>
   </a>
@@ -2029,10 +2007,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#305-exercise-for-the-reader" class="md-nav__link">
+  <a href="#305-vezba-za-citaoca" class="md-nav__link">
     <span class="md-ellipsis">
       
-        30.5 Exercise for the reader
+        30.5 Vežba za čitaoca
       
     </span>
   </a>
@@ -2055,14 +2033,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../poglavlje-31-zakljucak/" class="md-nav__link">
+      <a href="../poglavlje-31-merenje-zrelosti/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Chapter 31 — Conclusion: rules collected
+    Poglavlje 31 — Merenje zrelosti sopstvenog programa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-32-zakljucak/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Poglavlje 32 — Zaključak: skupljena pravila
   
 
     
@@ -2115,7 +2121,7 @@
   <span class="md-ellipsis">
     
   
-    Appendices
+    Dodaci
   
 
     
@@ -2131,7 +2137,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Appendices
+    Dodaci
   
 
           </label>
@@ -2151,7 +2157,7 @@
   <span class="md-ellipsis">
     
   
-    Appendix A — PromQL/LogQL recipes
+    Dodatak A — PromQL/LogQL recepti
   
 
     
@@ -2179,7 +2185,7 @@
   <span class="md-ellipsis">
     
   
-    Appendix B — Glossary of terms
+    Dodatak B — Rečnik pojmova
   
 
     
@@ -2207,7 +2213,7 @@
   <span class="md-ellipsis">
     
   
-    Appendix C — Checklist for onboarding a new service onto observability
+    Dodatak C — Checklist za onboarding novog servisa na observability
   
 
     
@@ -2235,7 +2241,7 @@
   <span class="md-ellipsis">
     
   
-    Appendix D — Runbook template and postmortem template
+    Dodatak D — Šablon runbook-a i šablon postmortema
   
 
     
@@ -2269,7 +2275,7 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+<nav class="md-nav md-nav--secondary" aria-label="Sadržaj">
   
   
   
@@ -2278,15 +2284,15 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      Sadržaj
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#301-the-question-this-chapter-answers" class="md-nav__link">
+  <a href="#301-pitanje-na-koje-ovo-poglavlje-odgovara" class="md-nav__link">
     <span class="md-ellipsis">
       
-        30.1 The question this chapter answers
+        30.1 Pitanje na koje ovo poglavlje odgovara
       
     </span>
   </a>
@@ -2294,22 +2300,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#302-how-it-was-done-a-practical-overview" class="md-nav__link">
+  <a href="#302-kako-je-to-uraeno-praktican-pregled" class="md-nav__link">
     <span class="md-ellipsis">
       
-        30.2 How it was done — a practical overview
+        30.2 Kako je to urađeno — praktičan pregled
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="30.2 How it was done — a practical overview">
+    <nav class="md-nav" aria-label="30.2 Kako je to urađeno — praktičan pregled">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-review-done-in-passes-not-in-one-reading" class="md-nav__link">
+  <a href="#plan-sa-cetiri-sloja-i-redosledom-koji-se-objavljuje-unapred" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A review done in passes, not in one reading
+        Plan sa četiri sloja i redosledom koji se objavljuje unapred
       
     </span>
   </a>
@@ -2317,10 +2323,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#a-confidence-label-on-every-claim" class="md-nav__link">
+  <a href="#trenutak-kad-je-stvarnost-prva-prijavila-gresku" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A confidence label on every claim
+        Trenutak kad je stvarnost prva prijavila grešku
       
     </span>
   </a>
@@ -2328,10 +2334,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#a-section-that-openly-admits-what-was-wrong-last-time" class="md-nav__link">
+  <a href="#odluka-da-se-redosled-promeni-i-zasto-je-to-bila-prava-odluka" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A section that openly admits what was wrong last time
+        Odluka da se redosled promeni — i zašto je to bila prava odluka
       
     </span>
   </a>
@@ -2339,10 +2345,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#the-case-where-the-fix-had-already-been-shipped-and-nobody-checked" class="md-nav__link">
+  <a href="#kad-se-ceo-mehanizam-pokaze-pogresnim-ne-samo-lose-podesenim" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The case where the fix had already been shipped, and nobody checked
+        Kad se ceo mehanizam pokaže pogrešnim, ne samo loše podešenim
       
     </span>
   </a>
@@ -2350,10 +2356,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#an-alert-that-has-been-ringing-for-ten-weeks-and-nobody-fixes-it" class="md-nav__link">
+  <a href="#ko-dolazi-poslednji-i-zasto-je-to-pravilo-ne-izuzetak" class="md-nav__link">
     <span class="md-ellipsis">
       
-        An alert that has been ringing for ten weeks and nobody fixes it
+        Ko dolazi poslednji, i zašto je to pravilo, ne izuzetak
       
     </span>
   </a>
@@ -2361,10 +2367,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#measuring-documentation-decay-as-a-number-not-an-impression" class="md-nav__link">
+  <a href="#revizija-pre-brisanja-starog-sistema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Measuring documentation decay as a number, not an impression
+        Revizija pre brisanja starog sistema
       
     </span>
   </a>
@@ -2372,10 +2378,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#comparing-last-passs-recommendations-against-actual-tracking" class="md-nav__link">
+  <a href="#zasto-se-planiran-korak-namerno-preskace-ne-dodaje" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Comparing last pass's recommendations against actual tracking
+        Zašto se planiran korak namerno preskače, ne dodaje
       
     </span>
   </a>
@@ -2383,32 +2389,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#what-the-review-praised" class="md-nav__link">
+  <a href="#kad-se-jedna-greska-pretvori-u-sistematsku-pretragu-iste-klase" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What the review praised
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#a-trend-measured-on-a-short-window-can-reverse-with-just-a-little-more-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A trend measured on a short window can reverse with just a little more data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#when-the-measurement-itself-becomes-part-of-the-load-it-measures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When the measurement itself becomes part of the load it measures
+        Kad se jedna greška pretvori u sistematsku pretragu iste klase
       
     </span>
   </a>
@@ -2421,22 +2405,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#303-analytical-section-why-measuring-maturity-has-to-be-a-repeatable-discipline" class="md-nav__link">
+  <a href="#303-analiticki-deo-kad-je-odstupanje-od-plana-znak-zrelosti-ne-slabosti" class="md-nav__link">
     <span class="md-ellipsis">
       
-        30.3 Analytical section — why measuring maturity has to be a repeatable discipline
+        30.3 Analitički deo — kad je odstupanje od plana znak zrelosti, ne slabosti
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="30.3 Analytical section — why measuring maturity has to be a repeatable discipline">
+    <nav class="md-nav" aria-label="30.3 Analitički deo — kad je odstupanje od plana znak zrelosti, ne slabosti">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#counterfactual-scenario-had-the-review-not-re-measured-everything" class="md-nav__link">
+  <a href="#kontrafakticki-scenario-da-je-plan-sproveden-bukvalno" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Counterfactual scenario — had the review not re-measured everything
+        Kontrafaktički scenario — da je plan sproveden bukvalno
       
     </span>
   </a>
@@ -2449,10 +2433,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#304-rules-collected-from-this-chapter" class="md-nav__link">
+  <a href="#304-skupljena-pravila-iz-ovog-poglavlja" class="md-nav__link">
     <span class="md-ellipsis">
       
-        30.4 Rules collected from this chapter
+        30.4 Skupljena pravila iz ovog poglavlja
       
     </span>
   </a>
@@ -2460,10 +2444,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#305-exercise-for-the-reader" class="md-nav__link">
+  <a href="#305-vezba-za-citaoca" class="md-nav__link">
     <span class="md-ellipsis">
       
-        30.5 Exercise for the reader
+        30.5 Vežba za čitaoca
       
     </span>
   </a>
@@ -2487,7 +2471,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-30-merenje-zrelosti.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-30-fazni-rollout.md" title="Ažuriraj stranicu" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"></path></svg>
     </a>
@@ -2495,282 +2479,266 @@
   
 
 
-<h1 id="chapter-30-measuring-the-maturity-of-your-own-program">Chapter 30 — Measuring the maturity of your own program</h1>
-<p>A pilot doesn't fly for years on the strength of one passed exam. Every few
-months, no matter how many hours they've logged or how confident they feel,
-they go back for a checkride — not because something went wrong, but because
-a periodic check is the only reliable way to know whether their own
-assessment of their skill is still accurate. The check doesn't ask "do you
-remember once knowing this," it asks "do this now, in front of someone who
-is measuring, and show the correct result." If a pilot has lost the habit of
-night landings because they've spent months flying only by day, the check
-will discover that before the pilot does — in the air, when it's too late to
-learn it.</p>
-<p>The same discipline applies to an observability program that has already
-been built and is running. Does it actually work the way the documentation
-claims it works? That can't be known by reading the documentation —
-documentation is a record of what someone believed to be true at the moment
-of writing. The only way to know is periodic, disciplined measurement
-against living reality — and, harder to accept, a willingness to admit when
-a past measurement was wrong.</p>
-<h2 id="301-the-question-this-chapter-answers">30.1 The question this chapter answers</h2>
-<p>How do you periodically measure the maturity of your own observability
-program, rather than simply trusting the last written record of how it
-works? And what do you do when a measurement reveals that a previous
-measurement was wrong — do you quietly correct the error, or do you
-publicly acknowledge it, along with the reason it happened?</p>
-<h2 id="302-how-it-was-done-a-practical-overview">30.2 How it was done — a practical overview</h2>
-<h3 id="a-review-done-in-passes-not-in-one-reading">A review done in passes, not in one reading</h3>
-<p>The periodic review of the whole program was not done as a single reading
-of the documentation followed by a conclusion. Instead, it was carried out
-in five separate passes: first, reading the existing documentation to
-extract claims; then reconciling those claims against the live state of the
-work-tracking system (how many of the previously reported items were
-actually closed); then two separate rounds of direct verification against
-the live observability platform (alerts, data series, cost); and finally,
-since only a few days had passed since the previous review, a complete
-re-measurement of <strong>every</strong> number from the previous round, instead of
-assuming it still held.</p>
-<p>That last step turned out to be decisive. In just a few days, two entire
-observability subsystems had been shipped and rolled into production —
-which meant that a review relying on the previous pass would have missed a
-significant part of the current state. The conclusion was clear: the rate
-at which the estate was changing was faster than the rate at which the
-review could keep up with it, so the only honest approach was to re-measure
-everything, not merely append what was new.</p>
-<h3 id="a-confidence-label-on-every-claim">A confidence label on every claim</h3>
-<p>Every number in the final document carries an explicit label of provenance:
-whether it was just measured directly against the live platform, whether it
-was taken from documentation without independent verification, or whether
-it was previously claimed and has since been disproven by a live
-measurement. This simple but consistently applied convention solves a
-problem that otherwise quietly creeps into every long-running report: a
-reader without those labels cannot tell "I know this because I just
-checked" apart from "I believe this because someone else wrote it down a
-week ago" — and the gap in reliability between those two claims is enormous,
-even when they look identical on the page.</p>
-<h3 id="a-section-that-openly-admits-what-was-wrong-last-time">A section that openly admits what was wrong last time</h3>
-<p>At the very top of the document, before any new finding, sits a section
-devoted exclusively to what the previous review claimed that turned out to
-be incorrect — with a named cause for each error, not just a corrected
-number. Three findings were retracted entirely: one claim of a complete
-absence of coverage turned out to be false because the measurement had
-looked at only one of two existing rule groups and generalized from it; one
-claim about the number of alerts lacking a severity label was an artifact
-of the wrong denominator (it had counted rules that write a data series as
-well, for which a severity label makes no sense); one claim of data loss
-was true at the moment it was measured, but the problem resolved itself in
-a different way than the one proposed, before the recommendation was even
-read.</p>
-<p>On top of that, three further findings were <strong>directionally correct but
-wrong in magnitude</strong> — the underlying issue was real, but the arithmetic
-was off by a factor of three or more, because a cumulative counter had been
-read as a monthly rate, or a point-in-time value had been cited as if it
-were stable over time. The section explicitly names each of these causes
-and closes with a sentence worth repeating: the very error this review
-criticizes in someone else's documentation — a number carried forward as
-fact without being re-measured — also showed up in its own previous pass.
-Admitting one's own mistake with the same rigor used to judge someone
-else's documentation is what makes this discipline credible.</p>
-<h3 id="the-case-where-the-fix-had-already-been-shipped-and-nobody-checked">The case where the fix had already been shipped, and nobody checked</h3>
-<p>One finding deserves special mention because it runs in the opposite
-direction from what you'd expect. An earlier review had recommended
-rewriting the primary availability signal to draw from a source resistant
-to common noise. The new review discovered that this rewrite had <strong>already
-been done</strong>, weeks earlier — but a configuration switch that temporarily
-disabled the rewrite had been left unchanged, and the comment next to it in
-the code still described the old, pre-rewrite state as if it were current.
-Nobody had gone back to check whether the work, once "done," was actually
-turned on. The fix was a one-line configuration change — but only because
-someone finally went and checked, instead of trusting that "done" and
-"turned on and verified" are the same thing.</p>
-<h3 id="an-alert-that-has-been-ringing-for-ten-weeks-and-nobody-fixes-it">An alert that has been ringing for ten weeks and nobody fixes it</h3>
-<p>The review flagged, as one of its ten most important items, an alert that
-at the time of writing had been continuously in a firing state for <strong>about
-ten weeks</strong>. The cause was well known and had been diagnosed several times
-over: a change introducing a progress metric for one job lived only on an
-unmerged branch, so every subsequent build from the main branch quietly
-undid that change — the problem would get fixed, then come back, over and
-over, in cycles. This is the oldest unresolved finding in the entire
-review, and it was deliberately placed at the top of the list, not because
-it's the most technically complex, but because ten weeks of continuous
-ringing with no resolution says something about the team's discipline, not
-about the difficulty of the problem.</p>
-<h3 id="measuring-documentation-decay-as-a-number-not-an-impression">Measuring documentation decay as a number, not an impression</h3>
-<p>The review didn't merely claim that the documentation was becoming
-unwieldy — it measured it. The two largest internal documents had grown by
-roughly a third and by nearly half of their size, respectively, in just
-four days. That number was used as a direct signal of a structural problem
-(documents growing without bound instead of branching into smaller,
-focused pieces), not as a passing remark.</p>
-<h3 id="comparing-last-passs-recommendations-against-actual-tracking">Comparing last pass's recommendations against actual tracking</h3>
-<p>The final maturity check was the simplest and the most sobering: how many
-of the concrete action items from the previous review had actually been
-completed as a tracked item in the work-tracking system? The answer: almost
-none. The list of open and closed items was identical to the one from the
-previous pass, number for number. The findings had existed — but they had
-existed only inside a document that no one was formally responsible for
-acting on. That's a different kind of failure from "we didn't know" — it's
-"we knew, we wrote it down, and the writing didn't obligate anyone to do
-anything."</p>
-<h3 id="what-the-review-praised">What the review praised</h3>
-<p>The review wasn't just a list of shortcomings. One pattern was singled out
-as the most mature habit found across the whole estate: a team had earlier,
-for one part of the system, written its own justification for why a
-particular check was <strong>not</strong> needed — and then, months later, tested that
-same self-written justification against an external best-practice
-benchmark, found that it did not hold up, and added exactly the check it
-had previously argued against. This willingness to revisit one's own
-earlier decision against the evidence, voluntarily, without external
-pressure, was rated the single most valuable finding in the whole
-review — precisely because it was voluntary and recent.</p>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch30-ciklus-revizije.png" data-desc-position="bottom"><img alt="The cycle of periodic review: five passes, a confidence label per claim, a section of retracted findings at the top, and a comparison of recommendations against the actual work-tracking system." src="../diagrams/ch30-ciklus-revizije.png" width="92%"></a></p>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-alert-streak.png" data-desc-position="bottom"><img alt="An alert ringing continuously for about ten weeks — the opposite case from &quot;the alert that never rings&quot;: deliberately placed at the top of the findings list, because continuous ringing with no response says something about team discipline, not about the severity of the problem." src="../diagrams/dashboard-alert-streak.png" width="92%"></a></p>
-<h3 id="a-trend-measured-on-a-short-window-can-reverse-with-just-a-little-more-data">A trend measured on a short window can reverse with just a little more data</h3>
-<p>One item from the previous review was flagged as something to watch, not
-as a confirmed problem: the rate of memory change for one service,
-measured over a seven-day window, showed a consistent rise that looked
-like a leak. The new review, only a few days later, repeated the same
-measurement with four additional days of data — and the trend
-<strong>reversed</strong>. What had looked like a consistent rise was, with a wider
-window, just part of a broader oscillating pattern; the value had, in the
-meantime, returned nearly to its starting point.</p>
-<p>This is a different kind of error from the one the section on retracted
-findings already names. The retracted findings from the previous section
-were wrong because of a wrong denominator or a point value cited as
-stable — here, the <strong>direction</strong> of change itself was mathematically
-correct as computed on the available data, and yet wrong as a conclusion,
-because the measurement window wasn't wide enough to distinguish a real
-trend from noise temporarily moving in the same direction. The review
-explicitly named this as a lesson for itself: when a finding is based on
-a derived rate of change (rather than a directly measured value), before
-declaring it a trend it's worth explicitly asking how many days of data
-stand behind it, and whether that same calculation, repeated with a
-window twice as wide, would give the same direction.</p>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch30-kratak-prozor.png" data-desc-position="bottom"><img alt="The same rate-of-change calculation, two measurement windows: seven days looks like a consistent leak, four more days of data show it was part of a broader oscillating pattern." src="../../diagrams/ch30-kratak-prozor.png" width="78%"></a></p>
-<h3 id="when-the-measurement-itself-becomes-part-of-the-load-it-measures">When the measurement itself becomes part of the load it measures</h3>
-<p>The review uncovered a cost nobody had directly connected to its cause,
-even though it was fully visible in the bill: a line item that grew month
-over month, arising because the team's own rules tracking the telemetry
-system's consumption <strong>repeatedly scan</strong> that same system to measure its
-consumption. The system that exists to measure the load becomes part of
-the load it measures — a self-induced loop that no previous review had
-recognized as a cost, because it looked like a normal part of the
-measurement infrastructure, not like a line item that belonged on the
-cost list.</p>
-<p>The point the review draws isn't "remove consumption measurement" —
-measuring consumption is a legitimate, necessary control. The point is
-that every mechanism observing a system should be treated as a
-<strong>potential</strong> consumer of that same system's resources, not as a neutral
-observer outside it, and periodically checked to see whether that has
-actually happened. Without that check, this kind of cost grows quietly,
-in the very cost category the mechanism itself is responsible for
-monitoring — the hardest place for anyone to notice the problem, because
-it's exactly the place that should be raising an alarm about itself.</p>
-<h2 id="303-analytical-section-why-measuring-maturity-has-to-be-a-repeatable-discipline">30.3 Analytical section — why measuring maturity has to be a repeatable discipline</h2>
-<p>Google's SRE Book frames monitoring measurement around four <abbr title="Latency, traffic, errors, saturation — the core four dimensions for judging a service's health.">golden signals</abbr>
-(latency, traffic, errors, saturation), but the key point of that chapter
-isn't the list of signals — it's the position that an observability system
-should be judged by whether it supports fast detection and diagnosis, not
-by how much data it collects. Commercial maturity models (Grafana Labs and
-similar) turn this into measurable dimensions — coverage, the
-alert-to-incident ratio, time to detection, and time to recovery — and DORA
-metrics (Google Cloud) go further and treat recovery time and change
-failure rate as a direct proxy for how well the observability system
-actually works, not how much telemetry exists. The point that recurs
-across all of these models: maturity isn't measured by the volume of
-tooling, but by whether signals reliably translate into fast, accurate
-action.</p>
-<p>For the question "is an alert that never rings a good sign," the most
-influential text is Rob Ewaschuk's internal Google document, "My
-Philosophy on Alerting" — the rule is explicit: "track your on-call, and
-all other alerts. If an alert fires and people just say 'I looked, nothing
-was wrong,' that's a strong signal to remove that alerting rule." The same
-document sets a quantitative threshold too: an alert that is correct less
-than 50% of the time is broken. This directly confirms a pattern from
-earlier chapters in this book — an alert that never rings deserves
-suspicion, not praise, until it's verified to ring correctly when it
-should. The same principle, applied in reverse to an alert that rings for
-ten weeks without resolution, reveals a complementary truth: continuous
-ringing with no response is just as much a sign of a problem in team
-discipline as a silently dead alert — only in the opposite direction.</p>
-<p>The formal distinction between "consciously declined, with a reason" and
-"not yet done" was already introduced in Chapter 27 through a risk
-management framework (ISO/IEC 27005 <abbr title="A documented decision to knowingly not resolve a risk, with a rationale and a date.">risk acceptance</abbr> as a documented act,
-not silence). Here the same distinction shows up in a different form — not
-as the disposition of an individual finding, but as the question of
-whether the whole program is tracked at all through a system that compels
-action, or merely lives in a document that gets read but not followed up
-on. NIST's Plan of Action and Milestones (<abbr title="Plan of Action and Milestones — an item not yet resolved but actively tracked toward resolution.">POA&amp;M</abbr>) model makes exactly this
-distinction explicit — an item is either a formally accepted risk (which
-closes the question) or an actively tracked obligation (a <abbr title="Plan of Action and Milestones — an item not yet resolved but actively tracked toward resolution.">POA&amp;M</abbr>), never an
-informal note in the text with neither of those two fates.</p>
-<p>For the discipline of correcting one's own earlier claims, the ACM piece on
-why SRE documentation has value at all emphasizes a visible owner's name
-and a last-verified date on every operational document — without that,
-processes fragment over time as the team grows. The same principle was
-applied here to the review document itself: instead of quietly overwriting
-earlier numbers, the errors were left visible, with a date and an
-explanation of what corrected them — the same pattern of transparent
-correction that exists in scientific publishing (COPE guidelines on
-retracting claims), applied here to engineering documentation.</p>
-<h3 id="counterfactual-scenario-had-the-review-not-re-measured-everything">Counterfactual scenario — had the review not re-measured everything</h3>
-<p>Had the new review simply appended new findings to the old list instead of
-re-measuring every earlier claim, the document would still be claiming
-that the primary availability signal was broken — even though it had been
-fixed weeks earlier, merely switched off by one forgotten toggle. The team
-would spend time solving a problem that no longer existed, while a real,
-active problem (ten weeks of a continuously firing alert) would remain
-buried somewhere further down the list, because a falsely "open" old
-finding would still be occupying attention at the top. More precisely: the
-review would be <strong>honest about what used to be true</strong>, but useless for
-deciding what to do today — and the sole purpose of a document like this is
-to be a guide for action today, not an archive of history.</p>
-<p>Back to the pilot returning for a periodic check. A pilot who, instead of
-an actual check in the air, simply read their report from the last flight
-and concluded "I landed well then, so I still land well now" would in fact
-know nothing about their current state. The check exists precisely because
-it's the only honest answer to the question "is my own assessment of my
-skill still accurate" — measuring now, not trusting a record from before.</p>
-<h2 id="304-rules-collected-from-this-chapter">30.4 Rules collected from this chapter</h2>
+<h1 id="poglavlje-30-kako-izgleda-fazni-rollout-u-realnom-vremenu">Poglavlje 30 — Kako izgleda fazni rollout u realnom vremenu</h1>
+<p>Kad se stara kuća renovira, prvi plan uvek pretpostavlja zid kao ravnu,
+poznatu površinu — ovde ide nov razvod struje, tu novi vod za vodu, ovamo
+se ruši pregrada. Taj plan traje tačno do trenutka kad se otvori prvi zid.
+Iza gipsanih ploča se pojavi stara instalacija koju niko nije ucrtao,
+vlaga koja je godinama nevidljivo nagrizala gredu, cev koja ide kroz zid
+koji je trebalo srušiti prvog dana. Iskusan izvođač ne doživljava ovo kao
+neuspeh plana — on unapred zna da će se plan menjati čim se otvori prvi
+zid, i pravi raspored radova tako da najrizičnija prostorija (ona koja
+nosi krov, ili ona bez koje domaćinstvo ne može da funkcioniše ni jedan
+dan) dolazi na red poslednja, kad je izvođač već video dovoljno iza
+susednih zidova da zna na šta da se navikne.</p>
+<p>Isto važi za fazni rollout observability-ja preko flote servisa koji
+nikad nisu bili pod nadzorom. Plan napisan pre prvog koraka je najbolja
+moguća procena — ali je procena, ne ugovor. Pitanje koje odlučuje da li
+je takav program dobro vođen nije "da li se plan promenio", nego "da li
+su promene bile odgovor na stvarne dokaze, u pravom trenutku, dokumentovane
+tako da neko ko dođe kasnije razume zašto".</p>
+<h2 id="301-pitanje-na-koje-ovo-poglavlje-odgovara">30.1 Pitanje na koje ovo poglavlje odgovara</h2>
+<p>Kako izgleda, iznutra, program koji uvodi observability preko desetina
+servisa istovremeno — ne kao gotova arhitektura opisana unazad, nego kao
+niz odluka donetih pod pritiskom stvarnog vremena, sa nepotpunim
+informacijama? I kako se razlikuje odstupanje od plana koje je znak lošeg
+planiranja od odstupanja koje je znak da plan ispravno reaguje na ono što
+je upravo otkriveno?</p>
+<h2 id="302-kako-je-to-uraeno-praktican-pregled">30.2 Kako je to urađeno — praktičan pregled</h2>
+<h3 id="plan-sa-cetiri-sloja-i-redosledom-koji-se-objavljuje-unapred">Plan sa četiri sloja i redosledom koji se objavljuje unapred</h3>
+<p>Program je krenuo od jasne arhitekture: svaki zadatak nosi aplikacioni
+kontejner sa automatskom instrumentacijom i prilagođenim rasponima
+(spans) za poslovni kontekst; pored njega, bočni kolektor (sidecar) koji
+hvata poslednje raspone pri gašenju zadatka i dodaje metrike kontejnera
+koje aplikacija sama ne vidi; sve to ide ka centralnom prolazu (gateway)
+koji radi uzorkovanje, autentikaciju i grupisanje pre slanja dalje ka
+sistemu za skladištenje. Svaki sloj postoji zato što rešava kvar koji
+ostala tri ne mogu — bez bočnog kolektora gube se poslednji rasponi pri
+izlasku zadatka; bez centralnog prolaza svaki pošiljalac nosi sopstvene
+kredencijale i nema centralizovanog uzorkovanja; bez automatske
+instrumentacije svaki HTTP/DB poziv se ručno opremio.</p>
+<p>Redosled uvođenja je od početka objavljen kao numerisan spisak koraka,
+gde svaki korak otvara sledeći — ne slobodna lista želja, nego zaključana
+sekvenca sa jasnim uslovom prelaska. To je učinilo odstupanja vidljivim:
+kad se nešto promeni, promena se meri prema originalnom redosledu, ne
+tiho preformuliše kao da je oduvek tako trebalo da bude.</p>
+<h3 id="trenutak-kad-je-stvarnost-prva-prijavila-gresku">Trenutak kad je stvarnost prva prijavila grešku</h3>
+<p>Prva zakazana produkciona provera pilot-porodice zadataka otkrila je
+problem koji plan nije predvideo: pet od šest zadataka je tiho puklo na
+trci za istim redovima u bazi — dva odvojena puta pisanja (redovan i
+naknadni, "samo keš") su pokušala da upišu iste podatke istovremeno, prvi
+je uspeo, ostali su pukli na grešci jedinstvenosti. Ono što je ovaj
+trenutak učinilo posebno poučnim nije sama greška — greške u kodu su
+očekivane — nego to što je <strong>alarm izgrađen tačno da uhvati ovakav kvar
+ostao tih</strong>. Alarm "uspešno završeno, ali prazno" je proveravao da li je
+proizvedeno nula redova; pošto su puknuti zadaci uspeli da upišu deo
+podataka pre nego što su pali, uslov "nula redova" nikad nije bio tačan,
+pa je alarm ostao zelen dok je većina flote tiho umirala.</p>
+<p>Odgovor nije bio "sačekaj sledeću fazu plana da se to reši". U roku od
+dva sata nakon otkrića, u plan su ubačena dva nova koraka koja originalni
+raspored nije sadržao: grub alarm na izlazni kod različit od nule, koji
+zatvara vidljivi propust dok se ne popravi pravi uzrok, i sam popravak
+trke u aplikativnom kodu. Oba su morala da se završe pre nastavka na
+sledeći planirani korak — jer bi rad na sledećem koraku protiv flote koja
+konstantno puca pomešao nove greške sa starim.</p>
+<h3 id="odluka-da-se-redosled-promeni-i-zasto-je-to-bila-prava-odluka">Odluka da se redosled promeni — i zašto je to bila prava odluka</h3>
+<p>Nekoliko dana kasnije doneta je druga, direktnija promena plana: pilot
+bočnog kolektora, koji je originalno bio zakazan da čeka popravku trke iz
+prethodnog koraka, premešten je ISPRED te popravke — i proširen da odmah
+pokrije dve porodice zadataka umesto jedne. Ovo je bila svesna odluka, ne
+nestrpljenje, i obrazloženje je vredno ponavljanja: trka u pisanju je
+greška u aplikativnom kodu, dok pilot bočnog kolektora testira potpuno
+drugačiji sloj (kontejner, kolektor, rutiranje kroz prolaz) koji se sa
+tom greškom nikad ne dodiruje — nove serije metrika kontejnera, put preko
+lokalnog OTLP porta, i ponašanje pri gašenju sve se pojavljuju u prvih
+tridesetak sekundi života zadatka, mnogo pre nego što aplikacija uopšte
+stigne do redova koji se takmiče. Rizik je bio proveren i prihvaćen:
+jedini novi način kvara koji bočni kolektor uvodi je "kolektor ne
+uspe da se pokrene", a kolektor je markiran kao neobavezan deo zadatka,
+pa taj kvar ne obara ceo zadatak — samo bi tiho osiromašio telemetriju.</p>
+<h3 id="kad-se-ceo-mehanizam-pokaze-pogresnim-ne-samo-lose-podesenim">Kad se ceo mehanizam pokaže pogrešnim, ne samo loše podešenim</h3>
+<p>Treća promena plana bila je najdublja. Prvobitni dizajn alarmiranja na
+neuspeh zadatka koristio je grube alarme po porodici zadataka: kad bilo
+koji zadatak u porodici izađe sa greškom, jedan alarm se pali za celu
+porodicu. Posle prve stvarne produkcione poruke koju je taj alarm
+proizveo, postalo je jasno da problem nije prag ili osetljivost — poruka
+je doslovno govorila "nešto u ovoj porodici je izašlo sa greškom u
+poslednjih pet minuta", bez identiteta konkretnog zadatka, bez detalja
+greške, bez linka za dalju istragu. Da bi se istraga uopšte pokrenula,
+trebalo je ručno otvoriti logove, pronaći tačan zadatak u vremenskom
+prozoru, pročitati grešku, pa tek onda ručno preneti taj vremenski
+prozor u sistem za posmatranje.</p>
+<p>Umesto podešavanja praga, ceo mehanizam je zamenjen: događaj-vođen
+cevovod koji čita pun objekat promene stanja zadatka (identifikator
+zadatka, izlazni kod, razlog gašenja, revizija slike) i šalje poruku po
+zadatku, sa linkovima unapred podešenim na taj tačan zadatak. Uz to,
+uveden je <abbr title="Klasifikacija alarma po ozbiljnosti koja određuje dedup i put obaveštenja.">nivo hitnosti</abbr> u tri stepena — kritičan (svaki neuspeh se
+prijavljuje, bez grupisanja u jedan zapis), standardan (grupisanje
+ponovljenih neuspeha iste porodice u kratkom prozoru) i tih (bez
+obaveštenja, za razvojne/testne varijante) — gde je promena nivoa za
+jednu porodicu postala jedna linija konfiguracije umesto ručnog
+podešavanja praga po alarmu. Ovo je razlika vredna imenovanja: nekad
+plan ne treba fino podešavanje, nego priznanje da je izabrani mehanizam
+strukturno pogrešan za cilj koji se pokušava postići.</p>
+<h3 id="ko-dolazi-poslednji-i-zasto-je-to-pravilo-ne-izuzetak">Ko dolazi poslednji, i zašto je to pravilo, ne izuzetak</h3>
+<p>Kroz ceo program važilo je jedno tiho pravilo: proizvodno najkritičniji
+zadatak — onaj čiji ispad korisnici odmah osete — namerno je onboardovan
+<strong>poslednji</strong>, tek pošto je svaki susedni rizik uklonjen na manje
+kritičnim zadacima prvo. Ovo nije bio slučaj po slučaj izuzetak, nego
+objavljena politika, zapisana pre nego što je bila potrebna — što znači
+da kad je neko kasnije pitao "zašto ovaj zadatak još nema instrumentaciju",
+odgovor nije bio improvizovan, nego pokazivanje na već postojeće pravilo.</p>
+<h3 id="revizija-pre-brisanja-starog-sistema">Revizija pre brisanja starog sistema</h3>
+<p>Poslednji korak faznog programa bio je gašenje starog, grubog sistema
+alarmiranja pošto ga je novi u potpunosti zamenio. Umesto direktnog
+brisanja, prvo je urađena revizija: koliko od postojećih alarma zaista
+još uvek prima podatke? Rezultat je bio otrežnjujuć — od dvadesetak
+starih alarma po porodici, većina nije primila nijednu tačku podataka
+godinu dana unazad (izvor podataka koji ih je hranio je tiho prestao da
+radi, a podešavanje "nedostatak podataka = normalno stanje" ih je držalo
+večno "zelenim"), nekoliko nije promenilo stanje od pre nekoliko godina, i
+samo mala šačica je zaista predstavljala živu pokrivenost. Ta revizija
+je promenila prirodu gašenja — nije bilo brisanje aktivne zaštite, nego
+uklanjanje fasade koja je godinama izgledala kao zaštita dok to odavno
+nije bila.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch29-vremenska-linija.png" data-desc-position="bottom"><img alt="Vremenska linija faznog rollout-a: numerisan plan, stvarnost koja otkriva propust koji alarm nije uhvatio, dva ubačena koraka, premešten redosled i zamenjen mehanizam alarmiranja, sa najkritičnijim delom flote namerno na kraju." src="../diagrams/ch29-vremenska-linija.png" width="95%"></a></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-alarm-audit.png" data-desc-position="bottom"><img alt="Revizija pre gašenja starog sistema alarmiranja: od 23 stara alarma, 16 nije primilo nijednu tačku podataka preko godinu dana — izgledali su &quot;zeleno&quot; samo zato što je odsustvo podataka bilo protumačeno kao normalno stanje." src="../diagrams/dashboard-alarm-audit.png" width="95%"></a></p>
+<h3 id="zasto-se-planiran-korak-namerno-preskace-ne-dodaje">Zašto se planiran korak namerno preskače, ne dodaje</h3>
+<p>Ne svaka promena plana je dodavanje koraka. Originalni plan je predviđao
+poseban mehanizam u samoj aplikaciji koji bi, pri gašenju procesa, ručno
+uhvatio i poslao poslednje podatke pre nego što proces stvarno umre. Kad je
+došlo vreme za taj korak, implementacija ga je svesno <strong>preskočila</strong> — ne
+zaboravila, nego eksplicitno odlučila da ga ne radi, sa zapisanim razlogom:
+bočni kolektor iz drugog sloja plana već rešava isti problem čistije, jer
+zadržava raspone dok proces izlazi i garantovan mu je fiksan vremenski
+prozor pre prisilnog gašenja. Ručni mehanizam u aplikaciji bi pokrivao samo
+uzak podskup situacija koje bočni kolektor već pokriva u celini.</p>
+<p>Ono što ovu odluku čini disciplinom, ne lenjošću, jeste da je zapisan
+tačan uslov pod kojim bi se preskočeni korak ipak morao vratiti na plan:
+ako pilot bočnog kolektora otkrije da se poslednji podaci ipak gube u
+merljivoj količini, korak se vraća. Procenjen najgori slučaj gubitka bez
+tog koraka je bio mali i imenovan brojkom, ne "trebalo bi da bude
+zanemarljivo". Preskakanje koraka bez ovog uslova bi bilo nadanje;
+preskakanje sa njim je proverljiva opklada koja se automatski poništava
+čim dokaz kaže suprotno.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch29-preskocen-korak.png" data-desc-position="bottom"><img alt="Preskočen korak sa zapisanim uslovom za povratak: procenjen najgori slučaj je imenovan brojkom, a plan se automatski vraća na korak čim pilot pokaže merljiv gubitak." src="../diagrams/ch29-preskocen-korak.png" width="80%"></a></p>
+<h3 id="kad-se-jedna-greska-pretvori-u-sistematsku-pretragu-iste-klase">Kad se jedna greška pretvori u sistematsku pretragu iste klase</h3>
+<p>Tokom popravke jednog specifičnog kvara u jednoj porodici zadataka —
+neusklađenost formata pri upisu redova koja je uzrokovala tihe otkaze —
+implementacija je otišla korak dalje od uobičajenog "popravi i nastavi".
+Umesto da se popravka ograniči na mesto gde je greška prvi put uočena,
+neko je proverio da li se <strong>isti oblik greške</strong> pojavljuje bilo gde
+drugde u deljenoj biblioteci koju koristi cela flota. Pretraga je pronašla
+istu grešku na deset dodatnih mesta poziva, u potpuno različitim delovima
+koda, koje niko nije prijavio jer se do sad nisu manifestovale na isti
+vidljiv način.</p>
+<p>Ovaj nalaz je ubačen u plan kao preduslov, ne kao naknadna napomena:
+nijedan od tih deset mesta ne sme ući u produkcionu instrumentaciju niti se
+osloniti pod opterećenjem dok se popravka ne primeni na sve njih. Razlika u
+odnosu na standardni tok "prijavi grešku, popravi, zatvori" je namerna: kad
+je jedan konkretan slučaj samo simptom šireg obrasca u deljenom kodu,
+tretiranje tog jednog slučaja kao izolovanog ostavlja preostalih deset da
+čekaju sopstveni incident da bi bili otkriveni.</p>
+<h2 id="303-analiticki-deo-kad-je-odstupanje-od-plana-znak-zrelosti-ne-slabosti">30.3 Analitički deo — kad je odstupanje od plana znak zrelosti, ne slabosti</h2>
+<p>Industrijska praksa oko faznih rollout-a je, na sreću, dobro razrađena, i
+gotovo svaka preporuka potvrđuje intuiciju izvođača koji renovira kuću:
+sekvenca po riziku, ne po pogodnosti.</p>
+<p>Martin Fowler-ov opis "canary release" obrasca — postepenog uvođenja
+promene na sve manjem, pa sve većem delu saobraćaja — i Google-ov SRE
+Workbook idu korak dalje i kvantifikuju zašto: kvar koji pogodi 20% korisnika
+na samo 5% saobraćaja troši samo 1% budžeta greške, ne 20%. Microsoft-ov
+Azure Well-Architected Framework ovo pretvara u konkretno pravilo za
+redosled — interno testiranje → pilot → rani usvojioci → puna dostupnost,
+sa vremenom "odležavanja" između svakog kruga mereno u satima ili danima,
+ne minutima, upravo zato što različiti obrasci korišćenja isplivaju samo
+uz dovoljno vremena. Redosled po riziku, ne po tome šta je tehnički lakše
+uraditi sledeće, jeste tačno princip koji je odredio da najkritičniji deo
+flote dolazi poslednji u ovom programu — ne izuzetak od preporučene
+prakse, nego njena direktna primena.</p>
+<p>Za sâmo pitanje "da li je legitimno menjati plan usred izvršenja",
+koristan okvir je Cynefin (Snowden i Boone): kad je sistem "komplikovan",
+stručna analiza unapred daje pouzdan plan; kad je sistem "kompleksan" —
+a flota heterogenih zadataka sa različitim domenima kvara upravo to jeste
+— ispravna disciplina je "probaj → oseti → odgovori", ne "analiziraj pa
+odgovori". To znači da se deluje na osnovu delimične informacije, posmatra
+šta sistem otkriva, i plan se prilagođava — ovo se u toj literaturi tretira
+kao <strong>rigorozna praksa</strong>, ne kao priznanje lošeg planiranja. Google-ov
+model budžeta greške radi isto sa druge strane: cilj pouzdanosti je
+nepromenljiv, ali tempo i redosled isporuke promena je promenljiva koja se
+kontinuirano prilagođava prema stvarnoj potrošnji budžeta — što je tačno
+mehanizam koji je opravdao ubacivanje dva nova koraka odmah posle prve
+prijave stvarnog kvara, umesto čekanja da originalni plan dođe na red.</p>
+<p>Google-ov SRE Book poglavlje o postmortem kulturi formalizuje kanal kroz
+koji nova saznanja ulaze u postojeći plan: postmortem nije samo zapis
+šta se desilo, nego formalni ulaz za nove stavke plana, sa eksplicitnom
+ocenom da li je predloženi akcioni plan primeren. To je tačno ono što se
+desilo posle prve prijave — nije samo popravljena aplikacija, nego je
+sâm plan revidovan da uključi trajnu vidljivost tog kvara.</p>
+<p>Konkretan presedan za reviziju pre gašenja starog sistema postoji i van
+ove implementacije: LogicMonitor-ova studija slučaja jednog velikog
+migracionog projekta opisuje isti obrazac — revizija svakog starog
+pravila alarmiranja pre migracije, pitanjem "koliko često se ovo zaista
+okine, i da li je sistem na koji se odnosi uopšte još živ" pre nego što
+se pravilo prenese ili obriše — otkrivajući mrtva pravila vezana za
+odavno ugašene sisteme, tačno klasu problema koja se pojavila i ovde.
+Njihova preporuka: migracija alarmiranja je prilika za čišćenje, ne
+prosto prenošenje, jer prenošenje neproverenog alarmiranja tiho gomila
+dug koji niko ne vidi dok ne zatreba.</p>
+<h3 id="kontrafakticki-scenario-da-je-plan-sproveden-bukvalno">Kontrafaktički scenario — da je plan sproveden bukvalno</h3>
+<p>Da je originalni redosled ispoštovan bukvalno — bočni kolektor čeka
+popravku trke, stari alarmi se prenose "kako jesu" bez revizije, svaka
+odluka o redosledu se donosi jednom na početku i drži se do kraja — ishod
+bi bio dvostruko lošiji. Prvo, verifikacija bočnog kolektora bi kasnila
+danima čekajući popravku koja s njom nema tehničke veze, bez ikakve
+koristi za bezbednost tog čekanja. Drugo, i ozbiljnije: novi sistem
+alarmiranja bi krenuo u produkciju noseći dvadesetak "aktivnih" alarma
+od kojih je najveći deo već godinama mrtav — svaka buduća revizija
+pokrivenosti bi računala tu mrtvu fasadu kao stvarnu zaštitu, i istinski
+propust u pokrivenosti bi ostao neprimećen mnogo duže nego što je bio.</p>
+<p>Vratimo se izvođaču koji renovira kuću. Onaj koji uporno drži prvobitni
+raspored radova, bez obzira šta pronađe iza prvog zida, ne dovršava
+posao brže — samo kasnije otkriva da je zazidao problem koji je trebalo
+rešiti na licu mesta. Plan koji se nikad ne menja pod pritiskom
+stvarnosti nije znak discipline. Verovatnije je znak da niko nije zaista
+gledao šta je iza zida.</p>
+<h2 id="304-skupljena-pravila-iz-ovog-poglavlja">30.4 Skupljena pravila iz ovog poglavlja</h2>
 <ul>
-<li>Run periodic reviews in passes that include direct verification against
-  the live platform, not just reading existing documentation.</li>
-<li>If enough time has passed since the previous review that the estate has
-  changed, re-measure EVERY number — don't assume it still holds.</li>
-<li>Label every claim with its provenance (just measured / from
-  documentation, unverified / previously claimed, now disproven) — the
-  reader must know how much to trust each individual claim.</li>
-<li>When a previous finding is wrong, show that openly with the cause of the
-  error, don't quietly overwrite the number.</li>
-<li>An alert that never rings deserves suspicion; an alert that rings for
-  weeks with no response deserves the same suspicion in the opposite
-  direction — both go at the top of the list, not in a footnote.</li>
-<li>Check whether last time's recommendations actually entered a system that
-  compels action, or merely live in a document nobody tracks.</li>
-<li>Before declaring a derived rate of change a trend, check how many days
-  of data stand behind it — a short window can show a consistent
-  direction that's actually part of a broader oscillating pattern, not a
-  real trend.</li>
-<li>Treat every mechanism observing a system as a potential consumer of that
-  same system's resources, not as a neutral observer — a cost the
-  measurement itself causes grows hardest to notice exactly in the
-  category it's responsible for monitoring.</li>
+<li>Objavi redosled unapred kao numerisan, uslovljen spisak — to čini svako
+  buduće odstupanje vidljivim i objašnjivim, umesto tiho preformulisanim.</li>
+<li>Kad novi dokaz iz produkcije otkrije rupu koju plan nije predvideo,
+  ubaci novi korak ODMAH, ne na sledećem planiranom ciklusu — ali
+  dokumentuj zašto je ubačen.</li>
+<li>Redosled radova sekvencioniraj po domenu kvara i radijusu dejstva, ne
+  po tehničkoj pogodnosti — najkritičniji deo sistema poslednji, kao
+  standing politika, ne ad hoc izuzetak.</li>
+<li>Kad prva stvarna poruka iz novog mehanizma alarmiranja pokaže da je
+  mehanizam strukturno neupotrebljiv (ne samo loše kalibrisan), zameni
+  ceo mehanizam — ne samo prag.</li>
+<li>Pre gašenja starog sistema, revidiraj ga — koliko od "aktivne" zaštite
+  je zapravo tiha fasada koja godinama nije primila nijedan podatak.</li>
+<li>Kad preskačeš planiran korak jer ga drugi deo plana već pokriva, zapiši
+  tačan uslov pod kojim bi se korak morao vratiti — preskakanje bez tog
+  uslova je nadanje, preskakanje sa njim je proverljiva opklada.</li>
+<li>Kad popravljaš konkretan kvar u deljenom kodu, proveri da li se ista
+  klasa greške pojavljuje na drugim mestima poziva pre nego što ijedno od
+  njih uđe u produkciju pod opterećenjem — jedan prijavljen slučaj je često
+  samo prvi vidljivi simptom šireg obrasca.</li>
 </ul>
-<h2 id="305-exercise-for-the-reader">30.5 Exercise for the reader</h2>
-<p>Take the last internal report, review, or audit your team wrote more than a
-month ago. Pick three concrete numbers from it and verify them right now,
-against living reality. Do they still hold? If not, would anyone have
-noticed had you not just checked?</p>
+<h2 id="305-vezba-za-citaoca">30.5 Vežba za čitaoca</h2>
+<p>Pronađi u istoriji sopstvenog tima jedan slučaj gde je plan promenjen
+usred izvršenja. Da li je ta promena bila zapisana negde sa razlogom, ili
+je samo tiho postala nova stvarnost? Da si morao da objasniš tu promenu
+nekome ko dolazi šest meseci kasnije, imaš li šta da pokažeš osim
+sopstvenog sećanja?</p>
 <hr>
-<p><em>Sources used in the analytical section:</em></p>
+<p><em>Izvori korišćeni u analitičkom delu:</em></p>
 <ul>
-<li><em>Google SRE Book — "Monitoring Distributed Systems" (četiri zlatna signala)</em></li>
-<li><em>Grafana Labs — model zrelosti observability strategije</em></li>
-<li><em>Google Cloud — DORA / Four Keys metrike</em></li>
-<li><em>Rob Ewaschuk — "My Philosophy on Alerting"</em></li>
-<li><em>NIST okvir za upravljanje rizikom — <abbr title="Plan of Action and Milestones — an item not yet resolved but actively tracked toward resolution.">POA&amp;M</abbr> i formalno prihvatanje rizika</em></li>
-<li><em>ACM — "Why SRE Documents Matter"</em></li>
+<li><em>Google SRE Workbook — "Canarying Releases"</em></li>
+<li><em>Martin Fowler — "CanaryRelease" (martinfowler.com)</em></li>
+<li><em>Microsoft Azure Well-Architected Framework — "Safe deployment practices"</em></li>
+<li><em>Google SRE Book — "Postmortem Culture: Learning from Failure"</em></li>
+<li><em>Cynefin Framework (Snowden i Boone) — pregledi primene na odlučivanje</em></li>
+<li><em>LogicMonitor — studija slučaja revizije alarma pre migracije</em></li>
 </ul>
 
 
@@ -2789,10 +2757,10 @@ noticed had you not just checked?</p>
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="Last update">
+    <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:42:34 UTC">August 31, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 11:57:00 UTC">31. avgust 2026.</span>
   </span>
 
     
@@ -2816,7 +2784,7 @@ noticed had you not just checked?</p>
           <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
-  Back to top
+  Nazad na vrh
 </button>
         
       </main>
@@ -2825,33 +2793,33 @@ noticed had you not just checked?</p>
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="Footer">
+      <nav class="md-footer__inner md-grid" aria-label="Podnožje">
         
           
-          <a href="../poglavlje-29-fazni-rollout/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Chapter 29 — What a phased rollout looks like in real time">
+          <a href="../deo-7-uvod/" class="md-footer__link md-footer__link--prev" aria-label="Prethodno: Deo VII — Sazrevanje programa">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                Previous
+                Prethodno
               </span>
               <div class="md-ellipsis">
-                Chapter 29 — What a phased rollout looks like in real time
+                Deo VII — Sazrevanje programa
               </div>
             </div>
           </a>
         
         
           
-          <a href="../poglavlje-31-zakljucak/" class="md-footer__link md-footer__link--next" aria-label="Next: Chapter 31 — Conclusion: rules collected">
+          <a href="../poglavlje-31-merenje-zrelosti/" class="md-footer__link md-footer__link--next" aria-label="Sledeće: Poglavlje 31 — Merenje zrelosti sopstvenog programa">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                Next
+                Sledeće
               </span>
               <div class="md-ellipsis">
-                Chapter 31 — Conclusion: rules collected
+                Poglavlje 31 — Merenje zrelosti sopstvenog programa
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2888,10 +2856,10 @@ noticed had you not just checked?</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.action.edit", "content.tooltips", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.action.edit", "content.tooltips", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Iskopirano u clipboard", "clipboard.copy": "Kopiraj u clipboard", "search.result.more.one": "jo\u0161 1 na ovoj stranici", "search.result.more.other": "jo\u0161 # na ovoj stranici", "search.result.none": "Ni\u0161ta nije prona\u0111eno", "search.result.one": "1 rezultat pretrage", "search.result.other": "# rezultata pretrage", "search.result.placeholder": "Unesi pojam pretrage", "search.result.term.missing": "Nedostaje", "select.version": "Izaberi verziju"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   

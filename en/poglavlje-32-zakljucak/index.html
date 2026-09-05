@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="sr" class="no-js"><head>
+<!DOCTYPE html><html lang="en" class="no-js"><head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,35 +7,35 @@
       
       
       
-        <link rel="canonical" href="https://predrag86.github.io/observability-in-practice/poglavlje-31-zakljucak/">
+        <link rel="canonical" href="https://predrag86.github.io/observability-in-practice/en/poglavlje-32-zakljucak/">
       
       
-        <link rel="prev" href="../poglavlje-30-merenje-zrelosti/">
+        <link rel="prev" href="../poglavlje-31-merenje-zrelosti/">
       
       
         <link rel="next" href="../dodatak-a-promql-logql-recepti/">
       
       
         
-          <link rel="alternate" href="./" hreflang="sr">
+          <link rel="alternate" href="../../poglavlje-32-zakljucak/" hreflang="sr">
         
-          <link rel="alternate" href="../en/poglavlje-31-zakljucak/" hreflang="en">
+          <link rel="alternate" href="./" hreflang="en">
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Poglavlje 31 — Zaključak: skupljena pravila - Observability u praksi</title>
+        <title>Chapter 32 — Conclusion: rules collected - Observability in Practice</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -54,9 +54,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -71,7 +71,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://predrag86.github.io/observability-in-practice/diagrams/og-image.png">
 
-  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
             html.glightbox-open { overflow: initial; height: 100%; }
             .gslide-title { margin-top: 0px; user-select: text; }
             .gslide-desc { color: #666; user-select: text; }
@@ -100,8 +100,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#poglavlje-31-zakljucak-skupljena-pravila" class="md-skip">
-          Idi na tekst
+        <a href="#chapter-32-conclusion-rules-collected" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -115,8 +115,8 @@
   
 
 <header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Zaglavlje">
-    <a href=".." title="Observability u praksi" class="md-header__button md-logo" aria-label="Observability u praksi" data-md-component="logo">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../" title="Observability in Practice" class="md-header__button md-logo" aria-label="Observability in Practice" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
@@ -130,13 +130,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Observability u praksi
+            Observability in Practice
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Poglavlje 31 — Zaključak: skupljena pravila
+              Chapter 32 — Conclusion: rules collected
             
           </span>
         </div>
@@ -176,20 +176,20 @@
       <div class="md-header__option">
   <div class="md-select">
     
-    <button class="md-header__button md-icon" aria-label="Izaberi jezik">
+    <button class="md-header__button md-icon" aria-label="Select language">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
     </button>
     <div class="md-select__inner">
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="./" hreflang="sr" class="md-select__link">
+            <a href="../../poglavlje-32-zakljucak/" hreflang="sr" class="md-select__link">
               Srpski
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="../en/poglavlje-31-zakljucak/" hreflang="en" class="md-select__link">
+            <a href="./" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
@@ -210,16 +210,16 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Pretraga" placeholder="Pretraga" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
       </label>
-      <nav class="md-search__options" aria-label="Pretraga">
+      <nav class="md-search__options" aria-label="Search">
         
-        <button type="reset" class="md-search__icon md-icon" title="Očisti" aria-label="Očisti" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
         </button>
@@ -232,7 +232,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            Inicijalizujem pretragu
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -244,7 +244,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/predrag86/observability-in-practice" title="Idi u repozitorijum" class="md-source" data-md-component="source">
+        <a href="https://github.com/predrag86/observability-in-practice" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
@@ -278,19 +278,19 @@
 
 
 
-<nav class="md-nav md-nav--primary" aria-label="Navigacija" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Observability u praksi" class="md-nav__button md-logo" aria-label="Observability u praksi" data-md-component="logo">
+    <a href="../" title="Observability in Practice" class="md-nav__button md-logo" aria-label="Observability in Practice" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 
     </a>
-    Observability u praksi
+    Observability in Practice
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/predrag86/observability-in-practice" title="Idi u repozitorijum" class="md-source" data-md-component="source">
+      <a href="https://github.com/predrag86/observability-in-practice" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
@@ -310,14 +310,14 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Naslovna
+    Home
   
 
     
@@ -344,7 +344,7 @@
   <span class="md-ellipsis">
     
   
-    Uvod
+    Introduction
   
 
     
@@ -389,7 +389,7 @@
   <span class="md-ellipsis">
     
   
-    Deo I
+    Part I
   
 
     
@@ -405,7 +405,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Deo I
+    Part I
   
 
           </label>
@@ -425,7 +425,7 @@
   <span class="md-ellipsis">
     
   
-    Deo I — Osnove
+    Part I — Fundamentals
   
 
     
@@ -453,7 +453,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 1 — Šta je observability, a šta je samo monitoring sa novim imenom
+    Chapter 1 — What observability is, and what's just monitoring with a new name
   
 
     
@@ -481,7 +481,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 2 — OpenTelemetry: mentalni model pre prve linije koda
+    Chapter 2 — OpenTelemetry: a mental model before the first line of code
   
 
     
@@ -509,7 +509,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 3 — Izbor platforme: zašto Grafana Cloud
+    Chapter 3 — Choosing a platform: why Grafana Cloud
   
 
     
@@ -562,7 +562,7 @@
   <span class="md-ellipsis">
     
   
-    Deo II
+    Part II
   
 
     
@@ -578,7 +578,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Deo II
+    Part II
   
 
           </label>
@@ -598,7 +598,7 @@
   <span class="md-ellipsis">
     
   
-    Deo II — Arhitektura prikupljanja telemetrije
+    Part II — Telemetry-collection architecture
   
 
     
@@ -626,7 +626,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 4 — Gateway obrazac: centralna tačka za telemetriju
+    Chapter 4 — The gateway pattern: a central point for telemetry
   
 
     
@@ -654,7 +654,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 5 — Instrumentacija aplikacije: dve strategije
+    Chapter 5 — Instrumenting the application: two strategies
   
 
     
@@ -682,7 +682,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 6 — Kontejnerska/batch radna opterećenja: sidecar obrazac
+    Chapter 6 — Containerized/batch workloads: the sidecar pattern
   
 
     
@@ -710,7 +710,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 7 — Kada ne možeš da instrumentiraš izvor: pull-obrasci
+    Chapter 7 — When you can't instrument the source: pull-based patterns
   
 
     
@@ -738,7 +738,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 8 — Frontend / RUM observability
+    Chapter 8 — Frontend / RUM observability
   
 
     
@@ -766,7 +766,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 9 — Sintetičko (black-box) praćenje
+    Chapter 9 — Synthetic (Black-Box) Monitoring
   
 
     
@@ -819,7 +819,7 @@
   <span class="md-ellipsis">
     
   
-    Deo III
+    Part III
   
 
     
@@ -835,7 +835,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Deo III
+    Part III
   
 
           </label>
@@ -855,7 +855,7 @@
   <span class="md-ellipsis">
     
   
-    Deo III — Obrada, kardinalnost i troškovi
+    Part III — Processing, cardinality, and cost
   
 
     
@@ -883,7 +883,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 10 — Anatomija pipeline-a: šta se radi sa signalom pre nego što ode u cloud
+    Chapter 10 — Anatomy of the pipeline: what happens to the signal before it goes to the cloud
   
 
     
@@ -911,7 +911,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 11 — Kardinalnost i cena: kako sistem prirodno naraste iznad budžeta
+    Chapter 11 — Cardinality and cost: how a system naturally outgrows its budget
   
 
     
@@ -939,7 +939,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 12 — Sampling trejsova: server-side adaptivni sampling naspram collector-side
+    Chapter 12 — Trace sampling: server-side adaptive sampling versus collector-side
   
 
     
@@ -992,7 +992,7 @@
   <span class="md-ellipsis">
     
   
-    Deo IV
+    Part IV
   
 
     
@@ -1008,7 +1008,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Deo IV
+    Part IV
   
 
           </label>
@@ -1028,7 +1028,7 @@
   <span class="md-ellipsis">
     
   
-    Deo IV — Alarmiranje, SLO i odgovor na incidente
+    Part IV — Alerting, SLOs, and incident response
   
 
     
@@ -1056,7 +1056,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 13 — Arhitektura alarmiranja: dva puta, jedan odredišni kanal
+    Chapter 13 — Alerting architecture: two paths, one destination channel
   
 
     
@@ -1084,7 +1084,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 14 — Kad alarm ćuti: gating, dedup i "tihi gap"
+    Chapter 14 — When the alert stays silent: gating, dedup, and the "silent gap"
   
 
     
@@ -1112,7 +1112,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 15 — SLO i alarmi zasnovani na budžetu grešaka
+    Chapter 15 — SLOs and error-budget-based alerts
   
 
     
@@ -1140,7 +1140,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 16 — Runbook-ovi: od alarma do rešenja
+    Chapter 16 — Runbooks: from alert to resolution
   
 
     
@@ -1168,7 +1168,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 17 — Postmortem kultura
+    Chapter 17 — Postmortem culture
   
 
     
@@ -1221,7 +1221,7 @@
   <span class="md-ellipsis">
     
   
-    Deo V
+    Part V
   
 
     
@@ -1237,7 +1237,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Deo V
+    Part V
   
 
           </label>
@@ -1257,7 +1257,7 @@
   <span class="md-ellipsis">
     
   
-    Deo V — Domenske studije slučaja
+    Part V — Domain case studies
   
 
     
@@ -1285,7 +1285,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 18 — Baze podataka (upravljane, tipa RDS/Aurora)
+    Chapter 18 — Databases (managed, RDS/Aurora-type)
   
 
     
@@ -1313,7 +1313,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 19 — Samostalno upravljani distribuirani sistemi (klaster tipa Dremio)
+    Chapter 19 — Self-managed distributed systems (a Dremio-style cluster)
   
 
     
@@ -1341,7 +1341,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 20 — Autentikacija i IAM (sistem tipa Keycloak)
+    Chapter 20 — Authentication and IAM (a Keycloak-type system)
   
 
     
@@ -1369,7 +1369,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 21 — Hostovi i serveri kao mašine
+    Chapter 21 — Hosts and servers as machines
   
 
     
@@ -1397,7 +1397,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 22 — Mreža kao posebna ravan posmatranja
+    Chapter 22 — The network as its own observation plane
   
 
     
@@ -1425,7 +1425,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 23 — Batch/ETL flota zadataka
+    Chapter 23 — The batch/ETL job fleet
   
 
     
@@ -1453,7 +1453,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 24 — Posmatranje servisa koji nije naš (tipa Snowflake)
+    Chapter 24 — Observing a service that isn't ours (the Snowflake kind)
   
 
     
@@ -1506,7 +1506,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VI
+    Part VI
   
 
     
@@ -1522,7 +1522,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Deo VI
+    Part VI
   
 
           </label>
@@ -1542,7 +1542,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VI — Upravljanje, usklađenost i zrelost
+    Part VI — Governance, compliance, and maturity
   
 
     
@@ -1570,7 +1570,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 25 — Privatnost u telemetriji
+    Chapter 25 — Privacy in telemetry
   
 
     
@@ -1598,7 +1598,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 26 — Observability kao kontrola usklađenosti (SOC 2 primer)
+    Chapter 26 — Observability as a compliance control (a SOC 2 example)
   
 
     
@@ -1626,7 +1626,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 27 — Prioritizacija: cena, performanse, pouzdanost, bezbednost
+    Chapter 27 — Prioritization: cost, performance, reliability, security
   
 
     
@@ -1654,7 +1654,35 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 28 — AI-asistirana observability: agent koji čita telemetriju
+    Chapter 28 — AI-assisted observability: an agent that reads telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../poglavlje-29-cicd-infrastruktura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapter 29 — CI/CD for infrastructure: when two revisions quietly go their separate ways
   
 
     
@@ -1707,7 +1735,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VII
+    Part VII
   
 
     
@@ -1723,7 +1751,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Deo VII
+    Part VII
   
 
           </label>
@@ -1743,7 +1771,7 @@
   <span class="md-ellipsis">
     
   
-    Deo VII — Sazrevanje programa
+    Part VII — The program matures
   
 
     
@@ -1764,14 +1792,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../poglavlje-29-fazni-rollout/" class="md-nav__link">
+      <a href="../poglavlje-30-fazni-rollout/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Poglavlje 29 — Kako izgleda fazni rollout u realnom vremenu
+    Chapter 30 — What a phased rollout looks like in real time
   
 
     
@@ -1792,14 +1820,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../poglavlje-30-merenje-zrelosti/" class="md-nav__link">
+      <a href="../poglavlje-31-merenje-zrelosti/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Poglavlje 30 — Merenje zrelosti sopstvenog programa
+    Chapter 31 — Measuring the maturity of your own program
   
 
     
@@ -1836,7 +1864,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 31 — Zaključak: skupljena pravila
+    Chapter 32 — Conclusion: rules collected
   
 
     
@@ -1854,7 +1882,7 @@
   <span class="md-ellipsis">
     
   
-    Poglavlje 31 — Zaključak: skupljena pravila
+    Chapter 32 — Conclusion: rules collected
   
 
     
@@ -1866,7 +1894,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="Sadržaj">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -1875,15 +1903,15 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Sadržaj
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#osnove" class="md-nav__link">
+  <a href="#fundamentals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Osnove
+        Fundamentals
       
     </span>
   </a>
@@ -1891,10 +1919,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#arhitektura-prikupljanja" class="md-nav__link">
+  <a href="#collection-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Arhitektura prikupljanja
+        Collection architecture
       
     </span>
   </a>
@@ -1902,10 +1930,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#obrada-kardinalnost-troskovi" class="md-nav__link">
+  <a href="#processing-cardinality-cost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Obrada, kardinalnost, troškovi
+        Processing, cardinality, cost
       
     </span>
   </a>
@@ -1913,10 +1941,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#alarmiranje-slo-incidenti" class="md-nav__link">
+  <a href="#alerting-slos-incidents" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Alarmiranje, SLO, incidenti
+        Alerting, SLOs, incidents
       
     </span>
   </a>
@@ -1924,10 +1952,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#domenske-studije-slucaja" class="md-nav__link">
+  <a href="#domain-case-studies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Domenske studije slučaja
+        Domain case studies
       
     </span>
   </a>
@@ -1935,10 +1963,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upravljanje-usklaenost-zrelost" class="md-nav__link">
+  <a href="#governance-compliance-maturity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upravljanje, usklađenost, zrelost
+        Governance, compliance, maturity
       
     </span>
   </a>
@@ -1946,10 +1974,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#poslednja-recenica" class="md-nav__link">
+  <a href="#the-last-sentence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Poslednja rečenica
+        The last sentence
       
     </span>
   </a>
@@ -2004,7 +2032,7 @@
   <span class="md-ellipsis">
     
   
-    Dodaci
+    Appendices
   
 
     
@@ -2020,7 +2048,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Dodaci
+    Appendices
   
 
           </label>
@@ -2040,7 +2068,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak A — PromQL/LogQL recepti
+    Appendix A — PromQL/LogQL recipes
   
 
     
@@ -2068,7 +2096,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak B — Rečnik pojmova
+    Appendix B — Glossary of terms
   
 
     
@@ -2096,7 +2124,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak C — Checklist za onboarding novog servisa na observability
+    Appendix C — Checklist for onboarding a new service onto observability
   
 
     
@@ -2124,7 +2152,7 @@
   <span class="md-ellipsis">
     
   
-    Dodatak D — Šablon runbook-a i šablon postmortema
+    Appendix D — Runbook template and postmortem template
   
 
     
@@ -2158,7 +2186,7 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="Sadržaj">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -2167,15 +2195,15 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Sadržaj
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#osnove" class="md-nav__link">
+  <a href="#fundamentals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Osnove
+        Fundamentals
       
     </span>
   </a>
@@ -2183,10 +2211,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#arhitektura-prikupljanja" class="md-nav__link">
+  <a href="#collection-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Arhitektura prikupljanja
+        Collection architecture
       
     </span>
   </a>
@@ -2194,10 +2222,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#obrada-kardinalnost-troskovi" class="md-nav__link">
+  <a href="#processing-cardinality-cost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Obrada, kardinalnost, troškovi
+        Processing, cardinality, cost
       
     </span>
   </a>
@@ -2205,10 +2233,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#alarmiranje-slo-incidenti" class="md-nav__link">
+  <a href="#alerting-slos-incidents" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Alarmiranje, SLO, incidenti
+        Alerting, SLOs, incidents
       
     </span>
   </a>
@@ -2216,10 +2244,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#domenske-studije-slucaja" class="md-nav__link">
+  <a href="#domain-case-studies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Domenske studije slučaja
+        Domain case studies
       
     </span>
   </a>
@@ -2227,10 +2255,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upravljanje-usklaenost-zrelost" class="md-nav__link">
+  <a href="#governance-compliance-maturity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upravljanje, usklađenost, zrelost
+        Governance, compliance, maturity
       
     </span>
   </a>
@@ -2238,10 +2266,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#poslednja-recenica" class="md-nav__link">
+  <a href="#the-last-sentence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Poslednja rečenica
+        The last sentence
       
     </span>
   </a>
@@ -2265,7 +2293,7 @@
 
 
   
-    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-31-zakljucak.md" title="Ažuriraj stranicu" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/predrag86/observability-in-practice/edit/main/docs/poglavlje-32-zakljucak.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"></path></svg>
     </a>
@@ -2273,122 +2301,125 @@
   
 
 
-<h1 id="poglavlje-31-zakljucak-skupljena-pravila">Poglavlje 31 — Zaključak: skupljena pravila</h1>
-<p>Avion nosi dva potpuno različita sistema za beleženje sopstvenog stanja
-— instrumenti u kokpitu koji odgovaraju na pitanja postavljena unapred,
-i crna kutija koja ne zna šta će pokvariti let, ali garantuje da će, kad
-se to dogodi, dokaz postojati. Tom razlikom je ova knjiga počela, jer je
-to razlika koja menja šta se gradi prvo.</p>
-<p>Trideset poglavlja kasnije, vredi reći jasno šta se od tada nije
-promenilo: ni jedan alat, ni jedan dashboard, ni jedna arhitektura
-opisana u ovoj knjizi nije vredna sama po sebi. Vredna je jedino onoliko
-koliko pouzdano odgovara na pitanje koje niko nije znao da postavi
-unapred. Instrumenti u kokpitu i dalje imaju svoje mesto — alarm mora da
-zna unapred šta je normalno, da bi prijavio kad nešto to nije. Ali svaka
-ozbiljna implementacija u ovoj knjizi je, u jednom trenutku, otkrila
-granicu instrumenta i posegla za crnom kutijom — za sposobnošću da se
-postavi pitanje koje niko nije predvideo, o incidentu koji tek treba da
-se dogodi.</p>
-<p>Ono što sledi nije rezime poglavlja. To je gusta lista pravila
-prikupljenih usput, organizovana po delovima knjige, zamišljena da se
-otcepi i zalepi iznad monitora — referenca za trenutak kad se donosi
-odluka, ne štivo za čitanje unapred.</p>
-<h2 id="osnove">Osnove</h2>
+<h1 id="chapter-32-conclusion-rules-collected">Chapter 32 — Conclusion: rules collected</h1>
+<p>An aircraft carries two entirely different systems for recording its own
+state — the cockpit instrumentation, which answers questions asked in
+advance, and the black box, which doesn't know what will break the flight,
+but guarantees that when it does, the evidence will exist. That's the
+difference this book began with, because it's the difference that changes
+what gets built first.</p>
+<p>Thirty-one chapters later, it's worth saying plainly what hasn't changed since
+then: not one tool, not one dashboard, not one architecture described in
+this book is valuable on its own. It's valuable only to the degree that it
+reliably answers a question nobody knew to ask in advance. Cockpit
+instrumentation still has its place — an alert has to know in advance what's
+normal, in order to report when something isn't. But every serious
+implementation in this book, at some point, hit the limit of the instrument
+and reached for the black box — for the ability to ask a question nobody
+predicted, about an incident that hasn't happened yet.</p>
+<p>What follows isn't a chapter-by-chapter summary. It's a dense list of rules
+collected along the way, organized by the book's parts, meant to be torn off
+and taped above the monitor — a reference for the moment a decision is being
+made, not reading material for beforehand.</p>
+<h2 id="fundamentals">Fundamentals</h2>
 <ul>
-<li>Monitoring odgovara na pitanja postavljena unapred; observability
-  odgovara na pitanja postavljena posle, o incidentu koji nisi mogao
-  dovoljno precizno da predvidiš da bi za njega napravio poseban alarm
-  — a najskuplja poglavlja u svakom sistemu su ona za koja niko nije
-  znao da postave pitanje unapred.</li>
-<li>Tri signala (metrike, logovi, rasponi) nisu tri nezavisna alata —
-  vredni su onoliko koliko se mogu povezati preko istog konteksta, u
-  istom trenutku istrage.</li>
-<li>Kardinalnost je trošak koji se plaća unapred za pitanja koja možda
-  nikad nećeš postaviti — svaka nova oznaka mora opravdati sopstveno
-  postojanje pre nego što uđe u produkciju, ne posle.</li>
+<li>Monitoring answers questions asked in advance; observability answers
+  questions asked afterward, about an incident you couldn't predict
+  precisely enough to build a dedicated alert for — and the costliest
+  chapters in any system are the ones nobody knew to ask about in advance.</li>
+<li>The three signals (metrics, logs, spans) aren't three independent tools —
+  they're worth exactly as much as they can be tied together through the
+  same context, at the same moment of investigation.</li>
+<li>Cardinality is a cost paid in advance for questions you might never ask —
+  every new label has to justify its own existence before it goes into
+  production, not after.</li>
 </ul>
-<h2 id="arhitektura-prikupljanja">Arhitektura prikupljanja</h2>
+<h2 id="collection-architecture">Collection architecture</h2>
 <ul>
-<li>Watcher signal nikad ne sme zavisiti od infrastrukture koju posmatra
-  — alarm koji prati da li je sam sistem posmatranja živ mora imati
-  nezavisan put do čoveka, jer je upravo taj trenutak kad standardni
-  put najverovatnije već ne radi.</li>
-<li>Centralni prolaz (gateway) postoji da apsorbuje složenost koju bi
-  inače svaki pošiljalac morao sam da nosi — kredencijale, uzorkovanje,
-  usmeravanje — ali sam postaje tačka otkaza ako nije autoscaliran,
-  meren i testiran isto strogo kao ono što kroz njega prolazi.</li>
-<li>Bez bočnog kolektora (sidecar) gube se poslednji rasponi pri gašenju
-  zadatka — graciozno gašenje mora biti dokazano merenjem, ne
-  pretpostavljeno jer "trebalo bi da radi".</li>
+<li>A watcher's signal must never depend on the infrastructure it watches —
+  the alert that tracks whether the observation system itself is alive has
+  to have an independent path to a human, because that's exactly the moment
+  the standard path is most likely to already be broken.</li>
+<li>The gateway exists to absorb complexity every sender would otherwise have
+  to carry on its own — credentials, sampling, routing — but it becomes a
+  single point of failure itself if it isn't autoscaled, measured, and
+  tested as rigorously as whatever passes through it.</li>
+<li>Without a sidecar collector, the last spans are lost when a job shuts
+  down — graceful shutdown has to be proven by measurement, not assumed
+  because "it should work."</li>
 </ul>
-<h2 id="obrada-kardinalnost-troskovi">Obrada, kardinalnost, troškovi</h2>
+<h2 id="processing-cardinality-cost">Processing, cardinality, cost</h2>
 <ul>
-<li>Svaka promena kardinalnosti mora imati merenje pre i posle, i
-  trivijalan rollback — bez oba, promena je opklada, ne inženjerska
-  odluka.</li>
-<li>Uzorkovanje na izvoru mora biti svesno onoga što tek treba da se
-  dogodi, ne samo onoga što se već dogodilo — greška koja se prvi put
-  javlja mora proći, čak i kad opšte pravilo kaže "smanji".</li>
-<li>Trošak posmatranja koji raste brže od sistema koji se posmatra je
-  sopstveni signal koji zaslužuje sopstveni dashboard — ne uzgredna
-  linija u mesečnom računu.</li>
+<li>Every cardinality change needs a before-and-after measurement, and a
+  trivial rollback — without both, the change is a bet, not an engineering
+  decision.</li>
+<li>Sampling at the source has to be aware of what's about to happen, not
+  just what already happened — an error occurring for the first time has to
+  get through, even when the general rule says "sample it down."</li>
+<li>Observability cost growing faster than the system it's watching is a
+  signal in its own right, one that deserves its own dashboard — not an
+  incidental line on the monthly bill.</li>
 </ul>
-<h2 id="alarmiranje-slo-incidenti">Alarmiranje, <abbr title="Service Level Objective — ciljna vrednost signala kroz vreme, npr. 99.9%.">SLO</abbr>, incidenti</h2>
+<h2 id="alerting-slos-incidents">Alerting, SLOs, incidents</h2>
 <ul>
-<li>Alarm koji nikad ne okine je isto toliko sumnjiv koliko i sistem koji
-  nikad ne pada — dok se ne proveri da li bi zaista okinuo kad treba,
-  tišina nije dokaz zdravlja.</li>
-<li><abbr title="Service Level Objective — ciljna vrednost signala kroz vreme, npr. 99.9%.">SLO</abbr> mora biti izgrađen na signalu otpornom na šum koji ne znači kvar
-  (restart, deploy, planirano održavanje) — inače <abbr title="Dozvoljena količina &quot;lošeg&quot; ponašanja pre nego što SLO bude prekršen.">budžet greške</abbr> troši
-  svaku rutinsku promenu jednako kao stvaran incident.</li>
-<li>Postmortem je formalni kanal kroz koji novo saznanje ulazi u
-  postojeći plan — akcione stavke iz njega se prioritizuju kao i svaki
-  drugi rad, ne ostavljaju u dokumentu koji niko ne prati.</li>
+<li>An alert that never fires is exactly as suspect as a system that never
+  goes down — until you've verified it would actually fire when it should,
+  silence isn't proof of health.</li>
+<li>An <abbr title="Service Level Objective — a target value for a signal over time, e.g. 99.9%.">SLO</abbr> has to be built on a signal resistant to noise that doesn't mean
+  failure (restart, deploy, planned maintenance) — otherwise the error
+  budget burns on every routine change exactly as it would on a real
+  incident.</li>
+<li>A postmortem is the formal channel through which new knowledge enters the
+  existing plan — its action items get prioritized like any other work, not
+  left in a document nobody tracks.</li>
 </ul>
-<h2 id="domenske-studije-slucaja">Domenske studije slučaja</h2>
+<h2 id="domain-case-studies">Domain case studies</h2>
 <ul>
-<li>Dve nezavisne ravni posmatranja (spoljna i unutrašnja) retko su
-  potpune jedna bez druge — svaka vidi drugačiju klasu kvara, i nijedna
-  nije nadskup one druge.</li>
-<li>Model potpunosti (pokrenuto / proizvelo izlaz / zašto nije) je
-  ispravniji okvir za zakazane zadatke od standardnog obrasca za
-  servise koji stalno primaju saobraćaj — "uspešno završeno, ali
-  prazno" mora biti spojen uslov, nikad prazan sam za sebe.</li>
-<li>Alarm o svežini podataka spoljnog servisa mora biti uslovljen
-  zasebnom metrikom "da li je kolektor živ" — bez tog uslova, mrtav
-  kolektor izgleda identično katastrofalnom prekidu dotoka.</li>
+<li>Two independent observation layers (external and internal) are rarely
+  complete without one another — each sees a different class of failure,
+  and neither is a superset of the other.</li>
+<li>The completeness model (ran / produced output / why not) is a more
+  correct framework for scheduled jobs than the standard pattern for
+  services that receive continuous traffic — "finished successfully, but
+  empty" has to be treated as a combined condition, never left standing on
+  its own.</li>
+<li>An alert about the freshness of data from an external service has to be
+  gated on a separate "is the collector alive" metric — without that
+  condition, a dead collector looks identical to a catastrophic break in
+  the data flow.</li>
 </ul>
-<h2 id="upravljanje-usklaenost-zrelost">Upravljanje, usklađenost, zrelost</h2>
+<h2 id="governance-compliance-maturity">Governance, compliance, maturity</h2>
 <ul>
-<li>Identifikator OSOBE i identifikator IMOVINE nad kojom je nešto
-  urađeno su različite kategorije — prvi se pseudonimizuje ili
-  briše, drugi se namerno i dalje beleži, jer identifikuje šta je
-  urađeno, ne ko je uradio.</li>
-<li>Ono što revizor stvarno testira nije da li je sve savršeno, nego
-  doslednost između onoga što se javno tvrdi i onoga što se stvarno
-  radi — iskrena interna tabela stanja je dokaz te doslednosti, ne
-  priznanje slabosti.</li>
-<li>Kratak rangiran spisak po domenu je koristan samo ako se iz njega
-  briše kad je nešto stvarno završeno — arhiviranje precrtanih stavki
-  vraća isti šum koji je spisak trebalo da ukloni.</li>
-<li>AI agent sa generičkim znanjem sistema posmatranja dolazi tačno do
-  mesta gde je potreban specifičan uvid u konkretan sistem — sloj
-  konteksta, ne pristup alatima, je ono što razlikuje tačan odgovor od
-  samouverenog pogrešnog.</li>
-<li>Redosled uvođenja u produkciju ide po radijusu dejstva, ne po
-  tehničkoj pogodnosti — najkritičniji deo sistema dolazi poslednji,
-  kao politika zapisana unapred, ne izuzetak po slučaju.</li>
-<li>Periodična revizija mora ponovo meriti SVAKU brojku, ne samo dodavati
-  nove nalaze na stari spisak — a kad je prošli nalaz bio pogrešan, to
-  se priznaje otvoreno, sa uzrokom greške, ne tiho prepisuje.</li>
+<li>A PERSON identifier and an ASSET identifier for the thing something was
+  done to are different categories — the first gets pseudonymized or
+  deleted, the second is deliberately still recorded, because it identifies
+  what was done, not who did it.</li>
+<li>What an auditor actually tests isn't whether everything is perfect, but
+  the consistency between what's claimed publicly and what's actually
+  done — an honest internal status table is evidence of that consistency,
+  not an admission of weakness.</li>
+<li>A short, ranked list per domain is only useful if things get removed from
+  it once they're actually done — archiving crossed-out items brings back
+  the exact noise the list was supposed to remove.</li>
+<li>An AI agent with generic knowledge of observability systems gets you
+  exactly to the point where specific insight into your particular system
+  is needed — a context layer, not tool access, is what separates a correct
+  answer from a confidently wrong one.</li>
+<li>Rollout order into production follows <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr>, not technical
+  convenience — the most critical part of the system goes last, as a policy
+  written down in advance, not a case-by-case exception.</li>
+<li>A periodic audit has to re-measure EVERY number, not just add new
+  findings to the old list — and when a past finding turns out to have been
+  wrong, that gets acknowledged openly, with the cause of the error, not
+  silently rewritten.</li>
 </ul>
-<h2 id="poslednja-recenica">Poslednja rečenica</h2>
-<p>Nijedno pravilo sa ove liste nije bilo očigledno unapred. Svako je
-naučeno tako što je nešto zaista pošlo po zlu, ili tako što je neko
-posumnjao u tišinu koja je izgledala kao zdravlje, pa proverio. To je,
-u suštini, cela poenta observability-ja — ne sistem koji zna sve unapred,
-nego sistem koji, kad dođe pitanje koje niko nije predvideo, ima gde da
-potraži odgovor.</p>
+<h2 id="the-last-sentence">The last sentence</h2>
+<p>Not one rule on this list was obvious in advance. Each was learned because
+something actually went wrong, or because someone doubted a silence that
+looked like health, and checked. That is, at bottom, the entire point of
+observability — not a system that knows everything in advance, but a system
+that, when the question nobody predicted arrives, has somewhere to go look
+for the answer.</p>
 
 
 
@@ -2406,10 +2437,10 @@ potraži odgovor.</p>
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="Ažurirano">
+    <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="25. avgust 2026. 13:39:42 UTC">25. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 19:23:38 UTC">August 26, 2026</span>
   </span>
 
     
@@ -2433,7 +2464,7 @@ potraži odgovor.</p>
           <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
-  Nazad na vrh
+  Back to top
 </button>
         
       </main>
@@ -2442,33 +2473,33 @@ potraži odgovor.</p>
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="Podnožje">
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
         
           
-          <a href="../poglavlje-30-merenje-zrelosti/" class="md-footer__link md-footer__link--prev" aria-label="Prethodno: Poglavlje 30 — Merenje zrelosti sopstvenog programa">
+          <a href="../poglavlje-31-merenje-zrelosti/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Chapter 31 — Measuring the maturity of your own program">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                Prethodno
+                Previous
               </span>
               <div class="md-ellipsis">
-                Poglavlje 30 — Merenje zrelosti sopstvenog programa
+                Chapter 31 — Measuring the maturity of your own program
               </div>
             </div>
           </a>
         
         
           
-          <a href="../dodatak-a-promql-logql-recepti/" class="md-footer__link md-footer__link--next" aria-label="Sledeće: Dodatak A — PromQL/LogQL recepti">
+          <a href="../dodatak-a-promql-logql-recepti/" class="md-footer__link md-footer__link--next" aria-label="Next: Appendix A — PromQL/LogQL recipes">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                Sledeće
+                Next
               </span>
               <div class="md-ellipsis">
-                Dodatak A — PromQL/LogQL recepti
+                Appendix A — PromQL/LogQL recipes
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2505,10 +2536,10 @@ potraži odgovor.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.action.edit", "content.tooltips", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Iskopirano u clipboard", "clipboard.copy": "Kopiraj u clipboard", "search.result.more.one": "jo\u0161 1 na ovoj stranici", "search.result.more.other": "jo\u0161 # na ovoj stranici", "search.result.none": "Ni\u0161ta nije prona\u0111eno", "search.result.one": "1 rezultat pretrage", "search.result.other": "# rezultata pretrage", "search.result.placeholder": "Unesi pojam pretrage", "search.result.term.missing": "Nedostaje", "select.version": "Izaberi verziju"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.action.edit", "content.tooltips", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   
