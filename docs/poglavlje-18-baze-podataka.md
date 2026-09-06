@@ -150,6 +150,51 @@ pozivaoce na vreme.
 
 ![Curenje konekcija vidljivo iznutra od sata nula — spoljna ravan (latencija) primeti problem tek 40 sati kasnije, kada je trend već daleko odmakao.](diagrams/dashboard-connections.png){: width="95%" }
 
+### Treći primer istog obrasca: ono što je nevidljivo objema ravnima odjednom
+
+Obe ravni opisane na početku poglavlja i dalje mere **bazu podataka**, samo
+iz dva različita ugla — instancu spolja, motor iznutra. Postoji, međutim,
+klasa problema kojoj nijedna od te dve ravni strukturno ne može ni da
+priđe, jer se ne dešava na bazi nego **ispred** nje: iscrpljivanje bazena
+konekcija na strani same aplikacije. Aplikacija drži sopstveni, fiksno
+veliki bazen konekcija (na primer, dvadeset) i pod određenim uslovom —
+konekcija se pozajmi za jedan poziv, ali se ne vrati u bazen na vreme jer
+poziv visi na spoljnoj zavisnosti — sve konekcije u tom bazenu ostanu
+zauzete istovremeno, i svaki naredni zahtev čeka, pa ističe.
+
+Ni jedna od dve ravni sa početka poglavlja ovo strukturno ne vidi kao
+problem. Spoljna ravan meri instancu u celini — dvadeset zauzetih konekcija
+naspram baze čiji je maksimum mereno u hiljadama nije ni primetan pomak.
+Unutrašnja ravan, koja čita sopstveno stanje baza-motora, vidi te iste
+konekcije kao potpuno legitimne, aktivne sesije — ništa u njihovom broju ili
+stanju ne govori bazi da je nešto pogrešno, jer sa strane baze zaista i nije:
+dvadeset otvorenih sesija je normalna, mala brojka. Problem ne postoji u
+apsolutnom broju konekcija ka bazi — postoji u tome što **jedan konkretan
+klijent** troši ceo sopstveni, mali budžet, i ta činjenica je vidljiva samo
+onome ko zna koliki je taj budžet i ko ga troši, što nije baza nego sama
+aplikacija.
+
+Signal koji ovo stvarno hvata živi na trećem mestu, van obe ravni sa početka
+poglavlja: u samom izuzetku koji aplikacija baci u trenutku kad zahtev
+konekciju ne dobije na vreme, zapisanom u njenim sopstvenim logovima.
+Alarm izgrađen direktno na taj izuzetak je nedvosmislen i imenuje bazen
+koji je iscrpljen — dok bi alarm zasnovan na ukupnom broju konekcija ka
+bazi morao ili da bude toliko osetljiv da lažno okida na normalnu dnevnu
+varijaciju, ili toliko grub da nikad ne uhvati bazen koji je mali u odnosu
+na celu bazu. Ovo je treći primer principa sa početka poglavlja, samo
+pomeren jedan korak dalje: nije da nijedna ravan nije nadskup druge — ovde
+nijedna od dve ravni namenjene bazi uopšte nije mesto gde se problem može
+videti, jer problem strukturno pripada aplikaciji, ne bazi koju posmatraju.
+
+Vredi zabeležiti i jednu tehničku zamku otkrivenu pri prvom postavljanju
+ovog alarma: tip izuzetka na kom se alarm zasniva stiže kao strukturirani
+metapodatak u sistemu za logove, ne kao obična reč u tekstu poruke — pravilo
+koje ga traži unutar glavnog selektora toka, umesto kao filter primenjen
+posle njega, ne prijavljuje grešku, samo tiho ne uhvati nijedan red. Alarm
+je u tom obliku isporučen kao naizgled ispravan, a zapravo mrtav — uhvaćen
+tek kad je stvaran ponovljeni incident prošao neopaženo pored njega,
+proveren i ispravljen istog dana.
+
 ## 18.3 Analitički deo — dve ravni kao poznat, ali retko imenovan obrazac
 
 ### Zvanična preporuka se slaže sa podelom, ali je ne imenuje eksplicitno
@@ -266,6 +311,12 @@ redovno, kao drugi, jednako legitiman izvor istine.
   kredencijal van sistema za upravljanje infrastrukturom kao kodom, pa tek
   onda poveži — greška u jednom koraku ovog redosleda srušila bi
   posmatranje cele flote, ne samo novog izvora.
+
+- Ne zaboravi da baza podataka ima svoje ravni prikupljanja, ali i klijenti
+  baze imaju svoj, mali budžet konekcija koji ni jedna od tih ravni ne
+  vidi kao problem — kad se sumnja na iscrpljivanje bazena konekcija na
+  strani aplikacije, alarmiraj direktno na izuzetak koji aplikacija baca,
+  ne na ukupan broj konekcija ka bazi.
 
 ## 18.5 Vežba za čitaoca
 
