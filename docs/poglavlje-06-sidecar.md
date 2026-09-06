@@ -147,6 +147,86 @@ stiglo do njega.
 
 ![Flush prozor koji sidecar dobija pre gašenja (stopTimeout) pokriva samo drugi skok — sidecar do gateway-a. Ne pokriva prvi skok — asinhroni bafer u glavnom kontejneru do sidecar-a preko localhost-a — koji se gubi bez traga ako se zadatak ugasi pre sledećeg periodičnog slanja.](diagrams/ch06-flush-prozor.png){: width="75%" }
 
+### Drift kroz reviziju: tri konkretna kvara i kako se sad hvataju
+
+Sve zamke navedene do sada u ovom poglavlju dešavaju se **unutar** jedne
+verzije task definicije — kako je konfigurisana, kako se gasi, šta prima.
+Postoji i potpuno drugačija klasa kvara, koja nema veze sa sadržajem
+nijedne pojedinačne revizije: **ista porodica zadataka može biti
+lansirana sa više od jednog mesta, i svako od tih mesta pamti sopstveni
+broj revizije.** Registrovanje nove, ispravne revizije sa sidecar-om ne
+znači da je iko zaista počeo da je koristi — to je samo upisano u AWS kao
+mogućnost, dok svaki launcher i dalje pokreće broj revizije na koji je
+poslednji put eksplicitno pokazan.
+
+![Jedna porodica, tri nezavisne tačke lansiranja — svaka pinovana na svoju reviziju; registrovanje nove revizije ne ažurira nijedan pin automatski.](diagrams/ch06-pinovi-driftuju.png){: width="90%" }
+
+Tri stvarna slučaja ovog obrasca, svaki drugačiji:
+
+1. **Par veličina, jedna polovina zaboravljena.** Jedna porodica zadataka
+   postoji u dve veličine — standardna i "LARGE" varijanta za posebno
+   zahtevan dnevni prozor — registrovane kao susedne revizije istog para.
+   Kad je sidecar dodat, nova standardna revizija je registrovana ispravno
+   — ali LARGE polovina istog para je registrovana **bez** sidecar-a,
+   propuštena jer je par tretiran kao jedna izmena umesto dve. Rezultat:
+   LARGE varijanta je nedeljama radila potpuno slepo za observability, a
+   Slack alarmi koji su je pokrivali otvarali su linkove ka praznim
+   Grafana dashboard-ima — alarm je i dalje radio (jer prati sam ECS, ne
+   telemetriju), ali istraga alarma nije imala šta da pokaže.
+2. **Porodica koja nikad nije ni ušla u talas onboardovanja.** Jedna
+   porodica ima launcher koji hardkoduje **dve** odvojene pinovane
+   revizije za dva različita moda rada, ne jednu. Talas onboardovanja koji
+   je sistematski prošao kroz sve porodice i dodao sidecar je, po
+   pretpostavci "jedna porodica = jedan pin", tu porodicu jednostavno
+   preskočio — nije bila greška u primeni, nego u premisi. Nekoliko
+   otkaza dnevno ostalo je nevidljivo nedeljama, ne zato što alarm nije
+   radio, nego zato što porodica nikad nije ni dobila signal koji bi
+   alarm mogao da pročita.
+3. **Izmena nevezana za observability koja je ipak obrisala sidecar.**
+   Treći slučaj nije ni pokušaj da se nešto doda niti oduzme u vezi sa
+   telemetrijom — nova revizija je registrovana samo da bi se udvostručio
+   CPU limit porodice, ali je pri tom, kloniranjem sa pogrešne polazne
+   revizije, tag image-a tiho vraćen na `:latest` — a `:latest` je
+   verzija bez sidecar-a. Ovaj slučaj je ostao samo potencijalna, a ne
+   stvarna šteta, jer nijedan launcher još nije pomeren na tu reviziju —
+   ali je otkriven kao zamka koja čeka prvog ko odluči da "pređe na
+   najnoviju verziju" bez provere da li je ta najnovija verzija zaista i
+   dalje instrumentirana.
+
+Zajednička nit sva tri slučaja: **registrovanje revizije i lansiranje
+revizije su dva odvojena čina, i drift između njih je nevidljiv dok ga
+neko eksplicitno ne proveri.** Otud i pravilo koje sad važi za svaku
+izmenu porodice: nova revizija se pravi kloniranjem revizije koja je
+**trenutno stvarno pinovana** od strane launcher-a, nikad od najnovije u
+konzoli niti od proizvoljne starije — napred, nikad unazad, nikad
+ustranu. A pošto jedna porodica ume da ima više od jednog launcher-a
+(promenljiva okruženja, hardkodovan broj u kodu, čak i EventBridge
+pravilo bez broja revizije koje automatski uzima najnoviju aktivnu), svaki
+pin mora biti pronađen i ponovo eksplicitno usmeren — ne pretpostaviti da
+je jedan pronađeni pin i jedini koji postoji.
+
+Provera da je nova revizija zaista stigla do prometa, ne samo do AWS
+registra, ide istim alatom već pomenutim ranije u poglavlju —
+`target_info` — samo raščlanjenim po broju revizije:
+
+```promql
+count by (aws_ecs_task_revision) (last_over_time(target_info{service_name="ime-porodice"}[24h]))
+```
+
+Ako se očekivani novi broj revizije ne pojavi u rezultatu, nijedan
+launcher još nije pomeren — dashboard može izgledati "zeleno" po starim
+podacima dok se pinovi ne provere jedan po jedan. Uz ovu proveru na nivou
+jedne porodice, sistem danas ima i automatizovanu, nedeljnu proveru na
+nivou cele flote koja poredi svaku porodicu sa sopstvenom istorijom
+revizija i prijavljuje kad novija revizija ispadne iz keep-liste sidecar-a
+ili kad se dve revizije u istom paru veličina razlikuju po tome da li nose
+sidecar. Ta provera ima jedno strukturno ograničenje vredno zapamćivanja:
+**poredi porodicu samu sa sobom — ne zna koju reviziju launcher zapravo
+pokreće.** Prijava da je novija revizija izgubila sidecar može značiti
+"bezopasno, launcher je i dalje na staroj dobroj reviziji" ili "aktivan
+prekid, launcher je već pomeren" — razlikovanje ta dva zahteva ručnu
+proveru pina, alat samo ukazuje gde da se gleda.
+
 ## 6.3 Analitički deo — sidecar naspram agenta, i granica gde sidecar prestaje da se isplati
 
 ### Zašto sidecar, a ne node-agent, za ovu klasu opterećenja
@@ -233,6 +313,18 @@ tvrdnja prestaje da važi.**
   glavnom kontejneru koji tek treba da stigne do sidecar-a preko localhost-a.
   Za kratkotrajne procese, popravka mora ići na strani aplikacije: eksplicitno
   pražnjenje bafera pre izlaska, ne oslanjanje na tuđi prozor za gašenje.
+
+- Porodica zadataka može biti lansirana sa više od jednog mesta (env
+  promenljiva, hardkodovan broj u kodu, EventBridge pravilo) — pre nego
+  što proglasiš izmenu završenom, pronađi SVAKI pin, ne samo prvi na koji
+  naiđeš.
+- Novu reviziju uvek pravi kloniranjem revizije koja je trenutno stvarno
+  pinovana od strane launcher-a — nikad od najnovije u konzoli, nikad od
+  proizvoljne starije. Napred, nikad unazad, nikad ustranu.
+- Posle svake izmene, proveri da je novi broj revizije zaista stigao do
+  prometa (`target_info` raščlanjen po `aws_ecs_task_revision`), ne samo
+  da je uspešno registrovan u AWS — registrovanje i lansiranje su dva
+  odvojena čina.
 
 ## 6.5 Vežba za čitaoca
 
