@@ -164,6 +164,60 @@ svakog alarma zasnovanog na procentilu kao apsolutne istine, bez pitanja
 prvi lažni alarm ne istraži do kraja i ne otkrije da iza njega stoji jedna
 jedina sesija.
 
+### Uzorkovanje na nivou sesije — binarno, ne postepeno
+
+RUM SDK uzorkuje na nivou **cele sesije**, ne na nivou pojedinačnog signala:
+sesija je ili uzorkovana — i tada šalje baš sve (Core Web Vitals, greške,
+trejsove) — ili nije, i tada ne šalje ništa. Pošto se RUM naplaćuje po
+sesiji, ovo uzorkovanje je najveći pojedinačni lever za trošak, i za većinu
+sistema bi bilo prirodno spustiti ga ispod 100%.
+
+Implementacija koju knjiga prati drži stopu na **1.0** — namerno, ne iz
+propusta da se razmotri jeftinija opcija. Dva razloga, oba merljiva: prvo,
+na obimu saobraćaja ovog alata (par hiljada sesija dnevno) trošak pune stope
+je zanemarljiv. Drugo, i važnije za ovo poglavlje konkretno: stopa ispod 1.0
+ne bi samo jeftinije smanjila podatke — tiho bi pokidala baš onu osobinu
+zbog koje ovo poglavlje uopšte postoji. Uzorkovanje je binarno na nivou
+sesije, što znači da neuzorkovana sesija nikad ne ubacuje trace-context
+header u svoj API poziv — "isti trace ID kroz ceo put" iz 8.2 važi samo za
+onaj deo saobraćaja koji je uzorkivač zadržao, ne za sav saobraćaj. Spuštanje
+stope ne bi bilo pogrešno samo po sebi, ali bi zahtevalo da se ta granica
+eksplicitno prizna i komunicira — "trejs povezan kroz ceo put" bi prestalo da
+znači "svaki klik", a počelo da znači "svaki klik koji je slučaj hteo da
+uzorkivač zadrži".
+
+Ovo se direktno vezuje i za zamku sa procentilima iz prethodnog odeljka:
+alarm koji već zahteva minimalan broj tačaka u prozoru pre nego što uopšte
+razmotri okidanje računa taj broj na **uzorkovanim** sesijama, ne na
+stvarnom saobraćaju. Da stopa ikad padne ispod 1.0, isti minimalni prag bi
+odjednom predstavljao mnogo veći procenat stvarnog saobraćaja nego što je
+nameravano kad je prag postavljen — dva odvojena podešavanja (stopa
+uzorkovanja i minimalni prag alarma) koja moraju ostati usklađena, ne
+menjana nezavisno jedno od drugog.
+
+### Sourcemap-ovi: greška je uhvaćena, ali ne i čitljiva
+
+JavaScript greške, opisane u 8.2, stižu redovno i pouzdano — ali stack trag
+koji nose je stack trag **minifikovanog, spakovanog** koda koji je stvarno
+poslat browseru, ne originalnog izvornog koda. Prevođenje minifikovanog
+stack traga nazad u čitljive linije izvornog koda zahteva da build proces
+otpremi sopstvene sourcemap fajlove ka RUM kolektoru u trenutku izgradnje —
+taj korak, u trenutku pisanja, još nije ožičen.
+
+Praktična posledica: neko ko otvori istragu na osnovu JS greške dobija
+stack trag koji upire u jednu jedinu, ogromnu liniju spakovanog koda —
+greška **jeste** uhvaćena, tačno kao što je opisano ranije u poglavlju, ali
+nije upotrebljiva bez ručne rekonstrukcije lokalno ili ručnog čitanja
+minifikovanog izvora, redom, dok se ne pronađe odgovarajuće mesto.
+
+Ovo je ista vrsta iskrenosti prema čitaocu koju je Poglavlje 5 već pokazalo
+na drugom mestu: identifikovana popravka koja u trenutku pisanja još nije
+sprovedena beleži se kao otvorena praznina, ne prećutkuje se zato što bi
+priznanje nedovršenog posla ličilo na manjkavost implementacije. Vrednost
+za čitaoca nije u tome da svaki primer u knjizi bude završen — nego da svaki
+primer bude tačan onome što stvarno postoji u tom trenutku, uključujući i
+ono što se zna da nedostaje.
+
 ## 8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad "jedan filter" nije dovoljan
 
 ### Zašto zvanična arhitektura RUM-a skoro uvek ide direktno u cloud
@@ -247,6 +301,15 @@ eksplicitnu proveru."**
   signalu, proveri koliko je tačaka ušlo u obračun — na niskom saobraćaju
   jedna sesija može da pomeri p75 iz "dobrog" u "loš" opseg bez ijedne
   stvarne promene u sistemu.
+
+- Uzorkovanje na nivou sesije je binarno, ne postepeno — stopa ispod 1.0 ne
+  samo smanjuje trošak, nego tiho ograničava "isti trace ID kroz ceo put" na
+  samo onaj deo saobraćaja koji je uzorkivač zadržao. Ako ikad spustiš stopu,
+  eksplicitno priznaj tu granicu i ponovo uskladi minimalne pragove alarma
+  koji broje uzorkovane, ne stvarne, sesije.
+- Hvatanje greške i mogućnost da se ta greška razume nisu ista stvar — provera
+  da JS greške stižu ne znači da su stack tragovi čitljivi; bez otpremanja
+  sourcemap-a, greška je uhvaćena, ali istraga i dalje počinje od nule.
 
 ## 8.5 Vežba za čitaoca
 
