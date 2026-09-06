@@ -162,6 +162,63 @@ mesečni račun za metrike skočio, ne pre.
 
 ![Sedmodnevni grafik upita u toku: prag "stvarno neaktivno" nije dostignut nijednom kroz celu nedelju — merenje, ne pretpostavka, je pokazalo da automatsko gašenje ovde ne bi imalo pravi prozor u kom bi radilo.](diagrams/dashboard-rightsizing.png){: width="95%" }
 
+### Alarm koji čuva popravku može i sam otkazati tačno kad zatreba
+
+Popravka opisana ranije u poglavlju — trimovanje presitnih, po-fragmentu
+zapisa iz log sloja, uneta ručno na svaki čvor — dobila je i sopstveni,
+namenski par alarmi koji prati baš njenu regresiju: prvi, precizniji broji
+koliko puta se u prozoru pojavljuje tekst tačno onih zapisa koji treba da
+budu utišani (zdravo stanje je striktno nula), drugi, grublji, prati ukupan
+broj bajtova log sloja kao rezervnu proveru ako prvi ikad zataji.
+
+Kad je taj par prvi put stvarno okinuo, uzrok nije bila regresija same
+popravke — ona je proverena kao netaknuta pre, tokom i posle događaja.
+Uzrok je bio potpuno nezavisan bag na strani aplikacije koja klasteru šalje
+upite: aplikacija je u jedan upit ubacila datumski niz u pogrešnom, golom
+tekstualnom obliku; pokušaj klastera da taj niz automatski protumači kao
+datum je otkazivao **po fragmentu izvršavanja**, a svaki neuspeh je u log
+zapisivao pun trag greške. Upit je i pored toga završavao uspešno i vraćao
+rezultat pozivaocu — aplikacija koja ga je poslala nije imala nikakav znak
+da nešto nije u redu. Za nekoliko sati, obrazac se ponovio dovoljno puta da
+podigne dnevni volumen log sloja na višestruko od uobičajenog.
+
+Grublji, rezervni alarm je okinuo ispravno. Ali precizniji, primarni alarm
+— baš onaj čiji je posao da imenuje koji je zapis odgovoran — u tom trenutku
+nije prijavio ni uspeh ni neuspeh, nego je sam otkazao: njegova pretraga
+teksta preko višesatnog prozora nije stigla da završi pre isteka vremena,
+jer je prozor sad nosio višestruko više podataka nego kad je alarm
+projektovan. Ovo je greška čiji je obrazac vredan imenovanja: alarm je
+otkazao **tačno u onom uslovu zbog kog postoji** — što je veći volumen koji
+treba prijaviti, to je manja šansa da alarm stigne da ga izmeri. Da je
+umesto toga otkazao mirno, niko ne bi ni primetio da je nešto pošlo naopako
+sa samim alarmom, ne samo sa sistemom koji posmatra.
+
+Bilo je i gore od toga: pošto je stanje greške i dalje koristilo isti
+tekstualni šablon za obaveštenje kao i uspešno merenje, poruka koja je
+stigla nije jasno govorila "nisam stigao da proverim" — izgledala je kao
+merenje, sa brojem koji nedostaje umesto vrednosti. Popravka nije bila
+učiniti pretragu bržom po svaku cenu (kraći prozor je dovoljan, jer je
+zdravo stanje strogo nula i nema šta da se izgladi usrednjavanjem), nego
+i eksplicitno razdvojiti obaveštenje za stanje greške od obaveštenja za
+stvarno merenje, tako da alarm koji nije stigao da proveri to i kaže,
+umesto da oponaša merenje koje nije napravio.
+
+Vredi zabeležiti i treću grešku, unazad: kad je rezervni, grublji alarm
+prvi put podešavan, njegov prag je opravdan tvrdnjom da bi svaka regresija
+bila teško razlučiva od običnog radnog dana — jer su, tvrdilo se, oba
+obrasca slična po veličini. Ta tvrdnja je bila zasnovana na merenju
+uzetom u prozoru koji je sam još uvek nosio ostatke volumena od pre
+popravke, ne na stvarnom mirnom stanju posle nje. Kad je mirno stanje
+kasnije izmereno posebno, izolovano od tog prelaznog perioda, pokazalo se
+da je stvarna razlika između regresije i normalnog dana **red veličine
+veća** nego što je prvobitna procena tvrdila — prag je, ispostavilo se,
+mogao biti mnogo osetljiviji nego što se mislilo. Ovo je ista disciplina
+"izmeri, ne pretpostavi" koja je ranije u poglavlju odlučila pitanje
+automatskog gašenja, primenjena sad na podešavanje praga alarma — i pokazuje
+da čak i tim koji meri može izmeriti pogrešan prozor i izvući preuveličan
+zaključak, ako se prozor merenja ne izoluje pažljivo od prelaznog stanja
+koje meri.
+
 ## 19.3 Analitički deo — zašto standardna poluga ovde ne radi
 
 ### FinOps standard poređa poluge, ali i sam upozorava na granice
@@ -268,6 +325,11 @@ mu stvarno treba, ni manje ni više, i da ostane sastavljen.
   tekstu lako proizvelo nevalidnu strukturu i srušilo čitanje sa greškom
   umesto da tiho izostavi jedno polje, obarajući odjednom svaki panel koji
   čita taj izvor.
+
+- Kad gradiš alarm koji čuva neku popravku od regresije, proveri i da li
+  sam alarm može otkazati tačno pod opterećenjem koje ta regresija
+  izaziva — i nikad ne dozvoli da stanje "nisam stigao da proverim"
+  izgleda kao izmerena vrednost u istom obaveštenju.
 
 ## 19.5 Vežba za čitaoca
 
