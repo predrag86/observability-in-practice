@@ -177,6 +177,85 @@ oba pitanja koja generičko znanje o observability-ju ne postavlja
 automatski, ali specifičan sloj konteksta o ovom sistemu treba da ih
 nametne.
 
+### Novi rizik nije pristup — nego kome se taj pristup šalje
+
+Alat koji agentu daje pristup platformi za telemetriju ne otvara nijedan
+pristup podacima koji ne postoji već danas: isti upiti, ista prava,
+isti obim vidljivosti kakav bi imao inženjer koji ručno pokreće te upite
+sa administratorskim ovlašćenjima. Implementacija je eksplicitno
+razdvojila ovo od stvarno novog rizika, i ta razlika je vredna izdvajanja:
+telemetrija ove implementacije nosi stvaran identitet korisnika (email na
+trejsovima i logovima), i taj podatak, kad agent upita platformu, sada
+putuje dalje — ka provajderu jezičkog modela, kao deo konteksta koji
+agent prima. To nije pitanje pristupa (ko sme da vidi podatak) nego
+pitanje **obrade** (kome se podatak fizički šalje) — potpuno istog oblika
+kao pitanje otvoreno u poglavlju o privatnosti ranije u ovoj knjizi, samo
+na novom, dodatnom mestu u lancu.
+
+Implementacija je razmotrila četiri odvojena mehanizma da ogradi agenta od
+ovog konkretnog identifikatora, rastuće složenosti:
+
+1. **Potpuno isključivanje jednog izvora podataka.** Najjednostavnije, ali
+   sve-ili-ništa — ako se lični podaci i sve ostalo mešaju u istom
+   skladištu logova, ovo znači "nimalo logova za agenta", ne "logovi bez
+   ličnih podataka".
+2. **Filter po oznaci na nivou pristupne politike**, sa mogućnošću
+   isključivanja tačno onih zapisa koji nose identifikator. Radi za
+   metrike i logove — ali ne i za trejsove, jer taj mehanizam pristupne
+   politike naprosto ne pokriva tu vrstu podataka, a upravo isti
+   identifikator postoji i tamo.
+3. **Kontrola pristupa vezana za tim**, unutar same platforme. Za metrike i
+   logove već zrela mogućnost; za trejsove tek u ranoj fazi dostupnosti —
+   i, ključno, ne postoji dokumentovana potvrda da li se ta kontrola
+   uopšte primenjuje na nalog kojim agent pristupa (za razliku od naloga
+   pojedinačne osobe), što znači da se ništa od ovoga ne sme pretpostaviti
+   nego mora eksplicitno testirati pre oslanjanja.
+4. **Gornja granica broja vraćenih zapisa po upitu.** Ovo ne kontroliše
+   pristup uopšte — samo ograničava koliko podataka jedan upit može da
+   povuče odjednom, korisno kao dodatna mera, beskorisno kao samostalna
+   zaštita.
+
+Nijedan od ova četiri mehanizma ne rešava problem u korenu, i implementacija
+to otvoreno priznaje: trajno rešenje nije bilo koja kombinacija ovih
+kontrola pristupa, nego potpuno drugačiji potez — ista ključem-zaštićena
+pseudonimizacija opisana u poglavlju o privatnosti. Pseudonimizovan
+identitet koji stigne do provajderu jezičkog modela više nije lični podatak
+u istom smislu, i pitanje "kome sme da se pošalje" gubi veći deo svoje
+težine. Ovo je konkretan primer opšte poente iz tog poglavlja: prava
+popravka za curenje identiteta retko je kontrola pristupa na novoj tački —
+često je uklanjanje samog identiteta sa mesta odakle bi curenje uopšte
+moglo da krene.
+
+### Gotov paket uputstava od dobavljača, proveren na sopstvenim, teško stečenim činjenicama
+
+Pre nego što je izgrađen sopstveni, uskrojen sloj konteksta opisan ranije u
+ovom poglavlju, implementacija je proverila da li isti posao već postoji
+gotov — dobavljač platforme za telemetriju objavljuje sopstveni, opsežan
+paket unapred pripremljenih uputstava za agente, besplatan i lako instaliv.
+Umesto da poveruje na reč da bi takav paket učinio sopstveni sloj konteksta
+suvišnim, implementacija ga je proverila direktno, na dve od sopstvenih
+najteže stečenih činjenica iz ranijeg rada na ovoj platformi. Nijedna od te
+dve nije bila pomenuta — paket ne bi sprečio nijednu pojedinačnu grešku iz
+sopstvene istorije implementacije.
+
+Gora od pukog nepoklapanja je jedna konkretna stavka unutar tog paketa koja
+opisuje **pogrešan** put pristupa platformi za ovaj tačan projekat —
+dokumentuje isključivo samostalno-hostovanu varijantu, nikad upravljanu
+varijantu koju implementacija stvarno koristi, i savetuje da se
+pristup ukloni čim se potvrdi da čitanje radi, što je suprotno od odluke
+koju je implementacija svesno donela. Paket uputstava ovde nije bio
+neutralno nekorisan — bio bi aktivno pogrešan da je sleđen bez provere.
+
+Najotrežnjujući nalaz stigao je iz jednog jedinog pretraživanja: nijedna
+linija u celom, opsežnom paketu ne pominje mehanizam naplate po aktivnom
+korisniku — tačno onaj mehanizam koji je ovoj implementaciji već jednom
+doneo neplaniran trošak, tiho i neprimećeno mesec dana pre nego što je
+uočen. Lekcija koju sopstveni sloj konteksta postoji da uhvati — koja
+naplata je skrivena, koja metrika laže, koji put pristupa je stvaran a
+koji zastareo — nije generičko znanje o platformi koje bilo koji spoljni
+paket, ma koliko opsežan, može da ponese unapred. To znanje nastaje samo
+jednim putem: da neko stvarno plati cenu greške jednom, i onda je zapiše.
+
 ## 28.3 Analitički deo — potvrda spolja, i jedna otrežnjujuća granica
 
 ### Protokol za povezivanje agenata na telemetriju je nov, ali već standardizovan
@@ -287,6 +366,15 @@ sloj konteksta oko njega ažuran, iskren, i dostupan u pravom trenutku.
   traženi tip događaja uopšte može da postoji u skladištu koje je upitano, i
   koliko zahteva stoji iza izvedene statistike poput percentila — obe zamke
   vraćaju uverljivu, ali pogrešnu nulu umesto poruke o grešci.
+- Kad agent šalje telemetriju modelu, tretiraj to kao pitanje obrade
+  (kome se podatak šalje), ne kao pitanje pristupa (ko sme da ga vidi) —
+  kontrole pristupa na različitim tačkama pomažu, ali trajno rešenje za
+  lični identifikator je uklanjanje samog identiteta pre nego što uopšte
+  stigne do agenta, ne dodatna brava na putu.
+- Ne veruj gotovom, spolja objavljenom paketu uputstava za agenta dok ga
+  ne proveriš na sopstvenim, teško stečenim činjenicama — generički paket
+  može biti nekorisan u najboljem slučaju, i aktivno pogrešan u najgorem,
+  posebno tamo gde opisuje zastareo ili neprimenjen put pristupa.
 
 ## 28.5 Vežba za čitaoca
 
