@@ -240,6 +240,85 @@ učestalost upisa. Za sistem gde nekoliko izvora šalje podatke češće nego
 primenu od bilo koje pojedinačne mere protiv kardinalnosti, jer ne zahteva
 da se bilo šta odluči o tome koji je atribut "dovoljno koristan" da ostane.
 
+### Čitanje ima sopstveni račun, nezavisan od pisanja
+
+Sve dosadašnje mere u ovom poglavlju — nativni histogrami, agregacija na
+gateway-u, keep-liste, učestalost upisa — smanjuju jednu stranu računa:
+koliko se piše. Platforma za logove koju sistem koristi naplaćuje i drugu,
+potpuno nezavisnu stranu: koliko se **čita**, mereno u gigabajtima
+skeniranim po upitu, bez ikakve uključene besplatne kvote. Broj aktivnih
+serija i broj upisa u minuti mogu biti savršeno pod kontrolom, a račun za
+čitanje i dalje raste — jer to je drugi metar, ne isti metar viđen iz
+drugog ugla.
+
+Kad je taj deo računa narastao do desetak procenata ukupnog mesečnog
+troška, prva provera nije bila nagađanje nego merenje: platforma sama
+beleži svaki upit koji posluži, sa brojem skeniranih bajtova i izvorom
+upita. Rezultat merenja preko sedam dana: **70% skeniranih bajtova nije
+poticalo od živih dashboard-a koje neko gleda**, nego od zakazanih
+recording pravila koja periodično presnimavaju iste brojeve iz sirovih
+logova u metrike — a od toga, dvanaest pravila namenjenih izvršnom
+dashboard-u za korišćenje platforme nosilo je **60% ukupnog skeniranja**,
+samo ta pravila.
+
+Tri jeftina popravka su predložena, i sva tri su, pri proveri, propala —
+svaki na svoj način poučan:
+
+1. **Preusmeri panele izvršnog dashboard-a da čitaju već postojeće
+   metrike iz Mimir-a, umesto da ponovo skeniraju logove.** Izgleda
+   besplatno — brojevi već postoje na jeftinijem skladištu. Problem:
+   metrike u Mimir-u namerno ne nose labelu po pojedinačnom korisniku, jer
+   bi ta labela značila da se email adrese upisuju kao vrednost labele u
+   sistemu za metrike — već ranije odbijeno iz razloga privatnosti, i
+   upravo razlog zašto su te metrike izgrađene da čuvaju samo agregate.
+   Preusmeravanje panela bi ućutkalo filtere na dashboard-u tiho, bez
+   greške — filter za "korisnika" bi i dalje postojao vizuelno, ali ne bi
+   više ništa menjao. Gori ishod od ne diranja ničega.
+2. **Ukloni duplo skeniranje u "delta" panelima** (oni koji prikazuju
+   promenu u odnosu na prethodni period — trenutna vrednost minus ista
+   vrednost pomerena unazad). Svaki takav panel piše upit koji referencira
+   isti vremenski prozor dvaput: jednom direktno, jednom pomeren. Mereno
+   na identičnom prozoru od sat vremena: dvostruko skeniranje potrošilo je
+   **2,80 puta** više bajtova nego jedno skeniranje. Popravka je čista i
+   ne gubi nijedan filter — ali ušteda je bila ispod dolara mesečno, na
+   dashboard-u čiji je export format već tri puta do sada, pri
+   objavljivanju, pretvorio svaki panel u "No data" zbog placeholder-a
+   koji se razrešava samo kroz tačno određen put objave. Rizik od diranja
+   nije bio opravdan uštedom — ostavljeno za trenutak kad se taj
+   dashboard bude menjao iz nekog drugog razloga.
+3. **Zameni jedno sedmodnevno recording pravilo jeftinijim zbirom dnevnog
+   pravila preko sedam dana** (`sum_over_time` preko sedmodnevnog prozora
+   umesto direktnog sedmodnevnog izračunavanja). Ovde je provera otkrila
+   nešto ozbiljnije od "nije vredno" — **vrednosti se nisu slagale, dva
+   puta veća razlika.** Uzrok: `sum_over_time` preko recording pravila
+   broji **uzorke**, ne dane, a učestalost evaluacije tog pravila je u
+   međuvremenu promenjena sa dvanaest na dvadeset četiri sata. Sedmodnevni
+   prozor koji obuhvata i period pre i period posle te promene tiho
+   udvostručuje deo dana. Prenosivo pravilo: **nikad ne agregiraj
+   recording pravilo sa `sum_over_time` preko prozora koji može da
+   obuhvati promenu intervala evaluacije** — čak ni kad je razlika u
+   intervalu izgledala kao sitna operativna izmena u trenutku kad je
+   urađena.
+
+Sva tri predloga su odbačena posle merenja, ne pre njega — i to je poenta
+vredna ponavljanja iz prethodnih poglavlja. Ono što je ostalo posle
+odbacivanja sva tri nije "još jedna optimizacija" nego stvarna redizajn
+odluka: da li dashboard za rukovodstvo zaista treba da omogući filtriranje
+po pojedinačnom korisniku, ili agregat po danu i domenu dovoljno služi
+svrsi. To pitanje nema tehnički odgovor — nosi proizvodnu odluku unutar
+sebe, i zato je ostavljeno neodlučeno, eksplicitno, umesto da se prikrije
+lošim tehničkim kompromisom.
+
+Lekcija za čitaoca: kardinalnost i učestalost upisa, obrađene ranije u
+ovom poglavlju, kontrolišu koliko se **piše**. Ni jedna mera protiv njih
+ne skida nijedan bajt sa računa za **čitanje** — to je odvojen metar, sa
+sopstvenim uzrocima (zakazana pravila češće nego dashboard-i koje ljudi
+zaista gledaju) i sopstvenim zamkama (agregati koji tiho brišu filter,
+dupliranje u delta obrascu, `sum_over_time` preko promene intervala).
+Meriti samo jednu stranu računa i pretpostaviti da je time cela slika
+pokrivena je ista greška u drugom ruhu kao meriti broj serija i
+pretpostaviti da je time obuhvaćena i učestalost upisa.
+
 ## 11.3 Analitički deo — zašto kardinalnost nije "detalj skladištenja"
 
 ### Zvanična preporuka: nativni histogrami kao strukturno rešenje
@@ -320,6 +399,17 @@ odjednom.**
   naplaćuje njihov proizvod, i podešavanje intervala prikupljanja ume da
   bude veći i jeftiniji lever od bilo koje pojedinačne mere protiv
   kardinalnosti.
+
+- Trošak čitanja (upita) je poseban metar od troška pisanja (unosa) — mere
+  protiv kardinalnosti i učestalosti upisa ne diraju nijedan bajt skeniran pri
+  izvršavanju upita; meri obe strane računa odvojeno.
+- Pre nego što preusmeriš dashboard panel da čita jeftiniju, već agregiranu
+  metriku umesto sirovih podataka, proveri da li agregat nosi iste labele koje
+  filteri na panelu očekuju — tih labela često nema namerno (najčešće iz
+  razloga privatnosti), i preusmeravanje bi ućutkalo filter bez greške.
+- Nikad ne agregiraj recording pravilo sa `sum_over_time` preko prozora koji
+  može da obuhvati promenu intervala evaluacije tog pravila — broji se uzorak,
+  ne vremenska jedinica, i promena intervala tiho menja rezultat.
 
 ## 11.5 Vežba za čitaoca
 
