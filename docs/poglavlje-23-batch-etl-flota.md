@@ -140,6 +140,40 @@ je urađeno u odnosu na ostatak arhitekture.
 
 ![Trideset dana izvršavanja jednog zakazanog zadatka: dva dana kad zadatak nije ni pokrenut, i tri dana kad se uredno završio, ali proizveo nula redova — oba oblika kvara nevidljiva golom oku bez posebne provere.](diagrams/dashboard-completeness.png){: width="95%" }
 
+### Popravka redosleda koja nema svoj čuvar
+
+Promena redosleda opisana u prethodnom odeljku — koja izvor kapaciteta
+dobija prvenstvo — rešila je stvaran problem jednom, ali sama ta promena
+danas ne postoji nigde u kodu infrastrukture. Red čekanja i izvori
+kapaciteta za ovu flotu se i dalje menjaju isključivo direktnom komandom
+ili kroz konzolu, van sistema koji upravlja ostatkom infrastrukture kao
+kodom. Praktična posledica: bilo ko sa pristupom konzoli može, namerno ili
+slučajno, vratiti jeftiniji, manje pouzdan izvor na prvo mesto — i ništa u
+sistemu to neće primetiti kao odstupanje, jer ne postoji zapisano, željeno
+stanje sa kojim bi se trenutno stanje moglo uporediti.
+
+Ovo je vredno postaviti pored sličnog obrasca ranije u knjizi (drift
+revizije definicije zadatka) — ali sa jednom bitnom razlikom koja ovu
+prazninu čini opasnijom, ne manje: tamo je bar postojalo nešto snimljeno
+(revizija definicije) čiji se identitet mogao proveriti i uporediti.
+Ovde nema ni toga — sam redosled izvora kapaciteta ne postoji zapisan van
+trenutnog, živog stanja same usluge za izvršavanje zadataka. Regresija bi
+se prvi put primetila tek posredno, kroz opšti alarm na neuspeh opisan
+malopre u ovom poglavlju — a taj alarm hvata **posledicu** (zadatak
+otkazao na nepouzdanom izvoru), ne **uzrok** (neko je promenio redosled).
+Vreme između te dve stvari može biti dani, dovoljno da neko zaboravi da je
+uopšte dirao redosled kad prvi izveštaj o otkazu konačno stigne.
+
+Popravka nije komplikovana u principu — uvesti ove resurse u isti sistem
+za infrastrukturu kao kod koji već upravlja ostatkom flote, tako da
+željeno stanje postane nešto što se može pročitati i uporediti, ne samo
+nešto što trenutno postoji u glavi osobe koja je poslednja dirala
+konzolu. Vredno je zabeležiti i zašto to još nije urađeno: sami resursi za
+izvršavanje ove flote nikad nisu ni uvedeni u taj sistem, ni pre ove
+popravke — što znači da ovo nije regresija nečega što je nekad bilo
+zaštićeno, nego praznina koja je postojala od početka i koju je stvaran
+incident tek učinio vidljivom.
+
 ## 23.3 Analitički deo — poznat kontrast sa standardnim metodom za servise
 
 ### RED metod je namenjen drugačijem obliku opterećenja
@@ -231,6 +265,12 @@ pekar koji sazna tek ujutru, od mušterija, da police stoje prazne.
   je nepotreban rizik od tihog zastarevanja. Periodično revidiraj
   postojeće alarme da proveriš da nijedan nije godinama u istom,
   nepromenjenom stanju bez da iko primeti.
+
+- Kad popravku sprovedeš promenom redosleda ili konfiguracije direktno na
+  živom resursu, a taj resurs nije pod sistemom za infrastrukturu kao kod,
+  ta popravka nema čuvara — bilo ko sa pristupom konzoli je može tiho
+  vratiti, i regresija će se prvi put primetiti tek posredno, kroz
+  posledicu, ne kroz sam uzrok.
 
 ## 23.5 Vežba za čitaoca
 
