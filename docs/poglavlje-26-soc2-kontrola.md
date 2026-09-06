@@ -139,6 +139,44 @@ beleži samo jednu, zbirnu ocenu za "pristup" bi sakrila tačno tu razliku;
 tabela koja razdvaja mašinski i ljudski red čini prazninu vidljivom umesto da
 je zamagli iza dela koji je već u redu.
 
+### Ista disciplina primenjena na sam dokument koji je nosi
+
+Interna tabela stanja opisana ranije u ovom poglavlju nije jedino mesto
+gde se primenjuje pravilo "napiši šta je stvarno stanje, ne šta bi trebalo
+da bude." Sam radni dokument koji tu tabelu nosi je, na svom vrhu, obeležen
+statusom **NACRT**, sa brojem verzije koji jasno govori "rana, nezrela
+verzija", i sa poljem za vlasnika dokumenta koje glasi doslovno "TODO(vlasnik)"
+— još nedodeljeno, umesto da neko ime bude upisano kao formalnost bez
+stvarne odgovornosti iza njega. Ovo nije previd nego dosledna primena
+istog principa jedan nivo više: ako je poenta tabele da svaki red kaže
+istinu o kontroli koju opisuje, onda i sam dokument mora reći istinu o
+sebi — da je nezreo, da nema još formalno dodeljenog vlasnika, da verzija
+0.1 znači upravo to. Dokument koji tvrdi da je "gotov" dok interno nije ni
+recenziran bi bio ista vrsta neusklađenosti između tvrdnje i stvarnosti
+koju čitava tabela ispod njega postoji da uhvati kod pojedinačnih kontrola.
+
+### Kriterijum standarda nije isto što i konkretna tehnička mera
+
+Vredna razlika, lako izgubljena u praksi: standard imenuje **širok
+kriterijum** (poverljivost podataka, minimizacija onoga što se prikuplja i
+čuva) — ne propisuje **konkretnu tehničku meru** kojom se taj kriterijum
+zadovoljava. Pseudonimizacija identiteta korisnika, detaljno opisana u
+prethodnom poglavlju ove knjige, je jedan izabran, dovoljan način da se
+zadovolji taj širi kriterijum — ne stavka koju standard po imenu zahteva.
+Razlika zvuči sitno, ali menja šta se sme reći na glas: tvrdnja "moramo da
+pseudonimizujemo jer to standard traži" je netačna i, gore od toga, stvara
+lažnu obavezu koja se lako pogrešno prenese dalje — nekom drugom timu, u
+budući upitnik klijenta, u sopstvenu dokumentaciju. Tačna tvrdnja je "širi
+kriterijum poverljivosti postoji, a pseudonimizacija je mera koju smo mi
+odabrali da ga zadovoljimo, i mogli smo odabrati i drugu." Ova razlika
+takođe znači da odustajanje od pseudonimizacije, da je do toga ikad došlo,
+ne bi samo po sebi značilo kršenje standarda — značilo bi da je potreban
+neki **drugi** dokazan način da se isti, širi kriterijum i dalje ispunjava.
+Mešanje kriterijuma i mere u jedno vodi u oba pogrešna pravca: precenjivanje
+sopstvene obaveze (kad se izabrana mera pogrešno predstavi kao propisana),
+i potcenjivanje rizika (kad se ukidanje mere pogrešno protumači kao da
+oslobađa i od šireg kriterijuma koji je iza nje stajao).
+
 ## 26.3 Analitički deo — usaglašenost kao samo-doslednost, ne spoljni katalog
 
 ### Zvanična struktura kriterijuma potvrđuje dvoslojnu podelu
@@ -236,6 +274,13 @@ govore istu priču.
   stranu (tokeni, opseg dozvola) od ljudske strane (ko ima interaktivan
   pristup, sa kojom ulogom) — organizacija često ima tačan odgovor na jedno
   pitanje dok nema nikakav na drugo, i zbirna ocena tu razliku sakriva.
+- Primeni istu iskrenost i na dokument koji vodi tabelu stanja — obeleži ga
+  kao nacrt, sa nedodeljenim vlasnikom ako je zaista tako, umesto da izgleda
+  gotov pre nego što je iko interno pregledao.
+- Ne izjednačavaj širok kriterijum standarda sa konkretnom tehničkom merom
+  koju si izabrao da ga zadovoljiš — mera je jedan od mogućih odgovora, ne
+  propisana stavka, i mešanje ta dva vodi i u precenjivanje sopstvene obaveze
+  i u potcenjivanje rizika ako mera ikad bude ukinuta.
 
 ## 26.5 Vežba za čitaoca
 
