@@ -93,6 +93,63 @@ zamkama (strukturno kašnjenje reda veličine sat-dva, cena upita nad
 sistemskim pogledima, razlika između "watcher je mrtav" i "posmatrani sistem
 je mrtav") da dobija sopstvenu, punu studiju slučaja u Poglavlju 24.
 
+### Kontrola nad hostom nije isto što i trajnost instalacije
+
+Obrazac "agent po čvoru", opisan iznad za samostalno upravljan klaster,
+oslanja se na jednu prednost koju upravljana baza nikad ne nudi: tim ima
+puno pravo da instalira šta god treba na host. Ta ista prednost nosi
+posledicu koja se lako previdi dok se prvi put uvodi agent: **pravo da
+se nešto instalira nije isto što i garancija da će ta instalacija tu i
+ostati.** Agent instaliran ručno na konkretan host preživljava tačno
+onoliko dugo koliko preživi taj konkretan host — a bilo koji događaj koji
+zameni instancu ispod njega (migracija na drugu arhitekturu procesora,
+redovna zamena instance, čak i nadogradnja same klasterovane aplikacije
+kroz zamenu čvorova) briše svaku ručno instaliranu komponentu, tiho, jer
+nijedna od njih nikad nije bila deo onoga što se automatski postavlja pri
+kreiranju instance.
+
+Konkretno, na svakoj zameni instance nestaju **tri** odvojene stvari
+odjednom, ne jedna: sam agent koji prikuplja host i log signal; jedna
+linija podešavanja unutar konfiguracije same klasterovane aplikacije koja
+uključuje njen JVM/metrike endpoint; i mala zakazana usluga za čišćenje
+lokalnih logova aplikacije, da disk ne bi napunio sam sebe. Naivan oporavak
+— samo reinstaliranje agenta — vraća **jednu od te tri** stvari, i ništa
+na dashboard-u ne čini taj propust očiglednim: host-nivo signal može
+ponovo početi da teče normalno, dok JVM-nivo signal (i čišćenje logova uz
+njega) ostaju tiho odsutni, neprimećeni dok neko eksplicitno ne proveri
+sve tri komponente pojedinačno.
+
+Popravka, jednom kad se obrazac ponovio dovoljno puta da opravda
+automatizaciju, nije bila "zapamti da uradiš sve tri stvari sledeći put"
+— bila je jedan idempotentan skript oporavka koji vraća sve tri komponente
+odjednom, u jednom prolazu, i koji sam izvodi identitet čvora (koju ulogu
+taj čvor igra u klasteru) direktno sa hosta, umesto iz ručno održavane
+mape — tako da se sme bezbedno pokrenuti ponovo, nezavisno od toga koji je
+tačno host u pitanju. Bitno: taj skript namerno **ne restartuje** samu
+klasterovanu aplikaciju — restart te aplikacije nosi sopstveno pravilo
+redosleda (čvor koji igra ulogu koordinatora restartuje se poslednji i
+samo u prozoru za održavanje, jer njegov restart obara svaki upit u toku
+kroz ceo klaster) i ostaje odvojen, ručno pokrenut korak.
+
+Prateća zamka, vredna sopstvene linije: provera da je JVM metrike endpoint
+zaista ponovo aktivan ne sme ići preko svakodnevnog alata za "da li nešto
+sluša na ovom portu" — provera tabele soketa je jednom prijavila da port
+"ne sluša", dok je isti endpoint u tom istom trenutku ispravno odgovarao
+na običan HTTP zahtev. Uzrok: JVM je bio vezan za oblik loopback adrese
+koji alat za listanje soketa ne prikazuje podrazumevano. Da se poverovalo
+proveri soketa umesto stvarnom zahtevu, to bi izazvalo nepotreban dodatni
+restart uloge koordinatora — najrazorniju moguću operaciju u celom
+klasteru, pokrenutu na osnovu lažnog signala.
+
+Ovo se vezuje direktno za princip kontrole sa početka poglavlja: puna
+kontrola nad hostom znači da tim **sme** da instalira šta god treba — ali
+ne znači da ta instalacija **traje** sama od sebe, na način na koji signal
+upravljane baze traje bez ičije intervencije. Spoljašnja ravan RDS-a iz
+ovog poglavlja dobija svoj signal "besplatno" upravo zato što nije ručno
+instalirana; agent-po-čvoru dobija bogatiji signal upravo zato što **jeste**
+ručno instaliran — a ta bogatost dolazi sa eksplicitnom, trajnom obavezom
+održavanja koju obrazac upravljane baze nikad ne nosi.
+
 Sva tri obrasca dele jedan princip, dovoljno bitan da se izdvoji kao pravilo
 knjige: **watcher koji posmatra kritičnu putanju ne sme da zavisi od
 infrastrukture koju posmatra.** Spoljašnja ravan RDS-a ne zavisi od konekcije
@@ -244,6 +301,16 @@ te zaslepeo.**
   pitaš možda još nije objavio vrednost — puštač to čita kao "serija ne
   postoji", ne kao "još nije stigla". Proširi prozor upita dobro iznad
   nominalne granularnosti izvora umesto da menjaš sam izvor.
+
+- Za svaki ručno instaliran agent na hostu koji potpuno kontrolišeš, tretiraj
+  zamenu instance (migracija, redovna zamena, nadogradnja kroz zamenu čvorova)
+  kao izvesnost, ne rubni slučaj — nabroj svaku komponentu od koje ta
+  instalacija zavisi (agent, linija podešavanja, prateće zakazane usluge) i
+  napravi oporavak svih odjednom, u jednom koraku, umesto da se propust otkriva
+  naknadno kroz dashboard koji ćuti o tome šta konkretno nedostaje. I nikad ne
+  proveravaj da je mrežni endpoint ponovo aktivan preko stanja soketa — proveri
+  stvarnim zahtevom; soket može tvrditi da ništa ne sluša dok endpoint ispravno
+  odgovara.
 
 ## 7.5 Vežba za čitaoca
 
