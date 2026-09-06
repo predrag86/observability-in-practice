@@ -165,6 +165,80 @@ zato što ulazni podaci prosto nisu postojali.
 
 ![Vidljivi događaji prijave pre i posle podizanja nivoa logovanja: neuspesi su uvek bili tu, ali uspešne prijave — hiljade dnevno — postaju vidljive tek od trenutka popravke.](diagrams/dashboard-authgap.png){: width="95%" }
 
+### Podizanje nivoa je zapravo dva nezavisna prekidača, ne jedan
+
+Popravka asimetrije opisana iznad zvuči kao jedna izmena — "podigni nivo
+vidljivosti uspešne prijave." U implementaciji su to zapravo **dva
+nezavisna prekidača**, i oba moraju biti tačno podešena da bi uspešna
+prijava uopšte stigla do platforme za posmatranje. Prvi je nivo koji sam
+modul za događaje autentikacije koristi kada zapisuje uspešnu prijavu —
+po difoltu niži od nivoa koji se uopšte gura dalje. Drugi, potpuno
+odvojen prekidač je prag na izlaznom putu koji odlučuje koji nivo
+zapisa sistem uopšte prosleđuje ka kolektoru posmatranja. Podizanje samo
+jednog od ta dva ne daje grešku, ne daje upozorenje — daje tišinu koja
+izgleda identično kao da popravka nije ni pokušana. Tek kad su oba
+prekidača usklađena, uspešna prijava postaje vidljiva sa punim detaljem
+opisanim ranije u poglavlju.
+
+Ovo je vredno imenovati kao poseban obrazac, ne samo detalj primene:
+"podigni nivo logovanja" zvuči kao jedna radnja sa jednim mestom gde se
+izvodi, ali sistem koji razdvaja **šta modul odlučuje da zabeleži** od
+**šta se od zabeleženog zaista otprema** krije drugi prekidač koji
+niko ne pretpostavi da postoji dok prvi put ne proveri zašto očekivani
+zapisi i dalje ne stižu.
+
+Uz istu popravku ide i eksplicitna cena koju vredi imenovati: čim uspešna
+prijava postane vidljiva sa punim detaljem, taj detalj po definiciji nosi
+identitet korisnika i poreklo zahteva — lične podatke koje sistem do tog
+trenutka nije čuvao u ovom obliku. Odluka da se asimetrija ispravi mora
+ići uz svesnu proveru šta se time uvodi u čuvanje podataka, ne samo
+proveru da li se izmena tehnički vidi na dashboard-u.
+
+### Nula pogodaka nije isto što i "nema pogrešnih prijava"
+
+Kada je brojač uspešnih i neuspelih prijava prvi put povezan sa alarmom i
+dashboard-om, oba su izgrađena na pretpostavci da neuspeh nosi sopstveni,
+zaseban tip događaja u brojaču. Ta pretpostavka je bila pogrešna: sistem
+ne beleži neuspeh kao poseban tip — beleži ga kao **isti** tip događaja
+kao i uspeh, razlikovan samo prisustvom polja razloga greške. Selektor
+napisan po prvobitnoj, pogrešnoj pretpostavci nije vraćao grešku — vraćao
+je nula vremenskih serija, tiho, i taj alarm i taj dashboard su stajali
+"zdravi" jer nikad nisu imali šta da prijave.
+
+Greška je otkrivena tek kad je neko namerno izazvao pravu neuspelu prijavu
+u test okruženju da proveri da alarm zaista radi — dashboard koji je
+trebalo da pokaže skok nije pokazao ništa. Da probno okruženje u tom
+trenutku nije imalo nijednu stvarnu neuspelu prijavu, ne bi bilo načina da
+se razlikuje "selektor je pogrešan" od "trenutno nema neuspelih prijava" —
+oba izgledaju identično kao nula. Ovo je isti obrazac "poznatog nedostatka
+podataka" koji izgleda kao "poznato dobro stanje," viđen ranije u knjizi u
+drugim kontekstima, sada u samom srcu poglavlja koje govori upravo o
+razlici između uspeha i neuspeha: čak i alarm dizajniran da hvata baš tu
+razliku može tiho promašiti obe strane odjednom.
+
+### Dva okruženja koja se ne ponašaju isto, iako oba nose isto ime sistema
+
+Test i produkciono okruženje ovog sistema su, u periodu dok se posmatranje
+uvodilo, radila na dve različite glavne verzije — produkcija na verziji
+kojoj je istekla zvanična podrška, test na tekućoj. Razlika nije bila
+kozmetička: tek na novijoj verziji sistem ume nativno da gura trejsove i
+strukturirane logove; starija verzija to jednostavno nema, bez obzira
+koliko dobro se konfiguriše. Bilo koja pretpostavka da se nešto provereno
+na test okruženju identično ponaša i u produkciji je, u tom periodu, bila
+pogrešna po definiciji verzije, ne po grešci u konfiguraciji.
+
+Postojala je i dodatna zamka koja je skoro proizvela pogrešan zaključak:
+oba okruženja pišu svoj startni izveštaj u **isti**, deljeni prostor za
+logove infrastrukture, razlikovan samo poljem okruženja unutar samog
+zapisa, ne posebnim prostorom. Prvi pokušaj da se potvrdi na kojoj verziji
+produkcija zaista radi, čitanjem tog prostora bez pažljivog filtriranja,
+umalo je pogrešno pripisao test-okruženjev startni izveštaj produkciji —
+ispravljeno tek proverom stvarno primenjene konfiguracije na samoj slici,
+ne čitanjem deljenog log izveštaja. Pouka nije nova, ali je ovde
+konkretna: deljena infrastruktura između okruženja nosi rizik pogrešnog
+pripisivanja identiteta zapisa, čak i kad polje okruženja postoji baš zato
+da tu zabunu spreči.
+
 ## 20.3 Analitički deo — poznata klasa gapa, retko formalno imenovana
 
 ### Zvanične smernice za logovanje traže oba ishoda podjednako
@@ -271,6 +345,19 @@ to nije.
   jedinstvenom po replici — ne oslanjaj se na ono što kolektor sam izvede
   iz adrese koju je skenirao, jer identične adrese na svim replikama
   tiho stope sve njih u jednu seriju.
+
+- Kad "podigni nivo logovanja" znači usklađivanje modula koji odlučuje šta
+  se beleži SA pragom koji odlučuje šta se od zabeleženog otprema, tretiraj
+  ih kao dva nezavisna prekidača — podizanje samo jednog daje tišinu koja
+  izgleda identično kao da ništa nije urađeno.
+- Nikad ne veruj alarmu ili dashboard-u da "zdravo, nula pogodaka" znači
+  "nema problema" dok ga bar jednom ne testiraš namernim, stvarnim
+  neuspehom — selektor koji cilja pogrešan oblik podataka i sistem koji
+  trenutno nema šta da prijavi izgledaju identično, oba kao nula.
+- Ne pretpostavljaj da se test i produkciono okruženje ponašaju isto samo
+  zato što nose isto ime sistema — proveri stvarnu verziju svakog posebno,
+  i nikad ne pripisuj startni izveštaj okruženju na osnovu deljenog
+  prostora za logove bez eksplicitnog filtriranja po polju okruženja.
 
 ## 20.5 Vežba za čitaoca
 
