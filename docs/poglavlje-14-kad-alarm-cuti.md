@@ -161,6 +161,62 @@ god mehanizam namerno ćuti dok je sve u redu, mora postojati odvojen signal
 koji dokazuje da je taj mehanizam uopšte živ — jer sam mehanizam, po
 dizajnu, ne može da posvedoči za sebe u trenutku kad je mrtav.
 
+### Peta studija slučaja: svaki kod-put mora da prijavi šta je uradio, ne samo da li je nešto prijavio
+
+Prve četiri studije slučaja u ovom poglavlju otkrivaju tišinu **spolja** —
+neko primeti prazan kanal, pa istražuje unazad. Peti slučaj gradi nešto
+drugačije: mehanizam koji tišinu otkriva **iznutra**, automatski, u
+trenutku kad neko doda novi kod, pre nego što bilo ko mora da primeti bilo
+šta na dashboard-u.
+
+Mehanizam koji odlučuje šta da radi sa svakim otkrivenim otkazom — pošalji,
+potisni jer je unutar prozora za sprečavanje ponavljanja, potisni jer je
+poznat duplikat, potisni jer je porodica na tihom nivou, potisni jer je
+dostigla novi prag po klasi izuzetka, ili pokušaj slanja koji je sam pao —
+emituje, na svakoj takvoj odluci, tačno **jedan** ishod iz malog, zatvorenog
+skupa. Bitno: ovaj signal se emituje na samoj tački odluke, nikad iza ijedne
+kapije — ista disciplina koju ovo poglavlje već zahteva od sirovog brojača
+otkaza (mora se beležiti pre bilo kakve odluke o slanju, ne posle).
+
+Pošto su ti ishodi, po konstrukciji, **potpuni i međusobno isključivi** —
+svaka odluka pripada tačno jednoj kategoriji, nikad nuli, nikad dvema —
+postaje moguća jedna jednostavna, samoproverljiva invarijanta: zbir svih
+ishoda za porodicu u nekom prozoru vremena mora biti **tačno jednak** broju
+otkrivenih otkaza te iste porodice u istom prozoru. Ako se ne poklapa,
+dogodilo se jedno od dvoje — ili je neko dodao novu granu odluke u kod
+(novi razlog za potiskivanje, na primer) a zaboravio da uz nju doda i
+odgovarajuću emisiju ishoda, ili sam prenos tiho gubi deo signala. U oba
+slučaja, **sam neslaganje brojeva je alarm** — niko ne mora unapred da se
+seti da testira baš tu novu granu koda; provera je ugrađena u sam oblik
+podataka, ne u nečije sećanje da je doda naknadno.
+
+Motivišući slučaj, izmeren pre nego što je ova invarijanta uopšte postojala:
+pitanje "da li je iko zaista obavešten" za konkretnu porodicu zadataka
+moglo je da se odgovori samo ručnim čitanjem sirovih linija loga. Jedna
+porodica je na taj način otkrivena kako šalje samo deo svojih alarma dok
+tiho potiskuje ostatak — nedeljama, neprimećeno, jer niko nije brojao
+poslate naspram potisnutih naspram stvarno otkrivenih otkaza jedne prema
+drugoj.
+
+Ovo se direktno vezuje za lekciju iz prve studije slučaja: invarijanta ne
+sprečava nekog da napiše novo, previše agresivno pravilo za potiskivanje —
+ta odluka i dalje zahteva pregled, isto kao mehanizam iz prvog slučaja.
+Ono što invarijanta garantuje je nešto uže ali podjednako vredno: šta god
+kod nameravao da uradi, mora to da **kaže naglas**, u obliku koji se
+automatski proverava naspram stvarnosti — umesto da se veruje da će svaki
+budući saradnik zapamtiti da ažurira dokumentaciju ili doda poziv za
+emitovanje na pravom mestu.
+
+Ista šema je, jednom kad se pokazala vrednom, ponovo iskorišćena na drugom,
+srodnom mehanizmu (ponovno pokretanje neuspelih zadataka na jedan klik) —
+tamo sa osam mogućih ishoda umesto šest, ista pravilo: nova grana koda u
+logici odlučivanja **mora** da emituje jedan od ishoda, ili se
+usklađivanje prestaje da poklapa. Opšta pouka nadilazi konkretan mehanizam:
+kad god sistem odlučuje između više mogućih ishoda za isti događaj, i kad
+je lako dodati novu granu odluke a zaboraviti računovodstvo uz nju, vredi
+potražiti sledeće mesto u sopstvenom sistemu gde isti oblik problema važi —
+ovaj obrazac se retko koristi samo jednom kad se jednom pokaže koristan.
+
 ## 14.3 Analitički deo — zašto ovo retko piše iko drugi
 
 ### Mehanizam za sprečavanje spam-a kodira pretpostavku o obliku greške
@@ -233,6 +289,13 @@ izgleda sumnjivo, dok ispravan-ali-pogrešno-kalibrisan izgleda kao mir.**
   samo kad nešto pronađe), dodaj odvojen signal koji dokazuje da je sam
   mehanizam živ — tišina zbog "sve je čisto" i tišina zbog "provera je
   pukla" izgledaju identično spolja.
+
+- Kad mehanizam odlučuje između više mogućih ishoda za isti događaj (pošalji /
+  potisni iz razloga X / potisni iz razloga Y / slanje palo), učini te ishode
+  potpunim i međusobno isključivim, i emituj tačno jedan po odluci,
+  bezuslovno. Zbir svih ishoda mora biti jednak broju sirovih događaja — ta
+  invarijanta sama otkriva kad je nova grana koda dodata bez odgovarajuće
+  emisije, bez oslanjanja na nečije sećanje da to proveri ručno.
 
 ## 14.5 Vežba za čitaoca
 
