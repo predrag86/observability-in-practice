@@ -169,10 +169,12 @@ Tri stvarna slučaja ovog obrasca, svaki drugačiji:
    Kad je sidecar dodat, nova standardna revizija je registrovana ispravno
    — ali LARGE polovina istog para je registrovana **bez** sidecar-a,
    propuštena jer je par tretiran kao jedna izmena umesto dve. Rezultat:
-   LARGE varijanta je nedeljama radila potpuno slepo za observability, a
-   Slack alarmi koji su je pokrivali otvarali su linkove ka praznim
-   Grafana dashboard-ima — alarm je i dalje radio (jer prati sam ECS, ne
-   telemetriju), ali istraga alarma nije imala šta da pokaže.
+   LARGE varijanta je danima radila potpuno slepo za observability — ni
+   metrike, ni logovi, ni trejsevi — dok je nedeljna provera na nivou cele
+   flote (opisana dalje u ovom poglavlju) to nije uhvatila. Pun tok ovog
+   konkretnog incidenta — uključujući tačno koliko je kašnjenje detekcije
+   iznosilo i zašto baš toliko — razrađen je kao centralni primer u
+   Poglavlju 29.
 2. **Porodica koja nikad nije ni ušla u talas onboardovanja.** Jedna
    porodica ima launcher koji hardkoduje **dve** odvojene pinovane
    revizije za dva različita moda rada, ne jednu. Talas onboardovanja koji
