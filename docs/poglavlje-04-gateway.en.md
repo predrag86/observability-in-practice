@@ -41,13 +41,17 @@ gateway, in high availability, through which almost all traffic passes.**
 Concretely:
 
 - The gateway is **Grafana Alloy** (the distribution of the OpenTelemetry
-  Collector maintained by Grafana Labs), run as two independent tasks on a
-  container platform (AWS ECS/Fargate), behind an internal load balancer.
+  Collector maintained by Grafana Labs), run on a container platform (AWS
+  ECS/Fargate) behind an internal load balancer, with **two tasks as the
+  lower bound** — autoscaling under load adds further instances when needed,
+  never fewer than two. (How that scaling affects the processing itself,
+  specifically how traces get distributed across instances, is worked out in
+  Chapter 12.)
 - All senders — whether longer-lived services (a backend application) or
   short-lived batch jobs — target **one stable DNS name** that stays the same
   across rebuilds of both the gateway itself and the load balancer. No sender
-  knows or cares which of the two gateway instances currently received its
-  signal.
+  knows or cares how many gateway instances are currently alive, nor which
+  one received its signal.
 - The gateway is **the only place that holds credentials for the cloud** (a
   basic-auth token toward Grafana Cloud). No application, no batch job, no
   sidecar knows that token — which means compromising any single service does
@@ -61,7 +65,7 @@ Concretely:
 
 Schematically, it looks like this:
 
-![Telemetry travels from senders to one stable DNS name, which distributes traffic evenly across two independent gateway instances; only the gateway talks to the cloud platform.](diagrams/diagram.png){: width="100%" }
+![Telemetry travels from senders to one stable DNS name, which distributes traffic evenly across two or more independent gateway instances (autoscaling under load); only the gateway talks to the cloud platform.](diagrams/diagram.png){: width="100%" }
 
 What this diagram does *not* show, and matters: there is a small,
 **explicitly documented** list of senders that **bypass** the gateway — a
@@ -101,29 +105,22 @@ logic also corrupted the application's own identity in the observability
 platform — which changed every time the gateway restarted, even though the
 application itself was never touched.
 
-The first fix was the fastest one possible: a dedicated step was added,
-right before export, that explicitly **strips** those handful of
-gateway-specific attributes — but only for that one, already-affected
-application, by name. The fix was verified live and confirmed to have
-resolved exactly that case. What that fix didn't resolve: the identical
-problem still existed, unnoticed and untouched, for two other, unrelated
-senders — because the strip list was maintained by hand, by sender name,
-rather than being a structural change to the mechanism itself. Every
-subsequent affected sender would require its own manual addition to that
-list.
+The fix was targeted, not structural: right after the fill-in mechanism,
+and before export, a narrow filter was added that explicitly **strips**
+those eight gateway-specific attributes — but only for traffic from that
+one, already-affected application, identified by its service name. The
+"fill if missing" mechanism itself remains unchanged for every other
+sender; nothing gets moved, and where it runs isn't narrowed. The fix was
+verified live through several independent checks — the availability-zone
+distribution for senders that are supposed to keep that label anyway, the
+identity contents on the affected application itself, the health of the
+alert rule that depended on that label — and confirmed to have resolved
+exactly that case, with no side effect on any other sender. Exactly where
+in the pipeline a filter like this gets inserted, and why a narrow,
+per-sender scope is the better choice over a broader cut across all senders
+at once, is covered in more detail in Chapter 10.
 
-The real fix, one release later, didn't add another name to the list — it
-changed **where** the fill-in mechanism ran at all. Instead of running
-downstream of every sender, it was narrowed to run only right at ingestion,
-and exclusively for the handful of sources the gateway *itself* hosts (its
-own self-measurement and a couple of direct integrations that pull data
-rather than push it) — before that data ever merges with the rest of the
-traffic. Every other sender now passes through the gateway completely
-untouched as far as identity goes, because the mechanism that would have
-touched it is no longer physically on its path. The by-name strip step was
-removed entirely — there's nothing left to strip.
-
-![Before the fix, the mechanism that fills in missing resource attributes runs downstream of every sender and leaks the gateway's own identity onto anyone who hasn't set it themselves. After the fix, that mechanism is narrowed to only the sources the gateway itself hosts, before merging with the rest of the traffic — every other sender passes through untouched.](diagrams/ch04-identitet-popuni-ako-nedostaje.png){: width="85%" }
+![The fix is a narrow step inserted right after the resourcedetection mechanism, which strips eight gateway-specific attributes only for the sender where the problem was found — every other sender passes through the same resourcedetection untouched.](diagrams/ch04-identitet-popuni-ako-nedostaje.png){: width="85%" }
 
 ### Deleting a label and setting a new value aren't the same operation
 
