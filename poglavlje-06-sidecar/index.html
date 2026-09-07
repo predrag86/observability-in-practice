@@ -790,6 +790,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#na-listi-instrumentirano-ne-znaci-da-nesto-stvarno-izlazi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Na listi "instrumentirano" ne znači da nešto stvarno izlazi
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2317,6 +2328,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#na-listi-instrumentirano-ne-znaci-da-nesto-stvarno-izlazi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Na listi "instrumentirano" ne znači da nešto stvarno izlazi
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2572,10 +2594,12 @@ poslednji put eksplicitno pokazan.</p>
    Kad je sidecar dodat, nova standardna revizija je registrovana ispravno
    — ali LARGE polovina istog para je registrovana <strong>bez</strong> sidecar-a,
    propuštena jer je par tretiran kao jedna izmena umesto dve. Rezultat:
-   LARGE varijanta je nedeljama radila potpuno slepo za observability, a
-   Slack alarmi koji su je pokrivali otvarali su linkove ka praznim
-   Grafana dashboard-ima — alarm je i dalje radio (jer prati sam ECS, ne
-   telemetriju), ali istraga alarma nije imala šta da pokaže.</li>
+   LARGE varijanta je danima radila potpuno slepo za observability — ni
+   metrike, ni logovi, ni trejsevi — dok je nedeljna provera na nivou cele
+   flote (opisana dalje u ovom poglavlju) to nije uhvatila. Pun tok ovog
+   konkretnog incidenta — uključujući tačno koliko je kašnjenje detekcije
+   iznosilo i zašto baš toliko — razrađen je kao centralni primer u
+   Poglavlju 29.</li>
 <li><strong>Porodica koja nikad nije ni ušla u talas onboardovanja.</strong> Jedna
    porodica ima launcher koji hardkoduje <strong>dve</strong> odvojene pinovane
    revizije za dva različita moda rada, ne jednu. Talas onboardovanja koji
@@ -2625,6 +2649,33 @@ pokreće.</strong> Prijava da je novija revizija izgubila sidecar može značiti
 "bezopasno, launcher je i dalje na staroj dobroj reviziji" ili "aktivan
 prekid, launcher je već pomeren" — razlikovanje ta dva zahteva ručnu
 proveru pina, alat samo ukazuje gde da se gleda.</p>
+<h3 id="na-listi-instrumentirano-ne-znaci-da-nesto-stvarno-izlazi">Na listi "instrumentirano" ne znači da nešto stvarno izlazi</h3>
+<p>Nedeljna provera pokrivenosti flote, već opisana iznad, održava listu
+porodica koje se smatraju instrumentiranim — svaka koja emituje makar
+osnovni identitet u platformi za posmatranje ulazi na tu listu i skida se sa
+liste "još nije onboardovano." Revizija cele liste, sprovedena istom
+proverom, otkrila je da ta lista meri pogrešnu stvar za šest porodica: pet od
+šest jednostavno nikad nije ni bilo pomenuto — nema ih ni na jednoj
+registrovanoj reviziji, ne slučaj da su ispale iz para. Šesta je bila
+suptilnija i zanimljivija: porodica koja <strong>jeste</strong> na listi, čiji sidecar
+kontejner redovno radi i redovno javlja <code>service.name</code> — sve što provera
+prisustva proverava. Ono što provera ne proverava: da li aplikacioni
+kontejner uopšte ima kud da pošalje bilo šta. Ovoj konkretnoj porodici je
+nedostajala promenljiva okruženja za odredišnu adresu kolektora u
+potpunosti, a slika koju pokreće nije ni nosila OpenTelemetry biblioteku —
+rezultat nisu trejsevi, nisu logovi, nisu ni aplikacione metrike, ništa osim
+onoga što sam sidecar kontejner meri o samom sebi.</p>
+<p>Očigledan popravak — dodati nedostajuću promenljivu i nazvati stvar
+gotovom — namerno <strong>nije</strong> urađen. Razlog: dodavanje same promenljive bi
+učinilo da porodica <em>izgleda</em> potpuno instrumentirana na listi pokrivenosti,
+dok slika i dalje ne bi imala šta da izveze čak i kad zna kuda da šalje.
+Rezultat bi bio gori od trenutnog stanja, ne bolji — trenutno stanje bar
+otvoreno priznaje da nešto nedostaje; "popravljeno" stanje bi to sakrilo iza
+zelene kvačice na listi, dok istinska popravka (dodavanje SDK-a u sliku)
+ostaje van dometa ove konkretne runde promena. Lista pokrivenosti meri
+<strong>prisustvo mehanizma</strong>, ne <strong>izlaz mehanizma</strong> — dve stvari koje se
+poklapaju u devet od deset slučajeva, dovoljno često da razlika ostane
+neprimećena dok je neko ne potraži namerno.</p>
 <h2 id="63-analiticki-deo-sidecar-naspram-agenta-i-granica-gde-sidecar-prestaje-da-se-isplati">6.3 Analitički deo — sidecar naspram agenta, i granica gde sidecar prestaje da se isplati</h2>
 <h3 id="zasto-sidecar-a-ne-node-agent-za-ovu-klasu-opterecenja">Zašto sidecar, a ne node-agent, za ovu klasu opterećenja</h3>
 <p>Nezavisne analize ovog izbora (uključujući Last9-ovo poređenje sidecar vs.
@@ -2718,6 +2769,10 @@ tvrdnja prestaje da važi.</strong></p>
   prometa (<code>target_info</code> raščlanjen po <code>aws_ecs_task_revision</code>), ne samo
   da je uspešno registrovan u AWS — registrovanje i lansiranje su dva
   odvojena čina.</li>
+<li>Provera pokrivenosti koja gleda samo prisustvo mehanizma (sidecar radi,
+  javlja identitet) ne garantuje da mehanizam ima šta da izveze — ne
+  dopunjuj nedostajuće promenljive samo da bi porodica prošla proveru, ako
+  slika iza njih i dalje nema SDK; to skriva prazninu umesto da je zatvori.</li>
 </ul>
 <h2 id="65-vezba-za-citaoca">6.5 Vežba za čitaoca</h2>
 <p>Pronađi jedan kratkotrajan zadatak u svom sistemu (batch posao, cron, Lambda)
@@ -2755,7 +2810,7 @@ sidecar obrazac iz ovog poglavlja.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 22:06:32 UTC">6. septembar 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7. septembar 2026. 19:33:13 UTC">7. septembar 2026.</span>
   </span>
 
     

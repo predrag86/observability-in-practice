@@ -1834,6 +1834,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kloniranje-nasledi-i-identitet-ne-samo-bazu-slike" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kloniranje nasledi i identitet, ne samo bazu slike
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2427,6 +2438,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kloniranje-nasledi-i-identitet-ne-samo-bazu-slike" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kloniranje nasledi i identitet, ne samo bazu slike
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2575,6 +2597,11 @@ izvršilo"? I kad konačno uhvatiš problem — da li ga tiho zakrpiš, ili ga i
 razlog da promeniš sam proces koji ga je proizveo?</p>
 <h2 id="292-kako-je-to-uraeno-praktican-pregled">29.2 Kako je to urađeno — praktičan pregled</h2>
 <h3 id="dva-json-fajla-jedna-sekunda-razmaka">Dva JSON fajla, jedna sekunda razmaka</h3>
+<p>Poglavlje 6 je ovaj obrazac — "par veličina, standardna i uvećana, jedna od njih
+propusti izmenu koju je druga dobila" — već predstavilo kao jedan od tri opšta
+načina na koje registrovanje revizije i njeno stvarno lansiranje tiho divergiraju.
+Ovde je taj isti obrazac razrađen kao potpun slučaj, sa procesom koji ga je
+proizveo i procesom koji ga je na kraju zaustavio.</p>
 <p>Jedan zakazani posao za obradu podataka izvršavao se u dve varijante: standardnoj, i
 "LARGE" varijanti za posebno zahtevan model koji je standardnu veličinu redovno gušio
 memorijom (OOM). Svaka varijanta je bila sopstvena revizija ECS task definicije — dva
@@ -2742,6 +2769,50 @@ prazninu" od "ovo je zatvorilo prazninu". To je tačno isti oblik greške kao dv
 definicije s početka poglavlja, samo jedan sloj iznad koda: dva mesta koja opisuju isto
 stanje sistema, održavana nezavisno, tiho su divergirala — samo što je ovog puta jedno od
 ta dva mesta proza, ne konfiguracija, pa ga nijedan <code>plan</code> ne bi ni pokušao da uporedi.</p>
+<h3 id="kloniranje-nasledi-i-identitet-ne-samo-bazu-slike">Kloniranje nasledi i identitet, ne samo bazu slike</h3>
+<p>Postoji i treći oblik ovog istog obrasca, otkriven istom nedeljnom proverom
+pokrivenosti alarma koja je uhvatila i slučaj sa dve JSON task definicije — ali
+uzrok ovoga puta nije bio nezavisno održavanje dva mesta koja bi trebalo da se
+slažu, nego kopiranje koje je preneo nešto što nije trebalo da se prenese.</p>
+<p>Nekoliko porodica zadataka je nastalo kloniranjem tuđe task definicije, jer im
+je bilo potrebno tačno isto polazište slike koje ta druga porodica već koristi
+— brži put od pisanja definicije od nule. Kloniranje je iskopiralo i promenljivu
+okruženja kojom sidecar prijavljuje sopstveni identitet servisa. Niko je nije
+ažurirao pri kloniranju, pošto ništa u samom procesu kloniranja ne skreće pažnju
+na tu jednu promenljivu među desetinama drugih — kontejner za aplikaciju je,
+nezavisno, dobio svoje, ispravno ime, ali sidecar je nastavio da javlja identitet
+porodice iz koje je kloniran.</p>
+<p>Efekat: telemetrija tri različite porodice tiho se slivala pod tuđim imenom, dok
+su same te tri porodice, po sopstvenom imenu, bile potpuno nevidljive u
+platformi za posmatranje — dashboard i alarmi koji ih prate su i dalje radili
+(prate sam ECS, ne telemetriju), ali svaka istraga zasnovana na imenu porodice
+nije imala šta da pronađe. Konkretna razmera: dve od pogođenih porodica su
+slivale svoju telemetriju baš pod imenom porodice koja nosi pojedinačno najveću
+troškovnu stavku u celoj floti — merenja pokazuju hiljade vremenskih serija koje
+su, prema oznaci, pripadale toj jednoj skupoj porodici, a zapravo su opisivale
+nešto sasvim drugo.</p>
+<p>Ono što ovaj slučaj čini vrednim više od još jednog primera pogrešnog imena:
+sam alat za nedeljnu proveru pokrivenosti je, pored otkrivanja problema, nudio i
+automatski predlog popravke — a taj predlog je bio sistematski pogrešan u
+<strong>svakom</strong> slučaju u kome je do tada bio primenjen. Predlog je glasio: "sidecar
+zna tačno ime, prepiši ime na strani aplikacije da mu se poklopi." Pretpostavka
+da je sidecar autoritativna strana zvučala je razumno — sidecar je taj koji šalje
+telemetriju — ali merenje na sva tri stvarna slučaja pokazalo je suprotno: u sve
+tri, aplikacija je nosila tačno ime, a sidecar je nosio nasleđeni, tuđi identitet.
+Da je predlog alata bez razmišljanja primenjen, popravka bi prepisala ispravno
+ime aplikacije da se poklopi sa pogrešnim imenom sidecar-a — potvrđujući
+pogrešnu vezu umesto da je raskine, i to dvaput baš na onu istu, najskuplju
+porodicu.</p>
+<p>Popravka alata nije bila "obrni predlog" nego "izmeri pre nego što predložiš
+smer": provera sad upoređuje obe strane sa <strong>deklarisanim</strong> imenom porodice
+(ono koje porodica sama sebi dodeljuje, van i sidecar-a i aplikacije), imenuje
+tačno onu stranu koja od njega odstupa, i kad se ni jedna strana ne poklapa —
+što je moguće kad je i deklaracija sama zastarela — kaže "popravi obe", umesto
+da nagađa koja je "prava."</p>
+<p>Pravilo koje ostaje: <strong>alat koji tačno pronalazi da postoji neslaganje ne mora
+tačno da zna i koja strana greši.</strong> Smer automatski predložene popravke zaslužuje
+istu sumnju kao i sam nalaz — pogotovo kad je nalaz nastao kopiranjem, gde je
+lakše kopirati grešku nego je primetiti.</p>
 <h2 id="293-analiticki-deo-princip-koji-je-ovde-nedostajao-vec-ima-ime">29.3 Analitički deo — princip koji je ovde nedostajao već ima ime</h2>
 <h3 id="kontinuirana-rekoncilijacija-ne-periodicno-poreenje">Kontinuirana rekoncilijacija, ne periodično poređenje</h3>
 <p>Ono što je ovaj incident stvarno tražio — mehanizam koji neprekidno poredi deklarisano
@@ -2816,6 +2887,10 @@ opipljivom, umesto apstraktnom.</p>
   što mu poveruješ, proveri fajl sistem ili nalog, ne pasus pored njega. Ovo važi
   podjednako za dokumentaciju kao i za konfiguraciju: obe vrste teksta mogu tiho da
   divergiraju od stvarnosti, samo što nijedan <code>plan</code> ne upozorava kad proza zaostane.</li>
+<li>Alat koji tačno pronalazi neslaganje ne mora tačno da zna i koju stranu treba popraviti
+  — proveri smer automatski predložene popravke merenjem, isto koliko proveravaš i sam
+  nalaz, pogotovo kad je uzrok nalaza kopiranje (kloniranje prenosi i greške, ne samo
+  strukturu).</li>
 </ul>
 <h2 id="295-vezba-za-citaoca">29.5 Vežba za čitaoca</h2>
 <p>Pronađi u svom sistemu jedan resurs koji ima "varijantu" — drugu veličinu, drugi region,
@@ -2851,7 +2926,7 @@ divergira sutra, to je tvoja verzija ove priče, samo još neispričana.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 21:44:08 UTC">6. septembar 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7. septembar 2026. 19:26:37 UTC">7. septembar 2026.</span>
   </span>
 
     

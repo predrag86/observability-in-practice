@@ -2478,13 +2478,16 @@ gateway, u visokoj dostupnosti, kroz koji prolazi skoro sav saobraćaj.</strong>
 <p>Konkretno:</p>
 <ul>
 <li>Gateway je <strong>Grafana Alloy</strong> (distribucija OpenTelemetry Collector-a koju
-  održava Grafana Labs), pokrenut kao dva nezavisna zadatka na kontejnerskoj
-  platformi (AWS ECS/Fargate), iza internog load balansera.</li>
+  održava Grafana Labs), pokrenut na kontejnerskoj platformi (AWS ECS/Fargate)
+  iza internog load balansera, sa <strong>dva zadatka kao donjom granicom</strong> —
+  autoskaliranje po opterećenju dodaje dodatne instance kad treba, nikad
+  manje od dve. (Kako to skaliranje utiče na sam proces obrade, konkretno na
+  raspoređivanje trejsova po instancama, razrađeno je u Poglavlju 12.)</li>
 <li>Svi pošiljaoci — bilo da su to duže-živi servisi (backend aplikacija) ili
   kratkotrajni batch zadaci — gađaju <strong>jedno stabilno DNS ime</strong> koje ostaje isto
   kroz rebuild-ove i samog gateway-a i load balansera. Nijedan pošiljalac ne zna
-  niti ga zanima koja od dve instance gateway-a je trenutno primila njegov
-  signal.</li>
+  niti ga zanima koliko je trenutno živih instanci gateway-a, niti koja je od
+  njih primila njegov signal.</li>
 <li>Gateway je <strong>jedino mesto koje drži kredencijale za cloud</strong> (basic-auth token
   ka Grafana Cloud-u). Nijedna aplikacija, nijedan batch zadatak, nijedan
   sidecar ne zna taj token — što znači da kompromitovanje bilo kog pojedinačnog
@@ -2497,7 +2500,7 @@ gateway, u visokoj dostupnosti, kroz koji prolazi skoro sav saobraćaj.</strong>
   kopira u svaki servis posebno.</li>
 </ul>
 <p>Šematski, to izgleda ovako:</p>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/diagram.png" data-desc-position="bottom"><img alt="Telemetrija ide od pošiljalaca ka jednom stabilnom DNS imenu, koje ravnopravno raspoređuje saobraćaj na dve nezavisne gateway instance; samo gateway razgovara sa cloud platformom." src="../diagrams/diagram.png" width="100%"></a></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/diagram.png" data-desc-position="bottom"><img alt="Telemetrija ide od pošiljalaca ka jednom stabilnom DNS imenu, koje ravnopravno raspoređuje saobraćaj na dve ili više nezavisnih gateway instanci (autoskaliranje po opterećenju); samo gateway razgovara sa cloud platformom." src="../diagrams/diagram.png" width="100%"></a></p>
 <p>Ono što ovaj dijagram <em>ne</em> pokazuje, a bitno je: postoji mala, <strong>eksplicitno
 dokumentovana</strong> lista pošiljalaca koji gateway <strong>zaobilaze</strong> — Lambda funkcija
 koja javlja o padu zadataka, i browser-korisnički interfejs. Oba imaju isti
@@ -2529,26 +2532,20 @@ tiho <strong>fragmentiše istoriju metrika aplikacije</strong> na potpuno nepove
 događaju. Ista logika je pokvarila i identitet same aplikacije u platformi za
 posmatranje — koji se menjao svaki put kad se gateway iznova pokrene, iako se
 aplikacija uopšte nije dirala.</p>
-<p>Prva popravka je bila najbrža moguća: dodat je poseban korak, odmah pre
-izvoza, koji eksplicitno <strong>briše</strong> tih nekoliko gateway-specifičnih atributa,
-ali samo za tu jednu, već pogođenu aplikaciju, po imenu. Popravka je
-verifikovana uživo i potvrđeno je da je rešila tačno taj slučaj. Ono što ta
-popravka nije rešila: identičan problem je i dalje postojao, neopažen i
-nedirnut, kod još dva druga, nepovezana pošiljaoca — jer je lista za brisanje
-bila ručno održavana po imenu pošiljaoca, ne strukturna izmena mehanizma
-samog. Svaki naredni pogođen pošiljalac bi zahtevao svoj sopstveni, ručni
-dodatak na tu listu.</p>
-<p>Prava popravka, jedno izdanje kasnije, nije dodala još jedno ime na listu —
-promenila je <strong>gde</strong> taj mehanizam za popunjavanje uopšte radi. Umesto da
-radi nizvodno od svakog pošiljaoca, sužen je da radi samo odmah po prijemu, i
-to isključivo za onu šačicu izvora koje gateway <em>sam</em> hostuje (sopstveno
-samo-merenje i par direktnih integracija koje povlače podatke, a ne guraju
-ih) — pre nego što se ti podaci uopšte spoje sa ostatkom saobraćaja. Svaki
-drugi pošiljalac sad prolazi kroz gateway potpuno nedirnut po pitanju
-identiteta, jer mehanizam koji bi ga dirnuo više fizički nije na njegovom
-putu. Korak za brisanje po imenu je u potpunosti uklonjen — više nema šta da
-se briše.</p>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch04-identitet-popuni-ako-nedostaje.png" data-desc-position="bottom"><img alt="Pre popravke, mehanizam koji popunjava nedostajuće resursne atribute radi nizvodno od svakog pošiljaoca i procuri sopstveni identitet gateway-a na svakog ko ga sam nije postavio. Posle popravke, taj mehanizam je sužen samo na izvore koje gateway sâm hostuje, pre spajanja sa ostatkom saobraćaja — svaki drugi pošiljalac prolazi nedirnut." src="../diagrams/ch04-identitet-popuni-ako-nedostaje.png" width="85%"></a></p>
+<p>Popravka je bila ciljana, ne strukturna: odmah posle mehanizma za popunjavanje,
+a pre izvoza, dodat je uzak filter koji eksplicitno <strong>briše</strong> tih osam
+gateway-specifičnih atributa — ali samo za saobraćaj te jedne, već pogođene
+aplikacije, prepoznate po njenom imenu servisa. Sam mehanizam "popuni ako
+nedostaje" ostaje nepromenjen za svakog drugog pošiljaoca; ništa se ne
+premešta niti se sužava gde on radi. Popravka je verifikovana uživo kroz
+nekoliko nezavisnih provera — raspodela po zoni dostupnosti kod pošiljalaca
+kojima ta oznaka ionako treba da ostane, sadržaj identiteta na samoj
+pogođenoj aplikaciji, zdravlje pravila alarma koje je zavisilo od te oznake —
+i potvrđeno je da je rešila tačno taj slučaj, bez sporednog efekta na bilo
+kog drugog pošiljaoca. Tačno mesto u pipeline-u gde se ovakav filter ubacuje,
+i zašto je uzak, po-pošiljaocu obim bolji izbor od šireg preseka svih
+pošiljalaca odjednom, detaljnije je obrađeno u Poglavlju 10.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch04-identitet-popuni-ako-nedostaje.png" data-desc-position="bottom"><img alt="Popravka je uzak korak umetnut odmah posle resourcedetection mehanizma, koji briše osam gateway-specifičnih atributa samo za pošiljaoca kod koga je problem otkriven — svi ostali pošiljaoci prolaze kroz isti resourcedetection nedirnuto." src="../diagrams/ch04-identitet-popuni-ako-nedostaje.png" width="85%"></a></p>
 <h3 id="brisanje-oznake-i-postavljanje-na-novu-vrednost-nisu-ista-operacija">Brisanje oznake i postavljanje na novu vrednost nisu ista operacija</h3>
 <p>Na istom gateway-u postoji i drugi mehanizam, potpuno nezavisan od prvog, koji
 na putanji za metrike svodi visoko-kardinalne atribute HTTP zahteva (putanju,
@@ -2815,7 +2812,7 @@ radi. Ako je odgovor na (3) "niko, dok neko ne primeti da nešto drugo ne
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 06:12:42 UTC">31. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7. septembar 2026. 19:19:32 UTC">7. septembar 2026.</span>
   </span>
 
     
