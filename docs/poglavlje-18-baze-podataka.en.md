@@ -29,9 +29,12 @@ systematically miss half of the problems that actually occur?
 
 ### Two layers, neither a subset of the other
 
-The implementation this book follows observes the managed relational
-database through two independent collection layers, deliberately without
-trying to reduce one to the other:
+Chapter 7 already introduced these two layers as an example of the third,
+most restricted level of control over a telemetry source. Here the focus
+is on what's actually done with them: the implementation this book
+follows observes the managed relational database through two independent
+collection layers, deliberately without trying to reduce one to the
+other:
 
 - **The external layer** — metrics the provider exposes at the instance and
   virtualization level: CPU, memory, IOPS, read/write latency, connection
@@ -158,6 +161,58 @@ always get every caller fixed in time.
 
 ![A connection leak visible from the inside from hour zero — the external layer (latency) doesn't notice the problem until 40 hours later, by which point the trend is already far along.](diagrams/dashboard-connections.png){: width="95%" }
 
+### A third example of the same pattern: what's invisible to both layers at once
+
+Both layers described at the start of this chapter still measure the
+**database**, just from two different angles — the instance from outside,
+the engine from inside. There is, however, a class of problem that
+neither of those two layers can structurally even approach, because it
+doesn't happen on the database at all but **in front of** it: connection
+pool exhaustion on the application's own side. The application holds its
+own, fixed-size connection pool (twenty, say), and under a certain
+condition — a connection is borrowed for one call but isn't returned to
+the pool in time because the call is hanging on an external dependency —
+every connection in that pool ends up busy at the same time, and every
+subsequent request waits, then times out.
+
+Neither of the two layers from the start of the chapter structurally sees
+this as a problem. The external layer measures the instance as a whole —
+twenty busy connections against a database whose maximum is measured in
+the thousands isn't even a noticeable blip. The internal layer, which
+reads the database engine's own state, sees those same connections as
+perfectly legitimate, active sessions — nothing about their count or state
+tells the database anything is wrong, because from the database's side,
+nothing is: twenty open sessions is a normal, small number. The problem
+doesn't exist in the absolute number of connections to the database — it
+exists in the fact that **one specific client** is spending its own small
+budget in full, and that fact is visible only to whoever knows what that
+budget is and who's spending it — which isn't the database, it's the
+application itself.
+
+The signal that actually captures this lives in a third place, outside
+both layers from the start of the chapter: in the exception the
+application itself throws at the moment a request fails to get a
+connection in time, recorded in its own logs. An alert built directly on
+that exception is unambiguous and names the exact pool that's exhausted —
+whereas an alert based on the total connection count to the database
+would have to be either so sensitive that it false-triggers on normal
+daily variation, or so coarse that it never catches a pool that's small
+relative to the whole database. This is a third example of the principle
+from the start of the chapter, only pushed one step further: it isn't
+just that neither layer is a superset of the other — here, neither of the
+two layers dedicated to the database is even a place where the problem
+can be seen at all, because the problem structurally belongs to the
+application, not the database it's watching.
+
+It's worth recording a technical trap discovered the first time this
+alert was set up: the exception type the alert is based on arrives as
+structured metadata in the logging system, not as a plain word in the
+message text — a rule that looks for it inside the main stream selector,
+instead of as a filter applied after it, doesn't report an error, it just
+quietly matches no rows. The alert shipped in that form looked correct
+and was, in fact, dead — caught only when an actual, repeated incident
+went unnoticed past it, then checked and fixed the same day.
+
 ## 18.3 Analytical section — two layers as a known but rarely named pattern
 
 ### The official recommendation agrees with the split, but doesn't name it explicitly
@@ -282,6 +337,13 @@ source of truth.
   the infrastructure-as-code system, then wire it up — a mistake in any
   one step of this order would break observability for the whole fleet,
   not just the new source.
+
+- Don't forget that the database has its own collection layers, but
+  database clients also have their own, small connection budget that
+  neither of those layers sees as a problem — when you suspect
+  connection-pool exhaustion on the application side, alert directly on
+  the exception the application throws, not on the total connection
+  count to the database.
 
 ## 18.5 Exercise for the reader
 
