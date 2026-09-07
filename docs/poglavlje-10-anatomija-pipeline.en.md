@@ -31,7 +31,7 @@ clog the chemical station with branches.
 The pipeline inside the gateway, in the implementation this book follows,
 has six stations, always in this order:
 
-![Anatomy of the pipeline: six stations, always in the same order.](diagrams/ch10-pipeline.png){: width="98%" }
+![Anatomy of the pipeline: six stations, always in the same order.](diagrams/ch10-pipeline.en.png){: width="98%" }
 
 **1. `memory_limiter` — always first.** Tracks the memory consumption of the
 gateway process itself, at short intervals. When consumption crosses a soft
@@ -143,7 +143,7 @@ suspect, not the station whose job is to prevent exactly this outcome. The
 difference between these two cases isn't visible on any dashboard until
 someone explicitly remembers to compare those two numbers.
 
-![memory_limiter is the first station in the chain for all ordinary traffic, but two data sources enter directly at the batch station, bypassing its protection — hence two different diagnostic patterns for the same crash.](diagrams/ch10-limiter-zaobilazak.png){: width="78%" }
+![memory_limiter is the first station in the chain for all ordinary traffic, but two data sources enter directly at the batch station, bypassing its protection — hence two different diagnostic patterns for the same crash.](diagrams/ch10-limiter-zaobilazak.en.png){: width="78%" }
 
 ### A pipe that "works" and still silently drops one signal
 

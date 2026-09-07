@@ -130,7 +130,7 @@ item was discovered as a **consequence** of work on a completely different
 one — a signal that the domains aren't actually isolated, they're only
 presented that way for clarity.
 
-![A living, ranked list per domain: the main top list, "honorable mention" below the threshold as a source for promotion, and the full backlog as a store of detail — three layers, one discipline of deletion once something is actually finished.](diagrams/ch27-tri-sloja.png){: width="88%" }
+![A living, ranked list per domain: the main top list, "honorable mention" below the threshold as a source for promotion, and the full backlog as a store of detail — three layers, one discipline of deletion once something is actually finished.](diagrams/ch27-tri-sloja.en.png){: width="88%" }
 
 ### Blast radius is measured, not assumed
 
@@ -155,7 +155,7 @@ this alongside the finding: the estimated blast radius was wrong until
 someone actually measured it, and that gap is a cheap lesson only because
 it was caught before an incident, not during one.
 
-![The same finding, the same fix — but the blast radius changed from "auth goes down" to "the entire product goes down" only once someone actually inventoried the dependencies instead of assuming them from the problem's title.](diagrams/ch27-domet-stete.png){: width="82%" }
+![The same finding, the same fix — but the blast radius changed from "auth goes down" to "the entire product goes down" only once someone actually inventoried the dependencies instead of assuming them from the problem's title.](diagrams/ch27-domet-stete.en.png){: width="82%" }
 
 ### Reliability ahead of savings when the measurement says so — and why the automated recommendation lags
 

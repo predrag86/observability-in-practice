@@ -98,7 +98,7 @@ membership is deliberately **not** restarted along with it — so that when
 the cluster comes back up, it knows who its members still are, instead of
 having to reconstruct that information from scratch.
 
-![Two phases of rolling out observability in a self-managed cluster: phase one (host + log) goes to all three nodes with no restart and no risk; phase two (the more expensive layer) follows the same blast-radius order, but each step waits on a manual check that no jobs are active, and the last step additionally waits on an announced maintenance window.](diagrams/ch19-dve-faze.png){: width="80%" }
+![Two phases of rolling out observability in a self-managed cluster: phase one (host + log) goes to all three nodes with no restart and no risk; phase two (the more expensive layer) follows the same blast-radius order, but each step waits on a manual check that no jobs are active, and the last step additionally waits on an announced maintenance window.](diagrams/ch19-dve-faze.en.png){: width="80%" }
 
 ### The trap on the first node: wrong identity, and records that vanish without a trace
 
@@ -166,9 +166,9 @@ number of active series in the cluster before anyone got around to
 limiting it — discovered only once the monthly metrics bill spiked, not
 before.
 
-![Triple signal per node in a self-managed cluster, with the order of rolling out changes ranked by blast radius — executor nodes first, coordinator last.](diagrams/ch19-trostruki-signal.png){: width="90%" }
+![Triple signal per node in a self-managed cluster, with the order of rolling out changes ranked by blast radius — executor nodes first, coordinator last.](diagrams/ch19-trostruki-signal.en.png){: width="90%" }
 
-![A seven-day graph of queries in flight: the "truly idle" threshold was never reached, not once across the whole week — measurement, not assumption, showed that automatic shutdown wouldn't have had a real window to operate in here.](diagrams/dashboard-rightsizing.png){: width="95%" }
+![A seven-day graph of queries in flight: the "truly idle" threshold was never reached, not once across the whole week — measurement, not assumption, showed that automatic shutdown wouldn't have had a real window to operate in here.](diagrams/dashboard-rightsizing.en.png){: width="95%" }
 
 ### An alert that guards a fix can itself fail exactly when it's needed
 

@@ -41,6 +41,18 @@ TEXT = {
         "export": "batch → export",
         "note": "Svi ostali pošiljaoci prolaze kroz\nisti korak nedirnuto — filter cilja\nsamo pošiljaoca X, ne menja mehanizam\nza sve.",
     },
+    "en": {
+        "suffix": ".en",
+        "title": "The fix is a narrow step for one sender, not a relocation of the mechanism",
+        "sender_x": "Sender X\n(sets no resource\nattributes of its own)",
+        "sender_other": "Every other sender",
+        "rd": "resourcedetection\nfill IF MISSING\n(override=false)",
+        "gw_id": "Gateway's own identity\n(zone, task, launch type)",
+        "leak": "fills the gap with\nthe gateway's identity",
+        "strip": "NEW: strip_gateway_identity\nnarrow filter, sender X only\n(deletes those 8 attributes by service name)",
+        "export": "batch → export",
+        "note": "Every other sender passes through\nthe same step untouched — the filter\ntargets sender X only, it doesn't\nchange the mechanism for everyone.",
+    },
 }
 
 
@@ -98,9 +110,8 @@ def main() -> None:
     for lang in langs:
         g = build(lang)
         suffix = TEXT[lang]["suffix"]
-        out_path = OUT_DIR / f"ch04-identitet-popuni-ako-nedostaje{suffix}"
         data = g.pipe(format="png")
-        png_path = out_path.with_suffix(".png")
+        png_path = OUT_DIR / f"ch04-identitet-popuni-ako-nedostaje{suffix}.png"
         png_path.write_bytes(data)
         print(f"wrote {png_path}")
 

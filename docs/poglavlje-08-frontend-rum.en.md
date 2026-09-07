@@ -85,7 +85,7 @@ deliberately not enabled at all — only the trace ID crosses the
 browser→backend boundary, nothing more. A smaller leak surface is
 deliberately chosen here over greater flexibility.
 
-![The browser goes directly to the hosted RUM collector, bypassing the gateway; backend telemetry still goes through the gateway. Two separate PII protections (native signals versus traces) are deliberately highlighted — that's the incident point from this chapter.](diagrams/ch8-rum.png){: width="75%" }
+![The browser goes directly to the hosted RUM collector, bypassing the gateway; backend telemetry still goes through the gateway. Two separate PII protections (native signals versus traces) are deliberately highlighted — that's the incident point from this chapter.](diagrams/ch8-rum.en.png){: width="75%" }
 
 **Two points for PII cleanup, not one.** This is the single most valuable
 practical lesson of the chapter. The RUM SDK has one central function that
@@ -109,7 +109,7 @@ percentiles (p50/p75/p95) instead of a single line, because an average, or
 even a median, can easily hide precisely the segment of users having the
 worst experience:
 
-![LCP tracked by percentile: p50 and p75 stay stable, but p95 shows a clear regression on one day — a signal an average would hide, because it hits only a portion of traffic (typically one geographic region or device type).](diagrams/dashboard-rum.png){: width="95%" }
+![LCP tracked by percentile: p50 and p75 stay stable, but p95 shows a clear regression on one day — a signal an average would hide, because it hits only a portion of traffic (typically one geographic region or device type).](diagrams/dashboard-rum.en.png){: width="95%" }
 
 ### When the build stays silent about its own failure
 
@@ -145,7 +145,7 @@ that looks at exactly that code in exactly that shipped artifact, or
 verifies whether the expected signal actually showed up downstream — and
 such a check is rarely run on its own; it has to be added deliberately.
 
-![Standard release checks (build, tests, HTTP 200) don't look at telemetry code — the shipped bundle can be built from an old version of the source, with no SDK initialization, and none of them will notice. It's only caught by an explicit check of the shipped artifact and downstream telemetry.](diagrams/ch08-tiha-praznina.png){: width="80%" }
+![Standard release checks (build, tests, HTTP 200) don't look at telemetry code — the shipped bundle can be built from an old version of the source, with no SDK initialization, and none of them will notice. It's only caught by an explicit check of the shipped artifact and downstream telemetry.](diagrams/ch08-tiha-praznina.en.png){: width="80%" }
 
 ### When a percentile lies because the sample is too small
 

@@ -46,7 +46,7 @@ explicit window to flush whatever it's still holding in its buffer before
 the whole task shuts down — without that window, the last few seconds of
 telemetry would simply vanish along with the container that produced them.
 
-![The job and its sidecar share the same ECS/Fargate task — they start and shut down together; the sidecar gets a short flush window before shutdown to drain its buffer to the central gateway.](diagrams/ch6-sidecar.png){: width="85%" }
+![The job and its sidecar share the same ECS/Fargate task — they start and shut down together; the sidecar gets a short flush window before shutdown to drain its buffer to the central gateway.](diagrams/ch6-sidecar.en.png){: width="85%" }
 
 This pattern, brought into production after an initial pilot on two jobs
 (covered in detail in Chapter 30), surfaced a catalog of real-world pitfalls
@@ -151,7 +151,7 @@ unsent at the moment the process ends. The sidecar's shutdown window still
 serves a purpose — it protects the second hop — but it can't recover what
 was lost before it ever reached the sidecar at all.
 
-![The flush window the sidecar gets before shutdown (stopTimeout) covers only the second hop — sidecar to gateway. It doesn't cover the first hop — the asynchronous buffer in the main container to the sidecar over localhost — which is lost without a trace if the job shuts down before the next periodic send.](diagrams/ch06-flush-prozor.png){: width="75%" }
+![The flush window the sidecar gets before shutdown (stopTimeout) covers only the second hop — sidecar to gateway. It doesn't cover the first hop — the asynchronous buffer in the main container to the sidecar over localhost — which is lost without a trace if the job shuts down before the next periodic send.](diagrams/ch06-flush-prozor.en.png){: width="75%" }
 
 ### Drift through revisions: three concrete failures and how they're caught now
 
@@ -165,7 +165,7 @@ revision with the sidecar doesn't mean anyone has actually started using
 it — it's only recorded in AWS as a possibility, while every launcher keeps
 running whatever revision number it was last explicitly pointed at.
 
-![One family, three independent launch points — each pinned to its own revision; registering a new revision doesn't update any pin automatically.](diagrams/ch06-pinovi-driftuju.png){: width="90%" }
+![One family, three independent launch points — each pinned to its own revision; registering a new revision doesn't update any pin automatically.](diagrams/ch06-pinovi-driftuju.en.png){: width="90%" }
 
 Three real cases of this pattern, each different:
 

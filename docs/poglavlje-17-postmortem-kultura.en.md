@@ -82,7 +82,7 @@ was recurring. Neither of these two incidents took down a single service.
 Both were, by the written postmortem's own admission, more damaging to
 trust in the system than some actual, short-lived outage.
 
-![A postmortem looks backward; from it you distill a runbook (forward-looking, for next time) or a handoff (a one-time request handed to a single owner) — three documents, three different directions.](diagrams/ch17-tri-tipa.png){: width="90%" }
+![A postmortem looks backward; from it you distill a runbook (forward-looking, for next time) or a handoff (a one-time request handed to a single owner) — three documents, three different directions.](diagrams/ch17-tri-tipa.en.png){: width="90%" }
 
 ### The extreme case of the pattern: four hundred sixty-nine days of silence
 
@@ -141,7 +141,7 @@ enough of them to confirm the first plausible explanation — an identical
 external alert shape guarantees neither one shared cause behind it, nor
 that every occurrence is fully related.
 
-![The alert correctly transitions into the firing state and sends exactly one notification on the day of the failure — the system only notifies on a state change, so 469 days of continuous, unchanged failure afterward send no further message. Discovered by accident, during an unrelated task.](diagrams/ch17-469-dana.png){: width="85%" }
+![The alert correctly transitions into the firing state and sends exactly one notification on the day of the failure — the system only notifies on a state change, so 469 days of continuous, unchanged failure afterward send no further message. Discovered by accident, during an unrelated task.](diagrams/ch17-469-dana.en.png){: width="85%" }
 
 ## 17.3 Analytical section — why "no one's at fault" is harder than it sounds
 

@@ -104,7 +104,7 @@ Here is what the first case study looks like once measured — nineteen
 failures spread across seventeen hours, each one individually under the
 anti-spam mechanism's threshold, none of them ever sent:
 
-![Nineteen failures spread across seventeen hours — each suppressed, none sent, because no pair of failures falls close enough together in time to satisfy the "three in thirty minutes" threshold.](diagrams/dashboard-suppression.png){: width="95%" }
+![Nineteen failures spread across seventeen hours — each suppressed, none sent, because no pair of failures falls close enough together in time to satisfy the "three in thirty minutes" threshold.](diagrams/dashboard-suppression.en.png){: width="95%" }
 
 ### Third case study: the channel every single alert passes through
 
@@ -144,7 +144,7 @@ gap as a known, unaddressed risk** rather than silently assume it was
 covered, because the real danger lies exactly in someone believing a
 protection exists that actually doesn't.
 
-![The first attempt added the backup channel (email) to multiple alerts, duplicating every message and making it useless as a signal; the adopted solution wires it exclusively to alerts whose firing, by itself, means the primary delivery channel is down.](diagrams/ch14-slack-spof.png){: width="80%" }
+![The first attempt added the backup channel (email) to multiple alerts, duplicating every message and making it useless as a signal; the adopted solution wires it exclusively to alerts whose firing, by itself, means the primary delivery channel is down.](diagrams/ch14-slack-spof.en.png){: width="80%" }
 
 ### Fourth case study: a report that stays silent when healthy and when dead
 

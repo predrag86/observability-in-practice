@@ -98,7 +98,7 @@ phases shown following it (the logarithmic axis is necessary — without it,
 the weekend spike from 34,000 to 4.3 million series would flatten everything
 else on the chart into a straight line):
 
-![Active time series count over 21 days — a spike on Friday evening, discovery on Monday, and a gradual decline through all four remediation phases down to below the contracted limit.](diagrams/dashboard-cardinality.png){: width="95%" }
+![Active time series count over 21 days — a spike on Friday evening, discovery on Monday, and a gradual decline through all four remediation phases down to below the contracted limit.](diagrams/dashboard-cardinality.en.png){: width="95%" }
 
 ### How you measure whether a change actually removed something
 
@@ -228,7 +228,7 @@ will write to the same series once identity is removed. The attribute
 distinguishing instances of the same service is exactly the attribute where
 the answer is almost always "yes."
 
-![Deleting the instance identity saved series, but merged the cumulative counters of multiple replicas into one series — the rate function interpreted the drop as a restart and extrapolated it into an inaccurate, much larger value.](diagrams/ch11-identitet-brojaca.png){: width="78%" }
+![Deleting the instance identity saved series, but merged the cumulative counters of multiple replicas into one series — the rate function interpreted the drop as a restart and extrapolated it into an inaccurate, much larger value.](diagrams/ch11-identitet-brojaca.en.png){: width="78%" }
 
 ### Cost isn't just the number of series, it's series times frequency
 

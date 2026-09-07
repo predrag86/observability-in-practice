@@ -81,7 +81,7 @@ decision is especially valuable because it runs counter to the intuitive
 reflex that "the default route is where alerts we don't want to see go" —
 here, the default route is a real, watched channel, not a wastebasket.
 
-![Two independent paths converge on routing by domain ownership, with an explicit fallback chain toward the general, always-watched channel when a dedicated webhook isn't configured.](diagrams/ch13-dual-path.png){: width="95%" }
+![Two independent paths converge on routing by domain ownership, with an explicit fallback chain toward the general, always-watched channel when a dedicated webhook isn't configured.](diagrams/ch13-dual-path.en.png){: width="95%" }
 
 ### How the alerts and dashboards themselves are kept under version control
 
@@ -173,7 +173,7 @@ value change while the pipeline behind it is already dead? If so, the rule
 must be conditioned on an independent, separate measure of that pipeline's
 health.
 
-![A collector that writes infrequently freezes its last value when it dies; time keeps flowing, the age of that value grows without bound, and the rule measuring age eventually fires — precisely because monitoring is dead, not because the observed system is broken.](diagrams/ch13-zamrznut-gauge.png){: width="85%" }
+![A collector that writes infrequently freezes its last value when it dies; time keeps flowing, the age of that value grows without bound, and the rule measuring age eventually fires — precisely because monitoring is dead, not because the observed system is broken.](diagrams/ch13-zamrznut-gauge.en.png){: width="85%" }
 
 ### Notification time isn't the same as state-change time
 

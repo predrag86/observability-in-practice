@@ -47,7 +47,7 @@ thin in this diagram, because that's the subject of the rest of Part II.
 The point of this overview is the opposite: to show **what** is being
 observed, before the book explains **how**.
 
-![The system we observe: the application layer, auth, two types of databases, a batch/ETL fleet, and the network layer — all on AWS, plus one independent SaaS service outside our network. The dashed arrows are the observing side, the subject of the rest of Part II.](diagrams/overview.png){: width="100%" }
+![The system we observe: the application layer, auth, two types of databases, a batch/ETL fleet, and the network layer — all on AWS, plus one independent SaaS service outside our network. The dashed arrows are the observing side, the subject of the rest of Part II.](diagrams/overview.en.png){: width="100%" }
 
 This diagram isn't the architecture of the observability system — it's
 the architecture of the system **that** the observability system

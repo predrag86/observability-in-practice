@@ -173,7 +173,7 @@ correct components can jointly answer wrong, which is why "check that each
 component works" isn't the same test as "check that the system answers the
 real question."
 
-![Three independently accurate observations about the same job, three independent causes — and only one earlier signal, written before the gate and independent of instrumentation, told the truth.](diagrams/ch01-tri-uzroka.png){: width="80%" }
+![Three independently accurate observations about the same job, three independent causes — and only one earlier signal, written before the gate and independent of instrumentation, told the truth.](diagrams/ch01-tri-uzroka.en.png){: width="80%" }
 
 ### An alarm shaped for a burst is blind to a leak
 
