@@ -1533,10 +1533,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#nemoguce-putovanje-kao-dobro-dokumentovana-ali-retko-implementirana-tehnika" class="md-nav__link">
+  <a href="#nemoguce-putovanje-kao-dobro-dokumentovana-tehnika-i-jeftiniji-zamenik-koji-je-stvarno-sproveden" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Nemoguće putovanje kao dobro dokumentovana, ali retko implementirana tehnika
+        Nemoguće putovanje kao dobro dokumentovana tehnika — i jeftiniji zamenik koji je stvarno sproveden
       
     </span>
   </a>
@@ -2489,10 +2489,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#nemoguce-putovanje-kao-dobro-dokumentovana-ali-retko-implementirana-tehnika" class="md-nav__link">
+  <a href="#nemoguce-putovanje-kao-dobro-dokumentovana-tehnika-i-jeftiniji-zamenik-koji-je-stvarno-sproveden" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Nemoguće putovanje kao dobro dokumentovana, ali retko implementirana tehnika
+        Nemoguće putovanje kao dobro dokumentovana tehnika — i jeftiniji zamenik koji je stvarno sproveden
       
     </span>
   </a>
@@ -2736,14 +2736,15 @@ umesto da forsira jedan oblik da odgovori na oba.</p>
 <h3 id="konkretni-bezbednosni-signali-izgraeni-na-podignutom-nivou">Konkretni bezbednosni signali izgrađeni na podignutom nivou</h3>
 <p>Tek kad je uspešna prijava postala vidljiva u standardnom toku logova,
 implementacija je mogla izgraditi konkretne upite za obrasce preuzimanja
-naloga: poređenje geografske lokacije trenutne uspešne prijave sa
-poslednjom poznatom lokacijom istog korisnika u kratkom vremenskom
-prozoru (nemoguće putovanje), otkrivanje istog tokena korišćenog sa dva
-različita klijenta ili IP adrese u preklapajućem vremenskom periodu
-(mogući replay), i otkrivanje neobično velikog broja istovremeno aktivnih
-sesija za jedan identitet. Nijedan od ova tri upita nije bio moguć pre
-popravke asimetrije — ne zato što je logika upita bila komplikovana, nego
-zato što ulazni podaci prosto nisu postojali.</p>
+naloga: brojanje koliko različitih IP adresa jedan korisnik koristi za
+uspešne prijave u kratkom vremenskom prozoru (jeftin zamenski signal za
+nemoguće putovanje — više o tome zašto baš zamenski, ne puna tehnika, u
+sledećem odeljku), otkrivanje istog tokena korišćenog sa dva različita
+klijenta ili IP adrese u preklapajućem vremenskom periodu (mogući replay),
+i otkrivanje neobično velikog broja istovremeno aktivnih sesija za jedan
+identitet. Nijedan od ova tri upita nije bio moguć pre popravke
+asimetrije — ne zato što je logika upita bila komplikovana, nego zato što
+ulazni podaci prosto nisu postojali.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch20-asimetrija.png" data-desc-position="bottom"><img alt="Asimetrija u logovanju autentikacije: neuspeh vidljiv po difoltu na standardnom nivou, uspeh ispod praga vidljivosti — dok se to ne popravi, čitava klasa bezbednosnih pitanja o preuzimanju naloga ostaje neodgovoriva." src="../diagrams/ch20-asimetrija.png" width="90%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-authgap.png" data-desc-position="bottom"><img alt="Vidljivi događaji prijave pre i posle podizanja nivoa logovanja: neuspesi su uvek bili tu, ali uspešne prijave — hiljade dnevno — postaju vidljive tek od trenutka popravke." src="../diagrams/dashboard-authgap.png" width="95%"></a></p>
 <h3 id="podizanje-nivoa-je-zapravo-dva-nezavisna-prekidaca-ne-jedan">Podizanje nivoa je zapravo dva nezavisna prekidača, ne jedan</h3>
@@ -2823,17 +2824,28 @@ prijave, ne i neuspele" — što znači da je pravac ove konkretne
 asimetrije (neuspeh vidljiv, uspeh nevidljiv) manje uobičajen u
 formalnoj literaturi, ali jednako štetan kada se dogodi, jer standardna
 smernica traži simetriju, ne bilo koji konkretan pravac asimetrije.</p>
-<h3 id="nemoguce-putovanje-kao-dobro-dokumentovana-ali-retko-implementirana-tehnika">Nemoguće putovanje kao dobro dokumentovana, ali retko implementirana tehnika</h3>
+<h3 id="nemoguce-putovanje-kao-dobro-dokumentovana-tehnika-i-jeftiniji-zamenik-koji-je-stvarno-sproveden">Nemoguće putovanje kao dobro dokumentovana tehnika — i jeftiniji zamenik koji je stvarno sproveden</h3>
 <p>Dobavljači identitetskih sistema dokumentuju otkrivanje nemogućeg
 putovanja kao standardnu tehniku: poređenje geografske lokacije trenutnog
 pokušaja prijave sa vremenom i lokacijom prethodnog, uz proveru da li je
 fizičko putovanje između te dve lokacije u tom vremenskom razmaku uopšte
-moguće. Minimalni ulazni podaci koje ova tehnika zahteva su tačno ono što
-je asimetrija u ovoj implementaciji blokirala: geografska lokacija
-izvedena iz IP adrese, vremenski žig, i trajno sačuvan zapis lokacije
-prethodne uspešne sesije. Bez pouzdanog, trajnog zapisa uspešnih prijava,
-ova tehnika je nemoguća bez obzira koliko sofisticirana logika poređenja
-bila napisana.</p>
+moguće. Minimalni ulazni podaci koje ova puna tehnika zahteva — geografska
+lokacija izvedena iz IP adrese, vremenski žig, trajno sačuvan zapis
+lokacije prethodne uspešne sesije — bili su tačno ono što je asimetrija u
+ovoj implementaciji ranije blokirala.</p>
+<p>Vredi biti precizan oko toga šta se dogodilo kad je asimetrija popravljena:
+implementacija nije odmah izgradila punu tehniku sa geolokacijom, nego
+jeftiniju zamenu koja koristi isti novodobijeni podatak na prostiji način —
+brojanje koliko različitih IP adresa jedan korisnik koristi za uspešne
+prijave unutar kratkog vremenskog prozora, bez ijednog koraka geolokacije.
+Nekoliko različitih IP adresa u desetak minuta je već dovoljno redak
+obrazac da opravda alarm, čak i bez znanja da li su te adrese geografski
+blizu ili na suprotnim stranama sveta — cena greške (lažno pozitivan alarm
+za korisnika koji legitimno promeni mrežu) je niska u odnosu na cenu
+propuštanja stvarnog preuzimanja naloga. Ovo je živ, produkcioni alarm, ne
+prototip — ali vredi ga zvati pravim imenom: jeftin zamenski signal za
+nemoguće putovanje, ne sama tehnika. Prava geolokacija ostaje eksplicitno
+zapisana kao preostala stavka na spisku, ne nešto što je već sprovedeno.</p>
 <h3 id="otkrivanje-ponovne-upotrebe-tokena-je-slabije-standardizovano">Otkrivanje ponovne upotrebe tokena je slabije standardizovano</h3>
 <p>Za razliku od nemogućeg putovanja, otkrivanje ponovne upotrebe tokena i
 istovremenih sesija je slabije pokriveno formalnim standardima. Jedna
@@ -2958,7 +2970,7 @@ tvoj tim trenutno ne može da odgovori zbog toga.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 22:43:09 UTC">6. septembar 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7. septembar 2026. 07:43:55 UTC">7. septembar 2026.</span>
   </span>
 
     

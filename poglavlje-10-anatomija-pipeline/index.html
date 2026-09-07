@@ -959,6 +959,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#kad-posiljalac-ne-kaze-nista-popuni-ne-prepisi-popunjava-pogresnim-identitetom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad pošiljalac ne kaže ništa, "popuni, ne prepiši" popunjava pogrešnim identitetom
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#zastita-koja-ne-pokriva-svaki-ulaz-u-cev" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2285,6 +2296,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#kad-posiljalac-ne-kaze-nista-popuni-ne-prepisi-popunjava-pogresnim-identitetom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad pošiljalac ne kaže ništa, "popuni, ne prepiši" popunjava pogrešnim identitetom
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#zastita-koja-ne-pokriva-svaki-ulaz-u-cev" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2467,9 +2489,9 @@ flote.</strong> Dva odvojena zadatka žive u ovoj stanici:</p>
 <ul>
 <li><strong>Redakcija osetljivih atributa</strong> (SQL tekst, connection stringovi) —
   primenjena samo na delove flote gde debug vrednost punog SQL teksta nije
-  potrebna. Za deo flote gde je pun SQL tekst i dalje neophodan za dijagnozu
-  (obrađeno u Poglavlju 18), redakcija se namerno <strong>ne</strong> primenjuje —
-  odluka doneta eksplicitno, po timu/servisu, ne globalno.</li>
+  potrebna. Za deo flote gde je pun SQL tekst i dalje neophodan za dijagnozu,
+  redakcija se namerno <strong>ne</strong> primenjuje — odluka doneta eksplicitno, po
+  timu/servisu, ne globalno.</li>
 <li><strong>Normalizacija naziva spanova</strong> — span koji bi inače nosio promenljiv
   datum ili ID u svom imenu (npr. <code>process-report-2026-08-21</code>) se
   normalizuje na stabilan obrazac (<code>process-report</code>) pre nego što ide dalje.
@@ -2482,6 +2504,33 @@ atribute (region, nalog, tip infrastrukture) <strong>samo tamo gde nedostaju</st
 ako je pošiljalac već poslao sopstvenu vrednost, ona se ne dira. Ovo je
 namerna odluka: pošiljalac uvek zna više o sebi nego što gateway može da
 pogodi iz konteksta u kome prima podatak.</p>
+<h3 id="kad-posiljalac-ne-kaze-nista-popuni-ne-prepisi-popunjava-pogresnim-identitetom">Kad pošiljalac ne kaže ništa, "popuni, ne prepiši" popunjava pogrešnim identitetom</h3>
+<p>"Popuni, ne prepiši" zvuči umirujuće, ali prećutno pretpostavlja da je
+pošiljalac uopšte nešto rekao. Realan slučaj otkriven u produkciji pokazuje
+šta se dešava kad pošiljalac ne postavi nijedan od tih atributa: gateway
+tada ne ostavlja polja prazna, nego ih popunjava <strong>sopstvenim</strong>, gateway-ovim
+identitetom — svojom zonom dostupnosti, svojim identitetom zadatka, svojim
+tipom infrastrukture. Ništa u pravilu ne pravi razliku između "pošiljalac
+namerno nije postavio ovo polje" i "pošiljalac uopšte ne liči na
+infrastrukturu koju gateway pretpostavlja" — prazno se popunjava bez obzira
+čije je telemetrija zapravo bila.</p>
+<p>Merljiva šteta bila je konkretna: zona dostupnosti se, kao popunjen atribut,
+promoviše u pravu oznaku metrike na telemetriji pošiljaoca koji sa tom
+zonom nema nikakve veze — pa svaki put kad se <strong>sam gateway</strong> ponovo
+postavi (ne pošiljalac), oznaka zalepljena na tuđu telemetriju se menja,
+fragmentišući njenu istoriju: stare serije zastarevaju, nove počinju, a
+izračunavanje brzine promene pokazuje prazninu tačno u trenutku kad se sa
+pošiljaocem ništa nije promenilo. Drugi, srodan efekat: podaci o identitetu
+procesa na toj telemetriji su nestabilni iz istog razloga, menjaju se na
+svaki redeploy gateway-a, iako identitet procesa koji se opisuje uopšte nije
+gateway.</p>
+<p>Popravka koja je usledila nije promenila samo pravilo "popuni, ne prepiši" —
+dodata je posebna, uska stanica, ubačena tačno posle <code>resourcedetection</code>, i
+namenjena samo saobraćaju pošiljaoca kod koga je ovaj obrazac otkriven: briše
+šačicu atributa za koje je utvrđeno da opisuju gateway, ne pošiljaoca. Samo
+pravilo "popuni, ne prepiši" nikad nije bilo pogrešno kao mehanizam — praznina
+je bila u pretpostavci da će svaki pošiljalac ili postaviti sopstvene
+vrednosti, ili mu neće smetati koje su vrednosti popunjene umesto njega.</p>
 <p><strong>5. <code>batch</code> — grupiši pre slanja.</strong> Umesto da svaki pojedinačan zapis ide
 kao zaseban HTTP poziv ka cloud platformi, ova stanica ih grupiše u veće
 pakete — drastično manje mrežnih poziva, drastično manji overhead po
@@ -2609,6 +2658,10 @@ stanici koja je pomerena, nego na svakoj stanici posle nje.</p>
   sva tri tipa signala (metrike, logove, tragove) na ulaz sledeće stanice —
   nedostajuća veza ne ruši proces i nijedan alarm za pad zadatka je neće
   uhvatiti.</li>
+<li>Ne veruj da "popuni, ne prepiši" znači "bezbedno za svakog pošiljaoca" —
+  proveri šta se upisuje kad pošiljalac ne postavi ništa, jer se prazno
+  polje tada popunjava identitetom same stanice koja ga popunjava, ne
+  ostaje prazno.</li>
 </ul>
 <h2 id="105-vezba-za-citaoca">10.5 Vežba za čitaoca</h2>
 <p>Nacrtaj redosled stanica u sopstvenom telemetrijskom pipeline-u (ili,
@@ -2646,7 +2699,7 @@ nego što ga proizvodni saobraćaj otkrije umesto tebe.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 12:50:53 UTC">31. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7. septembar 2026. 07:41:32 UTC">7. septembar 2026.</span>
   </span>
 
     

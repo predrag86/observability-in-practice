@@ -1712,10 +1712,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zasto-se-pseudonimizacioni-kljuc-namerno-nikad-ne-rotira" class="md-nav__link">
+  <a href="#zasto-predlog-preporucuje-da-se-pseudonimizacioni-kljuc-nikad-ne-rotira" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto se pseudonimizacioni ključ namerno nikad ne rotira
+        Zašto predlog preporučuje da se pseudonimizacioni ključ nikad ne rotira
       
     </span>
   </a>
@@ -2439,10 +2439,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zasto-se-pseudonimizacioni-kljuc-namerno-nikad-ne-rotira" class="md-nav__link">
+  <a href="#zasto-predlog-preporucuje-da-se-pseudonimizacioni-kljuc-nikad-ne-rotira" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zašto se pseudonimizacioni ključ namerno nikad ne rotira
+        Zašto predlog preporučuje da se pseudonimizacioni ključ nikad ne rotira
       
     </span>
   </a>
@@ -2656,31 +2656,40 @@ svoj deo. Popravka mora ići na izvor problema: sam backend treba da
 prestane da upisuje pravi identitet, i da umesto toga upisuje <strong>isti</strong>
 oblik pseudonima koji frontend već koristi.</p>
 <h3 id="izvedeni-pseudonim-ne-goli-hes">Izvedeni pseudonim, ne goli heš</h3>
-<p>Rešenje koje je implementacija projektovala ne koristi prost heš email
+<p>Predlog koji je tim sastavio namerno ne koristi prost heš email
 adrese — jer je prostor mogućih email adresa dovoljno mali i predvidljiv
 da bi goli heš bio trivijalno razbijen unapred izračunatom tabelom.
-Umesto toga, pseudonim se izvodi kroz ključem-zaštićenu heš funkciju:
-ista email adresa uvek proizvodi isti pseudonim (što čuva mogućnost
-praćenja istog korisnika kroz vreme, korisno za dashboard-e), ali niko bez
-tajnog ključa ne može da krene unazad od pseudonima ka pravom identitetu.
-Uz to, implementacija drži jednu, strogo kontrolisanu mogućnost razrešenja
-unazad — administrativni endpoint koji, samo za ovlašćenu ulogu i uz
-potpuno audit-logovanje ko je koga razrešio i kada, vraća pravi identitet
-iza pseudonima za retke slučajeve kad je to stvarno operativno potrebno.</p>
+Umesto toga, predlog izvodi pseudonim kroz ključem-zaštićenu heš funkciju:
+ista email adresa bi uvek proizvela isti pseudonim (što bi sačuvalo
+mogućnost praćenja istog korisnika kroz vreme, korisno za dashboard-e), a
+niko bez tajnog ključa ne bi mogao da krene unazad od pseudonima ka pravom
+identitetu. Predlog uključuje i jednu, strogo kontrolisanu mogućnost
+razrešenja unazad — administrativni endpoint koji bi, samo za ovlašćenu
+ulogu i uz potpuno audit-logovanje ko je koga razrešio i kada, vraćao pravi
+identitet iza pseudonima za retke slučajeve kad je to stvarno operativno
+potrebno.</p>
+<p>Vredno je reći ovo eksplicitno, ne samo podrazumevati: u trenutku pisanja
+ovo je dizajn na papiru, ne sprovedena promena. Predlog nosi status "nije
+započeto", sa nekoliko odluka koje osoba sa ovlašćenjem tek treba da
+donese pre nego što bilo šta od ovoga uđe u kod — uključujući i tačno
+pitanje rotacije ključa iz sledećeg odeljka. Otkriće od malopre (71 od 98
+povezanih raspona) jeste stvarno i potvrđeno; popravka opisana ovde je
+predlog kako da se to otkriće zatvori, ne opis nečega što se već desilo.</p>
 <h3 id="sta-popravka-ne-resava-i-zasto-je-to-u-redu">Šta popravka ne rešava — i zašto je to u redu</h3>
-<p>Implementacija je eksplicitno svesna granica sopstvene popravke: istorijska
-telemetrija, već zapisana pre promene, ostaje u sirovom obliku — pseudonimizacija
-nije retroaktivna, i stari zapisi jednostavno stare kroz redovnu politiku
-čuvanja. Ovo nije previd nego trezvena procena: retroaktivno prepisivanje
-već zapisanih podataka bi bilo nesrazmerno skupo u odnosu na korist, kad
-period čuvanja i onako uskoro obriše te zapise. Implementacija takođe
-pravi jasnu, dokumentovanu razliku između identifikatora <strong>osobe</strong> (koji se
-nikad ne beleže u novim poljima) i identifikatora <strong>imovine/resursa nad
-kojim je upit izvršen</strong> (koji se namerno i dalje beleže, jer identifikuju
-šta je upitano, ne ko je upitao) — razlika koja sprečava da se
-pseudonimizacija preterano primeni tamo gde nije ni potrebna ni korisna.</p>
+<p>Predlog eksplicitno priznaje granice sopstvenog dometa, unapred: istorijska
+telemetrija, već zapisana pre bilo kakve promene, ostala bi u sirovom obliku
+— pseudonimizacija ne bi bila retroaktivna, a stari zapisi bi jednostavno
+istekli kroz redovnu politiku čuvanja. Ovo nije previd nego trezvena
+procena unapred: retroaktivno prepisivanje već zapisanih podataka bilo bi
+nesrazmerno skupo u odnosu na korist, kad period čuvanja i onako uskoro
+briše te zapise. Predlog takođe pravi jasnu razliku između identifikatora
+<strong>osobe</strong> (koji se ne bi beležili u novim poljima) i identifikatora
+<strong>imovine/resursa nad kojim je upit izvršen</strong> (koji bi se namerno i dalje
+beležili, jer identifikuju šta je upitano, ne ko je upitao) — razlika koja
+bi sprečila da se pseudonimizacija preterano primeni tamo gde nije ni
+potrebna ni korisna.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch25-linkage.png" data-desc-position="bottom"><img alt="Isti trejs spaja pseudonimni identifikator sa strane pregledača i pravi identitet sa strane backend-a — pseudonimnost drži samo dok se dva dela istog trejsa ne povežu." src="../diagrams/ch25-linkage.png" width="90%"></a></p>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-pseudonymization.png" data-desc-position="bottom"><img alt="Ista sesija u panelu za otklanjanje grešaka, pre i posle: kad oba kraja pišu isti oblik ključem-zaštićenog pseudonima, spajanje po trejsu i dalje radi za dijagnostiku, ali više ne otkriva pravo ime i email." src="../diagrams/dashboard-pseudonymization.png" width="95%"></a></p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-pseudonymization.png" data-desc-position="bottom"><img alt="Ilustracija iste sesije u panelu za otklanjanje grešaka, danas naspram predloženog stanja: kad bi oba kraja pisala isti oblik ključem-zaštićenog pseudonima, spajanje po trejsu bi i dalje radilo za dijagnostiku, ali više ne bi otkrivalo pravo ime i email." src="../diagrams/dashboard-pseudonymization.png" width="95%"></a></p>
 <h3 id="tip-parametra-kao-dokaz-ne-samo-pravilo-po-nazivu">Tip parametra kao dokaz, ne samo pravilo po nazivu</h3>
 <p>Razlika između "identifikatora osobe" (nikad beleženih) i "identifikatora
 resursa" (legitimno beleženih) iz prethodnog odeljka zvuči kao pravilo koje
@@ -2704,24 +2713,30 @@ log, tako da sadržaj slobodnog teksta ne može da ubaci separator ili novi red
 i naruši strukturu samog log zapisa. Dve različite garancije za dve različite
 kategorije parametara — jedna strukturna (tip), jedna operativna (enkodiranje)
 — primenjene tačno tamo gde svaka ima smisla.</p>
-<h3 id="zasto-se-pseudonimizacioni-kljuc-namerno-nikad-ne-rotira">Zašto se pseudonimizacioni ključ namerno nikad ne rotira</h3>
+<h3 id="zasto-predlog-preporucuje-da-se-pseudonimizacioni-kljuc-nikad-ne-rotira">Zašto predlog preporučuje da se pseudonimizacioni ključ nikad ne rotira</h3>
 <p>Uobičajena bezbednosna higijena nalaže periodičnu rotaciju tajnih ključeva —
 pravilo koje važi za lozinke, API tokene, enkripcione ključeve. Za ključ koji
-pokreće heš funkciju za pseudonime, implementacija je svesno odlučila
-<strong>suprotno</strong>: ključ ostaje stabilan, bez planirane rotacije. Razlog nije
-nemar nego eksplicitna analiza kompromisa. Rotacija ključa menja <strong>svaki</strong>
-pseudonim odjednom — svaki korisnik dobija novi pseudonim istog trenutka, što
-kida longitudinalnu analizu (dashboard koji prati istog korisnika kroz vreme
-odjednom vidi "novog" korisnika) i zahteva usklađivanje interne mapione
-tabele koja pseudonime vezuje za email. Nasuprot tome, dobit od rotacije je
-ovde neobično mala: ključ ne štiti sam sadržaj (email ostaje čitljiv u
-mapionoj tabeli bez obzira na ključ) — štiti samo <strong>vezu</strong> između pseudonima
-i emaila za svakog ko vidi pseudonim bez pristupa toj tabeli. Ako je mapiona
-tabela već kompromitovana, rotacija ključa ništa ne popravlja; ako nije,
-stabilan ključ ne otvara novi rizik koji rotacija zatvara. Bezbednosna
-higijena koja ima smisla za lozinku ovde bi samo unela operativnu štetu bez
-odgovarajuće bezbednosne dobiti — implementacija je to prepoznala umesto da
-mehanički primeni opšte pravilo na situaciju gde ono ne važi.</p>
+bi pokretao heš funkciju za pseudonime, predlog ide svesno <strong>suprotno</strong>
+uobičajenom pravilu: preporučuje da ključ ostane stabilan, bez planirane
+rotacije. Ali ovo je tačno mesto gde treba biti precizan oko toga šta je
+odlučeno, a šta samo predloženo — ovo je preporuka koja u trenutku pisanja
+još čeka da je neko sa ovlašćenjem zvanično potvrdi, ne već doneto pravilo.
+Razlog iza same preporuke nije nemar nego eksplicitna analiza kompromisa
+unapred. Rotacija ključa bi promenila <strong>svaki</strong> pseudonim odjednom — svaki
+korisnik bi dobio novi pseudonim istog trenutka, što bi kidalo longitudinalnu
+analizu (dashboard koji prati istog korisnika kroz vreme odjednom bi video
+"novog" korisnika) i zahtevalo usklađivanje interne mapione tabele koja
+pseudonime vezuje za email. Nasuprot tome, dobit od rotacije bi ovde bila
+neobično mala: ključ ne bi štitio sam sadržaj (email bi ostao čitljiv u
+mapionoj tabeli bez obzira na ključ) — štitio bi samo <strong>vezu</strong> između
+pseudonima i emaila za svakog ko vidi pseudonim bez pristupa toj tabeli. Ako
+bi mapiona tabela već bila kompromitovana, rotacija ključa ništa ne bi
+popravila; ako ne bi bila, stabilan ključ ne bi otvarao novi rizik koji bi
+rotacija zatvorila. Bezbednosna higijena koja ima smisla za lozinku bi ovde
+samo unela operativnu štetu bez odgovarajuće bezbednosne dobiti — što je
+argument ZA preporuku, ne dokaz da je pitanje zatvoreno. Dok god je neko sa
+ovlašćenjem zvanično ne potvrdi, rotacija ključa ostaje otvorena stavka na
+spisku odluka koje predlog čeka, ne završena priča.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch25-rotacija-kljuca.png" data-desc-position="bottom"><img alt="Zašto rotacija pseudonimizacionog ključa ovde ne bi bila bezbednosna dobit, samo operativna šteta: ključ štiti vezu pseudonim↔email, ne sam sadržaj, i stabilan ključ ne otvara novi rizik koji bi rotacija zatvorila." src="../diagrams/ch25-rotacija-kljuca.png" width="80%"></a></p>
 <h3 id="drugo-pitanje-o-istom-podatku-ne-ko-ga-vidi-nego-gde-fizicki-lezi">Drugo pitanje o istom podatku: ne ko ga vidi, nego gde fizički leži</h3>
 <p>Sve dosad opisano u ovom poglavlju — povezivanje trejsova, pseudonimizacija,
@@ -2768,10 +2783,10 @@ dalje ostavio drugu, potpuno neotvorenu.</p>
 podatak <strong>ostaje</strong> lični podatak u punom pravnom smislu, jer je
 re-identifikacija i dalje moguća u principu — razlika prema potpuno
 anonimizovanom podatku (koji izlazi iz obaveze u potpunosti) je oštra i
-namerna. Ovo znači da pseudonimizacija implementacije nije "rešila"
-pravnu obavezu — smanjila je rizik i pooštrila minimizaciju, ali podatak
-i dalje zahteva istu pažnju kao svaki drugi lični podatak, samo sa manjim
-rizikom po pojedinca ako dođe do curenja.</p>
+namerna. Ovo znači da predložena pseudonimizacija, čak i kad bude sprovedena, neće
+"rešiti" pravnu obavezu u potpunosti — smanjiće rizik i pooštriti
+minimizaciju, ali podatak će i dalje zahtevati istu pažnju kao svaki drugi
+lični podatak, samo sa manjim rizikom po pojedinca ako dođe do curenja.</p>
 <h3 id="ono-sto-se-dogodilo-ima-precizno-ime-u-literaturi-napad-povezivanjem">Ono što se dogodilo ima precizno ime u literaturi: napad povezivanjem</h3>
 <p>Scenario koji je implementacija otkrila — dva naizgled bezopasna,
 pseudonimna skupa podataka koji zajedno otkrivaju identitet čim se povežu
@@ -2782,10 +2797,11 @@ ili spoljnim izvorom. Zvanična smernica o pseudonimizaciji ide korak dalje
 i imenuje tačno ovaj mehanizam kao razlog zašto preporučuje <strong>tranzakcione</strong>
 pseudonime (drugačiji po svakoj interakciji) umesto <strong>ličnih</strong> pseudonima
 (stabilan, ponovo korišćen svuda) — jer je upravo stabilan, deljen
-identifikator ono što povezivanje čini lakim. Implementacija je svesno
-zadržala stabilan pseudonim (radi longitudinalne analize po korisniku) uz
-punu svest o ovom kompromisu — razumna odluka, ali odluka koja mora ostati
-vidljiva, ne podrazumevana.</p>
+identifikator ono što povezivanje čini lakim. Predlog svesno bira da
+zadrži stabilan pseudonim (radi longitudinalne analize po korisniku) uz
+punu svest o ovom kompromisu — razuman izbor, ali izbor koji mora ostati
+vidljiv, ne podrazumevan, i koji je, kao što je prethodni odeljak pokazao,
+još uvek samo preporuka koja čeka potvrdu, ne doneta odluka.</p>
 <h3 id="kljucem-zasticena-hes-funkcija-je-zvanicno-preporucena-ne-proizvoljna">Ključem-zaštićena heš funkcija je zvanično preporučena, ne proizvoljna</h3>
 <p>I zvanična smernica o pseudonimizaciji i šira tehnička literatura
 eksplicitno upozoravaju protiv golog, nezaštićenog heša niskoentropijskih
@@ -2795,8 +2811,8 @@ dovoljno entropije u samom ključu. Dodatna, suptilnija napomena iz iste
 literature, direktno relevantna: <strong>isti</strong> ključ korišćen u dva različita
 sistema ponovo uvodi mogućnost povezivanja — ako dva servisa heš-uju istu
 email adresu istim ključem, njihovi izlazi se poklapaju i mogu se spojiti,
-poništavajući svrhu izolacije. Implementacija ovo rešava tako što ključ
-ostaje jedan, unutrašnji, čuva se odvojeno od bilo kog eksternog sistema.</p>
+poništavajući svrhu izolacije. Predlog ovo rešava tako što bi ključ ostao jedan, unutrašnji, čuvan
+odvojeno od bilo kog eksternog sistema.</p>
 <h3 id="pravo-na-brisanje-sudara-se-sa-arhitekturom-sistema-za-telemetriju">Pravo na brisanje sudara se sa arhitekturom sistema za telemetriju</h3>
 <p>Šira analiza pokazuje da je pravo na brisanje ličnih podataka iskren,
 nerešen problem trenja za većinu sistema za metrike i logove — mnogi su
@@ -2892,7 +2908,7 @@ kao u ovom poglavlju.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 23:01:44 UTC">6. septembar 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7. septembar 2026. 07:36:57 UTC">7. septembar 2026.</span>
   </span>
 
     
