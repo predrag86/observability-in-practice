@@ -116,6 +116,45 @@ podešavanja praga po alarmu. Ovo je razlika vredna imenovanja: nekad
 plan ne treba fino podešavanje, nego priznanje da je izabrani mehanizam
 strukturno pogrešan za cilj koji se pokušava postići.
 
+### Mesecima kasnije: isti mehanizam, jedna sledeća slepa tačka
+
+Novi mehanizam iz prethodnog odeljka rešio je originalni problem —
+gubljenje identiteta zadatka u grubom alarmu po porodici — ali nije rešio
+ceo problem hitnosti, što je postalo vidljivo tek kroz kasniji, stvaran
+incident. Jedna porodica zadataka standardnog nivoa počela je da otkazuje
+zbog nedostatka memorije, ponovljeno, tokom sedamnaest sati —
+devetnaest puta ukupno. Standardni nivo grupiše ponovljene neuspehe iste
+porodice unutar kratkog prozora upravo zato da izbegne poplavu poruka za
+nešto što je zapravo jedan produžen incident — ali taj isti mehanizam
+pretpostavlja da će ponavljanja stizati u naletima. Ovih devetnaest
+otkaza stizalo je razvučeno, otprilike jedan na sat — nikad dovoljno
+gusto da pređe prag naleta, pa nijedno nije prošlo kroz kapiju za
+obaveštavanje. Postojao je poseban, kasnije dodat alarm koji baš ovakav,
+razvučen obrazac otkriva bez obzira na naletni prag, i on je ispravno
+upalio nekoliko sati u incident — ali sa nivoom "upozorenje", istim
+nivoom kao i obična poruka o visokoj potrošnji memorije koja se pojavila
+malo kasnije u istom kanalu. Čovek koji je čitao kanal video je dva
+upozorenja jedno pored drugog i pročitao ih kao nisku hitnost — dok je
+stvarnost bila da je zadatak nasilno gašen skoro svakog sata.
+
+Popravka nije bila "podigni prag" niti "promeni nivo cele porodice" —
+bila je uža i preciznija: određeni, poznato ozbiljni razlozi otkaza
+(gašenje zbog nedostatka memorije je prvi i jedini uveden) sada
+zaobilaze kapiju za ponavljanje bez obzira na učestalost, dok sve ostalo
+i dalje prolazi kroz nju nepromenjeno. Uslov za bilo koji budući dodatak
+na tu listu zapisan je unapred: razlog otkaza mora biti determinisan i
+sklon ponavljanju, ne slučajan i prolazan — jer bi suprotno pretvorilo
+listu u deponiju izuzetaka koja bi vremenom obesmislila samu kapiju.
+
+Pouka nije samo tehnička nego strukturna: kapija za ponavljanje je, iako
+to nikad nije bila njena nameravana uloga, tiho donosila odluku o
+hitnosti — brisala je razliku između tri isprobavanja koja su samo šum i
+tri gašenja zbog nedostatka memorije koja su ozbiljan signal, jer je
+gledala samo koliko često, nikad zašto. Dva odvojena upozorenja, oba
+tehnički tačna, ne zbrajaju se automatski u jednu grešku u glavi čoveka
+koji ih čita — pokrivenost bez hitnosti nije isto što i biti stvarno
+obavešten.
+
 ### Ko dolazi poslednji, i zašto je to pravilo, ne izuzetak
 
 Kroz ceo program važilo je jedno tiho pravilo: proizvodno najkritičniji
@@ -272,6 +311,10 @@ gledao šta je iza zida.
 - Kad prva stvarna poruka iz novog mehanizma alarmiranja pokaže da je
   mehanizam strukturno neupotrebljiv (ne samo loše kalibrisan), zameni
   ceo mehanizam — ne samo prag.
+- Kapija koja grupiše ponovljene neuspehe po učestalosti tiho donosi i
+  odluku o hitnosti, iako to nije njena nameravana uloga — proveri da li
+  neki poznato ozbiljan razlog otkaza treba da zaobiđe tu kapiju bez
+  obzira na to koliko retko se ponavlja.
 - Pre gašenja starog sistema, revidiraj ga — koliko od "aktivne" zaštite
   je zapravo tiha fasada koja godinama nije primila nijedan podatak.
 - Kad preskačeš planiran korak jer ga drugi deo plana već pokriva, zapiši
