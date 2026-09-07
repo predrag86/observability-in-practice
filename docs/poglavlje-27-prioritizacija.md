@@ -48,6 +48,32 @@ implementacija ih namerno spaja u jednu, više rangiranu kombinovanu stavku
 sprečava situaciju gde bi rangiranje bilo lažno nisko samo zato što je
 jedan uzrok slučajno proizveo više pojedinačnih simptoma.
 
+### Redosled izvršenja ima i četvrtu osu: brzinu kojom se greška vidi
+
+Tri ose rangiranja iznad — domet, verovatnoća, cena popravke — određuju
+**šta** popraviti prvo. Kad se dve slične, nezavisne promene stvarno
+izvode jedna za drugom, pojavljuje se i peto pitanje koje nijedna od te tri
+ose ne pokriva: kojim redom ih pustiti u produkciju?
+
+Konkretan slučaj: dve gotovo identične promene veličine resursa čekale su
+red za primenu — jedna na porodici najvišeg nivoa ozbiljnosti sa uskom
+marginom, druga na porodici nižeg nivoa koja se izvršava jednom nedeljno.
+Intuicija "najrizičnije poslednje" bi nalagala da uža, ozbiljnija promena
+ide poslednja, kao ona kod koje greška najviše boli. Stvarni redosled je bio
+obrnut, i to namerno: uža promena je puštena **prva**, jer bi njen rezultat
+bio potvrđen ili opovrgnut za par minuta (porodica se izvršava često), dok bi
+greška na sedmičnoj porodici ostala neopažena danima — sledeće izvršenje
+stiže tek posle nedelju dana. Cena greške na osetljivijoj promeni je veća,
+ali cena **kašnjenja u otkrivanju** greške na sporijoj promeni je bila
+veća od toga.
+
+Pravilo koje sledi ne zamenjuje tri ose rangiranja — dodaje im redosled
+izvršenja kao odvojeno pitanje: **ređaj primenu po tome koliko brzo greška
+postaje vidljiva, ne samo po tome koliko izgleda rizično.** Promena na
+retko izvršavanom poslu nosi skriven trošak koji njena nominalna
+"ozbiljnost" ne hvata — trošak vremena tokom kog bi greška tiho čekala da
+je neko primeti.
+
 ### "Časna pomena" kao formalna, imenovana kategorija
 
 Ispod praga koji ulazi u glavni rangirani spisak, implementacija drži
@@ -121,6 +147,52 @@ stvarno izmerio, i ta razlika je jeftina lekcija samo zato što je otkrivena
 pre incidenta, ne tokom njega.
 
 ![Isti nalaz, ista popravka — ali domet štete se promenio od "auth ide dole" do "ceo proizvod ide dole" tek kad je neko stvarno popisao zavisnosti umesto da ih pretpostavi iz naziva problema.](diagrams/ch27-domet-stete.png){: width="82%" }
+
+### Pouzdanost ispred uštede kad merenje tako nalaže — i zašto automatska preporuka kasni
+
+Prva osa rangiranja — domet štete — ne mora da dolazi iz posebne analize
+napravljene samo za tu svrhu. Fleetsko merenje memorijske utilizacije
+opisano u Poglavlju 23 je nastalo kao provera trošenja resursa, ne kao
+vežba rangiranja rizika, a ipak je direktno promenilo redosled na spisku
+iz ovog poglavlja: kad se pokazalo da porodice blizu memorijskog plafona
+otkazuju **trideset puta češće** od porodica u srednjem opsegu i da tih
+nekoliko retkih porodica nosi gotovo polovinu svih otkaza u celoj floti,
+popravka tih porodica je preskočila ispred svake jeftinije, bezbednije
+uštede negde drugde u floti — iako ta jeftinija ušteda čeka duže i iako
+je uvek lakše prvo uzeti lak, siguran dobitak. Redosled nije promenjen
+zato što je neko odlučio da pouzdanost "vredi više" na papiru, nego zato
+što je merenje direktno pokazalo da domet štete tih retkih porodica
+nadmašuje bilo koju uštedu koja bi mogla da ide ispred njih. Ovo je isti
+princip kao u primeru sa auth SPOF-om iznad, primenjen na floti umesto na
+pojedinačnom nalazu: cena popravke ne menja se, ali domet, jednom kad se
+stvarno izmeri, može da preskoči čitav niz jeftinijih stavki na spisku.
+
+Automatski alati za predlog uštede (Compute Optimizer i, preko njega,
+Cost Optimization Hub) sami po sebi ne rangiraju po dometu — rangiraju po
+proceni koliko bi se uštedelo, izvedenoj iz merenja unazad. Ta procena
+nosi sopstvenu, iskrivljenu manu direktno relevantnu za redosled u ovom
+spisku: prozor merenja je fiksnih četrnaest dana unazad, koji klizi. Kad
+je jedna javna, uvek-uključena usluga sužena na manju rezervaciju resursa,
+alat je nastavio da prikazuje staru, veću rezervaciju kao "trenutnu" i da
+reklamira uštedu izračunatu prema njoj — jer je jedanaest od četrnaest
+dana u prozoru i dalje prethodilo promeni. Sopstveni brojevi alata su to
+odavali: prijavljeni broj časova rada je odgovarao isključivo starom
+obliku, ne novom. Veći deo uštede koju je alat reklamirao je zapravo već
+bio ostvaren pre nedelju dana; preostali, mali deo je bio korak koji je
+tim svesno odbio, jer bi dodatno sužavanje rezervacije uklonilo prostor
+za kratak, ali predvidljiv skok potrošnje pri svakom pokretanju zadatka —
+skok koji se ponavlja pri svakom startu i koji prosečna, dvonedeljna
+slika potpuno sakriva.
+
+Isti uzak prozor seče u oba smera, i to je razlog zašto redosled u ovom
+spisku ne sme da uzme red iz alata za uštedu bez provere: prozor koji
+kasni za promenom nagore takođe kasni za promenom nadole — skok
+potrošnje koji bi jednu drugu, već predloženu uštedu učinio nebezbednom
+može jednako lako da padne van tih istih četrnaest dana i ostane
+nezabeležen. Red na spisku uštede zato nije dokaz o trenutnom stanju,
+nego dokaz o poslednje dve nedelje — a razlika između to dvoje je upravo
+ono što redosled u ovom poglavlju mora da proveri pre nego što je prihvati
+kao konačnu.
 
 ### Obrisano tek kad merenje to potvrdi, ne kad kod uđe u granu
 
@@ -248,6 +320,20 @@ listu korisnom umesto da postane još jedan dokument koji niko ne čita.
   koja dokazuje da je popravka promenila stanje produkcije — i briši stavku
   tek kad je taj signal izmeren, ne kad je kod spojen u granu; "spojeno" i
   "objavljeno u produkciju" nisu isto "završeno."
+- Kad se dve slične promene puštaju jedna za drugom, ređaj njihov redosled
+  izvršenja i po tome koliko brzo greška postaje vidljiva, ne samo po tome
+  koliko izgleda rizično — promena na retko izvršavanom poslu nosi skriven
+  trošak kašnjenja u otkrivanju koji njena nominalna ozbiljnost ne hvata.
+- Kad merenje pokaže da uzak segment nosi nesrazmeran deo otkaza cele
+  flote, popravka tog segmenta ide ispred jeftinijih, bezbednijih ušteda
+  na spisku — pouzdanost preskače red kad je domet štete stvarno izmeren,
+  ne samo kad izgleda veći na papiru.
+- Ne uzimaj red automatskog alata za predlog uštede kao dokaz o trenutnom
+  stanju — alat koji procenjuje iz kliznog prozora unazad može i dalje da
+  reklamira uštedu za promenu koja je već sprovedena, i taj isti prozor
+  jednako lako krije skok potrošnje koji bi neku drugu stavku na spisku
+  učinio nebezbednom; proveri živu konfiguraciju pre nego što redosled
+  preuzmeš od alata.
 
 ## 27.5 Vežba za čitaoca
 
