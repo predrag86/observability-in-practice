@@ -38,13 +38,16 @@ gateway, u visokoj dostupnosti, kroz koji prolazi skoro sav saobraćaj.**
 Konkretno:
 
 - Gateway je **Grafana Alloy** (distribucija OpenTelemetry Collector-a koju
-  održava Grafana Labs), pokrenut kao dva nezavisna zadatka na kontejnerskoj
-  platformi (AWS ECS/Fargate), iza internog load balansera.
+  održava Grafana Labs), pokrenut na kontejnerskoj platformi (AWS ECS/Fargate)
+  iza internog load balansera, sa **dva zadatka kao donjom granicom** —
+  autoskaliranje po opterećenju dodaje dodatne instance kad treba, nikad
+  manje od dve. (Kako to skaliranje utiče na sam proces obrade, konkretno na
+  raspoređivanje trejsova po instancama, razrađeno je u Poglavlju 12.)
 - Svi pošiljaoci — bilo da su to duže-živi servisi (backend aplikacija) ili
   kratkotrajni batch zadaci — gađaju **jedno stabilno DNS ime** koje ostaje isto
   kroz rebuild-ove i samog gateway-a i load balansera. Nijedan pošiljalac ne zna
-  niti ga zanima koja od dve instance gateway-a je trenutno primila njegov
-  signal.
+  niti ga zanima koliko je trenutno živih instanci gateway-a, niti koja je od
+  njih primila njegov signal.
 - Gateway je **jedino mesto koje drži kredencijale za cloud** (basic-auth token
   ka Grafana Cloud-u). Nijedna aplikacija, nijedan batch zadatak, nijedan
   sidecar ne zna taj token — što znači da kompromitovanje bilo kog pojedinačnog
@@ -58,7 +61,7 @@ Konkretno:
 
 Šematski, to izgleda ovako:
 
-![Telemetrija ide od pošiljalaca ka jednom stabilnom DNS imenu, koje ravnopravno raspoređuje saobraćaj na dve nezavisne gateway instance; samo gateway razgovara sa cloud platformom.](diagrams/diagram.png){: width="100%" }
+![Telemetrija ide od pošiljalaca ka jednom stabilnom DNS imenu, koje ravnopravno raspoređuje saobraćaj na dve ili više nezavisnih gateway instanci (autoskaliranje po opterećenju); samo gateway razgovara sa cloud platformom.](diagrams/diagram.png){: width="100%" }
 
 Ono što ovaj dijagram *ne* pokazuje, a bitno je: postoji mala, **eksplicitno
 dokumentovana** lista pošiljalaca koji gateway **zaobilaze** — Lambda funkcija
