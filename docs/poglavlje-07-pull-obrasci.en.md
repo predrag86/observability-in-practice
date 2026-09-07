@@ -70,6 +70,12 @@ side by side, each showing something the other can't:
 
 ![The external layer (CloudWatch) sees CPU and replica lag even when the database is refusing connections; the internal layer (postgres_exporter) sees which table is actually driving sequential scans — here `audit_log`, a good candidate for an index.](diagrams/dashboard-rds.png){: width="95%" }
 
+It's enough here to present the layers as an example of the third level of
+control — what actually gets done with them later (when one layer knows
+something the other structurally can't, and specifically what a team
+watching only one of them misses) is worked out in more depth in
+Chapter 18.
+
 **A self-managed distributed cluster (Dremio-type) — an agent per node.**
 Unlike a managed database, here the team has full control over the host — it
 can install whatever it needs. The solution: Grafana Alloy installed as an
@@ -99,6 +105,70 @@ responses. This pattern is rich enough in its own pitfalls (structural
 latency on the order of an hour or two, the cost of querying system views,
 the difference between "the watcher is dead" and "the observed system is
 dead") that it earns a full case study of its own in Chapter 24.
+
+### Controlling the host doesn't mean the installation is permanent
+
+The "agent per node" pattern, described above for the self-managed
+cluster, relies on one advantage a managed database never offers: the
+team has full rights to install whatever it needs on the host. That same
+advantage carries a consequence that's easy to overlook the first time
+the agent is introduced: **the right to install something isn't the same
+as a guarantee that the installation will stay there.** An agent
+installed manually on a specific host survives exactly as long as that
+specific host survives — and any event that replaces the instance
+underneath it (a migration to a different processor architecture, a
+routine instance replacement, even an upgrade of the clustered
+application itself through node replacement) wipes out every manually
+installed component, silently, because none of them was ever part of
+what gets set up automatically when the instance is created.
+
+Concretely, every instance replacement wipes out **three** separate
+things at once, not one: the agent itself, which collects the host and
+log signal; a single configuration line inside the clustered
+application's own config that turns on its JVM/metrics endpoint; and a
+small scheduled service that cleans up the application's local logs so
+the disk doesn't fill itself up. A naive recovery — just reinstalling the
+agent — restores **one of those three**, and nothing on the dashboard
+makes that gap obvious: the host-level signal can start flowing normally
+again while the JVM-level signal (and the log cleanup alongside it) stays
+silently absent, unnoticed until someone explicitly checks all three
+components individually.
+
+The fix, once the pattern had repeated often enough to justify
+automating it, wasn't "remember to do all three things next time" — it
+was a single idempotent recovery script that restores all three
+components at once, in one pass, and that derives the node's identity
+(which role that node plays in the cluster) directly from the host
+itself, rather than from a manually maintained map — so it can safely be
+run again, regardless of exactly which host is involved. Importantly:
+that script deliberately **does not restart** the clustered application
+itself — restarting that application carries its own ordering rule (the
+node playing the coordinator role restarts last, and only within a
+maintenance window, because its restart kills every in-flight query
+across the whole cluster) and remains a separate, manually triggered
+step.
+
+A related trap, worth its own line: checking that the JVM metrics
+endpoint is actually back up must not go through the everyday "is
+anything listening on this port" tool — a socket-table check once
+reported that the port "wasn't listening," while that same endpoint, at
+that exact moment, was correctly answering a plain HTTP request. The
+cause: the JVM was bound to a form of the loopback address that the
+socket-listing tool doesn't show by default. Had the socket check been
+trusted instead of an actual request, it would have triggered an
+unnecessary extra restart of the coordinator role — the single most
+destructive operation in the whole cluster, triggered on a false signal.
+
+This ties directly back to the control principle from the start of the
+chapter: full control over the host means the team **is allowed** to
+install whatever it needs — but it doesn't mean that installation
+**persists** on its own, the way a managed database's signal persists
+without anyone's intervention. RDS's external layer from this chapter
+gets its signal "for free" precisely because it isn't manually
+installed; agent-per-node gets a richer signal precisely because it
+**is** manually installed — and that richness comes with an explicit,
+ongoing maintenance obligation that the managed-database pattern never
+carries.
 
 All three patterns share one principle, important enough to stand as a rule
 of the book: **a watcher observing a critical path must not depend on the
@@ -264,6 +334,17 @@ that source has of failing in a way that would blind you.**
   that as "series doesn't exist," not as "hasn't arrived yet." Widen the
   query window well beyond the source's nominal granularity instead of
   changing the source itself.
+
+- For every manually installed agent on a host you fully control, treat
+  instance replacement (migration, routine replacement, upgrade through
+  node replacement) as a certainty, not an edge case — enumerate every
+  component that installation depends on (the agent, the configuration
+  line, accompanying scheduled services) and build recovery for all of
+  them at once, in a single step, instead of letting the gap surface
+  later through a dashboard that stays silent about exactly what's
+  missing. And never verify that a network endpoint is back up via
+  socket state — verify it with an actual request; a socket can claim
+  nothing is listening while the endpoint is answering correctly.
 
 ## 7.5 Exercise for the reader
 
