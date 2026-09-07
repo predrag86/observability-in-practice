@@ -151,7 +151,7 @@ earlier decision against the evidence, voluntarily, without external
 pressure, was rated the single most valuable finding in the whole
 review — precisely because it was voluntary and recent.
 
-![The cycle of periodic review: five passes, a confidence label per claim, a section of retracted findings at the top, and a comparison of recommendations against the actual work-tracking system.](diagrams/ch30-ciklus-revizije.png){: width="92%" }
+![The cycle of periodic review: five passes, a confidence label per claim, a section of retracted findings at the top, and a comparison of recommendations against the actual work-tracking system.](diagrams/ch31-ciklus-revizije.png){: width="92%" }
 
 ![An alert ringing continuously for about ten weeks — the opposite case from "the alert that never rings": deliberately placed at the top of the findings list, because continuous ringing with no response says something about team discipline, not about the severity of the problem.](diagrams/dashboard-alert-streak.png){: width="92%" }
 
@@ -179,7 +179,7 @@ declaring it a trend it's worth explicitly asking how many days of data
 stand behind it, and whether that same calculation, repeated with a
 window twice as wide, would give the same direction.
 
-![The same rate-of-change calculation, two measurement windows: seven days looks like a consistent leak, four more days of data show it was part of a broader oscillating pattern.](diagrams/ch30-kratak-prozor.png){: width="78%" }
+![The same rate-of-change calculation, two measurement windows: seven days looks like a consistent leak, four more days of data show it was part of a broader oscillating pattern.](diagrams/ch31-kratak-prozor.png){: width="78%" }
 
 ### When the measurement itself becomes part of the load it measures
 

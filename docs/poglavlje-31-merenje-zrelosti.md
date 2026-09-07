@@ -144,7 +144,7 @@ Ova spremnost da se sopstvena ranija odluka preispita protiv dokaza,
 dobrovoljno, bez spoljnog pritiska, ocenjena je kao najvredniji nalaz u
 čitavoj reviziji — upravo zato što je dobrovoljna i nedavna.
 
-![Ciklus periodične revizije: pet prolaza, oznaka pouzdanosti po tvrdnji, sekcija povučenih nalaza na vrhu, i poređenje preporuka protiv stvarnog sistema za praćenje rada.](diagrams/ch30-ciklus-revizije.png){: width="92%" }
+![Ciklus periodične revizije: pet prolaza, oznaka pouzdanosti po tvrdnji, sekcija povučenih nalaza na vrhu, i poređenje preporuka protiv stvarnog sistema za praćenje rada.](diagrams/ch31-ciklus-revizije.png){: width="92%" }
 
 ![Alarm koji zvoni neprekidno oko deset nedelja — suprotan slučaj od "alarm koji nikad ne zvoni": istaknut namerno na vrh liste nalaza, jer neprekidno zvonjenje bez odgovora govori o disciplini tima, ne o težini problema.](diagrams/dashboard-alert-streak.png){: width="92%" }
 
@@ -171,7 +171,7 @@ izvedenoj brzini promene (a ne na direktno izmerenoj vrednosti), pre nego
 iza njega, i da li bi taj isti izračun, ponovljen sa duplo širim prozorom,
 dao isti pravac.
 
-![Isti izračun brzine promene, dva prozora merenja: sedam dana liči na dosledno curenje, četiri dana više podataka pokazuju da je to bio deo šireg oscilatornog obrasca.](diagrams/ch30-kratak-prozor.png){: width="78%" }
+![Isti izračun brzine promene, dva prozora merenja: sedam dana liči na dosledno curenje, četiri dana više podataka pokazuju da je to bio deo šireg oscilatornog obrasca.](diagrams/ch31-kratak-prozor.png){: width="78%" }
 
 ### Kad merenje samo postane deo tereta koji meri
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Source-of-truth generator for the "ch29-vremenska-linija" diagram used in
+Source-of-truth generator for the "ch30-vremenska-linija" diagram used in
 Poglavlje 29 / Chapter 29 (fazni-rollout / phased-rollout).
 
 Why this file exists
 ---------------------
 Same rationale as scripts/diagrams/cost_crossover.py: the original
-ch29-vremenska-linija.png was hand-built with no source file kept
+ch30-vremenska-linija.png was hand-built with no source file kept
 alongside it, so its Serbian labels were baked into raster pixels with no
 way to re-render them in English. This script reconstructs the diagram
 from one parameterized Graphviz source, so both language variants come
@@ -14,9 +14,9 @@ from the same structure.
 
 Usage
 -----
-    python3 scripts/diagrams/ch29_vremenska_linija.py sr   # -> docs/diagrams/ch29-vremenska-linija.png
-    python3 scripts/diagrams/ch29_vremenska_linija.py en   # -> docs/diagrams/ch29-vremenska-linija.en.png
-    python3 scripts/diagrams/ch29_vremenska_linija.py all  # both
+    python3 scripts/diagrams/ch30_vremenska_linija.py sr   # -> docs/diagrams/ch30-vremenska-linija.png
+    python3 scripts/diagrams/ch30_vremenska_linija.py en   # -> docs/diagrams/ch30-vremenska-linija.en.png
+    python3 scripts/diagrams/ch30_vremenska_linija.py all  # both
 
 Structure note: a top-to-bottom timeline in four horizontal rows,
 using the book's standard color coding (gray = neutral event, red =
@@ -51,7 +51,7 @@ GREEN_LINE = "#2E7D4F"
 
 LANGUAGES = {
     "sr": {
-        "suffix": "",  # docs/diagrams/ch29-vremenska-linija.png (default locale, no suffix)
+        "suffix": "",  # docs/diagrams/ch30-vremenska-linija.png (default locale, no suffix)
         "nodes": {
             "plan": "Numerisan plan,\nobjavljen unapred",
             "provera": "Prva produkciona\nprovera:\n5 od 6 zadataka\ntiho pukne na trci",
@@ -67,7 +67,7 @@ LANGUAGES = {
         },
     },
     "en": {
-        "suffix": ".en",  # docs/diagrams/ch29-vremenska-linija.en.png
+        "suffix": ".en",  # docs/diagrams/ch30-vremenska-linija.en.png
         "nodes": {
             "plan": "Numbered plan,\npublished ahead of time",
             "provera": "First production\ncheck:\n5 of 6 tasks\ncrash silently on a race",
@@ -89,7 +89,7 @@ def render(lang: str):
     cfg = LANGUAGES[lang]
     n = cfg["nodes"]
 
-    g = Digraph("ch29_vremenska_linija", format="png")
+    g = Digraph("ch30_vremenska_linija", format="png")
     g.attr(bgcolor="white", fontname="DejaVu Serif", rankdir="TB",
            nodesep="0.45", ranksep="0.7", splines="spline")
     g.attr("node", fontname="DejaVu Serif", fontsize="14", margin="0.25,0.15",
@@ -132,7 +132,7 @@ def render(lang: str):
     g.edge("stari_alarmi", "ugasen")
     g.edge("politika", "revizija")
 
-    out_path = OUT_DIR / f"ch29-vremenska-linija{cfg['suffix']}.png"
+    out_path = OUT_DIR / f"ch30-vremenska-linija{cfg['suffix']}.png"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     g.render(outfile=str(out_path), cleanup=True)
     print(f"wrote {out_path}")

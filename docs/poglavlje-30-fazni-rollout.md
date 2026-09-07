@@ -180,7 +180,7 @@ je promenila prirodu gašenja — nije bilo brisanje aktivne zaštite, nego
 uklanjanje fasade koja je godinama izgledala kao zaštita dok to odavno
 nije bila.
 
-![Vremenska linija faznog rollout-a: numerisan plan, stvarnost koja otkriva propust koji alarm nije uhvatio, dva ubačena koraka, premešten redosled i zamenjen mehanizam alarmiranja, sa najkritičnijim delom flote namerno na kraju.](diagrams/ch29-vremenska-linija.png){: width="95%" }
+![Vremenska linija faznog rollout-a: numerisan plan, stvarnost koja otkriva propust koji alarm nije uhvatio, dva ubačena koraka, premešten redosled i zamenjen mehanizam alarmiranja, sa najkritičnijim delom flote namerno na kraju.](diagrams/ch30-vremenska-linija.png){: width="95%" }
 
 ![Revizija pre gašenja starog sistema alarmiranja: od 23 stara alarma, 16 nije primilo nijednu tačku podataka preko godinu dana — izgledali su "zeleno" samo zato što je odsustvo podataka bilo protumačeno kao normalno stanje.](diagrams/dashboard-alarm-audit.png){: width="95%" }
 
@@ -205,7 +205,7 @@ zanemarljivo". Preskakanje koraka bez ovog uslova bi bilo nadanje;
 preskakanje sa njim je proverljiva opklada koja se automatski poništava
 čim dokaz kaže suprotno.
 
-![Preskočen korak sa zapisanim uslovom za povratak: procenjen najgori slučaj je imenovan brojkom, a plan se automatski vraća na korak čim pilot pokaže merljiv gubitak.](diagrams/ch29-preskocen-korak.png){: width="80%" }
+![Preskočen korak sa zapisanim uslovom za povratak: procenjen najgori slučaj je imenovan brojkom, a plan se automatski vraća na korak čim pilot pokaže merljiv gubitak.](diagrams/ch30-preskocen-korak.png){: width="80%" }
 
 ### Kad se jedna greška pretvori u sistematsku pretragu iste klase
 

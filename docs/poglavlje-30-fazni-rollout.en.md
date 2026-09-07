@@ -147,7 +147,7 @@ shutdown — it wasn't deleting active protection, it was removing a facade
 that had looked like protection for years after it had long stopped being
 one.
 
-![Timeline of the phased rollout: a numbered plan, reality exposing a gap the alert didn't catch, two inserted steps, a reordered sequence, and a replaced alerting mechanism, with the most critical part of the fleet deliberately placed last.](diagrams/ch29-vremenska-linija.png){: width="95%" }
+![Timeline of the phased rollout: a numbered plan, reality exposing a gap the alert didn't catch, two inserted steps, a reordered sequence, and a replaced alerting mechanism, with the most critical part of the fleet deliberately placed last.](diagrams/ch30-vremenska-linija.png){: width="95%" }
 
 ![Audit before shutting down the old alerting system: of 23 old alerts, 16 hadn't received a single data point in over a year — they looked "green" only because the absence of data had been interpreted as a normal state.](diagrams/dashboard-alarm-audit.png){: width="95%" }
 
@@ -175,7 +175,7 @@ without this condition would be a hope; skipping it with this condition
 is a verifiable bet that automatically reverses the moment evidence says
 otherwise.
 
-![A skipped step with a written condition for its return: the estimated worst case is named with a number, and the plan automatically reverts to the step the moment the pilot shows measurable loss.](diagrams/ch29-preskocen-korak.png){: width="80%" }
+![A skipped step with a written condition for its return: the estimated worst case is named with a number, and the plan automatically reverts to the step the moment the pilot shows measurable loss.](diagrams/ch30-preskocen-korak.png){: width="80%" }
 
 ### When one bug turns into a systematic search for the same class
 

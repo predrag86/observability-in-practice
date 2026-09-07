@@ -200,8 +200,8 @@ Originalne (pre rekonstrukcije) slike su sačuvane radi poređenja u
 | `ch26-dvosmeran-odnos.png` | `scripts/diagrams/ch26_dvosmeran_odnos.py` | ✅ sr + en |
 | `ch27-tri-sloja.png` | `scripts/diagrams/ch27_tri_sloja.py` | ✅ sr + en |
 | `ch28-cetiri-replay.png` | `scripts/diagrams/ch28_cetiri_replay.py` | ✅ sr + en |
-| `ch29-vremenska-linija.png` | `scripts/diagrams/ch29_vremenska_linija.py` | ✅ sr + en |
-| `ch30-ciklus-revizije.png` | `scripts/diagrams/ch30_ciklus_revizije.py` | ✅ sr + en |
+| `ch30-vremenska-linija.png` | `scripts/diagrams/ch30_vremenska_linija.py` | ✅ sr + en |
+| `ch31-ciklus-revizije.png` | `scripts/diagrams/ch31_ciklus_revizije.py` | ✅ sr + en |
 | `dashboard-alarm-audit.png` | `scripts/diagrams/dashboard_alarm_audit.py` | ✅ sr + en |
 | `dashboard-alert-streak.png` | `scripts/diagrams/dashboard_alert_streak.py` | ✅ sr + en |
 | `dashboard-authgap.png` | `scripts/diagrams/dashboard_authgap.py` | ✅ sr + en |
