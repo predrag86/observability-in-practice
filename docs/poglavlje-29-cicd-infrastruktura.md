@@ -22,6 +22,12 @@ razlog da promeniš sam proces koji ga je proizveo?
 
 ### Dva JSON fajla, jedna sekunda razmaka
 
+Poglavlje 6 je ovaj obrazac — "par veličina, standardna i uvećana, jedna od njih
+propusti izmenu koju je druga dobila" — već predstavilo kao jedan od tri opšta
+načina na koje registrovanje revizije i njeno stvarno lansiranje tiho divergiraju.
+Ovde je taj isti obrazac razrađen kao potpun slučaj, sa procesom koji ga je
+proizveo i procesom koji ga je na kraju zaustavio.
+
 Jedan zakazani posao za obradu podataka izvršavao se u dve varijante: standardnoj, i
 "LARGE" varijanti za posebno zahtevan model koji je standardnu veličinu redovno gušio
 memorijom (OOM). Svaka varijanta je bila sopstvena revizija ECS task definicije — dva
