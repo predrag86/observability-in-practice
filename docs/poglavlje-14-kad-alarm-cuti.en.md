@@ -169,6 +169,68 @@ separate signal proving that mechanism is alive at all — because the
 mechanism itself, by design, can't vouch for itself at the moment it's
 dead.
 
+### Fifth case study: every code path has to report what it did, not just whether it reported something
+
+The first four case studies in this chapter uncover silence **from the
+outside** — someone notices an empty channel, then investigates backward.
+The fifth case builds something different: a mechanism that detects
+silence **from the inside**, automatically, at the moment someone adds
+new code, before anyone has to notice anything on a dashboard.
+
+The mechanism that decides what to do with every detected failure — send
+it, suppress it because it's within the repeat-suppression window,
+suppress it because it's a known duplicate, suppress it because the
+family is at a quiet level, suppress it because it hit a new threshold
+for that exception class, or an attempted send that itself failed —
+emits, on every such decision, exactly **one** outcome from a small,
+closed set. Importantly: this signal is emitted right at the decision
+point itself, never behind any gate — the same discipline this chapter
+already demands of the raw failure counter (it has to be recorded before
+any decision about sending, not after).
+
+Because these outcomes are, by construction, **complete and mutually
+exclusive** — every decision belongs to exactly one category, never zero,
+never two — one simple, self-checking invariant becomes possible: the sum
+of all outcomes for a family within some time window has to be **exactly
+equal** to the number of detected failures for that same family in the
+same window. If it doesn't match, one of two things happened — either
+someone added a new decision branch to the code (a new suppression
+reason, say) and forgot to add the matching outcome emission alongside
+it, or the transport itself is silently losing part of the signal. Either
+way, **the mismatch itself is the alert** — nobody has to remember in
+advance to test that particular new code branch; the check is built into
+the shape of the data itself, not into someone's memory to add it
+afterward.
+
+The motivating case, measured before this invariant existed at all: the
+question "was anyone actually notified" for a specific family of jobs
+could only be answered by manually reading raw log lines. One family was
+discovered this way to be sending only part of its alerts while silently
+suppressing the rest — for weeks, unnoticed, because nobody was counting
+sent against suppressed against actually-detected failures, one against
+the other.
+
+This ties directly back to the lesson from the first case study: the
+invariant doesn't stop someone from writing a new, overly aggressive
+suppression rule — that decision still requires review, just like the
+mechanism from the first case. What the invariant guarantees is something
+narrower but just as valuable: whatever the code intends to do, it has to
+**say so out loud**, in a form that's automatically checked against
+reality — instead of trusting that every future contributor will
+remember to update documentation or add the emission call in the right
+place.
+
+The same scheme, once it proved valuable, was reused on another, related
+mechanism (one-click retry of failed jobs) — there with eight possible
+outcomes instead of six, the same rule: a new code branch in the decision
+logic **must** emit one of the outcomes, or the reconciliation stops
+matching. The general lesson goes beyond the specific mechanism: whenever
+a system decides among several possible outcomes for the same event, and
+it's easy to add a new decision branch while forgetting the accounting
+that goes with it, it's worth looking for the next place in your own
+system where the same shape of problem applies — this pattern is rarely
+used just once, once it proves useful.
+
 ## 14.3 Analytical section — why almost nobody else writes about this
 
 ### An anti-spam mechanism encodes an assumption about the shape of failure
@@ -248,6 +310,14 @@ while correct-but-wrongly-calibrated looks like calm.**
   separate signal proving the mechanism itself is alive — silence because
   "everything's clean" and silence because "the check broke" look
   identical from the outside.
+
+- When a mechanism decides among several possible outcomes for the same
+  event (send / suppress for reason X / suppress for reason Y / send
+  failed), make those outcomes complete and mutually exclusive, and emit
+  exactly one per decision, unconditionally. The sum of all outcomes must
+  equal the number of raw events — that invariant, on its own, reveals
+  when a new code branch has been added without a matching emission,
+  without relying on anyone's memory to check it by hand.
 
 ## 14.5 Exercise for the reader
 
