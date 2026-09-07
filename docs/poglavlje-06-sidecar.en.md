@@ -153,6 +153,123 @@ was lost before it ever reached the sidecar at all.
 
 ![The flush window the sidecar gets before shutdown (stopTimeout) covers only the second hop — sidecar to gateway. It doesn't cover the first hop — the asynchronous buffer in the main container to the sidecar over localhost — which is lost without a trace if the job shuts down before the next periodic send.](diagrams/ch06-flush-prozor.png){: width="75%" }
 
+### Drift through revisions: three concrete failures and how they're caught now
+
+All the traps listed so far in this chapter happen **within** a single
+version of the task definition — how it's configured, how it shuts down,
+what it receives. There's a completely different class of failure, one
+that has nothing to do with the content of any single revision: **the same
+task family can be launched from more than one place, and each of those
+places remembers its own revision number.** Registering a new, correct
+revision with the sidecar doesn't mean anyone has actually started using
+it — it's only recorded in AWS as a possibility, while every launcher keeps
+running whatever revision number it was last explicitly pointed at.
+
+![One family, three independent launch points — each pinned to its own revision; registering a new revision doesn't update any pin automatically.](diagrams/ch06-pinovi-driftuju.png){: width="90%" }
+
+Three real cases of this pattern, each different:
+
+1. **A size pair, one half forgotten.** One task family exists in two
+   sizes — the standard variant and a "LARGE" variant for a particularly
+   demanding daily window — registered as adjacent revisions of the same
+   pair. When the sidecar was added, the new standard revision was
+   registered correctly — but the LARGE half of the same pair was
+   registered **without** the sidecar, missed because the pair was
+   treated as one change instead of two. The result: the LARGE variant
+   ran completely blind to observability for days — no metrics, no logs,
+   no traces — until the fleet-wide weekly check (described later in this
+   chapter) caught it. The full course of this specific incident —
+   including exactly how long the detection lag was and why it was
+   exactly that long — is worked out as the central example in Chapter 29.
+2. **A family that never even entered the onboarding wave.** One family
+   has a launcher that hardcodes **two** separate pinned revisions for
+   two different operating modes, not one. The onboarding wave that
+   systematically went through every family and added the sidecar simply
+   skipped this one, on the assumption "one family = one pin" — the
+   failure wasn't in the execution, it was in the premise. Several
+   failures a day went unnoticed for weeks, not because the alert wasn't
+   working, but because the family never even produced a signal the
+   alert could read.
+3. **A change unrelated to observability that erased the sidecar
+   anyway.** The third case wasn't even an attempt to add or remove
+   anything related to telemetry — a new revision was registered purely
+   to double the family's CPU limit, but in the process, by cloning from
+   the wrong starting revision, the image tag was silently reverted to
+   `:latest` — and `:latest` is the version without the sidecar. This
+   case stayed a potential harm rather than an actual one, because no
+   launcher had yet been moved to that revision — but it was caught as a
+   trap waiting for the first person who decides to "move to the latest
+   version" without checking whether that latest version is actually
+   still instrumented.
+
+The common thread across all three cases: **registering a revision and
+launching a revision are two separate acts, and the drift between them is
+invisible until someone explicitly checks for it.** Hence the rule that
+now applies to every change to a family: a new revision is created by
+cloning the revision that is **currently actually pinned** by the
+launcher, never the latest one in the console and never an arbitrary older
+one — forward, never backward, never sideways. And since one family can
+have more than one launcher (an environment variable, a hardcoded number
+in code, even an EventBridge rule with no revision number that
+automatically picks the latest active one), every pin has to be found and
+explicitly repointed — never assume that the one pin you found is the only
+one that exists.
+
+Checking that a new revision has actually reached traffic, not just the
+AWS registry, uses the same tool already mentioned earlier in the
+chapter — `target_info` — just broken down by revision number:
+
+```promql
+count by (aws_ecs_task_revision) (last_over_time(target_info{service_name="family-name"}[24h]))
+```
+
+If the expected new revision number doesn't show up in the result, no
+launcher has been moved yet — the dashboard can look "green" based on
+stale data until the pins are checked one by one. Alongside this
+per-family check, the system today also has an automated, weekly
+fleet-wide check that compares every family against its own revision
+history and flags when a newer revision drops out of the sidecar's
+keep-list, or when two revisions in the same size pair differ on whether
+they carry the sidecar. That check has one structural limitation worth
+remembering: **it compares a family against itself — it doesn't know
+which revision the launcher is actually running.** A report that a newer
+revision lost the sidecar can mean either "harmless, the launcher is still
+on the good old revision" or "active outage, the launcher has already
+moved" — telling the two apart requires manually checking the pin; the
+tool only points to where to look.
+
+### Being on the "instrumented" list doesn't mean anything actually goes out
+
+The weekly fleet coverage check, already described above, maintains a
+list of families considered instrumented — any family that emits at least
+a basic identity to the observability platform gets added to that list
+and dropped from the "not yet onboarded" list. A review of the whole
+list, carried out with that same check, found that the list was measuring
+the wrong thing for six families: five of the six had simply never been
+mentioned at all — not present on any registered revision, not a case of
+falling out of a pair. The sixth was subtler and more interesting: a
+family that **is** on the list, whose sidecar container runs reliably and
+reliably reports `service.name` — everything the presence check verifies.
+What the check doesn't verify: whether the application container has
+anywhere to send anything at all. This particular family was missing the
+environment variable for the collector's destination address entirely,
+and the image it runs didn't even carry the OpenTelemetry library — the
+result is no traces, no logs, not even application metrics, nothing
+except what the sidecar container itself measures about itself.
+
+The obvious fix — add the missing variable and call it done — was
+deliberately **not** made. The reason: adding just the variable would
+make the family *look* fully instrumented on the coverage list, while the
+image would still have nothing to export even once it knew where to send
+it. The result would be worse than the current state, not better — the
+current state at least openly admits something is missing; a "fixed"
+state would hide that behind a green checkmark on the list, while the
+real fix (adding the SDK to the image) stays out of scope for this
+particular round of changes. The coverage list measures **the presence of
+the mechanism**, not **the output of the mechanism** — two things that
+coincide in nine cases out of ten, often enough that the difference goes
+unnoticed until someone deliberately looks for it.
+
 ## 6.3 Analytical section — sidecar versus agent, and the boundary where sidecar stops paying off
 
 ### Why sidecar, not node-agent, for this class of workload
@@ -246,6 +363,22 @@ recognizing at what scale that claim stops holding.**
   sidecar over localhost. For short-lived processes, the fix has to happen
   on the application side: explicit buffer flushing before exit, not
   relying on someone else's shutdown window.
+- A task family can be launched from more than one place (an env
+  variable, a hardcoded number in code, an EventBridge rule) — before
+  declaring a change complete, find EVERY pin, not just the first one
+  you come across.
+- Always create a new revision by cloning the revision that's currently
+  actually pinned by the launcher — never the latest one in the console,
+  never an arbitrary older one. Forward, never backward, never sideways.
+- After every change, verify that the new revision number has actually
+  reached traffic (`target_info` broken down by `aws_ecs_task_revision`),
+  not just that it was successfully registered in AWS — registering and
+  launching are two separate acts.
+- A coverage check that only looks at the presence of the mechanism
+  (sidecar is running, reports identity) doesn't guarantee the mechanism
+  has anything to export — don't add missing variables just to make a
+  family pass the check if the image behind them still lacks the SDK;
+  that hides the gap instead of closing it.
 
 ## 6.5 Exercise for the reader
 
