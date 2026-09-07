@@ -229,6 +229,36 @@ pokreće.** Prijava da je novija revizija izgubila sidecar može značiti
 prekid, launcher je već pomeren" — razlikovanje ta dva zahteva ručnu
 proveru pina, alat samo ukazuje gde da se gleda.
 
+### Na listi "instrumentirano" ne znači da nešto stvarno izlazi
+
+Nedeljna provera pokrivenosti flote, već opisana iznad, održava listu
+porodica koje se smatraju instrumentiranim — svaka koja emituje makar
+osnovni identitet u platformi za posmatranje ulazi na tu listu i skida se sa
+liste "još nije onboardovano." Revizija cele liste, sprovedena istom
+proverom, otkrila je da ta lista meri pogrešnu stvar za šest porodica: pet od
+šest jednostavno nikad nije ni bilo pomenuto — nema ih ni na jednoj
+registrovanoj reviziji, ne slučaj da su ispale iz para. Šesta je bila
+suptilnija i zanimljivija: porodica koja **jeste** na listi, čiji sidecar
+kontejner redovno radi i redovno javlja `service.name` — sve što provera
+prisustva proverava. Ono što provera ne proverava: da li aplikacioni
+kontejner uopšte ima kud da pošalje bilo šta. Ovoj konkretnoj porodici je
+nedostajala promenljiva okruženja za odredišnu adresu kolektora u
+potpunosti, a slika koju pokreće nije ni nosila OpenTelemetry biblioteku —
+rezultat nisu trejsevi, nisu logovi, nisu ni aplikacione metrike, ništa osim
+onoga što sam sidecar kontejner meri o samom sebi.
+
+Očigledan popravak — dodati nedostajuću promenljivu i nazvati stvar
+gotovom — namerno **nije** urađen. Razlog: dodavanje same promenljive bi
+učinilo da porodica *izgleda* potpuno instrumentirana na listi pokrivenosti,
+dok slika i dalje ne bi imala šta da izveze čak i kad zna kuda da šalje.
+Rezultat bi bio gori od trenutnog stanja, ne bolji — trenutno stanje bar
+otvoreno priznaje da nešto nedostaje; "popravljeno" stanje bi to sakrilo iza
+zelene kvačice na listi, dok istinska popravka (dodavanje SDK-a u sliku)
+ostaje van dometa ove konkretne runde promena. Lista pokrivenosti meri
+**prisustvo mehanizma**, ne **izlaz mehanizma** — dve stvari koje se
+poklapaju u devet od deset slučajeva, dovoljno često da razlika ostane
+neprimećena dok je neko ne potraži namerno.
+
 ## 6.3 Analitički deo — sidecar naspram agenta, i granica gde sidecar prestaje da se isplati
 
 ### Zašto sidecar, a ne node-agent, za ovu klasu opterećenja
@@ -327,6 +357,10 @@ tvrdnja prestaje da važi.**
   prometa (`target_info` raščlanjen po `aws_ecs_task_revision`), ne samo
   da je uspešno registrovan u AWS — registrovanje i lansiranje su dva
   odvojena čina.
+- Provera pokrivenosti koja gleda samo prisustvo mehanizma (sidecar radi,
+  javlja identitet) ne garantuje da mehanizam ima šta da izveze — ne
+  dopunjuj nedostajuće promenljive samo da bi porodica prošla proveru, ako
+  slika iza njih i dalje nema SDK; to skriva prazninu umesto da je zatvori.
 
 ## 6.5 Vežba za čitaoca
 
