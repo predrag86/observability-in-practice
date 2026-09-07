@@ -169,6 +169,18 @@ keeps rising after an aggressive cut to the base rate.
 
 ![Retention and write cost drop to zero below one measurable volume threshold, while processing cost stays independent of the sampling percentage because it's billed on the raw input, before the retention decision.](diagrams/ch12-prag-troska.png){: width="78%" }
 
+A concrete breakdown of the monthly bill into these three components,
+measured in the period when this question was first seriously raised,
+shows the same principle in numbers: processing came to roughly nine
+percent of total cost, writing about three-quarters, and retention the
+rest — a ratio that, once measured, didn't shift for months, because it
+tracks a fixed cost per component, not traffic volume. It follows
+directly that roughly nine-tenths of the total trace bill, in this
+particular period, really was under the sampling decision's influence —
+while the remaining nine percent was there regardless of what sampling
+does, exactly as much as the section above already announced
+qualitatively.
+
 ### Two counters, two different points in the same pipe
 
 The measurement trap from § 12.2 (spanmetrics undercounts actual volume,
@@ -229,6 +241,72 @@ dashboards and the alert (specifically, the alert that reads
 traces before anything is dropped — moving the decision upstream would mean
 those dashboards and that alert no longer see what they claim to see.
 
+### The obstacle that isn't just memory: a trace has to keep hitting the same collector
+
+The memory pressure from the previous section is real, but it isn't the
+only, or even the deepest, obstacle a self-managed tail sampling would
+carry. For such a sampler to make a correct decision at all, it first has
+to see the **entire** trace in one place — which means every span of one
+and the same trace has to keep hitting the **same** collector instance,
+no matter how many the fleet currently has. In practice this is solved
+with a two-layer topology: the first layer routes incoming spans, by
+their trace ID, to one specific instance of the second layer, which is
+the one that actually holds the trace in memory and decides. For the
+first layer to be able to reliably address "this specific instance," it
+needs a mechanism that assigns each instance its own, stable address —
+and this implementation's gateway, described in Chapter 4, sits behind an
+ordinary network load balancer, with one shared address that routes to
+whichever instance happens to be alive, not to a particular one.
+
+Even if that part were solved, a second, harder problem remains: that
+same gateway autoscales up and down depending on load. Every such scaling
+event changes the number of live collector instances — and a change in
+instance count necessarily shifts which instance is responsible for which
+range of trace IDs. A trace already in progress, with a few spans already
+arrived at one instance, can suddenly have its next span routed to a
+completely different instance the moment the fleet changes mid-trace.
+This isn't a rare, edge case happening once in a thousand traces — it's
+routine behavior every time the fleet scales, and the fleet scales
+exactly when traffic is most intense, which is also the moment traces are
+most numerous and most likely to have some of them survive right through
+that transition. The server-side approach removes this whole problem at
+the root: because the platform receives the complete trace before
+deciding anything, there's no point at which spreading spans across
+multiple instances could ever compromise a trace's integrity.
+
+### A failure that's already known and documented elsewhere
+
+The second reason from the previous section — that a self-managed sampler
+would degrade the dashboards and alerts that depend on trace-derived
+metrics — has a concrete, publicly documented mechanism behind it, one
+that someone else discovered and reported before this implementation ever
+had to learn that lesson the hard way. A tail sampler has to hold a trace
+in memory through a fixed decision window before making a final retention
+decision. Independently of that, the step that generates metrics from
+traces has its own, separately configured tolerance window — and it
+silently drops any span whose end time is older than that window at the
+moment it arrives. When the sampler's decision window is close to or
+longer than the metrics generator's tolerance window, spans systematically
+arrive "too late" from the generator's point of view — not because
+anything is wrong with the traffic itself, but because two independently
+configured time windows collide. The result: trace-derived metrics
+silently drop to zero, at exactly the moment they should be showing the
+real state of the system.
+
+The person who first reported this failure confirmed that shortening the
+sampler's decision window brings the metrics back to normal; the more
+durable, published fix was on the other side — widening the metrics
+generator's tolerance window. This implementation couldn't apply that
+second fix itself, because that part of the pipeline isn't held by it but
+by the platform — which means a self-managed sampler here would be stuck
+between two mutually exclusive requirements: a decision window short
+enough for the metrics to stay accurate, versus a window long enough for
+slow-trace rules to have anything left to measure. The server-side
+approach avoids this dilemma entirely, because both steps — deciding and
+generating metrics — operate on the same, complete, still-unfiltered
+trace stream, before anything is split into two independent windows that
+can disagree.
+
 ### The cost of an instant retention decision, without full insight: a counterfactual scenario
 
 It's worth playing out the head sampling alternative concretely on the same
@@ -275,6 +353,17 @@ step; sampling that happens after full insight is a decision.**
   same point in the pipeline, never divide one by the other to get a
   "coverage percentage" — each counter in the pair has exactly one purpose
   (drop rate, or billable volume), not both.
+- Before building tail sampling on your own collector, check whether your
+  infrastructure can even guarantee that every span of a trace keeps
+  hitting the same instance — if the fleet scales up and down behind a
+  shared address, with no stable way to address an individual instance,
+  partial traces aren't a rare bug but a routine consequence of every
+  scaling event.
+- When a tail sampler and a trace-derived metrics generator share the same
+  data stream but have independently configured time windows, check
+  whether those windows can collide — a decision window longer than the
+  other step's tolerance window silently drives derived metrics to zero,
+  with no error message at all.
 
 ## 12.5 Exercise for the reader
 
@@ -294,3 +383,5 @@ made before the error even existed?
 - [Best practices for policies — Grafana Cloud documentation](https://grafana.com/docs/grafana-cloud/adaptive-telemetry/adaptive-traces/guides/best-practices-policies/)
 - [Sampling strategies for tracing — Grafana Cloud documentation](https://grafana.com/docs/grafana-cloud/send-data/traces/configure/sampling/)
 - [Maximize data value and cut costs: Adaptive Telemetry for metrics, logs, traces, and profiles in Grafana Cloud — Grafana Labs blog](https://grafana.com/blog/adaptive-telemetry-suite-in-grafana-cloud/)
+- [grafana/alloy#5682 — tail sampling appears to break Tempo metrics-generators](https://github.com/grafana/alloy/issues/5682)
+- [grafana/tempo#6587 — metrics_ingestion_time_range_slack vs tail-sampling decision_wait](https://github.com/grafana/tempo/issues/6587)
