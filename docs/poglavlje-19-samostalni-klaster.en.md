@@ -170,6 +170,69 @@ before.
 
 ![A seven-day graph of queries in flight: the "truly idle" threshold was never reached, not once across the whole week — measurement, not assumption, showed that automatic shutdown wouldn't have had a real window to operate in here.](diagrams/dashboard-rightsizing.png){: width="95%" }
 
+### An alert that guards a fix can itself fail exactly when it's needed
+
+The fix described earlier in this chapter — trimming overly granular,
+per-fragment log records from the logging layer, applied by hand to every
+node — got its own dedicated pair of alerts to watch specifically for its
+regression: the first, more precise one counts how many times the exact
+text of the records meant to be silenced shows up within the window (the
+healthy state is strictly zero); the second, coarser one tracks the total
+byte volume of the logging layer as a backup check in case the first one
+ever fails.
+
+The first time that pair actually fired, the cause wasn't a regression of
+the fix itself — that was checked and confirmed untouched before, during,
+and after the event. The cause was a completely unrelated bug on the side
+of the application sending queries to the cluster: the application had
+embedded a date string in the wrong, bare text format inside one query;
+the cluster's attempt to automatically parse that string as a date failed
+**per execution fragment**, and every failure wrote a full error trace to
+the log. The query nonetheless completed successfully and returned a
+result to the caller — the application that sent it had no sign anything
+was wrong. Within a few hours, the pattern repeated often enough to push
+the logging layer's daily volume to several times its usual level.
+
+The coarser, backup alert fired correctly. But the more precise, primary
+alert — the very one whose job is to name which record is responsible —
+at that moment reported neither success nor failure, but failed outright:
+its text search over the multi-hour window didn't finish before the
+timeout, because the window now carried several times more data than it
+did when the alert was designed. This is a failure pattern worth naming:
+the alert failed **exactly under the condition it exists for** — the
+larger the volume that needs reporting, the smaller the chance the alert
+gets to measure it in time. Had it instead failed silently, no one would
+even have noticed that something had gone wrong with the alert itself,
+not just with the system it was watching.
+
+It was worse than that: because the error state still used the same
+notification text template as a successful measurement, the message that
+arrived didn't clearly say "I didn't manage to check" — it looked like a
+measurement, with a missing number in place of a value. The fix wasn't to
+make the search faster at any cost (a shorter window is enough, since the
+healthy state is strictly zero and there's nothing to smooth out by
+averaging), but to explicitly separate the notification for the error
+state from the notification for an actual measurement, so that an alert
+that didn't get to check says so, instead of impersonating a measurement
+it never made.
+
+There's a third mistake worth recording, in hindsight: when the coarser,
+backup alert was first tuned, its threshold was justified by the claim
+that any regression would be hard to distinguish from an ordinary working
+day — because, the argument went, both patterns were similar in size.
+That claim rested on a measurement taken in a window that itself still
+carried leftover volume from before the fix, not on the actual quiet
+state afterward. When the quiet state was later measured separately,
+isolated from that transition period, it turned out the real gap between
+a regression and a normal day was **an order of magnitude larger** than
+the original estimate claimed — the threshold, it turned out, could have
+been set far more sensitively than anyone thought. This is the same
+"measure, don't assume" discipline that decided the automatic-shutdown
+question earlier in the chapter, now applied to tuning an alert
+threshold — and it shows that even a team that measures can measure the
+wrong window and draw an inflated conclusion, if the measurement window
+isn't carefully isolated from the transition state it's measuring.
+
 ## 19.3 Analytical section — why the standard lever doesn't work here
 
 ### The FinOps standard ranks the levers, but warns of its own limits
@@ -284,6 +347,11 @@ and no less, and staying assembled.
   with a text-based rule could easily produce invalid structure and break
   every panel reading that source with an error, instead of quietly
   dropping one field.
+
+- When you build an alert to guard a fix against regression, also check
+  whether the alert itself can fail exactly under the load that
+  regression causes — and never let the state "I didn't get to check"
+  look like a measured value in the same notification.
 
 ## 19.5 Exercise for the reader
 
