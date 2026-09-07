@@ -50,9 +50,9 @@ flote.** Dva odvojena zadatka žive u ovoj stanici:
 
 - **Redakcija osetljivih atributa** (SQL tekst, connection stringovi) —
   primenjena samo na delove flote gde debug vrednost punog SQL teksta nije
-  potrebna. Za deo flote gde je pun SQL tekst i dalje neophodan za dijagnozu
-  (obrađeno u Poglavlju 18), redakcija se namerno **ne** primenjuje —
-  odluka doneta eksplicitno, po timu/servisu, ne globalno.
+  potrebna. Za deo flote gde je pun SQL tekst i dalje neophodan za dijagnozu,
+  redakcija se namerno **ne** primenjuje — odluka doneta eksplicitno, po
+  timu/servisu, ne globalno.
 - **Normalizacija naziva spanova** — span koji bi inače nosio promenljiv
   datum ili ID u svom imenu (npr. `process-report-2026-08-21`) se
   normalizuje na stabilan obrazac (`process-report`) pre nego što ide dalje.
@@ -65,6 +65,37 @@ atribute (region, nalog, tip infrastrukture) **samo tamo gde nedostaju** —
 ako je pošiljalac već poslao sopstvenu vrednost, ona se ne dira. Ovo je
 namerna odluka: pošiljalac uvek zna više o sebi nego što gateway može da
 pogodi iz konteksta u kome prima podatak.
+
+### Kad pošiljalac ne kaže ništa, "popuni, ne prepiši" popunjava pogrešnim identitetom
+
+"Popuni, ne prepiši" zvuči umirujuće, ali prećutno pretpostavlja da je
+pošiljalac uopšte nešto rekao. Realan slučaj otkriven u produkciji pokazuje
+šta se dešava kad pošiljalac ne postavi nijedan od tih atributa: gateway
+tada ne ostavlja polja prazna, nego ih popunjava **sopstvenim**, gateway-ovim
+identitetom — svojom zonom dostupnosti, svojim identitetom zadatka, svojim
+tipom infrastrukture. Ništa u pravilu ne pravi razliku između "pošiljalac
+namerno nije postavio ovo polje" i "pošiljalac uopšte ne liči na
+infrastrukturu koju gateway pretpostavlja" — prazno se popunjava bez obzira
+čije je telemetrija zapravo bila.
+
+Merljiva šteta bila je konkretna: zona dostupnosti se, kao popunjen atribut,
+promoviše u pravu oznaku metrike na telemetriji pošiljaoca koji sa tom
+zonom nema nikakve veze — pa svaki put kad se **sam gateway** ponovo
+postavi (ne pošiljalac), oznaka zalepljena na tuđu telemetriju se menja,
+fragmentišući njenu istoriju: stare serije zastarevaju, nove počinju, a
+izračunavanje brzine promene pokazuje prazninu tačno u trenutku kad se sa
+pošiljaocem ništa nije promenilo. Drugi, srodan efekat: podaci o identitetu
+procesa na toj telemetriji su nestabilni iz istog razloga, menjaju se na
+svaki redeploy gateway-a, iako identitet procesa koji se opisuje uopšte nije
+gateway.
+
+Popravka koja je usledila nije promenila samo pravilo "popuni, ne prepiši" —
+dodata je posebna, uska stanica, ubačena tačno posle `resourcedetection`, i
+namenjena samo saobraćaju pošiljaoca kod koga je ovaj obrazac otkriven: briše
+šačicu atributa za koje je utvrđeno da opisuju gateway, ne pošiljaoca. Samo
+pravilo "popuni, ne prepiši" nikad nije bilo pogrešno kao mehanizam — praznina
+je bila u pretpostavci da će svaki pošiljalac ili postaviti sopstvene
+vrednosti, ili mu neće smetati koje su vrednosti popunjene umesto njega.
 
 **5. `batch` — grupiši pre slanja.** Umesto da svaki pojedinačan zapis ide
 kao zaseban HTTP poziv ka cloud platformi, ova stanica ih grupiše u veće
@@ -211,6 +242,10 @@ stanici koja je pomerena, nego na svakoj stanici posle nje.
   sva tri tipa signala (metrike, logove, tragove) na ulaz sledeće stanice —
   nedostajuća veza ne ruši proces i nijedan alarm za pad zadatka je neće
   uhvatiti.
+- Ne veruj da "popuni, ne prepiši" znači "bezbedno za svakog pošiljaoca" —
+  proveri šta se upisuje kad pošiljalac ne postavi ništa, jer se prazno
+  polje tada popunjava identitetom same stanice koja ga popunjava, ne
+  ostaje prazno.
 
 ## 10.5 Vežba za čitaoca
 
