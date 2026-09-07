@@ -333,6 +333,31 @@ zakazan, periodičan posao — gde nema koristi od toplog keša između
 pokretanja koja su satima razdvojena — nije proizvoljan, nego usklađen sa
 sopstvenom logikom radnog opterećenja.
 
+### Ista promena, dva magacina, suprotan predznak — merenje odlučuje, ne pravilo
+
+Konkretno merenje na dva različita Snowflake magacina u istom sistemu ide
+korak dalje od opšteg principa iznad: pokazuje da identična izmena — skraćeno
+minimalno vreme aktivacije — nije samo pitanje "koliko kratko," nego pitanje
+sa **suprotnim** predznakom u zavisnosti od magacina.
+
+Na magacinu posvećenom periodičnom, zakazanom poslu, skraćivanje minimalnog
+vremena aktivacije je bilo najbolja pojedinačna popravka troška u celom
+sistemu — merenje je pokazalo da je većina pauza između upita duža od
+postojećeg minimuma, pa se kraći minimum direktno prevodi u uštedu bez ijedne
+izgubljene prednosti toplog keša (kojeg tu i tako nema). Na drugom, susednom
+magacinu koji opslužuje interaktivan, česti saobraćaj, potpuno ista izmena bi
+učinila trošak **gorim**, ne boljim — merenje je pokazalo suprotnu
+raspodelu: većina pauza između upita je kraća od postojećeg minimuma, pa bi
+skraćivanje samo umnožilo broj puta kad se magacin ponovo pokreće i plaća
+sopstveni minimum naplate po pokretanju, umesto da tu pauzu prosto sačeka.
+
+Presudni podatak nije tip posla niti intuicija o tome "ovaj magacin izgleda
+opterećenije" — presudan je stvaran raspored dužine pauza između upita, po
+magacinu, nevidljiv bez atribucije troška na nivo pojedinačnog upita.
+Pravilo koje sledi: promena minimalnog vremena aktivacije se nikad ne
+prepisuje sa jednog magacina na drugi kao "dobra praksa" — svaki magacin
+nosi sopstvenu raspodelu pauza, i ta raspodela, izmerena, jeste odgovor.
+
 ### Kontrafaktički scenario: šta bi ostalo nevidljivo bez ovog rada
 
 Zamislimo da je odluka bila "nemamo pristup infrastrukturi, pa nema šta da
@@ -396,6 +421,11 @@ izveštaj.
   automatski dokaz da izmena ne radi — proveri da li prag ili filter
   strukturno isključuje baš taj saobraćaj, pre nego što zaključiš da je
   sama izmena pokvarena.
+- Ne prepisuj podešavanje minimalnog vremena aktivacije sa jednog magacina
+  na drugi kao "dobru praksu" — ista izmena može uštedeti na jednom i
+  poskupeti drugi, u zavisnosti od raspodele pauza između upita specifične
+  za taj magacin. Izmeri po magacinu, nikad ne generalizuj iz jednog
+  slučaja.
 
 ## 24.5 Vežba za čitaoca
 
