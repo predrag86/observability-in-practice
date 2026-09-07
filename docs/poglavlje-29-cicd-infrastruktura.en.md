@@ -23,6 +23,12 @@ it?
 
 ### Two JSON files, one second apart
 
+Chapter 6 already introduced this pattern — "a pair of sizes, standard and
+enlarged, one of them missing a change the other received" — as one of three
+general ways registering a revision and actually launching it silently
+diverge. Here that same pattern is worked out as a full case, with the
+process that produced it and the process that eventually caught it.
+
 One scheduled data-processing job ran in two variants: a standard one, and a "LARGE"
 variant for a particularly demanding model that regularly OOM'd the standard sizing. Each
 variant was its own ECS task-definition revision — two separate, hand-maintained JSON files
@@ -119,9 +125,24 @@ incident, part of that table became reality, not just intent:
   This directly closes the broader shape of failure behind this incident — configuration
   that points at something that doesn't exist, reports success, and leaves the old system
   quietly running until someone notices the new one never came up at all.
+- The separation between the planning role and the apply role was verified
+  **adversarially, not just by design**: a dedicated CI step deliberately tries to run an
+  apply using the limited identity every pull request carries, and expects it to be
+  rejected in exactly one way — an explicit "access denied," not any other kind of error.
+  Green on that step means the pipeline's privileged boundary is still in place; red means
+  it's gone, silently, with no code change that would have announced it on its own.
 - CI now runs **lint, type checks, and self-tests** over the infrastructure's supporting
-  code (not just `terraform plan`), so a bug in the script that generates task definitions
-  no longer sails through unnoticed until the first production apply.
+  code (not just `terraform plan`) — the default rule set for static code analysis, with
+  two deliberately disabled; type checking invoked separately per directory, because one
+  shared invocation breaks on two files that carry the same module name in different
+  directories; and a set of standalone tests run as part of the same check. One trap here
+  is worth naming because it isn't specific to this project: a rule meant to find
+  unjustified rule exclusions gives a false picture if run in isolation, with every other
+  rule disabled — every existing exception suddenly looks unused, because nothing else
+  exists for it to be excluding anymore. The auto-fix for that same rule goes a step
+  further and deletes the entire accompanying comment, including the reason the exception
+  was written down in the first place. A tool that looks for unnecessary exceptions is,
+  viewed apart from the context it was meant for, its own biggest false positive.
 
 It's worth being honest about what hasn't shipped, too: event-driven detection (the
 table's fifth row) hadn't replaced the weekly sweep as of writing. This isn't a tidy,
@@ -129,6 +150,93 @@ closed case study with a perfect ending — it's a live, ongoing process, and sa
 plainly is more honest than polishing it.
 
 ![Before: a hand-maintained JSON registered straight to production, with no diff and no CI. After: the change goes through a PR, a plan-time check that the image exists, review, and only then merge and apply — from CI alone.](diagrams/ch29-pre-posle-cevovod.en.png){: width="92%" }
+
+### Nine days later: the same kind of error, one layer up
+
+The part that makes this chapter worth a second look instead of a one-time close: nine
+days after the review above, the exact same pattern repeated itself — not in the
+infrastructure, but in the documentation describing it.
+
+A routine consistency check, run right after the boundary from the previous section was
+closed, compared several documents against the account, against each other, and against
+the code beside them. The worst single finding: one stack's description still claimed the
+deploy role "still needs to" get that exact boundary and its test — while the outputs file
+in the SAME directory already exported that role's ARN and the list of allowed signers.
+Both prerequisites had, by the time the description was read, already been satisfied for
+days. The same document misdescribed its own mechanism in the very paragraph meant to
+prevent exactly that confusion — it said identity customization "appends" a segment at the
+end, when it actually replaces that entire segment.
+
+The second finding was more serious than stale text — a real, still-open gap, masked by a
+table that made it look closed. The table listed two replacements for paid security checks
+the free plan doesn't include: a step supposedly catching accidentally committed secrets,
+and a scheduled check that a release tag is still an ancestor of the main branch, as a
+substitute for protecting that tag from being moved. Checked against the actual pipeline:
+the step that catches secrets doesn't exist anywhere in it — there are eight code-quality
+check steps, and none of them scans for secrets. The tag check does exist, but ships
+deliberately inactive until a single command arms it — and at the time of the finding, that
+command still hadn't been run. The sentence in the document read as if both were already in
+place, on a repository that had, only recently, started issuing itself cloud credentials
+through the very boundary described above.
+
+The lesson is worth writing down without softening it: **a table that names what closes a
+gap is not the same as a table that records whether that gap is actually closed.** The
+first describes a plan; the second describes an account. When the two get mixed in the same
+paragraph, the document stays technically accurate at the moment of writing and becomes
+wrong the instant reality shifts — with no signal that it happened, because nothing in the
+text itself distinguishes "this will close the gap" from "this has closed the gap." That's
+the exact same shape of error as the two JSON task definitions from the start of this
+chapter, just one layer above the code: two places describing the same system state,
+maintained independently, silently diverged — except this time one of those two places was
+prose, not configuration, so no `plan` would ever have thought to compare it.
+
+### Cloning inherits identity too, not just the image base
+
+There's a third form of this same pattern, caught by the same weekly alert-coverage check
+that also caught the two-JSON-task-definitions case — but the cause this time wasn't two
+places being maintained independently that were supposed to agree; it was copying that
+carried over something that was never supposed to be carried over.
+
+Several task families were created by cloning someone else's task definition, because they
+needed exactly the same image starting point that other family already used — a faster
+path than writing a definition from scratch. The clone also copied the environment
+variable the sidecar uses to report its own service identity. Nobody updated it during the
+clone, since nothing in the cloning process itself draws attention to that one variable
+among dozens of others — the application container independently got its own, correct
+name, but the sidecar kept reporting the identity of the family it was cloned from.
+
+The effect: telemetry from three different families was silently flowing in under someone
+else's name, while those same three families, under their own name, were completely
+invisible in the observability platform — the dashboards and alerts tracking them kept
+working (they track ECS itself, not telemetry), but any investigation based on a family
+name had nothing to find. The concrete scale: two of the affected families were flowing
+their telemetry under the exact name of the single most expensive line item in the entire
+fleet — measurements show thousands of time series that, by label, belonged to that one
+expensive family, while actually describing something else entirely.
+
+What makes this case worth more than one more example of a wrong name: the weekly
+coverage-check tool itself, beyond detecting the problem, also offered an automatic fix
+suggestion — and that suggestion was systematically wrong in **every** case it had been
+applied to so far. The suggestion read: "the sidecar knows the correct name, overwrite the
+application side's name to match it." The assumption that the sidecar was the authoritative
+side sounded reasonable — the sidecar is the one sending telemetry — but measurement across
+all three real cases showed the opposite: in all three, the application carried the correct
+name, and the sidecar carried the inherited, borrowed identity. Had the tool's suggestion
+been applied without thinking, the fix would have overwritten the correct application name
+to match the sidecar's wrong one — confirming the wrong link instead of breaking it, and
+doing so twice on that exact same, most expensive family.
+
+The fix to the tool wasn't "reverse the suggestion" but "measure before suggesting a
+direction": the check now compares both sides against the family's **declared** name (the
+one the family assigns itself, independent of both the sidecar and the application),
+names exactly the side that deviates from it, and when neither side matches — which is
+possible when the declaration itself is stale too — it says "fix both" instead of guessing
+which one is "correct."
+
+The rule that remains: **a tool that correctly finds that a mismatch exists doesn't
+necessarily know which side is wrong.** The direction of an automatically suggested fix
+deserves the same suspicion as the finding itself — especially when the finding originated
+from copying, where it's easier to copy an error than to notice it.
 
 ## 29.3 Analytical section — the principle missing here already has a name
 
@@ -208,6 +316,18 @@ the difference this incident makes concrete instead of abstract.
   independently of the resource it's injected into — a hand-edited JSON file, a mutating
   webhook, or an operator CRD. Look for a reconciliation check; don't trust the injection
   mechanism on its own.
+- Role separation (planning versus applying, reading versus writing) is only worth as much
+  as its proof — a design on paper and a test that actively tries to break it are not the
+  same thing, and only the second survives the next code change with nobody paying
+  attention.
+- A document that names WHAT closes a gap is not proof that it's closed — before you trust
+  it, check the file system or the account, not the paragraph beside it. This applies to
+  documentation exactly as much as to configuration: both kinds of text can silently
+  diverge from reality, except no `plan` warns you when prose falls behind.
+- A tool that correctly finds a mismatch doesn't necessarily know which side needs fixing
+  — check the direction of an automatically suggested fix by measurement, just as much as
+  you check the finding itself, especially when the finding's cause is cloning (cloning
+  carries over errors too, not just structure).
 
 ## 29.5 Exercise for the reader
 
