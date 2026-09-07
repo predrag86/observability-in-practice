@@ -140,6 +140,113 @@ something specific has actually disappeared.
 
 ![Inbound and outbound byte flow through the outbound gateway, read as a pair: the divergence between the two lines, not either line on its own, is what reveals traffic loss.](diagrams/dashboard-natdiff.png){: width="95%" }
 
+### Same panel type, different query mode, different column name — with no error in the query at all
+
+A third example of the same class of bug, with an entirely different
+cause from the previous two, turned up on a dashboard that has nothing to
+do with the network but goes through the identical check: five tabular
+panels, right after being built, were displaying the raw column name
+`Value #A` instead of a readable name like "failed login attempts" or
+"distinct user count." The live query check would have missed this for
+the same reason as the previous two cases — the query was returning
+correct, non-empty data, and the number in the column itself was
+correct. The bug was entirely in what that column was called.
+
+The cause: the transformation that renames the column targeted a field
+named `Value` — the name that same transformation gets when a panel uses
+a **range** query. All five panels, however, used an **instant** query
+in table format, and an instant query returns the value under a name
+suffixed with the query reference's own identifier — `Value #A`, not
+`Value`. Renaming a field that doesn't exist under that name isn't an
+error that gets reported; it simply matches nothing and silently does
+nothing, letting the raw name pass through to the display unchanged.
+
+This is the same general lesson as the truncated title and the
+duplicated value from the previous example — a query check proves a
+panel isn't dead, not that it's displayed correctly — but with a cause
+their check couldn't have caught even in theory by any other means: two
+different query modes over the same data source and the same panel type
+don't automatically share the same output field name, and a
+transformation that assumes a fixed name doesn't complain when that
+assumption doesn't hold, it just stops working. The fix wasn't in the
+query but in the transformation: the rename was pointed at the actual
+field name an instant query really returns.
+
+### A tool that promises to cover multiple planes at once — and why that doesn't apply here
+
+There is a technology that promises exactly what the per-instance
+network interface plane calls for: throughput data straight from the
+kernel, without a single application change and without an agent that
+has to be installed separately on every service. It sounds like a
+shortcut that could replace part of the work described above. The
+implementation considered it — and rejected it, for the large majority
+of the fleet, for one structural reason: a tool like this reads directly
+from the host's Linux kernel, and most of the fleet doesn't run on a
+host the implementation manages at all, but on managed, serverless
+compute with no kernel access whatsoever. An independent research source
+dedicated to systems observability confirmed this explicitly, outside
+the implementation's own context: tools in this family "won't work with
+serverless technologies," and most solutions in that category assume a
+Kubernetes cluster that the implementation doesn't run at all.
+
+But the decision wasn't a simple "yes" or "no" for the whole tool — one
+specific product from the same family was promoted from "rejected" to
+"deferred," not "adopted," once it turned out to be technically
+different from the rest: it runs as a first-class component inside the
+collector the fleet already uses, so it doesn't require a new agent on
+the hosts that do have kernel access. For that small minority of hosts,
+this tool would provide throughput data per source-destination pair
+without relying on flow logs. Why it still stays deferred, not adopted,
+even there: the cost would be in cardinality — data per source/
+destination pair explodes the series count in exactly the way Chapter 11
+already warns to measure before adopting, not after — and the question
+this tool would solve first (packet drops from a per-interface DNS
+request-rate limit) already has a cheaper, existing answer: a single
+tool reading the network card itself, which already runs on those same
+hosts, at close to zero cost.
+
+The lesson isn't "tools like this aren't worth it" — the lesson is that
+a tool whose biggest advantage (running agentless, at the kernel level)
+is exactly what disqualifies it on most of a fleet that runs without its
+own kernel, and that even where the precondition for using it exists,
+the order of questions has to be "what problem does this solve, and do
+we already have a cheaper answer to that exact problem" — not "is this
+technically possible here."
+
+### Three seemingly unrelated failures, one shared threshold on the same network interface
+
+The three less obvious planes from the previous section — name
+resolution, instance metadata, clock sync — share something that none of
+them, looked at individually, reveals: all traffic to those services
+passes through the same narrow, shared packets-per-second threshold on
+the instance's own network interface. The threshold isn't per service,
+it's shared across all three — which means one chatty consumer can
+starve the other two, even while, looked at on its own, it stays below
+its own assumed limit. In practice the result looks like three entirely
+unrelated failures: name resolution intermittently fails, credential
+renewal fails with an authentication error, and the clock starts
+drifting enough to break certificate validation and log correlation —
+all on the same machine, at the same time, from the same cause that none
+of the three symptoms individually reveals.
+
+The obvious diagnostic tool doesn't help here. Turning on verbose DNS
+query logging sounds like a natural first step — but the throttling
+happens **at the network interface itself, before the query is even
+logged**, so a throttled query never reaches the log that would record
+it. More verbose logging wouldn't find anything, no matter how long it
+was left on.
+
+There is exactly one counter that reveals this class of failure at all,
+and it's nearly free — but it's wired up only on a minority of
+instances, the ones under direct host-level monitoring. The workload
+most prone to actually triggering this failure — the one that resolves a
+name or refreshes credentials on every single request, without caching —
+typically runs on managed compute without access to that level of
+monitoring, which means it's exactly where the failure is most likely
+and least visible. The silence of that one counter on the rest of the
+fleet doesn't prove there's no problem — it only proves that no one
+there is measuring it.
+
 ## 22.3 Analytical section — a principle known in two separate official forms
 
 ### The official documentation already uses the differential pattern, explicitly
@@ -231,6 +338,12 @@ report it can even speak.
   synchronization — all three are documented as neglected, with no
   default detailed telemetry, despite their direct impact on TLS, logs,
   and tracing.
+- If DNS, instance metadata, and the clock share the same network
+  interface, assume they share the same throughput threshold too — one
+  chatty consumer can starve the other two without either individually
+  crossing its own assumed limit, and a common tool like verbose DNS
+  logging won't catch it if the throttling happens before the query is
+  ever logged.
 - Split a handful of the most critical network alerts into a separate
   group that reads directly from a source independent of the shared
   collector — if every rule evaluates over the same pipeline that
@@ -241,6 +354,18 @@ report it can even speak.
   correctly; for rendering bugs (truncated text, a duplicated value
   where there should be one) you need to look at the rendered panel
   itself.
+- Don't assume that the same panel type over the same data source
+  returns the same output field name regardless of query mode — an
+  instant and a range query against the same source can name the value
+  differently, and a transformation that targets the wrong name doesn't
+  report an error, it just silently does nothing; check the actual field
+  name the query returns, not the one you assume from documentation or
+  from another panel.
+- When considering a tool that promises to cover multiple planes at once
+  (e.g., one that reads directly from the host kernel), first check
+  whether your fleet even has a kernel that tool could reach — its
+  biggest advantage is often exactly what excludes it from the largest
+  part of a fleet that runs without its own server.
 
 ## 22.5 Exercise for the reader
 
@@ -261,3 +386,5 @@ layer that is currently completely blind.
 - [Monitoring Route 53 Resolver endpoints with CloudWatch](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-resolver-with-cloudwatch.html)
 - [Manage Amazon EC2 instance clock accuracy using Amazon Time Sync Service and CloudWatch — AWS Cloud Operations Blog](https://aws.amazon.com/blogs/mt/manage-amazon-ec2-instance-clock-accuracy-using-amazon-time-sync-service-and-amazon-cloudwatch-part-2/)
 - [Synthetic Monitoring vs Real User Monitoring — Kentik](https://www.kentik.com/kentipedia/synthetic-monitoring-vs-real-user-monitoring/)
+- [The State of eBPF in Observability — Observability 360](https://observability-360.com/article/viewarticle?id=ebpf-in-observability)
+- [Grafana Beyla — eBPF-based auto-instrumentation](https://grafana.com/oss/beyla-ebpf/)
