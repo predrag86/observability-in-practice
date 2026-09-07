@@ -304,6 +304,49 @@ razlika između demonstracije i sistema koji se stvarno može koristiti u
 produkciji. Ovo je nezavisna potvrda da "sloj konteksta" implementacije
 nije nusprodukt opreza nego identifikovan, imenovan, presudan sastojak.
 
+### Sloj konteksta ima merljivu granicu: može biti pronađen i ipak zaobiđen
+
+Prethodni zaključak — da je sloj konteksta presudan sastojak, ne nusprodukt
+opreza — proverava se onim što se dešava kad se taj isti sloj postavi u
+alat gde ga agent može sam pronaći, umesto da mu bude ubačen ručno. Sažet
+prepis dokumenta zamki objavljen je unutar sopstvenog asistenta platforme
+za telemetriju, dostupan svim korisnicima. Rezultat je, u tri zasebna
+pokušaja sa sve konkretnijom formulacijom — najpre samo referenca, zatim
+pasus koji eksplicitno kaže kad se prepis primenjuje, na kraju blok sa
+konkretnim primerima pogrešnog i ispravnog upita — bio identičan svaki
+put: asistent bi u odgovoru upotrebio rečnik iz prepisa, interfejs bi čak
+i potvrdio da je prepis pronađen i pročitan, a upit koji je zaista pokrenuo
+ostao bi onaj isti, zabranjeni. U jednom takvom slučaju agent je brojač
+tipa "događaj" nazvao "nalik brojaču koji raste", pokrenuo upit koji tu
+pretpostavku koristi, dobio nulu, i samouvereno prijavio da se u tom
+periodu ništa nije desilo — dok je prepis, doslovno pronađen i naveden kao
+izvor, govorio suprotno.
+
+Nezavisno od ovog testa, jedno kontrolno pitanje van svega što prepis
+pokriva vratilo je uverljiv, uredno formatiran izveštaj o kašnjenju
+aplikacije koji je bio pogrešan za približno hiljadu puta — jer je jedna
+metrika kašnjenja beležena u sekundama, a agent ju je pročitao kao da je u
+milisekundama, i ništa u opštem znanju o observability-ju nije ga upozorilo
+na tu mogućnost. Baš zato što je pitanje bilo van pokrivenog opsega, ovaj
+promašaj je otkrio prazninu koju nijedan raniji test nije mogao — otud i
+zaključak implementacije da je namerno postavljeno kontrolno pitanje van
+pokrivenog opsega vrednije od još jednog uspešnog testa unutar njega.
+
+Razlika između ova dva ishoda i ranije opisanog sloja konteksta nije u
+sadržaju nego u mestu na kome pravilo živi. Sloj konteksta koji implementacija
+gradi učitava se modelu kao tekst, u istom prostoru gde model odlučuje šta
+će da uradi — a takvo pravilo se, kao što ovaj test pokazuje, može pronaći,
+navesti kao izvor, i ipak ne primeniti, jer ništa ga tehnički ne sprovodi u
+trenutku kad se upit stvarno pokreće. Nezavisan projekat iz iste oblasti
+gradi isto uputstvo jedan nivo niže: pravilo živi na serveru koji upit
+prima, proverava ga pre izvršenja, i **odbija** onaj koji krši granicu —
+umesto da model, posle čitanja saveta, ostane slobodan da ga ne posluša.
+Sloj konteksta ostaje vredna, jeftina navika koja hvata većinu slučajeva i
+košta samo disciplinu održavanja — ali tamo gde je cena jednog pogrešnog
+upita dovoljno visoka, ova razlika prestaje da bude teorijska: savetodavni
+tekst je tavanica koliko dobar meki pristup može da bude, ne zamena za
+sprovođenje koje model ne može da zaobiđe.
+
 ### Preporuka da agent ostane savetodavan, ne ovlašćen da menja stanje
 
 Nezavisna smernica o upravljanju ovom klasom alata u operativnom kontekstu
@@ -375,6 +418,10 @@ sloj konteksta oko njega ažuran, iskren, i dostupan u pravom trenutku.
   ne proveriš na sopstvenim, teško stečenim činjenicama — generički paket
   može biti nekorisan u najboljem slučaju, i aktivno pogrešan u najgorem,
   posebno tamo gde opisuje zastareo ili neprimenjen put pristupa.
+- Ne oslanjaj se na to da je savetodavni sloj konteksta pronađen i naveden
+  kao izvor — model ga može navesti i ipak postupiti suprotno; tamo gde je
+  cena pogrešnog upita visoka, pravilo treba da živi na strani koja upit
+  prima i može da ga odbije, ne samo na strani koja ga predlaže.
 
 ## 28.5 Vežba za čitaoca
 
