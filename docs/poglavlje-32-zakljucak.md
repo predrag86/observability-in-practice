@@ -104,6 +104,10 @@ odluka, ne štivo za čitanje unapred.
   mesta gde je potreban specifičan uvid u konkretan sistem — sloj
   konteksta, ne pristup alatima, je ono što razlikuje tačan odgovor od
   samouverenog pogrešnog.
+- Dve konfiguracije koje bi trebalo da budu identične (dve revizije,
+  dva okruženja) tiho divergiraju kad ih niko kontinuirano ne poredi —
+  periodična provera na sat ili nedelju je korak ka kontinuiranoj
+  rekoncilijaciji, ne njena zamena.
 - Redosled uvođenja u produkciju ide po radijusu dejstva, ne po
   tehničkoj pogodnosti — najkritičniji deo sistema dolazi poslednji,
   kao politika zapisana unapred, ne izuzetak po slučaju.

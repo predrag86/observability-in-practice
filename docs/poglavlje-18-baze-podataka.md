@@ -27,9 +27,11 @@ propušta polovinu problema koji se stvarno dešavaju?
 
 ### Dve ravni, nijedna nije podskup druge
 
-Implementacija koju knjiga prati posmatra upravljanu relacionu bazu kroz
-dve nezavisne ravni prikupljanja, namerno bez pokušaja da se jedna svede na
-drugu:
+Poglavlje 7 je ove dve ravni već predstavilo kao primer trećeg,
+najograničenijeg nivoa kontrole nad izvorom telemetrije. Ovde je fokus na
+tome šta se sa njima konkretno radi: implementacija koju knjiga prati
+posmatra upravljanu relacionu bazu kroz dve nezavisne ravni prikupljanja,
+namerno bez pokušaja da se jedna svede na drugu:
 
 - **Spoljna ravan** — metrike koje provajder izlaže na nivou instance i
   virtuelizacije: CPU, memorija, IOPS, latencija čitanja/pisanja, broj

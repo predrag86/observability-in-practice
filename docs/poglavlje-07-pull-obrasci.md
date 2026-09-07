@@ -66,6 +66,11 @@ druge, svaka pokazuje nešto što druga ne može:
 
 ![Spoljašnja ravan (CloudWatch) vidi CPU i replika kašnjenje čak i kad baza odbija konekcije; unutrašnja ravan (postgres_exporter) vidi koja tabela zapravo troši sekvencijalne skenove — ovde `audit_log`, dobar kandidat za indeks.](diagrams/dashboard-rds.png){: width="95%" }
 
+Ovde je ravni dovoljno predstaviti kao primer trećeg nivoa kontrole — šta
+se sa njima radi dalje (kad koja ravan zna nešto što druga strukturno ne
+može, i šta konkretno propušta tim koji gleda samo jednu) razrađeno je
+dublje u Poglavlju 18.
+
 **Samostalno upravljan distribuirani klaster (tipa Dremio) — agent po
 čvoru.** Za razliku od upravljane baze, ovde tim ima potpunu kontrolu nad
 hostom — može da instalira šta god treba. Rešenje: Grafana Alloy instaliran
