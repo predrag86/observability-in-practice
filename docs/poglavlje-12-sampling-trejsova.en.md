@@ -56,7 +56,7 @@ base rate:
   probabilistic rate randomly keeping a handful of copies of the same
   pattern, or none at all.
 
-![Trace retention decision: drop policies act as an absolute veto and are evaluated first; keep policies operate on OR logic with an effectively random order; only if none decides does the base probabilistic rate come into play.](diagrams/ch12-sampling-policy.png){: width="88%" }
+![Trace retention decision: drop policies act as an absolute veto and are evaluated first; keep policies operate on OR logic with an effectively random order; only if none decides does the base probabilistic rate come into play.](diagrams/ch12-sampling-policy.en.png){: width="88%" }
 
 ### How the rules are actually evaluated — and why it's surprising
 
@@ -137,7 +137,7 @@ retention rate began to drift from the expected value calculated from the
 configured policies, and it returned to the expected level only after the
 vendor explained the mechanism, not after anyone changed the configuration:
 
-![Trace retention rate, expected versus measured: a ten-day mismatch period was reported to the vendor, and the configuration was deliberately left unchanged until the mechanism was clarified.](diagrams/dashboard-sampling.png){: width="95%" }
+![Trace retention rate, expected versus measured: a ten-day mismatch period was reported to the vendor, and the configuration was deliberately left unchanged until the mechanism was clarified.](diagrams/dashboard-sampling.en.png){: width="95%" }
 
 ### Cost depends on a nonlinear threshold, not linearly on percentage
 
@@ -167,7 +167,7 @@ ends up being. Sampling protects two of the three cost components, not all
 three — worth knowing in advance, rather than discovering it when the bill
 keeps rising after an aggressive cut to the base rate.
 
-![Retention and write cost drop to zero below one measurable volume threshold, while processing cost stays independent of the sampling percentage because it's billed on the raw input, before the retention decision.](diagrams/ch12-prag-troska.png){: width="78%" }
+![Retention and write cost drop to zero below one measurable volume threshold, while processing cost stays independent of the sampling percentage because it's billed on the raw input, before the retention decision.](diagrams/ch12-prag-troska.en.png){: width="78%" }
 
 A concrete breakdown of the monthly bill into these three components,
 measured in the period when this question was first seriously raised,

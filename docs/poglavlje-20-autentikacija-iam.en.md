@@ -78,7 +78,7 @@ turn out to be too sparse too often to be useful — the reverse order from
 raising detail only once it's needed, because the default rate would
 have been too expensive to ever ship to production.
 
-![Three signals go directly from the authentication system to the observability collector by push; the fourth (metrics) the system only exposes locally, so a sidecar pulls it and pushes it onward — with an explicit override of the source identity so the two replicas don't collapse into one series.](diagrams/ch20-mehanizam-signala.png){: width="90%" }
+![Three signals go directly from the authentication system to the observability collector by push; the fourth (metrics) the system only exposes locally, so a sidecar pulls it and pushes it onward — with an explicit override of the source identity so the two replicas don't collapse into one series.](diagrams/ch20-mehanizam-signala.en.png){: width="90%" }
 
 ### An asymmetry discovered by reading the default logging levels
 
@@ -134,9 +134,9 @@ queries was possible before the asymmetry was fixed — not because the
 query logic was complicated, but because the input data simply didn't
 exist.
 
-![The asymmetry in authentication logging: failure visible by default at the standard level, success below the visibility threshold — until this is fixed, an entire class of account-takeover security questions stays unanswerable.](diagrams/ch20-asimetrija.png){: width="90%" }
+![The asymmetry in authentication logging: failure visible by default at the standard level, success below the visibility threshold — until this is fixed, an entire class of account-takeover security questions stays unanswerable.](diagrams/ch20-asimetrija.en.png){: width="90%" }
 
-![Visible login events before and after raising the logging level: failures were always there, but successful logins — thousands per day — only become visible from the moment of the fix onward.](diagrams/dashboard-authgap.png){: width="95%" }
+![Visible login events before and after raising the logging level: failures were always there, but successful logins — thousands per day — only become visible from the moment of the fix onward.](diagrams/dashboard-authgap.en.png){: width="95%" }
 
 ### Two different attacks look like the same symptom until split by username
 

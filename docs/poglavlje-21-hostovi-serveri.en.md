@@ -101,7 +101,7 @@ write on the exact version of the state that was read, so the write fails
 and after the write, explicitly confirms that exactly as many rules
 changed as intended — no more, no less.
 
-![The wrong order for fixing a lost label doesn't work — the label is still under aggregation, so the query silently returns empty. The correct order first removes the aggregation rule, confirms the label has actually come back, and only then adds the permanent rule that keeps it open going forward.](diagrams/ch21-redosled-vracanja.png){: width="75%" }
+![The wrong order for fixing a lost label doesn't work — the label is still under aggregation, so the query silently returns empty. The correct order first removes the aggregation rule, confirms the label has actually come back, and only then adds the permanent rule that keeps it open going forward.](diagrams/ch21-redosled-vracanja.en.png){: width="75%" }
 
 ### A minimal, deliberately chosen set of metrics instead of someone else's bundle
 
@@ -152,7 +152,7 @@ far. This distinction prevents anyone later, looking only at a list of
 deliberate, considered decisions, with a recorded reason for whoever
 revisits them later.
 
-![Why an imported shared dashboard typically stops working: the wrong data source, a missing collector that breaks template variables, a mismatched naming schema, and aggregation that silently strips labels — four separate causes, the same "no data" symptom.](diagrams/ch21-cetiri-uzroka.png){: width="90%" }
+![Why an imported shared dashboard typically stops working: the wrong data source, a missing collector that breaks template variables, a mismatched naming schema, and aggregation that silently strips labels — four separate causes, the same "no data" symptom.](diagrams/ch21-cetiri-uzroka.en.png){: width="90%" }
 
 ### A third, entirely independent layer: a view from outside the box
 

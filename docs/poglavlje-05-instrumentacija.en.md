@@ -87,7 +87,7 @@ in Grafana Cloud — without it, that data would exist only in application
 logs, out of reach of traces and the metrics derived from them (span
 metrics, covered in Chapter 11).
 
-![Auto-instrumentation (Java agent, Python SDK+shim) covers everything structurally visible from known libraries; the only manual point is extracting caller identity in the shared middleware layer, regardless of which of the three channels the identity arrived through.](diagrams/ch5-instrumentation.png){: width="92%" }
+![Auto-instrumentation (Java agent, Python SDK+shim) covers everything structurally visible from known libraries; the only manual point is extracting caller identity in the shared middleware layer, regardless of which of the three channels the identity arrived through.](diagrams/ch5-instrumentation.en.png){: width="92%" }
 
 ### When two separate pseudonymization mechanisms don't "know" about each other
 
@@ -140,7 +140,7 @@ at the level of the **merged** path through the system, not per service
 individually — one service "doing everything right" means nothing if its
 neighbor at the other end of the same trace reveals what the first one hid.
 
-![Current state: the frontend carries a pseudonymous ID, but the backend middleware from § 5.2 puts a real email onto the same, connected trace — the merged trace is de-anonymized. The identified fix (not implemented) changes only the backend side: the same user gets the same stable pseudonym, and the merged trace stays pseudonymous end to end.](diagrams/ch05-pseudonimizacija-preko-granice.png){: width="80%" }
+![Current state: the frontend carries a pseudonymous ID, but the backend middleware from § 5.2 puts a real email onto the same, connected trace — the merged trace is de-anonymized. The identified fix (not implemented) changes only the backend side: the same user gets the same stable pseudonym, and the merged trace stays pseudonymous end to end.](diagrams/ch05-pseudonimizacija-preko-granice.en.png){: width="80%" }
 
 ### When the diagnosis rots out from under you: same symptom, different cause
 

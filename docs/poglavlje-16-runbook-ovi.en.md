@@ -77,7 +77,7 @@ advance, and that procedure becomes a runbook — but the runbook itself
 afterward stands independently, with no need for the reader to first read
 the postmortem that inspired it.
 
-![The entry runbook orients the reader (signature + at-a-glance), and only then does branching by symptom fingerprint lead to the specific runbook for that particular cause.](diagrams/ch16-runbook-flow.png){: width="90%" }
+![The entry runbook orients the reader (signature + at-a-glance), and only then does branching by symptom fingerprint lead to the specific runbook for that particular cause.](diagrams/ch16-runbook-flow.en.png){: width="90%" }
 
 ### When the fingerprint isn't fine enough, the error doesn't go undetected — it goes to the wrong runbook
 
@@ -109,7 +109,7 @@ that doesn't exist is harmless — the reader knows there's no help. A
 runbook that **exists, but for the wrong cause**, is more dangerous,
 because it actively steers attention away from the real problem.
 
-![Coarse branching consistently routed database connection failures into the runbook for delayed input data — all 6 of 6 cases in a month were misread. Adding a dedicated fingerprint by exception type routes that failure into its own, correct runbook.](diagrams/ch16-pogresno-usmeravanje.png){: width="85%" }
+![Coarse branching consistently routed database connection failures into the runbook for delayed input data — all 6 of 6 cases in a month were misread. Adding a dedicated fingerprint by exception type routes that failure into its own, correct runbook.](diagrams/ch16-pogresno-usmeravanje.en.png){: width="85%" }
 
 ### A runbook that deliberately doesn't offer the fastest shortcut
 

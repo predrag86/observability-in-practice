@@ -126,9 +126,9 @@ rather than a permanently present, enormous file weighing down every
 unrelated session, proved essential to keeping the document useful instead
 of forgotten.
 
-![Four replayed incidents: two where the agent independently reached the correct diagnosis, one where a naive agent would have confidently gotten it wrong without the context layer, and one from the class of absence — where nothing reports incorrectly, but nothing reports at all.](diagrams/ch28-cetiri-replay.png){: width="92%" }
+![Four replayed incidents: two where the agent independently reached the correct diagnosis, one where a naive agent would have confidently gotten it wrong without the context layer, and one from the class of absence — where nothing reports incorrectly, but nothing reports at all.](diagrams/ch28-cetiri-replay.en.png){: width="92%" }
 
-![A seductive but wrong signal: the derived 'environment unhealthiness' percentage looks like a serious outage, while the authoritative 5xx error rate from the load balancer shows that users barely felt anything at all — without this context, an agent would easily confirm the wrong diagnosis.](diagrams/dashboard-ebhealth-vs-5xx.png){: width="95%" }
+![A seductive but wrong signal: the derived 'environment unhealthiness' percentage looks like a serious outage, while the authoritative 5xx error rate from the load balancer shows that users barely felt anything at all — without this context, an agent would easily confirm the wrong diagnosis.](diagrams/dashboard-ebhealth-vs-5xx.en.png){: width="95%" }
 
 ### False success: when the agent says "done" and nothing happened
 
@@ -156,7 +156,7 @@ because that's the only place the difference between "blocked" and
 "executed" exists at all. Trusting the agent's report of what it did is,
 under this threat model, the wrong place to put trust.
 
-![A blocked write and a real write return an identical success message — the agent has no way to internally distinguish the two outcomes, so the "read-only" boundary must be enforced on the token's permission scope, not on trust in the agent's report.](diagrams/ch28-lazni-uspeh.png){: width="80%" }
+![A blocked write and a real write return an identical success message — the agent has no way to internally distinguish the two outcomes, so the "read-only" boundary must be enforced on the token's permission scope, not on trust in the agent's report.](diagrams/ch28-lazni-uspeh.en.png){: width="80%" }
 
 ### The wrong store sounds like "no problem," not like an error
 

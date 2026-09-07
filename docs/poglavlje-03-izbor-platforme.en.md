@@ -122,7 +122,7 @@ it had already been raised twice before, gradually, as real, organic spend
 grew — each time as a conscious, documented decision, not as unnoticed scope
 creep.
 
-![A budget alarm as an early warning before overage starts being billed, and the diagnostic branch into two different possible causes behind it.](diagrams/ch03-alarm-pre-racuna.png){: width="76%" }
+![A budget alarm as an early warning before overage starts being billed, and the diagnostic branch into two different possible causes behind it.](diagrams/ch03-alarm-pre-racuna.en.png){: width="76%" }
 
 ### Why the budget-alarm rules are deliberately kept out of Terraform
 

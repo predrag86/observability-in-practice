@@ -107,9 +107,9 @@ because they identify what was queried, not who queried it) — a
 distinction that would keep pseudonymization from being over-applied
 where it's neither needed nor useful.
 
-![The same trace links the pseudonymous identifier from the browser side with the real identity from the backend side — pseudonymity holds only until the two halves of the same trace are joined.](diagrams/ch25-linkage.png){: width="90%" }
+![The same trace links the pseudonymous identifier from the browser side with the real identity from the backend side — pseudonymity holds only until the two halves of the same trace are joined.](diagrams/ch25-linkage.en.png){: width="90%" }
 
-![An illustration of the same session in the debugging panel, today versus the proposed state: if both ends wrote the same form of keyed-hash pseudonym, joining by trace would still work for diagnostics, but would no longer reveal the real name and email.](diagrams/dashboard-pseudonymization.png){: width="95%" }
+![An illustration of the same session in the debugging panel, today versus the proposed state: if both ends wrote the same form of keyed-hash pseudonym, joining by trace would still work for diagnostics, but would no longer reveal the real name and email.](diagrams/dashboard-pseudonymization.en.png){: width="95%" }
 
 ### Parameter type as proof, not just a naming rule
 
@@ -169,7 +169,7 @@ that the question is closed. Until someone with authority officially
 confirms it, key rotation remains an open item on the list of decisions
 the proposal is waiting on, not a finished story.
 
-![Why rotating the pseudonymization key wouldn't be a security gain here, only operational damage: the key protects the pseudonym↔email link, not the content itself, and a stable key opens no new risk that rotation would close.](diagrams/ch25-rotacija-kljuca.png){: width="80%" }
+![Why rotating the pseudonymization key wouldn't be a security gain here, only operational damage: the key protects the pseudonym↔email link, not the content itself, and a stable key opens no new risk that rotation would close.](diagrams/ch25-rotacija-kljuca.en.png){: width="80%" }
 
 ### A second question about the same data: not who can see it, but where it physically sits
 

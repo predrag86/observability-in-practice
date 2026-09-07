@@ -136,7 +136,7 @@ the same failure had been repeating for four days straight — a diagnostic
 capability that didn't exist before instrumentation, applied to an error
 instrumentation didn't cause.
 
-![A failure arriving right after an OTel rollout looks like an instrumentation regression — but three independent pieces of evidence (the same failure existed earlier, other branches passed, the pattern tracks the shape of the data) rule out the overlay as the cause.](diagrams/ch02-dokaz-ne-vreme.png){: width="78%" }
+![A failure arriving right after an OTel rollout looks like an instrumentation regression — but three independent pieces of evidence (the same failure existed earlier, other branches passed, the pattern tracks the shape of the data) rule out the overlay as the cause.](diagrams/ch02-dokaz-ne-vreme.en.png){: width="78%" }
 
 The point for this chapter's mental model: instrumentation adds visibility,
 it doesn't add new ways for application code to break. Proving that

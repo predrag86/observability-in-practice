@@ -103,7 +103,7 @@ still report. Both groups send to the same notification channel, so the
 difference exists only in the path to that point, not in where it
 ultimately shows up.
 
-![The main route for network alerts evaluates over the same collector that carries the rest of the telemetry, so when that collector goes down — the route goes quiet, indistinguishable from "everything is fine." An independent route reads directly from a separate source, bypassing the shared collector, and keeps working at exactly that moment.](diagrams/ch22-nezavisna-ruta.png){: width="85%" }
+![The main route for network alerts evaluates over the same collector that carries the rest of the telemetry, so when that collector goes down — the route goes quiet, indistinguishable from "everything is fine." An independent route reads directly from a separate source, bypassing the shared collector, and keeps working at exactly that moment.](diagrams/ch22-nezavisna-ruta.en.png){: width="85%" }
 
 ### Two kinds of check for two kinds of bugs
 
@@ -136,9 +136,9 @@ to be treated as capable of disappearing, and given an explicit
 zero-default proactively, instead of adding that protection only after
 something specific has actually disappeared.
 
-![Nine planes of network infrastructure grouped by how visibly they report their own failure — the worst group is blind and, at the same time, the path along which the telemetry of all the other planes travels.](diagrams/ch22-devet-ravni.png){: width="90%" }
+![Nine planes of network infrastructure grouped by how visibly they report their own failure — the worst group is blind and, at the same time, the path along which the telemetry of all the other planes travels.](diagrams/ch22-devet-ravni.en.png){: width="90%" }
 
-![Inbound and outbound byte flow through the outbound gateway, read as a pair: the divergence between the two lines, not either line on its own, is what reveals traffic loss.](diagrams/dashboard-natdiff.png){: width="95%" }
+![Inbound and outbound byte flow through the outbound gateway, read as a pair: the divergence between the two lines, not either line on its own, is what reveals traffic loss.](diagrams/dashboard-natdiff.en.png){: width="95%" }
 
 ### Same panel type, different query mode, different column name — with no error in the query at all
 

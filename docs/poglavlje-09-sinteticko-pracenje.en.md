@@ -70,13 +70,13 @@ the cloud is the exception, but it doesn't test business logic in the same
 explicit way) would fall silent, not because the application went down,
 but because the path to the monitoring system went down.
 
-![Probes from multiple regions hit the public endpoint directly over the internet, bypassing the internal network, DNS zone, and gateway — and report the result back to the cloud platform independently of internal infrastructure.](diagrams/ch9-synthetic.png){: width="92%" }
+![Probes from multiple regions hit the public endpoint directly over the internet, bypassing the internal network, DNS zone, and gateway — and report the result back to the cloud platform independently of internal infrastructure.](diagrams/ch9-synthetic.en.png){: width="92%" }
 
 The multi-region setup pays off in exactly a moment like this — when one
 region goes quiet while the other two keep reporting normal operation, the
 diagnosis narrows itself, without a single additional investigative step:
 
-![Region B stops reporting latency for a short window while Region A and Region C continue normally — a pattern pointing to a regional network problem, not a failure of the application itself.](diagrams/dashboard-synthetic.png){: width="95%" }
+![Region B stops reporting latency for a short window while Region A and Region C continue normally — a pattern pointing to a regional network problem, not a failure of the application itself.](diagrams/dashboard-synthetic.en.png){: width="95%" }
 
 ### The third layer: does the application actually render, not just does the server respond
 
@@ -150,7 +150,7 @@ must be wider than the shallow probe's, otherwise every occasional slow
 query (not a real outage) will falsely trigger an alert meant to catch
 actual failures.
 
-![Three probe layers, each testing a different depth of the system: the shallow probe checks only whether the shell responds, the deep probe checks whether the database behind the application actually works, the rendering probe checks whether the page actually displays. The pattern of which layer passes and which fails is the diagnosis itself.](diagrams/ch09-slojevi-otkaza.png){: width="85%" }
+![Three probe layers, each testing a different depth of the system: the shallow probe checks only whether the shell responds, the deep probe checks whether the database behind the application actually works, the rendering probe checks whether the page actually displays. The pattern of which layer passes and which fails is the diagnosis itself.](diagrams/ch09-slojevi-otkaza.en.png){: width="85%" }
 
 ### The same metric, two different thresholds, because they don't answer the same question
 

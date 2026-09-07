@@ -155,11 +155,11 @@ This is deliberately configured as a last line of defense, not a first one
 open — but the lever exists precisely because application code doesn't
 always get every caller fixed in time.
 
-![Both collection layers share the same collector that carries the rest of the fleet — the external layer through statically named per-instance jobs, the internal layer through a dedicated role with limited connections, merged under one instance identifier, with the writer/reader role read from the database's own replication status.](diagrams/ch18-deljeni-kolektor.png){: width="90%" }
+![Both collection layers share the same collector that carries the rest of the fleet — the external layer through statically named per-instance jobs, the internal layer through a dedicated role with limited connections, merged under one instance identifier, with the writer/reader role read from the database's own replication status.](diagrams/ch18-deljeni-kolektor.en.png){: width="90%" }
 
-![Two independent collection layers over one managed database: external (the provider's instance metrics) and internal (an exporter directly on the engine), with a dedicated alert watching whether the internal layer is breathing at all.](diagrams/ch18-dve-ravni.png){: width="90%" }
+![Two independent collection layers over one managed database: external (the provider's instance metrics) and internal (an exporter directly on the engine), with a dedicated alert watching whether the internal layer is breathing at all.](diagrams/ch18-dve-ravni.en.png){: width="90%" }
 
-![A connection leak visible from the inside from hour zero — the external layer (latency) doesn't notice the problem until 40 hours later, by which point the trend is already far along.](diagrams/dashboard-connections.png){: width="95%" }
+![A connection leak visible from the inside from hour zero — the external layer (latency) doesn't notice the problem until 40 hours later, by which point the trend is already far along.](diagrams/dashboard-connections.en.png){: width="95%" }
 
 ### A third example of the same pattern: what's invisible to both layers at once
 

@@ -106,7 +106,7 @@ instantly, the long window rises more slowly and slowly "comes back
 down," which is why the alert clears quickly after a real recovery
 instead of lagging behind for hours:
 
-![The short window (5 min) reacts instantly and clears instantly; the long window (1 h) rises more slowly and falls more slowly — the combination delivers both fast detection and fast alert clearing.](diagrams/dashboard-burnrate.png){: width="95%" }
+![The short window (5 min) reacts instantly and clears instantly; the long window (1 h) rises more slowly and falls more slowly — the combination delivers both fast detection and fast alert clearing.](diagrams/dashboard-burnrate.en.png){: width="95%" }
 
 ### Why latency deliberately isn't part of this SLI
 
@@ -161,7 +161,7 @@ tidiness, the system would have lost the simplicity and independence of
 the first signal — the one that doesn't depend on the budget math being
 correct in order to report that something is on fire right now.
 
-![The old, flat-threshold alert and the new, budget-aware alert deliberately overlap at the fastest urgency level — each answers a different question about the same failure, they aren't duplicates.](diagrams/ch15-dva-ugla.png){: width="80%" }
+![The old, flat-threshold alert and the new, budget-aware alert deliberately overlap at the fastest urgency level — each answers a different question about the same failure, they aren't duplicates.](diagrams/ch15-dva-ugla.en.png){: width="80%" }
 
 ## 15.3 Analytical section — why multi-window isn't an arbitrary complication
 

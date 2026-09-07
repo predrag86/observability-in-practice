@@ -65,7 +65,7 @@ Concretely:
 
 Schematically, it looks like this:
 
-![Telemetry travels from senders to one stable DNS name, which distributes traffic evenly across two or more independent gateway instances (autoscaling under load); only the gateway talks to the cloud platform.](diagrams/diagram.png){: width="100%" }
+![Telemetry travels from senders to one stable DNS name, which distributes traffic evenly across two or more independent gateway instances (autoscaling under load); only the gateway talks to the cloud platform.](diagrams/diagram.en.png){: width="100%" }
 
 What this diagram does *not* show, and matters: there is a small,
 **explicitly documented** list of senders that **bypass** the gateway — a
@@ -120,7 +120,7 @@ in the pipeline a filter like this gets inserted, and why a narrow,
 per-sender scope is the better choice over a broader cut across all senders
 at once, is covered in more detail in Chapter 10.
 
-![The fix is a narrow step inserted right after the resourcedetection mechanism, which strips eight gateway-specific attributes only for the sender where the problem was found — every other sender passes through the same resourcedetection untouched.](diagrams/ch04-identitet-popuni-ako-nedostaje.png){: width="85%" }
+![The fix is a narrow step inserted right after the resourcedetection mechanism, which strips eight gateway-specific attributes only for the sender where the problem was found — every other sender passes through the same resourcedetection untouched.](diagrams/ch04-identitet-popuni-ako-nedostaje.en.png){: width="85%" }
 
 ### Deleting a label and setting a new value aren't the same operation
 

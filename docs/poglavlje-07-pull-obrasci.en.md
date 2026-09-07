@@ -68,7 +68,7 @@ exactly at the depth that would explain *why* the failure happened.
 Here's what that data looks like once it lands on a dashboard — two layers,
 side by side, each showing something the other can't:
 
-![The external layer (CloudWatch) sees CPU and replica lag even when the database is refusing connections; the internal layer (postgres_exporter) sees which table is actually driving sequential scans — here `audit_log`, a good candidate for an index.](diagrams/dashboard-rds.png){: width="95%" }
+![The external layer (CloudWatch) sees CPU and replica lag even when the database is refusing connections; the internal layer (postgres_exporter) sees which table is actually driving sequential scans — here `audit_log`, a good candidate for an index.](diagrams/dashboard-rds.en.png){: width="95%" }
 
 It's enough here to present the layers as an example of the third level of
 control — what actually gets done with them later (when one layer knows
@@ -180,7 +180,7 @@ most need a voice.
 
 All three patterns, side by side:
 
-![Three pull-based patterns by level of control: two independent layers for a managed database, an agent-that-pushes for a self-managed cluster, and a direct pull bypassing the gateway for an external SaaS.](diagrams/ch7-pull-obrasci.png){: width="98%" }
+![Three pull-based patterns by level of control: two independent layers for a managed database, an agent-that-pushes for a self-managed cluster, and a direct pull bypassing the gateway for an external SaaS.](diagrams/ch7-pull-obrasci.en.png){: width="98%" }
 
 ### The cost of pulling is measured per call, not per data point
 
@@ -247,7 +247,7 @@ and that gap manifests as a complete absence of data, not as a slow or
 unusual value, which makes it easy to misread as a real failure of the
 observed system.
 
-![A narrow query window, equal to the source's default granularity, occasionally arrives before the source has published the value — the puller interprets that as the series not existing. A widened query window, beyond the default granularity, always catches even a late-published value.](diagrams/ch07-prozor-kasnjenje.png){: width="75%" }
+![A narrow query window, equal to the source's default granularity, occasionally arrives before the source has published the value — the puller interprets that as the series not existing. A widened query window, beyond the default granularity, always catches even a late-published value.](diagrams/ch07-prozor-kasnjenje.en.png){: width="75%" }
 
 ## 7.3 Analytical section — why there's no single universal pull-based pattern
 

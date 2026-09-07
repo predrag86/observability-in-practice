@@ -67,7 +67,7 @@ These six steps are the same for every job in the fleet, regardless of
 what the job actually does — which is exactly why the completeness model
 could be a single, general pattern instead of per-job custom logic.
 
-![The six steps every job passes through: submission, queue, capacity source selection in order, execution, exit code, and resubmission only for transient causes of failure.](diagrams/ch23-zivotni-ciklus.png){: width="90%" }
+![The six steps every job passes through: submission, queue, capacity source selection in order, execution, exit code, and resubmission only for transient causes of failure.](diagrams/ch23-zivotni-ciklus.en.png){: width="90%" }
 
 ### A specific and deliberately different pattern: completed successfully, but empty
 
@@ -145,9 +145,9 @@ that covers the rest of the system. This is recorded as a known gap in
 coverage, not as a hidden oversight — a clearly named boundary of what
 has been done relative to the rest of the architecture.
 
-![Completeness model for batch/ETL jobs: whether the job started, whether it produced output, and why not if it didn't — with particular emphasis on "completed successfully, but empty" as a distinct, easily missed failure mode.](diagrams/ch23-model-potpunosti.png){: width="90%" }
+![Completeness model for batch/ETL jobs: whether the job started, whether it produced output, and why not if it didn't — with particular emphasis on "completed successfully, but empty" as a distinct, easily missed failure mode.](diagrams/ch23-model-potpunosti.en.png){: width="90%" }
 
-![Thirty days of runs for one scheduled job: two days when the job never even started, and three days when it finished cleanly but produced zero rows — both failure modes invisible to the naked eye without a dedicated check.](diagrams/dashboard-completeness.png){: width="95%" }
+![Thirty days of runs for one scheduled job: two days when the job never even started, and three days when it finished cleanly but produced zero rows — both failure modes invisible to the naked eye without a dedicated check.](diagrams/dashboard-completeness.en.png){: width="95%" }
 
 ### A reorder fix with no guardian
 

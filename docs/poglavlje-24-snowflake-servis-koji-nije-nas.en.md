@@ -137,7 +137,7 @@ is entirely routine and quietly finishes with nothing to send — for most
 of the day, an earlier run the same day has already picked up everything
 that happened that day.
 
-![The concrete data flow through scheduled collection: from the actual query against the external service, through the trigger and the bookmark of where it left off, to sanitized records in the observability platform.](diagrams/ch24-mehanizam-prikupljanja.png){: width="90%" }
+![The concrete data flow through scheduled collection: from the actual query against the external service, through the trigger and the bookmark of where it left off, to sanitized records in the observability platform.](diagrams/ch24-mehanizam-prikupljanja.en.png){: width="90%" }
 
 ### Structural lag, not a design flaw
 
@@ -188,9 +188,9 @@ technically, they were the same one. Both findings were reported to the
 data owners for further decision; observability only made them visible, it
 didn't fix them.
 
-![Three phases of collection against an external SaaS service, all three within one shared, short-lived session — the data-freshness alert explicitly conditioned on a separate collector-health metric, so a dead collector is never read as a data-flow outage.](diagrams/ch24-tri-faze.png){: width="90%" }
+![Three phases of collection against an external SaaS service, all three within one shared, short-lived session — the data-freshness alert explicitly conditioned on a separate collector-health metric, so a dead collector is never read as a data-flow outage.](diagrams/ch24-tri-faze.en.png){: width="90%" }
 
-![When the collector dies, the freshness gauge freezes while time keeps passing — without conditioning on a separate collector-health metric, this looks identical to a real catastrophe on a completely healthy system.](diagrams/dashboard-snowflake.png){: width="95%" }
+![When the collector dies, the freshness gauge freezes while time keeps passing — without conditioning on a separate collector-health metric, this looks identical to a real catastrophe on a completely healthy system.](diagrams/dashboard-snowflake.en.png){: width="95%" }
 
 ### Fixing attribution isn't fixing identity — and that was a deliberate choice
 

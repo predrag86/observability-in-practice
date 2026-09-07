@@ -83,7 +83,7 @@ pseudonymized, while the actual telemetry still carries raw identity, that's
 a discrepancy the auditor uncovers and records as an exception — regardless
 of whether that area is even formally in the audit's scope.
 
-![Observability control as a two-way relationship: the alerting system is evidence of monitoring, but the telemetry that system carries is simultaneously confidential data that itself needs protection.](diagrams/ch26-dvosmeran-odnos.png){: width="85%" }
+![Observability control as a two-way relationship: the alerting system is evidence of monitoring, but the telemetry that system carries is simultaneously confidential data that itself needs protection.](diagrams/ch26-dvosmeran-odnos.en.png){: width="85%" }
 
 ### An automated action from chat: the token permits, the channel restricts
 
@@ -122,7 +122,7 @@ the first of the two is verifiable through code and infrastructure. The
 second depends on discipline around chat-channel membership, which is
 easier to forget to check regularly.
 
-![Two separate authorization layers for an action triggered from chat: the technical layer (signature, role, permission scope) is verifiable through code, while the organizational layer (channel membership) is the only real access control on the button.](diagrams/ch26-lanac-ovlascenja.png){: width="82%" }
+![Two separate authorization layers for an action triggered from chat: the technical layer (signature, role, permission scope) is verifiable through code, while the organizational layer (channel membership) is the only real access control on the button.](diagrams/ch26-lanac-ovlascenja.en.png){: width="82%" }
 
 ### Least privilege for services isn't the same as least privilege for people
 
