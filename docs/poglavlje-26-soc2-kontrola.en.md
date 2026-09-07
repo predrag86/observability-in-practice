@@ -148,6 +148,48 @@ would hide exactly that distinction; a table that separates the machine
 row from the human row makes the gap visible instead of burying it behind
 the part that's already in order.
 
+### The same discipline applied to the document that carries it
+
+The internal status table described earlier in this chapter isn't the
+only place the rule "write what the actual state is, not what it should
+be" applies. The working document that carries that table is itself,
+right at the top, marked with **DRAFT** status, with a version number
+that plainly says "early, immature version," and with a document-owner
+field that literally reads "TODO(owner)" — still unassigned, rather than
+having some name written in as a formality with no real accountability
+behind it. This isn't an oversight but a consistent application of the
+same principle one level up: if the point of the table is that every row
+tells the truth about the control it describes, then the document itself
+has to tell the truth about itself — that it's immature, that it doesn't
+yet have a formally assigned owner, that version 0.1 means exactly that.
+A document that claimed to be "done" while it hadn't even been reviewed
+internally would be the same kind of mismatch between claim and reality
+that the whole table beneath it exists to catch for individual controls.
+
+### A standard's criterion isn't the same as a specific technical measure
+
+A valuable distinction, easily lost in practice: a standard names a
+**broad criterion** (confidentiality of data, minimization of what's
+collected and retained) — it doesn't mandate a **specific technical
+measure** by which that criterion gets satisfied. Pseudonymizing user
+identity, described in detail in the previous chapter of this book, is
+one chosen, sufficient way to satisfy that broader criterion — not a line
+item the standard requires by name. The distinction sounds small, but it
+changes what's safe to say out loud: the claim "we have to pseudonymize
+because the standard requires it" is inaccurate and, worse, creates a
+false obligation that easily gets passed along incorrectly — to some
+other team, into a future client questionnaire, into your own
+documentation. The accurate claim is "a broader confidentiality criterion
+exists, and pseudonymization is the measure we chose to satisfy it, and
+we could have chosen a different one." This distinction also means that
+dropping pseudonymization, if that ever happened, wouldn't by itself mean
+violating the standard — it would mean some **other** demonstrated way is
+needed to still satisfy the same, broader criterion. Conflating criterion
+and measure leads in both wrong directions at once: overstating your own
+obligation (when the chosen measure gets misrepresented as mandated), and
+understating risk (when retiring the measure gets misread as also
+releasing you from the broader criterion behind it).
+
 ## 26.3 Analytical section — compliance as self-consistency, not an external catalog
 
 ### The official criteria structure confirms the two-layer split
@@ -250,6 +292,15 @@ question of whether the plan and reality tell the same story.
   interactive access, with which role) — an organization often has an
   accurate answer to one question while having none for the other, and a
   combined score hides that gap.
+- Apply the same honesty to the document that carries the status table —
+  mark it as a draft, with an unassigned owner if that's genuinely the
+  case, instead of making it look finished before anyone has reviewed it
+  internally.
+- Don't equate a standard's broad criterion with the specific technical
+  measure you chose to satisfy it — the measure is one possible answer,
+  not a mandated line item, and conflating the two leads to both
+  overstating your own obligation and understating risk if the measure is
+  ever retired.
 
 ## 26.5 Exercise for the reader
 
