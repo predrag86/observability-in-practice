@@ -156,6 +156,16 @@ agresivnog spuštanja bazne stope.
 
 ![Trošak zadržavanja i upisa pada na nulu ispod jednog izmerivog praga zapremine, dok trošak obrade ostaje nezavisan od procenta sampling-a jer se naplaćuje na sirov ulaz, pre odluke o zadržavanju.](diagrams/ch12-prag-troska.png){: width="78%" }
 
+Konkretna razlaganja mesečnog računa na tri komponente, izmerena u periodu
+kad je ovo pitanje prvi put ozbiljno postavljeno, pokazuje isti princip u
+brojkama: obrada je iznosila oko devet procenata ukupnog troška, upis oko
+tri četvrtine, a zadržavanje ostatak — omer koji se, jednom izmeren, nije
+menjao mesecima, jer prati fiksnu cenu po komponenti, ne obim saobraćaja.
+Odatle direktno sledi da je oko devet desetina ukupnog računa za trejsove,
+u ovom konkretnom periodu, zaista bilo pod uticajem sampling odluke — a
+preostalih devet procenata je bilo tu bez obzira šta sampling uradi,
+tačno onoliko koliko je odeljak iznad već najavio kvalitativno.
+
 ### Dva brojača, dve različite tačke u istoj cevi
 
 Zamka merenja iz § 12.2 (spanmetrics potcenjuje stvaran obim, i ne može da
@@ -211,6 +221,69 @@ koji čita `traces_spanmetrics_*` metrike) koji zavise od punog, nesamplovanog
 toka trejsova pre nego što bilo šta bude odbačeno — prebacivanje odluke uzvodno
 bi značilo da ti dashboard-i i taj alarm više ne vide ono što tvrde da vide.
 
+### Prepreka koja nije samo memorija: trejs mora stalno da pogađa isti kolektor
+
+Memorijski pritisak iz prethodnog odeljka je stvaran, ali nije jedina, ni
+najdublja prepreka koju bi samostalno upravljan tail sampling nosio. Da bi
+takav sampler uopšte mogao da donese ispravnu odluku, mora prvo da vidi
+**celokupan** trejs na jednom mestu — što znači da svaki span jednog te
+istog trejsa mora stalno da pogodi **isti** primerak kolektora, koliko god
+ih flota trenutno imala. Ovo se u praksi rešava dvoslojnom topologijom: prvi
+sloj raspoređuje dolazne spanove po njihovom ID-ju trejsa ka tačno
+određenom primerku drugog sloja, koji tek onda drži trejs u memoriji i
+odlučuje. Da bi prvi sloj mogao pouzdano da adresira "baš ovaj, konkretan
+primerak", potreban je mehanizam koji svakom primerku dodeljuje sopstvenu,
+stabilnu adresu — a gateway ove implementacije, opisan u Poglavlju 4, sedi
+iza običnog mrežnog balansera saobraćaja, sa jednom deljenom adresom koja
+vodi ka bilo kom trenutno živom primerku, ne ka određenom.
+
+Čak i kad bi se taj deo rešio, ostaje drugi, teži problem: isti taj gateway
+se automatski skalira gore-dole u zavisnosti od opterećenja. Svaki takav
+događaj skaliranja menja broj živih primeraka kolektora — a promena broja
+primeraka nužno pomera koji primerak je zadužen za koji opseg ID-jeva
+trejsa. Trejs koji je već u toku, sa nekoliko spanova već pristiglih na
+jedan primerak, može odjednom da ima sledeći span preusmeren na sasvim
+drugi primerak čim se flota promeni usred njegovog trajanja. Ovo nije redak,
+ivičan slučaj koji se dešava jednom u hiljadu trejsova — ovo je rutinsko
+ponašanje svaki put kad se flota skalira, a flota se skalira tačno onda kad
+je saobraćaj najintenzivniji, što je i trenutak kad su trejsovi
+najbrojniji i najverovatnije da će neki od njih preživeti baš kroz taj
+prelaz. Server-side pristup ovaj čitav problem uklanja u korenu: pošto
+platforma prima kompletan trejs pre nego što bilo šta odluči, ne postoji
+nijedna tačka gde bi raspodela spanova po više primeraka uopšte mogla da
+naruši celovitost trejsa.
+
+### Kvar koji je već poznat i dokumentovan negde drugde
+
+Drugi razlog iz prethodnog odeljka — da bi samostalno upravljan sampler
+degradirao dashboard-e i alarme koji zavise od metrika izvedenih iz
+trejsova — ima konkretan, javno dokumentovan mehanizam iza sebe, koji je
+neko drugi otkrio i prijavio pre nego što je ova implementacija uopšte
+morala da nauči tu lekciju iskustvom. Tail sampler mora da drži trejs u
+memoriji kroz fiksan prozor odlučivanja pre nego što donese konačnu odluku
+o zadržavanju. Nezavisno od toga, korak koji generiše metrike iz trejsova
+ima sopstveni, odvojeno podešen prozor tolerancije — i tiho odbacuje svaki
+span čije vreme završetka je starije od tog prozora u trenutku kad stigne.
+Kad je prozor odlučivanja samplera blizu ili duži od prozora tolerancije
+generatora metrika, spanovi sistematski stižu "prekasno" iz ugla generatora
+metrika — ne zato što nešto nije u redu sa samim saobraćajem, nego zato što
+se dva nezavisno podešena vremenska prozora sudaraju. Rezultat: metrike
+izvedene iz trejsova tiho padaju na nulu, tačno u trenutku kad bi trebalo
+da pokazuju stvarno stanje sistema.
+
+Osoba koja je ovaj kvar prvi put prijavila je potvrdila da skraćivanje
+prozora odlučivanja samplera vraća metrike u normalu; trajnija, objavljena
+popravka je bila na drugoj strani — proširenje prozora tolerancije
+generatora metrika. Ova implementacija ne bi mogla sama da primeni tu drugu
+popravku, jer taj deo cevovoda ne drži ona nego platforma — što znači da bi
+samostalno upravljan sampler ovde bio zaglavljen između dva zahteva koja se
+međusobno isključuju: dovoljno kratak prozor odlučivanja da metrike ostanu
+tačne, naspram dovoljno dugog prozora da pravila za spore trejsove imaju
+šta da izmere. Server-side pristup izbegava ovu dilemu u potpunosti, jer
+oba koraka — odlučivanje i generisanje metrika — rade nad istim,
+kompletnim, još neprosejanim tokom trejsova, pre nego što bilo šta bude
+podeljeno na dva nezavisna prozora koja mogu da se ne slože.
+
 ### Cena da je odluka o zadržavanju bila trenutna, bez punog uvida: kontrafaktički scenario
 
 Vredi konkretno odigrati head sampling alternativu na istom sistemu. Recimo
@@ -256,6 +329,17 @@ posle punog uvida je odluka.**
   nikad ih ne deli jedan drugim da bi se dobila "procenat pokrivenosti" —
   svaki brojač u paru ima tačno jednu namenu (stopa odbacivanja, ili
   naplativa zapremina), ne obe.
+- Pre nego što sam gradiš tail sampling na sopstvenom kolektoru, proveri da
+  li tvoja infrastruktura uopšte može da garantuje da svaki span jednog
+  trejsa stalno pogađa isti primerak — ako flota skalira gore-dole iza
+  deljene adrese, bez stabilnog načina da se adresira pojedinačan primerak,
+  parcijalni trejsovi nisu redak kvar nego rutinska posledica svakog
+  događaja skaliranja.
+- Kad tail sampler i generator metrika iz trejsova dele isti tok podataka
+  ali imaju nezavisno podešene vremenske prozore, proveri da li se ti
+  prozori mogu sudariti — prozor odlučivanja duži od prozora tolerancije
+  drugog koraka tiho obara izvedene metrike na nulu, bez ijedne poruke o
+  grešci.
 
 ## 12.5 Vežba za čitaoca
 
@@ -275,3 +359,5 @@ postojala?
 - [Best practices for policies — Grafana Cloud documentation](https://grafana.com/docs/grafana-cloud/adaptive-telemetry/adaptive-traces/guides/best-practices-policies/)
 - [Sampling strategies for tracing — Grafana Cloud documentation](https://grafana.com/docs/grafana-cloud/send-data/traces/configure/sampling/)
 - [Maximize data value and cut costs: Adaptive Telemetry for metrics, logs, traces, and profiles in Grafana Cloud — Grafana Labs blog](https://grafana.com/blog/adaptive-telemetry-suite-in-grafana-cloud/)
+- [grafana/alloy#5682 — tail sampling appears to break Tempo metrics-generators](https://github.com/grafana/alloy/issues/5682)
+- [grafana/tempo#6587 — metrics_ingestion_time_range_slack vs tail-sampling decision_wait](https://github.com/grafana/tempo/issues/6587)
