@@ -186,6 +186,88 @@ percentile — both questions that generic observability knowledge doesn't
 automatically raise, but the specific context layer about this system
 should force.
 
+### The new risk isn't access — it's who that access gets sent to
+
+The tool that gives the agent access to the telemetry platform doesn't
+open up any data access that doesn't already exist today: the same
+queries, the same permissions, the same scope of visibility an engineer
+running those queries by hand with administrator credentials would have.
+The implementation explicitly separated this from the genuinely new risk,
+and the distinction is worth drawing out: this implementation's
+telemetry carries a real user identity (email on traces and logs), and
+that data, once the agent queries the platform, now travels one step
+further — to the language-model provider, as part of the context the
+agent receives. That isn't a question of access (who's allowed to see
+the data) but a question of **processing** (who the data physically gets
+sent to) — exactly the same shape of question opened in this book's
+privacy chapter earlier, just at a new, additional point in the chain.
+
+The implementation considered four separate mechanisms to wall the agent
+off from this specific identifier, in increasing order of complexity:
+
+1. **Fully excluding one data source.** Simplest, but all-or-nothing —
+   if personal data and everything else are mixed in the same log store,
+   this means "no logs for the agent at all," not "logs without personal
+   data."
+2. **A tag filter at the access-policy level**, with the ability to
+   exclude exactly the records that carry the identifier. Works for
+   metrics and logs — but not for traces, because that access-policy
+   mechanism simply doesn't cover that kind of data, and the very same
+   identifier exists there too.
+3. **Team-scoped access control**, inside the platform itself. Already
+   mature for metrics and logs; still in early availability for traces —
+   and, critically, there's no documented confirmation of whether that
+   control even applies to the account the agent accesses through (as
+   opposed to an individual person's account), which means none of this
+   can be assumed and has to be explicitly tested before relying on it.
+4. **An upper bound on the number of records returned per query.** This
+   doesn't control access at all — it only limits how much data a single
+   query can pull at once, useful as an additional measure, useless as a
+   standalone safeguard.
+
+None of these four mechanisms solves the problem at its root, and the
+implementation openly admits this: the durable fix wasn't any combination
+of these access controls, but a completely different move — the same
+keyed pseudonymization described in the privacy chapter. A pseudonymized
+identity that reaches the language-model provider is no longer personal
+data in the same sense, and the question "who is it allowed to be sent
+to" loses most of its weight. This is a concrete instance of that
+chapter's general point: the real fix for an identity leak is rarely an
+access control at the new point — it's often removing the identity
+itself from the place the leak could ever start from.
+
+### A ready-made instruction pack from the vendor, checked against your own, hard-won facts
+
+Before building the custom, purpose-fit context layer described earlier
+in this chapter, the implementation checked whether the same work already
+existed ready-made — the telemetry platform's vendor publishes its own,
+extensive pack of pre-built agent instructions, free and easy to install.
+Instead of taking on faith that such a pack would make a custom context
+layer redundant, the implementation checked it directly, against two of
+its own hardest-won facts from earlier work on this platform. Neither of
+the two was mentioned — the pack wouldn't have prevented a single one of
+the implementation's own past mistakes.
+
+Worse than mere non-overlap is one concrete item inside that pack that
+describes the **wrong** access path to the platform for this exact
+project — it documents only the self-hosted variant, never the managed
+variant the implementation actually uses, and advises removing access as
+soon as a read is confirmed to work, the opposite of the decision the
+implementation deliberately made. The instruction pack wasn't neutrally
+unhelpful here — it would have been actively wrong if followed without
+checking.
+
+The most sobering finding came from a single search: not one line in the
+entire, extensive pack mentions the active-user billing mechanism —
+exactly the mechanism that already cost this implementation an unplanned
+expense once, quietly and unnoticed a month before it was caught. The
+lesson the custom context layer exists to capture — which billing is
+hidden, which metric lies, which access path is real and which is
+stale — isn't generic platform knowledge that any external pack, however
+extensive, can carry in advance. That knowledge is made only one way:
+someone actually pays the price of a mistake once, and then writes it
+down.
+
 ## 28.3 Analytical section — external confirmation, and one sobering limit
 
 ### The protocol for connecting agents to telemetry is new, but already standardized
@@ -234,6 +316,54 @@ same analysis, the difference between a demonstration and a system that
 can actually be used in production. This is independent confirmation that
 the implementation's "context layer" isn't a byproduct of caution but an
 identified, named, decisive ingredient.
+
+### The context layer has a measurable limit: it can be found and still bypassed
+
+The previous conclusion — that the context layer is a decisive
+ingredient, not a byproduct of caution — gets tested by what happens once
+that same layer is placed inside a tool where the agent can find it on
+its own, instead of being fed it by hand. A condensed write-up of the
+pitfalls document was published inside the telemetry platform's own
+assistant, available to every user. The result, across three separate
+attempts with increasingly explicit phrasing — first just a reference,
+then a paragraph explicitly stating when the write-up applies, finally a
+block with concrete examples of a wrong and a correct query — was
+identical every time: the assistant would use the write-up's own
+vocabulary in its answer, the interface would even confirm the write-up
+had been found and read, and the query it actually ran stayed the same,
+forbidden one. In one such case the agent called an "event"-type counter
+"something like a monotonically increasing counter," ran a query built on
+that assumption, got zero, and confidently reported that nothing had
+happened in that period — while the write-up, literally found and cited
+as a source, said the opposite.
+
+Independently of this test, one control question outside everything the
+write-up covers returned a convincing, neatly formatted application
+latency report that was wrong by roughly a factor of a thousand — because
+one latency metric was recorded in seconds and the agent read it as if it
+were in milliseconds, and nothing in general observability knowledge
+warned it of that possibility. Precisely because the question fell
+outside the covered scope, this miss revealed a gap no earlier test
+could — hence the implementation's conclusion that a control question
+deliberately placed outside the covered scope is worth more than one more
+successful test inside it.
+
+The difference between these two outcomes and the context layer described
+earlier isn't in the content but in where the rule lives. The context
+layer the implementation builds gets loaded into the model as text, in
+the same space where the model decides what to do — and such a rule, as
+this test shows, can be found, cited as a source, and still not applied,
+because nothing technically enforces it at the moment the query is
+actually run. An independent project in the same space builds the same
+guidance one level lower: the rule lives on the server that receives the
+query, checks it before execution, and **rejects** one that violates the
+boundary — instead of leaving the model, after reading the advice, still
+free not to follow it. The context layer remains a valuable, cheap habit
+that catches most cases and costs only the discipline of upkeep — but
+where the cost of a single wrong query is high enough, this difference
+stops being theoretical: advisory text is a ceiling on how good a soft
+approach can get, not a substitute for enforcement the model cannot route
+around.
 
 ### The recommendation that the agent remain advisory, not authorized to change state
 
@@ -299,6 +429,20 @@ it is current, honest, and available at the right moment.
   event type could even exist in the store that was queried, and how many
   requests stand behind a derived statistic like a percentile — both
   traps return a convincing but wrong zero instead of an error message.
+- When an agent sends telemetry to the model, treat that as a processing
+  question (who the data gets sent to), not an access question (who's
+  allowed to see it) — access controls at various points help, but the
+  durable fix for a personal identifier is removing the identity itself
+  before it ever reaches the agent, not one more lock along the way.
+- Don't trust a ready-made, externally published agent instruction pack
+  until you've checked it against your own hard-won facts — a generic
+  pack can be unhelpful at best, and actively wrong at worst, especially
+  where it describes a stale or unused access path.
+- Don't rely on an advisory context layer being found and cited as a
+  source — the model can cite it and still act against it; where the
+  cost of a wrong query is high, the rule should live on the side that
+  receives the query and can reject it, not only on the side that
+  suggests it.
 
 ## 28.5 Exercise for the reader
 
