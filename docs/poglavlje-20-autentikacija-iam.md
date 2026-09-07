@@ -166,6 +166,38 @@ ulazni podaci prosto nisu postojali.
 
 ![Vidljivi događaji prijave pre i posle podizanja nivoa logovanja: neuspesi su uvek bili tu, ali uspešne prijave — hiljade dnevno — postaju vidljive tek od trenutka popravke.](diagrams/dashboard-authgap.png){: width="95%" }
 
+### Dva različita napada liče na isti simptom dok se ne razdvoje po korisničkom imenu
+
+Postoji još jedna razlika vredna imenovanja u istom katalogu signala: broj
+neuspešnih prijava sam po sebi ne razlikuje dva različita napada koja
+zahtevaju različit odgovor. **Grubo nagađanje lozinke** (brute-force) je
+mnogo pokušaja protiv **jednog** korisničkog imena sa jedne IP adrese — to
+Keycloak-ov sopstveni mehanizam za privremeno zaključavanje naloga već hvata
+i zaustavlja sam, bez potrebe za dodatnim alarmom. **Punjenje akreditivima**
+(credential stuffing) je suprotan obrazac: jedna IP adresa koja pokušava
+mnogo **različitih** korisničkih imena, svako sa po par pokušaja — dovoljno
+malo po nalogu da nijedno pojedinačno zaključavanje ne okine, dok agregatni
+obrazac na nivou IP adrese ostaje jasno vidljiv. Mehanizam po nalogu je
+strukturno slep za ovaj drugi oblik: broji pokušaje po korisniku, ne po
+izvoru, pa napad razmazan preko hiljadu naloga izgleda kao hiljadu potpuno
+normalnih, usamljenih grešaka u kucanju.
+
+Razlikovanje ova dva zahteva upit koji grupiše po IP adresi i broji
+**različita** korisnička imena u prozoru, ne samo ukupan broj neuspeha —
+signal koji je opisan ranije u poglavlju kao "grubo nagađanje ili nešto
+suptilnije" sad ima konkretan test kojim se ta dva razlikuju. Osnovna linija
+vredna zapisivanja: uobičajena stopa neuspešnih prijava u ovom sistemu je
+2-5%; sve iznad 15-20% zaslužuje istragu, bez obzira na koji od dva obrasca
+ukazuje.
+
+Poslednji signal u istom katalogu gleda posle uspešnog upada, ne pre njega:
+administrativni i revizioni događaji — promena lozinke, dodela uloge,
+regenerisanje tajne klijenta — su ono što napadač radi **posle** što je već
+preuzeo nalog, ne pokušaj da uđe. Alarm na neobičan skok ovakvih događaja
+hvata **posledicu** uspešnog preuzimanja, ne sam pokušaj, i vredan je kao
+poslednja linija odbrane baš zato što ne zavisi od toga da li je bilo koji
+raniji signal uopšte primetio nešto sumnjivo.
+
 ### Podizanje nivoa je zapravo dva nezavisna prekidača, ne jedan
 
 Popravka asimetrije opisana iznad zvuči kao jedna izmena — "podigni nivo
@@ -371,6 +403,14 @@ to nije.
   zato što nose isto ime sistema — proveri stvarnu verziju svakog posebno,
   i nikad ne pripisuj startni izveštaj okruženju na osnovu deljenog
   prostora za logove bez eksplicitnog filtriranja po polju okruženja.
+- Grubo nagađanje lozinke (jedan nalog, mnogo pokušaja) i punjenje
+  akreditivima (jedna IP adresa, mnogo naloga, po par pokušaja svaki) traže
+  različit upit — mehanizam zaključavanja po nalogu je strukturno slep za
+  drugi obrazac, jer broji po korisniku, ne po izvoru.
+- Ne oslanjaj se samo na signale pre uspešnog upada — alarm na neobičan
+  skok osetljivih administrativnih događaja (promena lozinke, dodela
+  uloge) hvata posledicu preuzimanja naloga nezavisno od toga da li je
+  ijedan raniji signal nešto primetio.
 
 ## 20.5 Vežba za čitaoca
 

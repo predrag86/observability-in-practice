@@ -174,6 +174,84 @@ popravke — što znači da ovo nije regresija nečega što je nekad bilo
 zaštićeno, nego praznina koja je postojala od početka i koju je stvaran
 incident tek učinio vidljivom.
 
+### Rezanje CPU-a i rezanje memorije nisu ista uštedu, i plafon predviđa otkaz
+
+Sistematski prolazak kroz rezervacije cele flote — upoređujući stvarni vršni
+memorijski i CPU otisak sa onim što je zaista rezervisano — otkrio je dve
+stvari koje se lako izgube kad se optimizacija posmatra samo kroz "koliko smo
+prekomerno rezervisali."
+
+Prva je da rezanje CPU-a i rezanje memorije nisu zamenljive uštede. Kod
+porodice čiji je posao memorijski zahtevan ali CPU vezan (troši skoro sav
+dodeljen CPU tokom celog izvršavanja), smanjenje CPU rezervacije skoro ništa
+ne uštedi — posao samo duže traje na manje jezgara, sa približno istim brojem
+vCPU-časova na kraju, dok smanjenje memorije, kad postoji stvaran višak,
+uštedi linearno. Za drugu porodicu, obrnuto: memorija je bila taman uz vrh, a
+CPU je imao suvišak, pa je baš tu CPU rezanje donelo skoro svu uštedu. Pravilo
+koje iz ovoga sledi nije "rezuj oba resursa podjednako" nego "izmeri koji je
+resurs stvarno usko grlo za ovaj konkretan posao, pre nego što odlučiš gde da
+sečeš" — isti recept primenjen na pogrešan resurs ne šteti, samo ne uradi
+ništa.
+
+Druga, ozbiljnija stvar: kad se svih pedesetak porodica u floti grupišu po
+memorijskoj utilizaciji i uporede sa brojem otkaza u poslednjih trideset dana,
+razlika između grupa nije mala. Porodice čija je utilizacija 90% ili više
+otkazuju u proseku **trideset puta češće** od porodica u opsegu 40-70% — i te
+retke, blizu-plafonske porodice čine gotovo polovinu svih otkaza u celoj
+floti. (Grupa ispod 40% ima sopstveni, veći broj otkaza — ali to je odvojen
+uzrok, greške u samoj aplikaciji koje memorija ne bi objasnila, ne isti
+obrazac obrnut.) Ovo menja redosled prioriteta: porodica koja je blizu svog
+memorijskog plafona zaslužuje popravku pre bilo koje jeftinije, bezbednije
+uštede negde drugde u floti — razrađeno dalje u Poglavlju 27.
+
+Merenje ovoga nosi sopstvene zamke, svaka je vratila verovatan, a pogrešan
+odgovor, ne grešku: upit oblikovan za servise ne vraća ništa za samostalne,
+zakazane zadatke bez ECS servisa iza sebe (drugačiji atribut nosi identitet),
+metrika koja beleži *događaj* otkaza (ne stanje) vraća nula serija ako se upita
+trenutnom vrednošću umesto zbirom kroz vreme, a alat za listanje metrika tiho
+vraća samo prvu stranu rezultata ako se ne parsira sa podrškom za
+paginaciju — sve troje izgleda kao "nema podataka za ovu porodicu", ne kao
+greška u upitu.
+
+### Alarm koji je trebalo "izgraditi" već postoji — pauziran, ne odsutan
+
+Kad se ova ista analiza predložila kao preporuka: dodati flotni alarm koji
+prati odnos iskorišćene i rezervisane memorije po zadatku. Provera pre
+gradnje je pokazala da takav alarm **već postoji** — živ, upravljan kao kod,
+sa tačno traženim izrazom, dva praga (upozorenje i kritično) i bogatim
+linkovima ka dashboard-u i log-u u obaveštenju. Razlika između "nema alarma"
+i "alarm postoji, ali je pauziran na zahtev tima koji ga prima, jer je
+preplavljivao zajednički kanal obaveštenja" izgleda slično spolja — u oba
+slučaja alarm ćuti — ali su to dva potpuno različita problema, i samo drugi
+je stvaran. Da je alarm izgrađen ponovo, rezultat bi bio dupliran izraz koji
+duplo obaveštava baš onaj kanal koji je tražio manje buke.
+
+Dva merenja vredna zapisivanja pre nego što se odluči šta dalje sa pauziranim
+alarmom. Prvo: signal utilizacije i stvaran događaj gašenja procesa zbog
+nedostatka memorije **ne slažu se u oba pravca** — jedna porodica je imala
+deset gašenja i nijedno upozorenje o utilizaciji, druga devet upozorenja i
+nijedno gašenje. Utilizacija i zasićenje memorije mere različite stvari, kao
+što ranije poglavlje već razlikuje za hostove — ovde je isti princip, samo na
+nivou pojedinačnog zadatka. Drugo, oštrije: sam broj utilizacije je u
+najmanje jednom potvrđenom slučaju dokazano **donja granica**, ne stvarna
+vrednost — zadatak je čitao znatno ispod sopstvenog plafona u istom trenutku
+kad je aktivno gašen zbog nedostatka memorije, jer signal utilizacije i signal
+gašenja uzorkuju po različitom ritmu. Alarm koji izgleda zeleno ne znači da
+zadatak nije bio, u tom istom trenutku, na ivici gašenja.
+
+Poslednja stvar čini ponovno naoružavanje pauziranog alarma suptilnijim nego
+što izgleda: program smanjivanja rezervacija koji je i sam deo ove analize
+**mehanički podiže isti odnos** na nepromenjenom stvarnom opterećenju — kad
+se memorija smanji radi uštede, ista apsolutna potrošnja sad zauzima veći
+procenat manje rezervacije. Kod porodica pogođenih ranijim krugom uštede,
+odnos utilizacije se u nekim slučajevima gotovo udvostručio, iako se stvarno
+opterećenje uopšte nije promenilo. Nijedna od njih još ne prelazi prag
+upozorenja — ali svaka sledeća runda uštede ih približava toj liniji, i
+procena "koliko bi ovaj prag bio bučan" izmerena pre uštede više ne važi posle
+nje. Pravilo koje sledi nije "ne alarmiraj na utilizaciju" nego "nikad ne
+ponovo koristi procenu buke izmerenu pre promene rezervacije — izmeri ponovo,
+posle."
+
 ## 23.3 Analitički deo — poznat kontrast sa standardnim metodom za servise
 
 ### RED metod je namenjen drugačijem obliku opterećenja
@@ -271,6 +349,17 @@ pekar koji sazna tek ujutru, od mušterija, da police stoje prazne.
   ta popravka nema čuvara — bilo ko sa pristupom konzoli je može tiho
   vratiti, i regresija će se prvi put primetiti tek posredno, kroz
   posledicu, ne kroz sam uzrok.
+- Ne rezuj CPU i memoriju podjednako iz navike — izmeri koji je resurs
+  stvarno usko grlo za taj konkretan posao (CPU-vezan posao skoro ništa ne
+  uštedi rezanjem memorije i obrnuto), i tretiraj porodicu blizu sopstvenog
+  memorijskog plafona kao prioritet za pouzdanost, ne samo kandidata za
+  uštedu.
+- Pre nego što izgradiš alarm koji "očigledno nedostaje," proveri da li već
+  postoji, negde pauziran ili preusmeren — odsutnost signala i postojeći,
+  ućutkan signal izgledaju identično spolja, ali imaju različite popravke.
+- Nikad ne ponovo koristi procenu buke jednog alarma izmerenu pre promene
+  rezervacije resursa — svaka runda smanjenja rezervacije mehanički menja tu
+  procenu na nepromenjenom stvarnom opterećenju.
 
 ## 23.5 Vežba za čitaoca
 

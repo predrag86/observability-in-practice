@@ -38,13 +38,16 @@ gateway, u visokoj dostupnosti, kroz koji prolazi skoro sav saobraćaj.**
 Konkretno:
 
 - Gateway je **Grafana Alloy** (distribucija OpenTelemetry Collector-a koju
-  održava Grafana Labs), pokrenut kao dva nezavisna zadatka na kontejnerskoj
-  platformi (AWS ECS/Fargate), iza internog load balansera.
+  održava Grafana Labs), pokrenut na kontejnerskoj platformi (AWS ECS/Fargate)
+  iza internog load balansera, sa **dva zadatka kao donjom granicom** —
+  autoskaliranje po opterećenju dodaje dodatne instance kad treba, nikad
+  manje od dve. (Kako to skaliranje utiče na sam proces obrade, konkretno na
+  raspoređivanje trejsova po instancama, razrađeno je u Poglavlju 12.)
 - Svi pošiljaoci — bilo da su to duže-živi servisi (backend aplikacija) ili
   kratkotrajni batch zadaci — gađaju **jedno stabilno DNS ime** koje ostaje isto
   kroz rebuild-ove i samog gateway-a i load balansera. Nijedan pošiljalac ne zna
-  niti ga zanima koja od dve instance gateway-a je trenutno primila njegov
-  signal.
+  niti ga zanima koliko je trenutno živih instanci gateway-a, niti koja je od
+  njih primila njegov signal.
 - Gateway je **jedino mesto koje drži kredencijale za cloud** (basic-auth token
   ka Grafana Cloud-u). Nijedna aplikacija, nijedan batch zadatak, nijedan
   sidecar ne zna taj token — što znači da kompromitovanje bilo kog pojedinačnog
@@ -58,7 +61,7 @@ Konkretno:
 
 Šematski, to izgleda ovako:
 
-![Telemetrija ide od pošiljalaca ka jednom stabilnom DNS imenu, koje ravnopravno raspoređuje saobraćaj na dve nezavisne gateway instance; samo gateway razgovara sa cloud platformom.](diagrams/diagram.png){: width="100%" }
+![Telemetrija ide od pošiljalaca ka jednom stabilnom DNS imenu, koje ravnopravno raspoređuje saobraćaj na dve ili više nezavisnih gateway instanci (autoskaliranje po opterećenju); samo gateway razgovara sa cloud platformom.](diagrams/diagram.png){: width="100%" }
 
 Ono što ovaj dijagram *ne* pokazuje, a bitno je: postoji mala, **eksplicitno
 dokumentovana** lista pošiljalaca koji gateway **zaobilaze** — Lambda funkcija
@@ -95,28 +98,21 @@ događaju. Ista logika je pokvarila i identitet same aplikacije u platformi za
 posmatranje — koji se menjao svaki put kad se gateway iznova pokrene, iako se
 aplikacija uopšte nije dirala.
 
-Prva popravka je bila najbrža moguća: dodat je poseban korak, odmah pre
-izvoza, koji eksplicitno **briše** tih nekoliko gateway-specifičnih atributa,
-ali samo za tu jednu, već pogođenu aplikaciju, po imenu. Popravka je
-verifikovana uživo i potvrđeno je da je rešila tačno taj slučaj. Ono što ta
-popravka nije rešila: identičan problem je i dalje postojao, neopažen i
-nedirnut, kod još dva druga, nepovezana pošiljaoca — jer je lista za brisanje
-bila ručno održavana po imenu pošiljaoca, ne strukturna izmena mehanizma
-samog. Svaki naredni pogođen pošiljalac bi zahtevao svoj sopstveni, ručni
-dodatak na tu listu.
+Popravka je bila ciljana, ne strukturna: odmah posle mehanizma za popunjavanje,
+a pre izvoza, dodat je uzak filter koji eksplicitno **briše** tih osam
+gateway-specifičnih atributa — ali samo za saobraćaj te jedne, već pogođene
+aplikacije, prepoznate po njenom imenu servisa. Sam mehanizam "popuni ako
+nedostaje" ostaje nepromenjen za svakog drugog pošiljaoca; ništa se ne
+premešta niti se sužava gde on radi. Popravka je verifikovana uživo kroz
+nekoliko nezavisnih provera — raspodela po zoni dostupnosti kod pošiljalaca
+kojima ta oznaka ionako treba da ostane, sadržaj identiteta na samoj
+pogođenoj aplikaciji, zdravlje pravila alarma koje je zavisilo od te oznake —
+i potvrđeno je da je rešila tačno taj slučaj, bez sporednog efekta na bilo
+kog drugog pošiljaoca. Tačno mesto u pipeline-u gde se ovakav filter ubacuje,
+i zašto je uzak, po-pošiljaocu obim bolji izbor od šireg preseka svih
+pošiljalaca odjednom, detaljnije je obrađeno u Poglavlju 10.
 
-Prava popravka, jedno izdanje kasnije, nije dodala još jedno ime na listu —
-promenila je **gde** taj mehanizam za popunjavanje uopšte radi. Umesto da
-radi nizvodno od svakog pošiljaoca, sužen je da radi samo odmah po prijemu, i
-to isključivo za onu šačicu izvora koje gateway *sam* hostuje (sopstveno
-samo-merenje i par direktnih integracija koje povlače podatke, a ne guraju
-ih) — pre nego što se ti podaci uopšte spoje sa ostatkom saobraćaja. Svaki
-drugi pošiljalac sad prolazi kroz gateway potpuno nedirnut po pitanju
-identiteta, jer mehanizam koji bi ga dirnuo više fizički nije na njegovom
-putu. Korak za brisanje po imenu je u potpunosti uklonjen — više nema šta da
-se briše.
-
-![Pre popravke, mehanizam koji popunjava nedostajuće resursne atribute radi nizvodno od svakog pošiljaoca i procuri sopstveni identitet gateway-a na svakog ko ga sam nije postavio. Posle popravke, taj mehanizam je sužen samo na izvore koje gateway sâm hostuje, pre spajanja sa ostatkom saobraćaja — svaki drugi pošiljalac prolazi nedirnut.](diagrams/ch04-identitet-popuni-ako-nedostaje.png){: width="85%" }
+![Popravka je uzak korak umetnut odmah posle resourcedetection mehanizma, koji briše osam gateway-specifičnih atributa samo za pošiljaoca kod koga je problem otkriven — svi ostali pošiljaoci prolaze kroz isti resourcedetection nedirnuto.](diagrams/ch04-identitet-popuni-ako-nedostaje.png){: width="85%" }
 
 ### Brisanje oznake i postavljanje na novu vrednost nisu ista operacija
 

@@ -129,6 +129,36 @@ se ta zaštita doda tek pošto nešto konkretno stvarno nestane.
 
 ![Ulazni i izlazni tok bajtova kroz izlazni prolaz, čitani u paru: razilaženje između dve linije, ne bilo koja linija pojedinačno, je ono što otkriva gubitak saobraćaja.](diagrams/dashboard-natdiff.png){: width="95%" }
 
+### Isti tip panela, drugačiji način upita, drugačije ime kolone — bez ijedne greške u upitu
+
+Treći primer iste klase greške, sa sasvim drugim uzrokom od prethodna
+dva, otkriven je na dashboard-u koji nema nikakve veze sa mrežom, ali
+prolazi kroz identičnu proveru: pet tabelarnih panela je posle izgradnje
+prikazivalo sirov naziv kolone `Value #A` umesto čitljivog imena poput
+"broj neuspelih pokušaja" ili "broj različitih korisnika". Provera upita
+uživo bi ovo propustila iz istog razloga kao i prethodna dva slučaja —
+upit je vraćao tačne, neprazne podatke, i sam broj u koloni je bio
+ispravan. Greška je bila isključivo u tome kako se ta kolona zvala.
+
+Uzrok: transformacija koja preimenuje kolonu ciljala je polje po imenu
+`Value` — ime koje ta ista transformacija dobija kad panel koristi
+**range** upit. Svih pet panela je, međutim, koristilo **instant** upit u
+tabelarnom formatu, a instant upit vraća vrednost pod imenom
+sufiksovanim identifikatorom same reference upita — `Value #A`, ne
+`Value`. Preimenovanje polja koje ne postoji pod tim imenom nije greška
+koja se prijavljuje; ono jednostavno ne pogodi ništa i tiho ne uradi
+ništa, ostavljajući sirovo ime da prođe do prikaza nepromenjeno.
+
+Ovo je ista opšta pouka kao odsečen naslov i duplirana vrednost iz
+prethodnog primera — provera upita dokazuje da panel nije mrtav, ne da je
+ispravno prikazan — ali sa uzrokom koji njihova provera ne bi ni
+teoretski mogla da uhvati na drugi način: dva različita režima upita nad
+istim izvorom podataka i istim tipom panela ne dele automatski isto ime
+izlaznog polja, a transformacija koja pretpostavlja fiksno ime se ne
+buni kad ta pretpostavka ne važi, samo prestane da radi. Popravka nije
+bila u upitu nego u transformaciji: preimenovanje je pomereno da cilja
+stvarno ime polja koje instant upit zaista vraća.
+
 ### Alat koji obećava da pokrije više ravni odjednom — i zašto to ovde ne važi
 
 Postoji tehnologija koja obećava tačno ono što ravan mrežnog interfejsa po
@@ -296,6 +326,12 @@ javi uopšte može da progovori.
   proveru uživo — provera upita dokazuje da panel nije mrtav, ne da je
   ispravno prikazan; za greške u prikazu (odsečen tekst, dupla vrednost
   na mestu gde treba jedna) potreban je pogled na sam iscrtani panel.
+- Ne pretpostavljaj da isti tip panela nad istim izvorom podataka vraća
+  isto ime izlaznog polja bez obzira na režim upita — instant i range
+  upit istog izvora mogu imenovati vrednost drugačije, a transformacija
+  koja cilja pogrešno ime ne prijavljuje grešku, samo tiho ne uradi
+  ništa; proveri stvarno ime polja koje upit vraća, ne ono koje
+  pretpostavljaš iz dokumentacije ili iz drugog panela.
 - Kad razmatraš alat koji obećava da pokrije više ravni odjednom (npr.
   onaj koji čita direktno iz kernela hosta), prvo proveri da li tvoja
   flota uopšte ima kernel kome bi taj alat mogao da priđe — najveća

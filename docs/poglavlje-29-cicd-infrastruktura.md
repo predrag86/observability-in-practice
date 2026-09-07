@@ -22,6 +22,12 @@ razlog da promeniš sam proces koji ga je proizveo?
 
 ### Dva JSON fajla, jedna sekunda razmaka
 
+Poglavlje 6 je ovaj obrazac — "par veličina, standardna i uvećana, jedna od njih
+propusti izmenu koju je druga dobila" — već predstavilo kao jedan od tri opšta
+načina na koje registrovanje revizije i njeno stvarno lansiranje tiho divergiraju.
+Ovde je taj isti obrazac razrađen kao potpun slučaj, sa procesom koji ga je
+proizveo i procesom koji ga je na kraju zaustavio.
+
 Jedan zakazani posao za obradu podataka izvršavao se u dve varijante: standardnoj, i
 "LARGE" varijanti za posebno zahtevan model koji je standardnu veličinu redovno gušio
 memorijom (OOM). Svaka varijanta je bila sopstvena revizija ECS task definicije — dva
@@ -184,6 +190,57 @@ definicije s početka poglavlja, samo jedan sloj iznad koda: dva mesta koja opis
 stanje sistema, održavana nezavisno, tiho su divergirala — samo što je ovog puta jedno od
 ta dva mesta proza, ne konfiguracija, pa ga nijedan `plan` ne bi ni pokušao da uporedi.
 
+### Kloniranje nasledi i identitet, ne samo bazu slike
+
+Postoji i treći oblik ovog istog obrasca, otkriven istom nedeljnom proverom
+pokrivenosti alarma koja je uhvatila i slučaj sa dve JSON task definicije — ali
+uzrok ovoga puta nije bio nezavisno održavanje dva mesta koja bi trebalo da se
+slažu, nego kopiranje koje je preneo nešto što nije trebalo da se prenese.
+
+Nekoliko porodica zadataka je nastalo kloniranjem tuđe task definicije, jer im
+je bilo potrebno tačno isto polazište slike koje ta druga porodica već koristi
+— brži put od pisanja definicije od nule. Kloniranje je iskopiralo i promenljivu
+okruženja kojom sidecar prijavljuje sopstveni identitet servisa. Niko je nije
+ažurirao pri kloniranju, pošto ništa u samom procesu kloniranja ne skreće pažnju
+na tu jednu promenljivu među desetinama drugih — kontejner za aplikaciju je,
+nezavisno, dobio svoje, ispravno ime, ali sidecar je nastavio da javlja identitet
+porodice iz koje je kloniran.
+
+Efekat: telemetrija tri različite porodice tiho se slivala pod tuđim imenom, dok
+su same te tri porodice, po sopstvenom imenu, bile potpuno nevidljive u
+platformi za posmatranje — dashboard i alarmi koji ih prate su i dalje radili
+(prate sam ECS, ne telemetriju), ali svaka istraga zasnovana na imenu porodice
+nije imala šta da pronađe. Konkretna razmera: dve od pogođenih porodica su
+slivale svoju telemetriju baš pod imenom porodice koja nosi pojedinačno najveću
+troškovnu stavku u celoj floti — merenja pokazuju hiljade vremenskih serija koje
+su, prema oznaci, pripadale toj jednoj skupoj porodici, a zapravo su opisivale
+nešto sasvim drugo.
+
+Ono što ovaj slučaj čini vrednim više od još jednog primera pogrešnog imena:
+sam alat za nedeljnu proveru pokrivenosti je, pored otkrivanja problema, nudio i
+automatski predlog popravke — a taj predlog je bio sistematski pogrešan u
+**svakom** slučaju u kome je do tada bio primenjen. Predlog je glasio: "sidecar
+zna tačno ime, prepiši ime na strani aplikacije da mu se poklopi." Pretpostavka
+da je sidecar autoritativna strana zvučala je razumno — sidecar je taj koji šalje
+telemetriju — ali merenje na sva tri stvarna slučaja pokazalo je suprotno: u sve
+tri, aplikacija je nosila tačno ime, a sidecar je nosio nasleđeni, tuđi identitet.
+Da je predlog alata bez razmišljanja primenjen, popravka bi prepisala ispravno
+ime aplikacije da se poklopi sa pogrešnim imenom sidecar-a — potvrđujući
+pogrešnu vezu umesto da je raskine, i to dvaput baš na onu istu, najskuplju
+porodicu.
+
+Popravka alata nije bila "obrni predlog" nego "izmeri pre nego što predložiš
+smer": provera sad upoređuje obe strane sa **deklarisanim** imenom porodice
+(ono koje porodica sama sebi dodeljuje, van i sidecar-a i aplikacije), imenuje
+tačno onu stranu koja od njega odstupa, i kad se ni jedna strana ne poklapa —
+što je moguće kad je i deklaracija sama zastarela — kaže "popravi obe", umesto
+da nagađa koja je "prava."
+
+Pravilo koje ostaje: **alat koji tačno pronalazi da postoji neslaganje ne mora
+tačno da zna i koja strana greši.** Smer automatski predložene popravke zaslužuje
+istu sumnju kao i sam nalaz — pogotovo kad je nalaz nastao kopiranjem, gde je
+lakše kopirati grešku nego je primetiti.
+
 ## 29.3 Analitički deo — princip koji je ovde nedostajao već ima ime
 
 ### Kontinuirana rekoncilijacija, ne periodično poređenje
@@ -267,6 +324,10 @@ opipljivom, umesto apstraktnom.
   što mu poveruješ, proveri fajl sistem ili nalog, ne pasus pored njega. Ovo važi
   podjednako za dokumentaciju kao i za konfiguraciju: obe vrste teksta mogu tiho da
   divergiraju od stvarnosti, samo što nijedan `plan` ne upozorava kad proza zaostane.
+- Alat koji tačno pronalazi neslaganje ne mora tačno da zna i koju stranu treba popraviti
+  — proveri smer automatski predložene popravke merenjem, isto koliko proveravaš i sam
+  nalaz, pogotovo kad je uzrok nalaza kopiranje (kloniranje prenosi i greške, ne samo
+  strukturu).
 
 ## 29.5 Vežba za čitaoca
 

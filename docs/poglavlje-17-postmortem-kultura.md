@@ -68,10 +68,10 @@ mehanizam za praćenje pokrivenosti alarma bio ručno održavana lista koja se
 nikad automatski nije poredila sa stvarnim stanjem flote — što je,
 posmatrano unazad, otvorilo šest odvojenih, nezavisnih rupa u pokrivenosti
 tokom sedam nedelja, nijedna primećena dok neko slučajno nije uočio
-neslaganje na dashboard-u. Drugi, srodan slučaj, dogodio se dan kasnije, na
-istom tipu zadatka, ali sasvim drugim mehanizmom: dva odvojena, ispravna
-upozorenja niskog nivoa ozbiljnosti, koja se nikad nisu zbrojila u jasnu
-sliku da se nešto ozbiljno ponavlja iznova. Nijedan od ova dva incidenta nije
+neslaganje na dashboard-u. Drugi, srodan slučaj (isti incident detaljno ispričan u Poglavlju 14),
+dogodio se dan kasnije, na istom tipu zadatka, ali sasvim drugim mehanizmom:
+dva odvojena, ispravna upozorenja niskog nivoa ozbiljnosti, koja se nikad
+nisu zbrojila u jasnu sliku da se nešto ozbiljno ponavlja iznova. Nijedan od ova dva incidenta nije
 srušio nijedan servis. Oba su bila, po sopstvenom priznanju napisanog
 postmortema, ozbiljnija za poverenje u sistem nego neki pravi, kratkotrajni
 ispad.

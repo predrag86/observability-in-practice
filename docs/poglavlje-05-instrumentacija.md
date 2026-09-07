@@ -76,7 +76,7 @@ zahtevu, upit "koji korisnik je pogodio ovaj spor endpoint" ili "koliko grešaka
 dolazi od ovog specifičnog API ključa" postaje trivijalan filter u Grafana
 Cloud-u — bez toga, taj podatak bi postojao samo u aplikacionim logovima, van
 domašaja trejsova i metrika izvedenih iz njih (span metrics, obrađeno u
-Poglavlju 6).
+Poglavlju 11).
 
 ![Auto-instrumentacija (Java agent, Python SDK+shim) pokriva sve što je strukturno vidljivo iz poznatih biblioteka; jedina ručna tačka je ekstrakcija identiteta pozivaoca u zajedničkom middleware sloju, bez obzira kojim od tri kanala je identitet stigao.](diagrams/ch5-instrumentation.png){: width="92%" }
 

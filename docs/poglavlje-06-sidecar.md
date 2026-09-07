@@ -169,10 +169,12 @@ Tri stvarna slučaja ovog obrasca, svaki drugačiji:
    Kad je sidecar dodat, nova standardna revizija je registrovana ispravno
    — ali LARGE polovina istog para je registrovana **bez** sidecar-a,
    propuštena jer je par tretiran kao jedna izmena umesto dve. Rezultat:
-   LARGE varijanta je nedeljama radila potpuno slepo za observability, a
-   Slack alarmi koji su je pokrivali otvarali su linkove ka praznim
-   Grafana dashboard-ima — alarm je i dalje radio (jer prati sam ECS, ne
-   telemetriju), ali istraga alarma nije imala šta da pokaže.
+   LARGE varijanta je danima radila potpuno slepo za observability — ni
+   metrike, ni logovi, ni trejsevi — dok je nedeljna provera na nivou cele
+   flote (opisana dalje u ovom poglavlju) to nije uhvatila. Pun tok ovog
+   konkretnog incidenta — uključujući tačno koliko je kašnjenje detekcije
+   iznosilo i zašto baš toliko — razrađen je kao centralni primer u
+   Poglavlju 29.
 2. **Porodica koja nikad nije ni ušla u talas onboardovanja.** Jedna
    porodica ima launcher koji hardkoduje **dve** odvojene pinovane
    revizije za dva različita moda rada, ne jednu. Talas onboardovanja koji
@@ -226,6 +228,36 @@ pokreće.** Prijava da je novija revizija izgubila sidecar može značiti
 "bezopasno, launcher je i dalje na staroj dobroj reviziji" ili "aktivan
 prekid, launcher je već pomeren" — razlikovanje ta dva zahteva ručnu
 proveru pina, alat samo ukazuje gde da se gleda.
+
+### Na listi "instrumentirano" ne znači da nešto stvarno izlazi
+
+Nedeljna provera pokrivenosti flote, već opisana iznad, održava listu
+porodica koje se smatraju instrumentiranim — svaka koja emituje makar
+osnovni identitet u platformi za posmatranje ulazi na tu listu i skida se sa
+liste "još nije onboardovano." Revizija cele liste, sprovedena istom
+proverom, otkrila je da ta lista meri pogrešnu stvar za šest porodica: pet od
+šest jednostavno nikad nije ni bilo pomenuto — nema ih ni na jednoj
+registrovanoj reviziji, ne slučaj da su ispale iz para. Šesta je bila
+suptilnija i zanimljivija: porodica koja **jeste** na listi, čiji sidecar
+kontejner redovno radi i redovno javlja `service.name` — sve što provera
+prisustva proverava. Ono što provera ne proverava: da li aplikacioni
+kontejner uopšte ima kud da pošalje bilo šta. Ovoj konkretnoj porodici je
+nedostajala promenljiva okruženja za odredišnu adresu kolektora u
+potpunosti, a slika koju pokreće nije ni nosila OpenTelemetry biblioteku —
+rezultat nisu trejsevi, nisu logovi, nisu ni aplikacione metrike, ništa osim
+onoga što sam sidecar kontejner meri o samom sebi.
+
+Očigledan popravak — dodati nedostajuću promenljivu i nazvati stvar
+gotovom — namerno **nije** urađen. Razlog: dodavanje same promenljive bi
+učinilo da porodica *izgleda* potpuno instrumentirana na listi pokrivenosti,
+dok slika i dalje ne bi imala šta da izveze čak i kad zna kuda da šalje.
+Rezultat bi bio gori od trenutnog stanja, ne bolji — trenutno stanje bar
+otvoreno priznaje da nešto nedostaje; "popravljeno" stanje bi to sakrilo iza
+zelene kvačice na listi, dok istinska popravka (dodavanje SDK-a u sliku)
+ostaje van dometa ove konkretne runde promena. Lista pokrivenosti meri
+**prisustvo mehanizma**, ne **izlaz mehanizma** — dve stvari koje se
+poklapaju u devet od deset slučajeva, dovoljno često da razlika ostane
+neprimećena dok je neko ne potraži namerno.
 
 ## 6.3 Analitički deo — sidecar naspram agenta, i granica gde sidecar prestaje da se isplati
 
@@ -325,6 +357,10 @@ tvrdnja prestaje da važi.**
   prometa (`target_info` raščlanjen po `aws_ecs_task_revision`), ne samo
   da je uspešno registrovan u AWS — registrovanje i lansiranje su dva
   odvojena čina.
+- Provera pokrivenosti koja gleda samo prisustvo mehanizma (sidecar radi,
+  javlja identitet) ne garantuje da mehanizam ima šta da izveze — ne
+  dopunjuj nedostajuće promenljive samo da bi porodica prošla proveru, ako
+  slika iza njih i dalje nema SDK; to skriva prazninu umesto da je zatvori.
 
 ## 6.5 Vežba za čitaoca
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Source-of-truth generator for the "ch30-ciklus-revizije" diagram used in
+Source-of-truth generator for the "ch31-ciklus-revizije" diagram used in
 Poglavlje 30 / Chapter 30 (merenje-zrelosti / measuring-maturity).
 
 Why this file exists
 ---------------------
 Same rationale as scripts/diagrams/cost_crossover.py: the original
-ch30-ciklus-revizije.png was hand-built with no source file kept
+ch31-ciklus-revizije.png was hand-built with no source file kept
 alongside it, so its Serbian labels were baked into raster pixels with
 no way to re-render them in English. This script reconstructs the
 diagram from one parameterized Graphviz source, so both language
@@ -14,9 +14,9 @@ variants come from the same structure.
 
 Usage
 -----
-    python3 scripts/diagrams/ch30_ciklus_revizije.py sr   # -> docs/diagrams/ch30-ciklus-revizije.png
-    python3 scripts/diagrams/ch30_ciklus_revizije.py en   # -> docs/diagrams/ch30-ciklus-revizije.en.png
-    python3 scripts/diagrams/ch30_ciklus_revizije.py all  # both
+    python3 scripts/diagrams/ch31_ciklus_revizije.py sr   # -> docs/diagrams/ch31-ciklus-revizije.png
+    python3 scripts/diagrams/ch31_ciklus_revizije.py en   # -> docs/diagrams/ch31-ciklus-revizije.en.png
+    python3 scripts/diagrams/ch31_ciklus_revizije.py all  # both
 
 Structure note: the book's standard color coding (gray = neutral,
 red = problem/red-flag, tan = decision/policy note, green not used
@@ -47,7 +47,7 @@ NOTE_LINE = "#8B7355"
 
 LANGUAGES = {
     "sr": {
-        "suffix": "",  # docs/diagrams/ch30-ciklus-revizije.png (default locale, no suffix)
+        "suffix": "",  # docs/diagrams/ch31-ciklus-revizije.png (default locale, no suffix)
         "nodes": {
             "p1": "Prolaz 1: čitanje\ndokumentacije,\nizvlačenje tvrdnji",
             "p2": "Prolaz 2: usklađivanje\nsa sistemom za\npraćenje rada",
@@ -62,7 +62,7 @@ LANGUAGES = {
         },
     },
     "en": {
-        "suffix": ".en",  # docs/diagrams/ch30-ciklus-revizije.en.png
+        "suffix": ".en",  # docs/diagrams/ch31-ciklus-revizije.en.png
         "nodes": {
             "p1": "Pass 1: reading\ndocumentation,\nextracting claims",
             "p2": "Pass 2: reconciling\nwith the work-tracking\nsystem",
@@ -83,7 +83,7 @@ def render(lang: str):
     cfg = LANGUAGES[lang]
     n = cfg["nodes"]
 
-    g = Digraph("ch30_ciklus_revizije", format="png")
+    g = Digraph("ch31_ciklus_revizije", format="png")
     g.attr(bgcolor="white", fontname="DejaVu Serif", rankdir="TB",
            nodesep="0.5", ranksep="0.7", splines="spline")
     g.attr("node", fontname="DejaVu Serif", fontsize="14", margin="0.25,0.15",
@@ -123,7 +123,7 @@ def render(lang: str):
            fillcolor=NOTE_FILL, color=NOTE_LINE)
     g.edge("poredjenje", "odgovor")
 
-    out_path = OUT_DIR / f"ch30-ciklus-revizije{cfg['suffix']}.png"
+    out_path = OUT_DIR / f"ch31-ciklus-revizije{cfg['suffix']}.png"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     g.render(outfile=str(out_path), cleanup=True)
     print(f"wrote {out_path}")
