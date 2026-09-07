@@ -152,14 +152,15 @@ umesto da forsira jedan oblik da odgovori na oba.
 
 Tek kad je uspešna prijava postala vidljiva u standardnom toku logova,
 implementacija je mogla izgraditi konkretne upite za obrasce preuzimanja
-naloga: poređenje geografske lokacije trenutne uspešne prijave sa
-poslednjom poznatom lokacijom istog korisnika u kratkom vremenskom
-prozoru (nemoguće putovanje), otkrivanje istog tokena korišćenog sa dva
-različita klijenta ili IP adrese u preklapajućem vremenskom periodu
-(mogući replay), i otkrivanje neobično velikog broja istovremeno aktivnih
-sesija za jedan identitet. Nijedan od ova tri upita nije bio moguć pre
-popravke asimetrije — ne zato što je logika upita bila komplikovana, nego
-zato što ulazni podaci prosto nisu postojali.
+naloga: brojanje koliko različitih IP adresa jedan korisnik koristi za
+uspešne prijave u kratkom vremenskom prozoru (jeftin zamenski signal za
+nemoguće putovanje — više o tome zašto baš zamenski, ne puna tehnika, u
+sledećem odeljku), otkrivanje istog tokena korišćenog sa dva različita
+klijenta ili IP adrese u preklapajućem vremenskom periodu (mogući replay),
+i otkrivanje neobično velikog broja istovremeno aktivnih sesija za jedan
+identitet. Nijedan od ova tri upita nije bio moguć pre popravke
+asimetrije — ne zato što je logika upita bila komplikovana, nego zato što
+ulazni podaci prosto nisu postojali.
 
 ![Asimetrija u logovanju autentikacije: neuspeh vidljiv po difoltu na standardnom nivou, uspeh ispod praga vidljivosti — dok se to ne popravi, čitava klasa bezbednosnih pitanja o preuzimanju naloga ostaje neodgovoriva.](diagrams/ch20-asimetrija.png){: width="90%" }
 
@@ -255,18 +256,30 @@ asimetrije (neuspeh vidljiv, uspeh nevidljiv) manje uobičajen u
 formalnoj literaturi, ali jednako štetan kada se dogodi, jer standardna
 smernica traži simetriju, ne bilo koji konkretan pravac asimetrije.
 
-### Nemoguće putovanje kao dobro dokumentovana, ali retko implementirana tehnika
+### Nemoguće putovanje kao dobro dokumentovana tehnika — i jeftiniji zamenik koji je stvarno sproveden
 
 Dobavljači identitetskih sistema dokumentuju otkrivanje nemogućeg
 putovanja kao standardnu tehniku: poređenje geografske lokacije trenutnog
 pokušaja prijave sa vremenom i lokacijom prethodnog, uz proveru da li je
 fizičko putovanje između te dve lokacije u tom vremenskom razmaku uopšte
-moguće. Minimalni ulazni podaci koje ova tehnika zahteva su tačno ono što
-je asimetrija u ovoj implementaciji blokirala: geografska lokacija
-izvedena iz IP adrese, vremenski žig, i trajno sačuvan zapis lokacije
-prethodne uspešne sesije. Bez pouzdanog, trajnog zapisa uspešnih prijava,
-ova tehnika je nemoguća bez obzira koliko sofisticirana logika poređenja
-bila napisana.
+moguće. Minimalni ulazni podaci koje ova puna tehnika zahteva — geografska
+lokacija izvedena iz IP adrese, vremenski žig, trajno sačuvan zapis
+lokacije prethodne uspešne sesije — bili su tačno ono što je asimetrija u
+ovoj implementaciji ranije blokirala.
+
+Vredi biti precizan oko toga šta se dogodilo kad je asimetrija popravljena:
+implementacija nije odmah izgradila punu tehniku sa geolokacijom, nego
+jeftiniju zamenu koja koristi isti novodobijeni podatak na prostiji način —
+brojanje koliko različitih IP adresa jedan korisnik koristi za uspešne
+prijave unutar kratkog vremenskog prozora, bez ijednog koraka geolokacije.
+Nekoliko različitih IP adresa u desetak minuta je već dovoljno redak
+obrazac da opravda alarm, čak i bez znanja da li su te adrese geografski
+blizu ili na suprotnim stranama sveta — cena greške (lažno pozitivan alarm
+za korisnika koji legitimno promeni mrežu) je niska u odnosu na cenu
+propuštanja stvarnog preuzimanja naloga. Ovo je živ, produkcioni alarm, ne
+prototip — ali vredi ga zvati pravim imenom: jeftin zamenski signal za
+nemoguće putovanje, ne sama tehnika. Prava geolokacija ostaje eksplicitno
+zapisana kao preostala stavka na spisku, ne nešto što je već sprovedeno.
 
 ### Otkrivanje ponovne upotrebe tokena je slabije standardizovano
 
