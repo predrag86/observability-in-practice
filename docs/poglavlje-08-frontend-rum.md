@@ -218,6 +218,53 @@ za čitaoca nije u tome da svaki primer u knjizi bude završen — nego da svaki
 primer bude tačan onome što stvarno postoji u tom trenutku, uključujući i
 ono što se zna da nedostaje.
 
+### Dobavljač je tiho promenio podešavanje koje niko u timu nikad nije postavio
+
+Treći izvor pravno osetljivih podataka u RUM cevovodu ne dolazi iz koda
+aplikacije niti iz onoga što browser sam po sebi prikuplja — dolazi iz
+podešavanja koje **hostovana platforma za prijem RUM podataka** čuva o svakoj
+aplikaciji, van bilo kog fajla koji tim drži pod kontrolom verzija.
+
+Konkretan slučaj: obe frontend aplikacije su imale eksplicitnu, upisanu odluku
+— grubo geolociranje isključeno, jer je reč o autentikovanom, internom alatu sa
+poznatim korisnicima u EU, i cilj je minimizovati prikupljanje ličnih podataka.
+Platforma je tu vrednost tiho prebacila na uključeno, na nivou preciznosti grada
+(ne samo kontinenta ili države — mnogo precizniji nivo nego što izraz "grubo
+geolociranje" sugeriše), i to na obe aplikacije istovremeno, uz podešavanje
+koje se ne pojavljuje ni u jednom fajlu koji tim održava. Istorija verzija
+same konfiguracije potvrđuje da to nije bila ljudska izmena — jedini zabeleženi
+upis je bio originalni, koji je vrednost postavio na isključeno. Promena je
+došla sa strane platforme, van bilo kakve akcije tima. Prozor izloženosti gornja
+granica: oko dva meseca — od poslednje primene infrastrukturnog koda do
+otkrića, koje se dogodilo tek prvim pokretanjem periodične provere razlike
+između željenog i stvarnog stanja. Ništa u runtime monitoringu ne bi ovo
+primetilo samo od sebe.
+
+Popravka je nosila sopstvenu zamku: alat za infrastrukturu kao kod je prijavio
+uspešnu primenu **dvaput** za redom, a stvarno stanje se nije promenilo nijednom
+od ta dva puta. Razlog je drugi, nedokumentovan prekidač na nivou cele platforme
+— geolociranje se ne može uključiti kroz podešavanje jedne aplikacije ako je
+isključeno na tom višem nivou, ali se *može* isključiti odatle nadole bez
+ikakve prepreke. "Primena uspešna" je time dokazivala samo da je komanda
+poslata, ne da je podešavanje stvarno promenjeno — jedini pouzdan dokaz je bio
+sledeći plan izvršen odmah posle primene, koji upoređuje željeno stanje sa
+osvežnim, stvarnim stanjem.
+
+Poslednji obrt: kad je tim krenuo da istraži šta uraditi sa otkrivenom
+promenom, ispostavilo se da je sama polazna odluka — "geolociranje isključeno"
+— zastarela, upisana bez datuma, i da postoji novija, neformalna odluka da se
+geolociranje zapravo **želi**, upravo na nivou preciznosti grada koji je
+platforma tiho uključila. Refleksni prvi potez, vratiti podešavanje na staru,
+pisanu odluku, bio je pogrešan potez — ne zato što je pogrešno poštovati
+pisanu politiku, nego zato što ta politika više nije važila, a ništa u njoj
+nije nosilo datum koji bi to otkrio. Konačna popravka nije bila "vrati na
+staro" nego "upiši novu odluku eksplicitno, sa razlogom i datumom, tako da
+sledeći put kad se nešto promeni — bilo sa strane platforme, bilo sa strane
+tima — bude jasno koja je odluka trenutno na snazi." I dalje otvoreno pitanje,
+namerno ostavljeno van dometa ovog poglavlja: da li postoji pravni osnov
+(pristanak korisnika, na primer) za prikupljanje lokacije na ovom nivou
+preciznosti — to je odluka koju ovaj tim ne donosi sam.
+
 ## 8.3 Analitički deo — zašto direktna veza nije kompromis nego zahtev, i šta znači kad "jedan filter" nije dovoljan
 
 ### Zašto zvanična arhitektura RUM-a skoro uvek ide direktno u cloud
@@ -310,6 +357,16 @@ eksplicitnu proveru."**
 - Hvatanje greške i mogućnost da se ta greška razume nisu ista stvar — provera
   da JS greške stižu ne znači da su stack tragovi čitljivi; bez otpremanja
   sourcemap-a, greška je uhvaćena, ali istraga i dalje počinje od nule.
+- Podešavanja koja hostovana platforma čuva o tvojoj aplikaciji (ne kod koji
+  ti pišeš) su i dalje deo tvoje površine rizika — proveri ih periodičnom
+  proverom razlike, ne samo jednom pri uvođenju.
+- "Primena je uspešna" dokazuje da je komanda poslata, ne da se stvarno
+  stanje promenilo — kad postoji mogućnost skrivenog, nadređenog prekidača,
+  jedini pravi dokaz je sledeći plan izvršen posle primene, protiv osveženog
+  stanja.
+- Pisana odluka bez datuma ne razlikuje se od trajne istine — kad je vratiš
+  na staro jer "tako piše," proveri prvo da li još uvek važi, ne samo da li
+  je zapisana.
 
 ## 8.5 Vežba za čitaoca
 
