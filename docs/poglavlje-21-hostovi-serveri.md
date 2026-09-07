@@ -145,6 +145,66 @@ razlog za onog ko ih kasnije preispita.
 
 ![Zašto uvezeni zajednički dashboard tipično prestane da radi: pogrešan izvor podataka, nedostajući kolektor koji obara promenljive šablona, neusaglašena šema imenovanja, i agregacija koja tiho briše oznake — četiri odvojena uzroka, isti simptom "nema podataka."](diagrams/ch21-cetiri-uzroka.png){: width="90%" }
 
+### Treći, potpuno nezavisan sloj: pogled izvan same kutije
+
+Sve dosad opisano u ovom poglavlju — sopstveni skup metrika, kalibracija
+praga, razdvajanje utilizacije od zasićenja — deli jednu zajedničku osobinu:
+sve to čita signal koji **agent na samom hostu** prikuplja i gura ka
+kolektoru posmatranja. To znači da ceo taj sloj deli sudbinu sa svim
+onim što bi moglo prekinuti taj put — sam agent, kolektor, ili platforma
+za posmatranje. Alarm koji čuva "host je prestao da javlja" ne može sam
+da razlikuje dva sasvim različita stanja: host je stvarno mrtav, ili je
+samo cev kojom host javlja prestala da radi. Pitanje koje taj alarm ostavlja
+otvoreno — "mrtva kutija ili mrtav agent?" — dobavljač infrastrukture već
+zna odgovor, besplatno, jer to meri sasvim izvan mašine na kojoj agent
+uopšte radi.
+
+Ovaj treći sloj čita direktno status same instance sa strane provajdera —
+da li operativni sistem gosta uopšte odgovara, i da li je sama
+infrastruktura ispod instance zdrava — i namerno **ne ide** kroz isti put
+kojim ide ostatak posmatranja host sloja, nego se čita direktno u trenutku
+provere. Ovo je ista disciplina imenovana ranije u knjizi za sasvim drugu
+komponentu: **watcher koji posmatra kritičnu putanju ne sme da zavisi od
+infrastrukture koju posmatra** — ovde primenjena na hostove, umesto na
+zadatke. Treći sloj preživljava tačno onaj kvar zbog kog bi prva dva sloja
+ovog poglavlja ućutala.
+
+Otkriveno je i da sporedna korist ovog sloja na kraju važi više od
+prvobitnog razloga zašto je uveden: to je **jedini** signal o zdravlju
+mašina koje nikad nisu dobile agenta u ovom poglavlju opisan — hostovi
+svesno odbijeni sa ove strane posmatranja, iz razloga koji nemaju veze sa
+njihovom važnošću. Bez ijedne izmene na tim mašinama, dobile su bar
+osnovnu, spolja merenu proveru da li su uopšte žive. Vredi odmah
+naglasiti granicu: ovo nije zamena za agenta, samo dopuna njegovog
+odsustva — mašina prolazi svaku ovakvu proveru i sa gotovo punim diskom,
+jer provera meri da li je mašina dostupna, ne da li joj je dobro.
+
+Uvođenje ovog sloja nosilo je i sopstvenu, uskotehničku zamku vrednu
+imenovanja: upit mora ostati nezavisan od konkretne flote instanci (da automatski obuhvati
+svaku instancu, ne unapred nabrojanu listu), ali naivan način da se to
+postigne — otvoreni džoker umesto tačnog identifikatora — ne radi kako
+izgleda: takav upit se ne ograničava na trenutno žive instance, nego
+obuhvata **svaku instancu ikad viđenu**, uključujući godine ugašenih i
+zaboravljenih. Ispravan oblik je upit koji sam otkriva identitete iz
+kratkog, skorašnjeg prozora, ne iz cele istorije. Druga, sitnija ali podmukla
+zamka: naziv oznake koju ovakav upit vraća nije isti naziv koji bi neko
+očekivao iz iskustva sa ostatkom sistema, pa poruka obaveštenja koja ga
+referencira po očekivanom, a ne stvarnom imenu, tiho ispadne prazna —
+obaveštenje koje kaže "instanca " i ništa posle toga, umesto da prijavi
+grešku.
+
+Konačno, ovaj sloj je prvi u poglavlju čija cena raste sa svakim pojedinačnim
+merenjem, ne sa količinom podataka koja se čuva — svaka provera se
+naplaćuje po pozivu dobavljaču infrastrukture, nezavisno od toga da li je
+ista provera napravljena sekundu ranije. Učestalost provere je zato
+namerno izabrana ne na osnovu toga koliko brzo bi neko voleo da sazna za
+problem, nego na osnovu direktnog poređenja: učestalija provera bi
+košta­la višestruko više nego što je ušteđeno svim ostalim merama u ovom
+poglavlju zajedno. Ista vrsta računa — da samo posmatranje ima sopstvenu
+cenu, nezavisnu od onoga što se njime posmatra — javlja se ovde po drugi
+put u knjizi, prvi put primenjena na proveru izvan agenta umesto na
+skladištenje i čitanje podataka unutar platforme za posmatranje.
+
 ## 21.3 Analitički deo — poznat metod, dokumentovan uzrok kvara
 
 ### USE metod kao formalni okvir za ono što implementacija radi intuitivno
@@ -243,6 +303,13 @@ svaki deo njega je proveren i tačan za grad u kom se stvarno vozi.
   tačnu verziju pravila koje menjaš, ako isti skup pravila u pozadini
   menja i neki automatski proces — inače rizikuješ da tiho pregaziš
   promenu koja se desila između tvog čitanja i tvog pisanja.
+
+- Drži bar jedan sloj provere zdravlja hosta koji čita status direktno od
+  provajdera infrastrukture, van puta kojim ide agent i ostatak
+  posmatranja — taj sloj je jedini koji preživljava tačno onaj kvar (pao
+  agent, pao kolektor, pala platforma) zbog kog svaki sloj zasnovan na
+  agentu ućuti. Kad taj sloj naplaćuje po pozivu, biraj učestalost
+  proveravanjem računa, ne osećajem koliko brzo bi voleo da sazna.
 
 ## 21.5 Vežba za čitaoca
 

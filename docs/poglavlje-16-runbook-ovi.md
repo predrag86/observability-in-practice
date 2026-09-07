@@ -125,6 +125,55 @@ izostavljanje je jednako vredna informacija kao i korak koji **jeste**
 uključen, i vredi je zapisati zajedno sa razlogom, ne samo prećutno
 izostaviti.
 
+### Kad runbook postane dugme koje izvršava kod, ne čovek
+
+Sve dosad opisano u ovom poglavlju pretpostavlja čoveka koji čita korake i
+sam ih sprovodi. Isti alarm sada nosi i doslovno dugme — **"Ponovo pokreni
+ovaj zadatak"** — koje poslednji korak izvršava umesto dežurnog inženjera.
+Vredi ga posmatrati kao runbook doveden do krajnosti: otisak simptoma sveden
+na tačno jedan konkretan neuspeli zadatak, toliko uzak da cela procedura
+staje u jedan klik. Upravo zato isti zahtevi koji važe za tekstualni runbook
+ovde važe strože — kod nema priliku da zastane i posumnja pre nego što
+izvrši korak.
+
+**Trenutak snimanja je odlučio da li uputstvo uopšte može da postoji.** ECS
+drži opis zaustavljenog zadatka dostupnim samo oko sat vremena; alarm
+pročitan sledećeg jutra ne bi mogao da se rekonstruiše iz samog ID-ja
+zadatka. Zato se tačna revizija definicije zadatka i tačan override komande
+snimaju u trenutku slanja alarma, ne u trenutku klika na dugme — isti
+princip na kome počiva runbook uopšte (znanje pripremljeno **unapred**, dok
+još postoji, jer ga neće biti kad zatreba), ovde primenjen na stanje
+sistema umesto na proceduru koju čovek pamti.
+
+**Ponovo pokrenut zadatak nije isto što i ponovo pokrenut raspored.**
+Override komande nosi konkretan posao (koji resurs treba obraditi);
+podrazumevana komanda same definicije zadatka je sasvim drugi posao, i
+pokreće se **bez greške**. To je ista vrsta opasnosti kao grubo grananje po
+otisku simptoma opisano ranije u poglavlju: pogrešna akcija ne izgleda kao
+otkaz, izgleda kao uspeh, i ništa je ne bi uhvatilo da override nije snimljen
+zajedno sa revizijom, u istom trenutku.
+
+Ishod svakog pokušaja — pokrenut, blokiran (isteklo, neprihvatljiva
+porodica, definicija zadatka neaktivna, već pokrenut, već u toku,
+ograničenje učestalosti) ili neuspeo — beleži se kao jedan od tačno osam
+mogućih ishoda, po istom principu iscrpnog i međusobno isključivog skupa
+uvedenom u prethodnom poglavlju za sam alarm: svaki nov povratak iz koda
+koji izvršava pokušaj mora prijaviti ishod, ili bilans prema ukupnom broju
+zahteva tiho prestaje da se slaže. Ko dobija dugme takođe nije spisak
+imena nego strukturno pravilo — usluge kojima upravlja sam ECS, poslovi na
+Batch-u, infrastrukturni servisi i porodice bez alarma unapred su isključeni
+po svojstvu, ne po imenu upisanom u listu — ista odluka, primenjena i
+ranije u ovoj knjizi, da flota koja raste automatski nasledi ponašanje
+umesto da neko mora ručno da je upiše.
+
+Ograničenje na svega nekoliko ponovnih pokretanja po porodici u toku jednog
+dana postoji iz istog razloga kao i odsustvo grupnog pokretanja opisano
+malopre: porodici kojoj treba četvrto ponovno pokretanje istog dana ne
+treba još jedan pokušaj, nego popravka. Da je to ograničenje pre svega
+princip dobrog dizajna oporavka, a ne osobenost ovog tima, potvrđuje i
+spoljašnja preporuka za automatizovan oporavak radnih zadataka koja govori
+istim rečnikom: ograniči broj pokušaja i **beleži ishod svakog**.
+
 ## 16.3 Analitički deo — zašto struktura runbook-a nije stilski izbor
 
 ### Zvanična preporuka: orijentacija pre instrukcije
@@ -196,6 +245,11 @@ sekundi, i ništa više.**
 - Ako neka prečica u runbook-u već jednom dokazano izazove veću štetu nego
   korist, zapiši njeno namerno izostavljanje i razlog — ne oslanjaj se da
   će je čitalac pod pritiskom sam izbeći.
+
+- Kad runbook postane automatizovan (dugme, skripta), primeni na njega iste
+  zahteve kao na tekstualni runbook — precizan otisak, stanje snimljeno
+  unapred umesto rekonstruisano naknadno, iscrpan i međusobno isključiv
+  skup ishoda za svaki pokušaj, i eksplicitno ograničenje broja pokušaja.
 
 ## 16.5 Vežba za čitaoca
 

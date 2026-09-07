@@ -184,6 +184,97 @@ učinilo vidljivim, ne i rešilo.
 
 ![Kad kolektor umre, gauge svežine se smrzava dok vreme nastavlja da prolazi — bez uslovljavanja zasebnom metrikom zdravlja kolektora, ovo izgleda identično stvarnoj katastrofi na potpuno zdravom sistemu.](diagrams/dashboard-snowflake.png){: width="95%" }
 
+### Popravka atribucije nije popravka identiteta — i to je bila svesna odluka
+
+Nalaz o deljenom identitetu iz prethodnog odeljka otvara očigledno pitanje:
+zašto nije odmah rešen? Odgovor je da prava popravka — razdvajanje jednog
+zajedničkog naloga u po jedan poseban identitet za svako radno okruženje —
+nije nešto što se menja s ove strane, van vlasnika tog naloga, i nije nešto
+što se radi preko noći. Dok se ta popravka čeka, ostaje pitanje bez odgovora:
+kako uopšte razlikovati promet jednog okruženja od drugog u međuvremenu, kad
+sva tri pišu identične upite pod istim korisničkim imenom?
+
+Odgovor koji je primenjen ne dira identitet uopšte. Konekcioni string kojim
+se aplikacija povezuje na spoljni servis sadrži i parametre koje sam servis
+ne prepoznaje — a pokazalo se da upravljački drajver takav nepoznat parametar
+tiho pretvara u parametar sesije, umesto da odbije konekciju. To znači da je
+dovoljno dodati jedan takav parametar sa vrednošću koja identifikuje okruženje
+("ovo je test", "ovo je produkcija") da bi svaki upit koji ta sesija izvrši
+odsad nosio taj pečat u istoriji upotrebe servisa — bez ijedne linije koda,
+bez novog paketa za isporuku, samo izmena promenljive okruženja i restart.
+
+Ista osobina drajvera koja je ovo učinila bezbednim da se proba ima i naličje,
+i oba su podjednako važna:
+
+- **Bezbedno:** pogrešno ime parametra ne može da obori konekciju pri
+  pokretanju — probni pokušaj ne nosi rizik da zaustavi aplikaciju.
+- **Opasno:** pogrešno ime parametra **tiho ne radi ništa uopšte**. Konekcija
+  uspeva, aplikacija radi dalje, sve izgleda potpuno normalno — a nijedan
+  upit ne nosi novi pečat, i ništa u tom trenutku to ne prijavljuje.
+
+Posledica je disciplina koja se provlači kroz celu ovu knjigu u različitim
+oblicima: da je konekcija uspela, ili da je okruženje posle restarta ponovo
+prijavilo zdravo stanje, ne dokazuje ništa o tome da je izmena zaista
+proradila. Jedini pouzdan dokaz je pogledati **efekat** — u ovom slučaju,
+upit direktno nad istorijom upotrebe servisa koji broji koliko upita zaista
+nosi pečat svakog okruženja u poslednjih nekoliko sati. Uvođenje ovog
+parametra je zaista bilo rađeno postepeno, okruženje po okruženje, i baš na
+jednom od međukoraka desio se koristan skoro-incident: to okruženje je za
+nekoliko minuta prijavilo ozbiljno narušeno zdravlje tokom same izmene.
+Ispostavilo se da uzrok nije bio parametar servisa nego sasvim običan,
+očekivan artefakt platforme na kojoj aplikacija radi — stare instance koje
+se gase tokom uobičajene rotacije pri restartu, dok su preostale i dalje
+uredno opsluživale saobraćaj bez ijedne greške. Da je provera stala na boji
+statusa, umesto da pogleda stvaran saobraćaj, skoro-incident bi lako bio
+pogrešno protumačen kao da je bezazlena izmena parametra nešto pokvarila.
+
+Produkcijsko okruženje namerno nije dirano ovom brzom, ručnom izmenom uopšte
+— pečat je tamo pušten u rad isključivo kroz redovan put isporuke koda, uz
+odobrenje vlasnika sistema. Razlog nije opreznost radi opreznosti: potpunija
+zamena istog mehanizma — pečat po pojedinačnom zahtevu, ne samo po okruženju
+— već je bila u pripremi kroz taj isti put isporuke, i ručna izmena
+produkcije bi bila posao koji sledeće redovno objavljivanje koda odmah
+prepiše. Brza, ručna popravka ima smisla tamo gde ništa bolje nije već na
+putu; kad bolje već dolazi istim kanalom, ručna prečica postaje posao koji
+će neko drugi obrisati.
+
+### Kad je prag podešen za tuđi posao, sopstveni saobraćaj postaje nevidljiv
+
+Pečat po okruženju rešava pitanje "čiji je ovo upit". Ne rešava drugo,
+odvojeno pitanje: da li se taj upit uopšte pojavljuje na dashboard-u koji
+prikazuje najsporije upite iz prethodnog odeljka ovog poglavlja. Ovde se
+otkrio nalaz koji zaslužuje sopstveni pasus, jer izgleda kao pokvaren pečat
+dok je u stvari nešto sasvim drugo.
+
+Dashboard najsporijih upita bira upite koji traju najmanje šezdeset sekundi
+— prag koji je imao smisla za posao koji periodično učitava velike količine
+podataka, i koji taj prag redovno prelazi. Glavna aplikacija, koja ovaj isti
+spoljni servis koristi za sasvim drugu svrhu — brzo opsluživanje pojedinačnih
+zahteva korisnika — izvršava na desetine hiljada upita dnevno nad tim istim
+servisom, i **nijedan jedini od njih** ne prelazi taj prag od šezdeset
+sekundi. Posledica: svaki red koji je taj dashboard ikad prikazao potiče od
+posla za učitavanje podataka, ne od glavne aplikacije — dashboard koji po
+imenu treba da pokriva ceo servis je, u praksi, dashboard samo jednog njegovog
+korisnika.
+
+Kad je pečat po okruženju pušten u rad, prirodno se očekivalo da će nova
+kolona na tom istom dashboard-u odmah pokazati saobraćaj glavne aplikacije po
+okruženjima. Ta kolona je ostala prazna — i to je trenutak gde je razlika
+između dva različita objašnjenja presudna. Prazna kolona *izgleda* kao dokaz
+da pečat ne radi, isti onaj neuspeh opisan u prethodnom odeljku. Nije: pečat
+radi ispravno i upisuje se na svaki upit; upiti na koje se upisuje samo nikad
+ne prelaze prag koji bi ih uveo na ovaj konkretan dashboard. Ovo je varijanta
+istog obrasca viđenog ranije u knjizi (Poglavlje 20, prijave koje se broje
+kao nula ne zato što ih nema, nego zato što selektor gleda pogrešan tip
+događaja) — merenje koje izgleda kao "nema ničega" dok stvaran uzrok leži u
+tome gde je granica povučena, ne u tome da li se nešto zaista dešava. Jedini
+način da se razlikuju ova dva objašnjenja je proveriti direktno nad istorijom
+upotrebe servisa, mimo dashboard-a i mimo praga, da li pečat zaista postoji
+na upitima glavne aplikacije — a on jeste. Ispravna popravka nije "proveri da
+li je pečat pokvaren", nego zaseban, niži prag za upite ovog konkretnog
+korisnika servisa — priznata, još neizvedena stavka na listi poboljšanja, ne
+nešto što bi bilo koja izmena samog pečata mogla da reši.
+
 ## 24.3 Analitički deo — posmatranje bez pristupa infrastrukturi kao poseban problem
 
 ### Servis sam razlikuje dva različita oblika sopstvene posmatranosti
@@ -295,6 +386,16 @@ izveštaj.
   periodično povlačiti i gurati kao logove — periodično osvežavana
   tabela najgorih slučajeva je često dovoljna zamena za slobodno
   upitivanje.
+- Kad se identitet ne može odmah popraviti, potraži lakšu, obratnu
+  popravku za atribuciju — ali proveri da li mehanizam koji to
+  omogućava (npr. nepoznat parametar konekcije koji drajver tiho
+  prihvata) ima i naličje: ista osobina koja čini probu bezbednom čini
+  i grešku u kucanju potpuno nevidljivom. Uvek proveri efekat, nikad
+  samo da je konekcija ili okruženje ostalo zdravo.
+- Prazna kolona ili nulta vrednost posle uvedene izmene nije
+  automatski dokaz da izmena ne radi — proveri da li prag ili filter
+  strukturno isključuje baš taj saobraćaj, pre nego što zaključiš da je
+  sama izmena pokvarena.
 
 ## 24.5 Vežba za čitaoca
 

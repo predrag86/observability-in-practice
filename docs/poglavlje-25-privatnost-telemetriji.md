@@ -143,6 +143,50 @@ mehanički primeni opšte pravilo na situaciju gde ono ne važi.
 
 ![Zašto rotacija pseudonimizacionog ključa ovde ne bi bila bezbednosna dobit, samo operativna šteta: ključ štiti vezu pseudonim↔email, ne sam sadržaj, i stabilan ključ ne otvara novi rizik koji bi rotacija zatvorila.](diagrams/ch25-rotacija-kljuca.png){: width="80%" }
 
+### Drugo pitanje o istom podatku: ne ko ga vidi, nego gde fizički leži
+
+Sve dosad opisano u ovom poglavlju — povezivanje trejsova, pseudonimizacija,
+ključem-zaštićena heš funkcija — odgovara na pitanje "ko može da poveže ovaj
+podatak sa konkretnom osobom". Odvojena provera, urađena posle te, otvorila
+je sasvim drugo pitanje o istom podatku, koje prva provera ni ne dodiruje: u
+kojoj se zemlji taj podatak fizički obrađuje, bez obzira na to ko ga vidi.
+
+Telemetrija implementacije, uključujući i podatke koji se odnose na korisnike
+iz Evropske unije, obrađuje se isključivo u regionu pružaoca usluge za
+posmatranje smeštenom u Sjedinjenim Državama — jedan region za sav promet,
+bez obzira odakle korisnik zapravo dolazi. Sam taj podatak — koji je korisnik
+odakle — nije ni postojao kao evidentirana činjenica nigde u sistemu; da bi
+se uopšte saznalo koji su korisnici stvarno iz EU, moralo se ručno proći kroz
+uzorak stvarnog produkcionog pristupnog loga i proveriti kojim organizacijama
+pripadaju domeni prijavljenih korisnika. Rezultat te provere: najmanje dva
+korisnika su sa sigurnošću potvrđena kao organizacije sa sedištem u EU, dok
+je za nekoliko drugih domena rezidentnost ostala nepoznata i posle provere —
+sam čin utvrđivanja "ko je iz EU" pokazao se iznenađujuće netrivijalnim kad
+sistem tu činjenicu nigde ne beleži kao prvorazrednu.
+
+Ovo otvara pravno pitanje koje je potpuno odvojeno od svega ranije u
+poglavlju. Prenos ličnih podataka u zemlju koju Evropska unija nije
+proglasila adekvatnom destinacijom zahteva formalnu zaštitnu meru — u ovom
+slučaju standardne ugovorne klauzule unutar potpisanog ugovora o obradi
+podataka sa pružaocem usluge, procenu uticaja samog prenosa koja dokumentuje
+stvaran rizik, i jasno obaveštenje u politici privatnosti da se podaci
+povezani sa korisnicima obrađuju u toj zemlji. U trenutku ove provere, nijedna
+od te tri stavke nije mogla da se potvrdi kao već sprovedena — ne zato što je
+neko svesno odlučio da ih preskoči, nego zato što niko do tog trenutka nije
+ni postavio pitanje. Čistije rešenje, identifikovano ali još nesprovedeno, je
+jednostavno u principu: usmeriti sav promet koji se može pripisati korisniku
+iz EU ka regionu pružaoca usluge koji se nalazi unutar EU, umesto ka
+jedinstvenom regionu u SAD koji danas prima sve.
+
+Vredna lekcija ovde nije tehnička nego strukturna: "privatnost" u telemetriji
+nije jedan problem sa jednim rešenjem. Curenje identiteta kroz povezivanje
+trejsova i prekogranični prenos podataka su dve potpuno različite obaveze
+unutar iste regulative, sa dva potpuno različita leka — jedna se rešava
+pseudonimizacijom na izvoru, druga isključivo izborom **gde** infrastruktura
+fizički radi. Popraviti jednu ne pomera iglu na drugoj ni za milimetar, i tim
+koji je stao posle prve popravke, uveren da je "privatnost sređena", bi i
+dalje ostavio drugu, potpuno neotvorenu.
+
 ## 25.3 Analitički deo — poznat obrazac curenja, sa preciznim imenom
 
 ### Pseudonimizacija ostaje lični podatak — i to menja obavezu
@@ -243,6 +287,10 @@ sastati.
   ključa) na novu situaciju, proveri da li dobit tog pravila stvarno važi
   ovde — rotacija koja kida longitudinalnu analizu bez odgovarajuće
   bezbednosne dobiti je šteta obučena kao higijena.
+- Ne izjednačavaj "rešio sam ko može da poveže podatak sa osobom" sa
+  "rešio sam privatnost" — proveri odvojeno i gde se taj podatak fizički
+  obrađuje, jer prekogranični prenos ličnih podataka nosi sopstvenu,
+  potpuno nezavisnu obavezu koju nijedna mera protiv povezivanja ne dodiruje.
 
 ## 25.5 Vežba za čitaoca
 

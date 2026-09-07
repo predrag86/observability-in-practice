@@ -121,9 +121,24 @@ deo te tabele je zaista postao stvarnost, ne samo namera:
   zatvara oblik greške iz ovog incidenta u širem smislu — konfiguracija koja se poziva na
   nešto što ne postoji, prijavljuje uspeh, i ostavlja stari sistem da tiho radi dalje dok
   neko ne primeti da novi nikad nije ni krenuo.
+- Razdvajanje uloga za planiranje i za primenu je provereno **suprotstavljeno, ne samo
+  dizajnom**: poseban korak u CI-ju namerno pokušava da izvrši primenu sa ograničenim
+  identitetom koji nosi svaki pull request, i očekuje da to bude odbijeno tačno na jedan
+  način — eksplicitnim "pristup odbijen", ne bilo kojom drugom greškom. Zeleno na tom
+  koraku znači da je privilegovana granica cele cevi i dalje na mestu; crveno znači da je
+  nestala, tiho, bez ijedne izmene koda koja bi to sama od sebe najavila.
 - CI sada pokreće **lint, tipske provere i self-testove** nad pratećim kodom infrastrukture
-  (ne samo `terraform plan`), tako da greška u skripti koja generiše task definicije više
-  ne prolazi neprimećena do prve produkcijske primene.
+  (ne samo `terraform plan`) — podrazumevani skup pravila za statičku analizu koda, sa dva
+  namerno isključena; provera tipova pozvana posebno po svakom direktorijumu, jer jedan
+  zajednički poziv puca na dva fajla koja u različitim direktorijumima nose isto ime
+  modula; i skup samostalnih testova koji se pokreću kao deo iste provere. Jedna zamka
+  ovde je vredna imenovanja jer nije specifična za ovaj projekat: pravilo koje treba da
+  nađe isključenja pravila bez razloga daje netačnu sliku ako se pokrene izolovano, sa
+  svim ostalim pravilima isključenim — svako postojeće izuzeće odjednom izgleda
+  neiskorišćeno, jer ništa više ne postoji da bi ga ono izuzimalo. Automatska ispravka
+  istog pravila ide korak dalje i briše ceo prateći komentar, uključujući razlog zbog kog
+  je izuzeće uopšte tu upisano. Alat koji traži nepotrebna izuzeća je, gledan izolovano od
+  konteksta u kom je zamišljen, sam sebi najveći lažni pozitivan.
 
 Vredi biti iskren i o onome što još nije sprovedeno: detekcija vođena događajem (peti red
 tabele) u trenutku pisanja još uvek nije zamenila nedeljni sweep. Ovo nije uredna,
@@ -131,6 +146,43 @@ zatvorena studija slučaja sa savršenim krajem — to je živ, tekući proces, 
 reći direktno nego uglancati.
 
 ![Pre: ručno održavan JSON registrovan direktno u produkciju, bez diff-a i CI-ja. Posle: izmena ide kroz PR, plan-time proveru postojanja image-a, review, i tek onda merge i apply — samo iz CI-ja.](diagrams/ch29-pre-posle-cevovod.png){: width="92%" }
+
+### Devet dana kasnije: ista vrsta greške, jedan sloj iznad
+
+Deo koji ovo poglavlje čini vrednim ponovnog pogleda umesto jednokratnog zatvaranja:
+devet dana posle pregleda iznad, potpuno isti obrazac se ponovio — ne u infrastrukturi,
+nego u dokumentaciji koja je opisuje.
+
+Rutinska provera konzistentnosti, pokrenuta odmah posle zatvaranja granice iz prethodnog
+pasusa, uporedila je nekoliko dokumenata sa nalogom, jedan sa drugim, i sa kodom pored
+njih. Najgori pojedinačan nalaz: opis jednog stack-a je i dalje tvrdio da uloga za primenu
+"tek treba" da dobije baš tu granicu i njen test — dok je fajl sa izlaznim vrednostima u
+ISTOM direktorijumu već izvozio ARN te uloge i listu dozvoljenih potpisnika. Oba
+preduslova su, u trenutku čitanja opisa, već bila ispunjena danima ranije. Isti dokument je
+pogrešno opisivao sopstveni mehanizam u istom pasusu koji je trebalo da spreči baš tu
+zabunu — govorio je da prilagođavanje identiteta "dodaje" deo na kraj, kad ono zapravo
+zamenjuje ceo taj deo.
+
+Drugi nalaz je bio ozbiljniji od zastarelog teksta — pravi, i dalje otvoren propust,
+maskiran tabelom koja je delovala kao da je zatvoren. Tabela je navodila dve zamene za
+plaćene bezbednosne provere koje besplatan plan nema: korak koji navodno hvata slučajno
+komitovane tajne, i zakazanu proveru da je oznaka izdanja i dalje predak glavne grane, kao
+zamenu za zaštitu te oznake od premeštanja. Provera na terenu: koraka koji hvata tajne
+nema nigde u cevi — postoji osam koraka provere kvaliteta koda, i nijedan od njih ne
+skenira tajne. Provera oznake postoji, ali je isporučena namerno neaktivna, dok se ne
+izvrši jedna komanda koja je naoruži — ta komanda u trenutku nalaza još nije bila
+izvršena. Rečenica u dokumentu je zvučala kao da je oboje već na mestu, na repozitorijumu
+koji od nedavno sam sebi izdaje kredencijale u oblaku preko iste granice opisane iznad.
+
+Pouka vredi zapisati bez ublažavanja: **tabela koja imenuje čime se neki propust zatvara
+nije isto što i tabela koja beleži da li je taj propust zaista zatvoren.** Prva opisuje
+plan; druga opisuje nalog. Kad se te dve pomešaju u istom pasusu, dokument ostaje tehnički
+tačan u trenutku pisanja i postaje pogrešan onog trenutka kad se stvarnost pomeri — bez
+ijednog signala da se to dogodilo, jer ništa u samom tekstu ne razlikuje "ovo će zatvoriti
+prazninu" od "ovo je zatvorilo prazninu". To je tačno isti oblik greške kao dve JSON task
+definicije s početka poglavlja, samo jedan sloj iznad koda: dva mesta koja opisuju isto
+stanje sistema, održavana nezavisno, tiho su divergirala — samo što je ovog puta jedno od
+ta dva mesta proza, ne konfiguracija, pa ga nijedan `plan` ne bi ni pokušao da uporedi.
 
 ## 29.3 Analitički deo — princip koji je ovde nedostajao već ima ime
 
@@ -208,6 +260,13 @@ opipljivom, umesto apstraktnom.
 - Isti obrazac drifta postoji kod svakog mehanizma koji ubacuje konfiguraciju nezavisno od
   resursa u koji je ubacuje — bilo da je to ručan JSON, mutating webhook, ili operator CRD.
   Traži proveru rekoncilijacije, ne veruj mehanizmu injekcije samom po sebi.
+- Razdvajanje uloga (planiranje naspram primene, čitanje naspram pisanja) vredi onoliko
+  koliko vredi njegov dokaz — dizajn na papiru i test koji ga aktivno pokušava da probije
+  nisu isto, i samo drugo preživljava sledeću izmenu koda bez ičije pažnje.
+- Dokument koji imenuje ČIME se neki propust zatvara nije dokaz da je zatvoren — pre nego
+  što mu poveruješ, proveri fajl sistem ili nalog, ne pasus pored njega. Ovo važi
+  podjednako za dokumentaciju kao i za konfiguraciju: obe vrste teksta mogu tiho da
+  divergiraju od stvarnosti, samo što nijedan `plan` ne upozorava kad proza zaostane.
 
 ## 29.5 Vežba za čitaoca
 

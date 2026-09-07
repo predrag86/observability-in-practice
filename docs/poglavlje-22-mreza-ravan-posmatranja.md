@@ -129,6 +129,44 @@ se ta zaštita doda tek pošto nešto konkretno stvarno nestane.
 
 ![Ulazni i izlazni tok bajtova kroz izlazni prolaz, čitani u paru: razilaženje između dve linije, ne bilo koja linija pojedinačno, je ono što otkriva gubitak saobraćaja.](diagrams/dashboard-natdiff.png){: width="95%" }
 
+### Alat koji obećava da pokrije više ravni odjednom — i zašto to ovde ne važi
+
+Postoji tehnologija koja obećava tačno ono što ravan mrežnog interfejsa po
+instanci traži: podatke o protoku direktno iz kernela, bez ijedne izmene
+aplikacije i bez agenta koji treba posebno instalirati na svaki servis.
+Zvuči kao prečica koja bi mogla da zameni deo posla opisanog iznad.
+Implementacija ju je razmotrila — i odbila, za veliku većinu flote, iz
+jednog strukturnog razloga: ovakav alat čita direktno iz Linux kernela
+hosta, a najveći deo flote ne izvršava se na hostu kojim implementacija
+upravlja, nego na upravljanom, bez-serverskom izračunavanju bez pristupa
+kernelu uopšte. Nezavisan istraživački izvor posvećen posmatranju sistema
+je ovo potvrdio eksplicitno, van sopstvenog konteksta implementacije: alati
+ove porodice "neće raditi sa serverless tehnologijama," i većina rešenja u
+toj kategoriji pretpostavlja Kubernetes klaster koji implementacija uopšte
+ne vodi.
+
+Ali odluka nije bila jednostavno "da" ili "ne" za ceo alat — jedan
+konkretan proizvod iz iste porodice je promovisan iz "odbijeno" u
+"odloženo", ne "prihvaćeno", kad se ispostavilo da je tehnički drugačiji
+od ostalih: radi kao prvoklasna komponenta unutar kolektora koji flota već
+koristi, pa ne zahteva nov agent na hostovima koji kernel pristup stvarno
+imaju. Za tu malu manjinu hostova, ovaj alat bi doneo podatke o protoku po
+paru izvor-odredište bez oslanjanja na flow-logove. Zašto onda i tu ostaje
+odložen, ne uveden: cena bi bila u kardinalnosti — podaci po paru
+izvor/odredište eksplodiraju broj serija na način koji Poglavlje 11 već
+upozorava da se meri pre uvođenja, ne posle — a pitanje koje bi ovaj alat
+prvi rešio (odbacivanje paketa zbog ograničenja broja DNS zahteva po
+mrežnom interfejsu) već ima jeftiniji, postojeći odgovor: jedan alat za
+očitavanje same mrežne kartice, koji već radi na tim istim hostovima, po
+ceni bliskoj nuli.
+
+Pouka nije "ovakvi alati ne valjaju" — pouka je da alat čija najveća
+prednost (rad bez agenta, na nivou kernela) tačno onemogućava upotrebu na
+većini flote koja radi bez sopstvenog kernela, i da čak i tamo gde uslov
+za upotrebu postoji, redosled pitanja mora biti "koji problem ovo rešava,
+i da li već imamo jeftiniji odgovor na baš taj problem" — ne "da li je
+ovo tehnički moguće ovde."
+
 ## 22.3 Analitički deo — princip poznat u dva odvojena zvanična oblika
 
 ### Zvanična dokumentacija već koristi diferencijalni obrazac, i to eksplicitno
@@ -221,6 +259,11 @@ javi uopšte može da progovori.
   proveru uživo — provera upita dokazuje da panel nije mrtav, ne da je
   ispravno prikazan; za greške u prikazu (odsečen tekst, dupla vrednost
   na mestu gde treba jedna) potreban je pogled na sam iscrtani panel.
+- Kad razmatraš alat koji obećava da pokrije više ravni odjednom (npr.
+  onaj koji čita direktno iz kernela hosta), prvo proveri da li tvoja
+  flota uopšte ima kernel kome bi taj alat mogao da priđe — najveća
+  prednost ovakvog alata je često tačno ono što ga isključuje iz najvećeg
+  dela flote koja radi bez sopstvenog servera.
 
 ## 22.5 Vežba za čitaoca
 
@@ -241,3 +284,5 @@ slojevima? Pronađi barem jedan sloj koji je trenutno potpuno slep.
 - [Monitoring Route 53 Resolver endpoints with CloudWatch](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-resolver-with-cloudwatch.html)
 - [Manage Amazon EC2 instance clock accuracy using Amazon Time Sync Service and CloudWatch — AWS Cloud Operations Blog](https://aws.amazon.com/blogs/mt/manage-amazon-ec2-instance-clock-accuracy-using-amazon-time-sync-service-and-amazon-cloudwatch-part-2/)
 - [Synthetic Monitoring vs Real User Monitoring — Kentik](https://www.kentik.com/kentipedia/synthetic-monitoring-vs-real-user-monitoring/)
+- [The State of eBPF in Observability — Observability 360](https://observability-360.com/article/viewarticle?id=ebpf-in-observability)
+- [Grafana Beyla — eBPF-based auto-instrumentation](https://grafana.com/oss/beyla-ebpf/)
