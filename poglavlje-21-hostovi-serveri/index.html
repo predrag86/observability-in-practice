@@ -1510,6 +1510,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#treci-potpuno-nezavisan-sloj-pogled-izvan-same-kutije" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treći, potpuno nezavisan sloj: pogled izvan same kutije
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2416,6 +2427,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#treci-potpuno-nezavisan-sloj-pogled-izvan-same-kutije" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treći, potpuno nezavisan sloj: pogled izvan same kutije
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2682,6 +2704,60 @@ kasnije, gledajući samo listu "nedostaje," pretpostavi da je svaka
 praznina propust — neke su namerne, promišljene odluke, i imaju zapisan
 razlog za onog ko ih kasnije preispita.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch21-cetiri-uzroka.png" data-desc-position="bottom"><img alt="Zašto uvezeni zajednički dashboard tipično prestane da radi: pogrešan izvor podataka, nedostajući kolektor koji obara promenljive šablona, neusaglašena šema imenovanja, i agregacija koja tiho briše oznake — četiri odvojena uzroka, isti simptom &quot;nema podataka.&quot;" src="../diagrams/ch21-cetiri-uzroka.png" width="90%"></a></p>
+<h3 id="treci-potpuno-nezavisan-sloj-pogled-izvan-same-kutije">Treći, potpuno nezavisan sloj: pogled izvan same kutije</h3>
+<p>Sve dosad opisano u ovom poglavlju — sopstveni skup metrika, kalibracija
+praga, razdvajanje utilizacije od zasićenja — deli jednu zajedničku osobinu:
+sve to čita signal koji <strong>agent na samom hostu</strong> prikuplja i gura ka
+kolektoru posmatranja. To znači da ceo taj sloj deli sudbinu sa svim
+onim što bi moglo prekinuti taj put — sam agent, kolektor, ili platforma
+za posmatranje. Alarm koji čuva "host je prestao da javlja" ne može sam
+da razlikuje dva sasvim različita stanja: host je stvarno mrtav, ili je
+samo cev kojom host javlja prestala da radi. Pitanje koje taj alarm ostavlja
+otvoreno — "mrtva kutija ili mrtav agent?" — dobavljač infrastrukture već
+zna odgovor, besplatno, jer to meri sasvim izvan mašine na kojoj agent
+uopšte radi.</p>
+<p>Ovaj treći sloj čita direktno status same instance sa strane provajdera —
+da li operativni sistem gosta uopšte odgovara, i da li je sama
+infrastruktura ispod instance zdrava — i namerno <strong>ne ide</strong> kroz isti put
+kojim ide ostatak posmatranja host sloja, nego se čita direktno u trenutku
+provere. Ovo je ista disciplina imenovana ranije u knjizi za sasvim drugu
+komponentu: <strong>watcher koji posmatra kritičnu putanju ne sme da zavisi od
+infrastrukture koju posmatra</strong> — ovde primenjena na hostove, umesto na
+zadatke. Treći sloj preživljava tačno onaj kvar zbog kog bi prva dva sloja
+ovog poglavlja ućutala.</p>
+<p>Otkriveno je i da sporedna korist ovog sloja na kraju važi više od
+prvobitnog razloga zašto je uveden: to je <strong>jedini</strong> signal o zdravlju
+mašina koje nikad nisu dobile agenta u ovom poglavlju opisan — hostovi
+svesno odbijeni sa ove strane posmatranja, iz razloga koji nemaju veze sa
+njihovom važnošću. Bez ijedne izmene na tim mašinama, dobile su bar
+osnovnu, spolja merenu proveru da li su uopšte žive. Vredi odmah
+naglasiti granicu: ovo nije zamena za agenta, samo dopuna njegovog
+odsustva — mašina prolazi svaku ovakvu proveru i sa gotovo punim diskom,
+jer provera meri da li je mašina dostupna, ne da li joj je dobro.</p>
+<p>Uvođenje ovog sloja nosilo je i sopstvenu, uskotehničku zamku vrednu
+imenovanja: upit mora ostati nezavisan od konkretne flote instanci (da automatski obuhvati
+svaku instancu, ne unapred nabrojanu listu), ali naivan način da se to
+postigne — otvoreni džoker umesto tačnog identifikatora — ne radi kako
+izgleda: takav upit se ne ograničava na trenutno žive instance, nego
+obuhvata <strong>svaku instancu ikad viđenu</strong>, uključujući godine ugašenih i
+zaboravljenih. Ispravan oblik je upit koji sam otkriva identitete iz
+kratkog, skorašnjeg prozora, ne iz cele istorije. Druga, sitnija ali podmukla
+zamka: naziv oznake koju ovakav upit vraća nije isti naziv koji bi neko
+očekivao iz iskustva sa ostatkom sistema, pa poruka obaveštenja koja ga
+referencira po očekivanom, a ne stvarnom imenu, tiho ispadne prazna —
+obaveštenje koje kaže "instanca " i ništa posle toga, umesto da prijavi
+grešku.</p>
+<p>Konačno, ovaj sloj je prvi u poglavlju čija cena raste sa svakim pojedinačnim
+merenjem, ne sa količinom podataka koja se čuva — svaka provera se
+naplaćuje po pozivu dobavljaču infrastrukture, nezavisno od toga da li je
+ista provera napravljena sekundu ranije. Učestalost provere je zato
+namerno izabrana ne na osnovu toga koliko brzo bi neko voleo da sazna za
+problem, nego na osnovu direktnog poređenja: učestalija provera bi
+košta­la višestruko više nego što je ušteđeno svim ostalim merama u ovom
+poglavlju zajedno. Ista vrsta računa — da samo posmatranje ima sopstvenu
+cenu, nezavisnu od onoga što se njime posmatra — javlja se ovde po drugi
+put u knjizi, prvi put primenjena na proveru izvan agenta umesto na
+skladištenje i čitanje podataka unutar platforme za posmatranje.</p>
 <h2 id="213-analiticki-deo-poznat-metod-dokumentovan-uzrok-kvara">21.3 Analitički deo — poznat metod, dokumentovan uzrok kvara</h2>
 <h3 id="use-metod-kao-formalni-okvir-za-ono-sto-implementacija-radi-intuitivno"><abbr title="Utilization, Saturation, Errors — okvir za posmatranje resursa (host, disk, mreža).">USE metod</abbr> kao formalni okvir za ono što implementacija radi intuitivno</h3>
 <p>Formalni metod za dijagnostiku performansi sistemskih resursa poznat kao
@@ -2760,14 +2836,24 @@ svaki deo njega je proveren i tačan za grad u kom se stvarno vozi.</p>
   tuđeg kompleta — svaki panel koji postoji zato što odgovara na poznato
   pitanje je vredniji od deset panela koji postoje zato što su došli u
   paketu.</li>
-<li>Kad vraćaš oznaku koju je automatska agregacija obrisala, ne dodaji
+<li>
+<p>Kad vraćaš oznaku koju je automatska agregacija obrisala, ne dodaji
   prvo alarm koji je "drži otvorenom" — dok je oznaka još agregirana, taj
   alarm sam sebe ne može pokrenuti, jer pogađa istu tihu-prazno zamku
   koju pokušava da otkrije. Prvo ukloni pravilo agregacije, potvrdi da se
   oznaka vratila, tek onda dodaj trajno pravilo. I uslovi taj upis na
   tačnu verziju pravila koje menjaš, ako isti skup pravila u pozadini
   menja i neki automatski proces — inače rizikuješ da tiho pregaziš
-  promenu koja se desila između tvog čitanja i tvog pisanja.</li>
+  promenu koja se desila između tvog čitanja i tvog pisanja.</p>
+</li>
+<li>
+<p>Drži bar jedan sloj provere zdravlja hosta koji čita status direktno od
+  provajdera infrastrukture, van puta kojim ide agent i ostatak
+  posmatranja — taj sloj je jedini koji preživljava tačno onaj kvar (pao
+  agent, pao kolektor, pala platforma) zbog kog svaki sloj zasnovan na
+  agentu ućuti. Kad taj sloj naplaćuje po pozivu, biraj učestalost
+  proveravanjem računa, ne osećajem koliko brzo bi voleo da sazna.</p>
+</li>
 </ul>
 <h2 id="215-vezba-za-citaoca">21.5 Vežba za čitaoca</h2>
 <p>Otvori jedan uvezeni, zajednički dashboard koji tvoj tim koristi za
@@ -2806,7 +2892,7 @@ praznog panela pre nego što odlučiš da li ga popraviti ili ukloniti.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 20:15:51 UTC">30. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 22:46:49 UTC">6. septembar 2026.</span>
   </span>
 
     

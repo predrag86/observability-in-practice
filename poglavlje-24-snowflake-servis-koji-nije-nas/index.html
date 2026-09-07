@@ -1605,6 +1605,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#popravka-atribucije-nije-popravka-identiteta-i-to-je-bila-svesna-odluka" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Popravka atribucije nije popravka identiteta — i to je bila svesna odluka
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kad-je-prag-podesen-za-tui-posao-sopstveni-saobracaj-postaje-nevidljiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad je prag podešen za tuđi posao, sopstveni saobraćaj postaje nevidljiv
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2438,6 +2460,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#popravka-atribucije-nije-popravka-identiteta-i-to-je-bila-svesna-odluka" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Popravka atribucije nije popravka identiteta — i to je bila svesna odluka
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kad-je-prag-podesen-za-tui-posao-sopstveni-saobracaj-postaje-nevidljiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad je prag podešen za tuđi posao, sopstveni saobraćaj postaje nevidljiv
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2740,6 +2784,88 @@ prijavljena vlasnicima podataka na dalju odluku; posmatranje ih je samo
 učinilo vidljivim, ne i rešilo.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch24-tri-faze.png" data-desc-position="bottom"><img alt="Tri faze prikupljanja nad spoljnim SaaS servisom, sve tri unutar jedne zajedničke, kratkotrajne sesije — alarm o svežini podataka eksplicitno uslovljen zasebnom metrikom zdravlja kolektora, da mrtav kolektor nikad ne bude pročitan kao prekid dotoka podataka." src="../diagrams/ch24-tri-faze.png" width="90%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-snowflake.png" data-desc-position="bottom"><img alt="Kad kolektor umre, gauge svežine se smrzava dok vreme nastavlja da prolazi — bez uslovljavanja zasebnom metrikom zdravlja kolektora, ovo izgleda identično stvarnoj katastrofi na potpuno zdravom sistemu." src="../diagrams/dashboard-snowflake.png" width="95%"></a></p>
+<h3 id="popravka-atribucije-nije-popravka-identiteta-i-to-je-bila-svesna-odluka">Popravka atribucije nije popravka identiteta — i to je bila svesna odluka</h3>
+<p>Nalaz o deljenom identitetu iz prethodnog odeljka otvara očigledno pitanje:
+zašto nije odmah rešen? Odgovor je da prava popravka — razdvajanje jednog
+zajedničkog naloga u po jedan poseban identitet za svako radno okruženje —
+nije nešto što se menja s ove strane, van vlasnika tog naloga, i nije nešto
+što se radi preko noći. Dok se ta popravka čeka, ostaje pitanje bez odgovora:
+kako uopšte razlikovati promet jednog okruženja od drugog u međuvremenu, kad
+sva tri pišu identične upite pod istim korisničkim imenom?</p>
+<p>Odgovor koji je primenjen ne dira identitet uopšte. Konekcioni string kojim
+se aplikacija povezuje na spoljni servis sadrži i parametre koje sam servis
+ne prepoznaje — a pokazalo se da upravljački drajver takav nepoznat parametar
+tiho pretvara u parametar sesije, umesto da odbije konekciju. To znači da je
+dovoljno dodati jedan takav parametar sa vrednošću koja identifikuje okruženje
+("ovo je test", "ovo je produkcija") da bi svaki upit koji ta sesija izvrši
+odsad nosio taj pečat u istoriji upotrebe servisa — bez ijedne linije koda,
+bez novog paketa za isporuku, samo izmena promenljive okruženja i restart.</p>
+<p>Ista osobina drajvera koja je ovo učinila bezbednim da se proba ima i naličje,
+i oba su podjednako važna:</p>
+<ul>
+<li><strong>Bezbedno:</strong> pogrešno ime parametra ne može da obori konekciju pri
+  pokretanju — probni pokušaj ne nosi rizik da zaustavi aplikaciju.</li>
+<li><strong>Opasno:</strong> pogrešno ime parametra <strong>tiho ne radi ništa uopšte</strong>. Konekcija
+  uspeva, aplikacija radi dalje, sve izgleda potpuno normalno — a nijedan
+  upit ne nosi novi pečat, i ništa u tom trenutku to ne prijavljuje.</li>
+</ul>
+<p>Posledica je disciplina koja se provlači kroz celu ovu knjigu u različitim
+oblicima: da je konekcija uspela, ili da je okruženje posle restarta ponovo
+prijavilo zdravo stanje, ne dokazuje ništa o tome da je izmena zaista
+proradila. Jedini pouzdan dokaz je pogledati <strong>efekat</strong> — u ovom slučaju,
+upit direktno nad istorijom upotrebe servisa koji broji koliko upita zaista
+nosi pečat svakog okruženja u poslednjih nekoliko sati. Uvođenje ovog
+parametra je zaista bilo rađeno postepeno, okruženje po okruženje, i baš na
+jednom od međukoraka desio se koristan skoro-incident: to okruženje je za
+nekoliko minuta prijavilo ozbiljno narušeno zdravlje tokom same izmene.
+Ispostavilo se da uzrok nije bio parametar servisa nego sasvim običan,
+očekivan artefakt platforme na kojoj aplikacija radi — stare instance koje
+se gase tokom uobičajene rotacije pri restartu, dok su preostale i dalje
+uredno opsluživale saobraćaj bez ijedne greške. Da je provera stala na boji
+statusa, umesto da pogleda stvaran saobraćaj, skoro-incident bi lako bio
+pogrešno protumačen kao da je bezazlena izmena parametra nešto pokvarila.</p>
+<p>Produkcijsko okruženje namerno nije dirano ovom brzom, ručnom izmenom uopšte
+— pečat je tamo pušten u rad isključivo kroz redovan put isporuke koda, uz
+odobrenje vlasnika sistema. Razlog nije opreznost radi opreznosti: potpunija
+zamena istog mehanizma — pečat po pojedinačnom zahtevu, ne samo po okruženju
+— već je bila u pripremi kroz taj isti put isporuke, i ručna izmena
+produkcije bi bila posao koji sledeće redovno objavljivanje koda odmah
+prepiše. Brza, ručna popravka ima smisla tamo gde ništa bolje nije već na
+putu; kad bolje već dolazi istim kanalom, ručna prečica postaje posao koji
+će neko drugi obrisati.</p>
+<h3 id="kad-je-prag-podesen-za-tui-posao-sopstveni-saobracaj-postaje-nevidljiv">Kad je prag podešen za tuđi posao, sopstveni saobraćaj postaje nevidljiv</h3>
+<p>Pečat po okruženju rešava pitanje "čiji je ovo upit". Ne rešava drugo,
+odvojeno pitanje: da li se taj upit uopšte pojavljuje na dashboard-u koji
+prikazuje najsporije upite iz prethodnog odeljka ovog poglavlja. Ovde se
+otkrio nalaz koji zaslužuje sopstveni pasus, jer izgleda kao pokvaren pečat
+dok je u stvari nešto sasvim drugo.</p>
+<p>Dashboard najsporijih upita bira upite koji traju najmanje šezdeset sekundi
+— prag koji je imao smisla za posao koji periodično učitava velike količine
+podataka, i koji taj prag redovno prelazi. Glavna aplikacija, koja ovaj isti
+spoljni servis koristi za sasvim drugu svrhu — brzo opsluživanje pojedinačnih
+zahteva korisnika — izvršava na desetine hiljada upita dnevno nad tim istim
+servisom, i <strong>nijedan jedini od njih</strong> ne prelazi taj prag od šezdeset
+sekundi. Posledica: svaki red koji je taj dashboard ikad prikazao potiče od
+posla za učitavanje podataka, ne od glavne aplikacije — dashboard koji po
+imenu treba da pokriva ceo servis je, u praksi, dashboard samo jednog njegovog
+korisnika.</p>
+<p>Kad je pečat po okruženju pušten u rad, prirodno se očekivalo da će nova
+kolona na tom istom dashboard-u odmah pokazati saobraćaj glavne aplikacije po
+okruženjima. Ta kolona je ostala prazna — i to je trenutak gde je razlika
+između dva različita objašnjenja presudna. Prazna kolona <em>izgleda</em> kao dokaz
+da pečat ne radi, isti onaj neuspeh opisan u prethodnom odeljku. Nije: pečat
+radi ispravno i upisuje se na svaki upit; upiti na koje se upisuje samo nikad
+ne prelaze prag koji bi ih uveo na ovaj konkretan dashboard. Ovo je varijanta
+istog obrasca viđenog ranije u knjizi (Poglavlje 20, prijave koje se broje
+kao nula ne zato što ih nema, nego zato što selektor gleda pogrešan tip
+događaja) — merenje koje izgleda kao "nema ničega" dok stvaran uzrok leži u
+tome gde je granica povučena, ne u tome da li se nešto zaista dešava. Jedini
+način da se razlikuju ova dva objašnjenja je proveriti direktno nad istorijom
+upotrebe servisa, mimo dashboard-a i mimo praga, da li pečat zaista postoji
+na upitima glavne aplikacije — a on jeste. Ispravna popravka nije "proveri da
+li je pečat pokvaren", nego zaseban, niži prag za upite ovog konkretnog
+korisnika servisa — priznata, još neizvedena stavka na listi poboljšanja, ne
+nešto što bi bilo koja izmena samog pečata mogla da reši.</p>
 <h2 id="243-analiticki-deo-posmatranje-bez-pristupa-infrastrukturi-kao-poseban-problem">24.3 Analitički deo — posmatranje bez pristupa infrastrukturi kao poseban problem</h2>
 <h3 id="servis-sam-razlikuje-dva-razlicita-oblika-sopstvene-posmatranosti">Servis sam razlikuje dva različita oblika sopstvene posmatranosti</h3>
 <p>Zvanična dokumentacija spoljnog servisa pravi jasnu razliku između dva
@@ -2839,6 +2965,16 @@ izveštaj.</p>
   periodično povlačiti i gurati kao logove — periodično osvežavana
   tabela najgorih slučajeva je često dovoljna zamena za slobodno
   upitivanje.</li>
+<li>Kad se identitet ne može odmah popraviti, potraži lakšu, obratnu
+  popravku za atribuciju — ali proveri da li mehanizam koji to
+  omogućava (npr. nepoznat parametar konekcije koji drajver tiho
+  prihvata) ima i naličje: ista osobina koja čini probu bezbednom čini
+  i grešku u kucanju potpuno nevidljivom. Uvek proveri efekat, nikad
+  samo da je konekcija ili okruženje ostalo zdravo.</li>
+<li>Prazna kolona ili nulta vrednost posle uvedene izmene nije
+  automatski dokaz da izmena ne radi — proveri da li prag ili filter
+  strukturno isključuje baš taj saobraćaj, pre nego što zaključiš da je
+  sama izmena pokvarena.</li>
 </ul>
 <h2 id="245-vezba-za-citaoca">24.5 Vežba za čitaoca</h2>
 <p>Nabroj spoljne, upravljane servise koje tvoj sistem koristi, a nad kojima
@@ -2878,7 +3014,7 @@ zatvoriš.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 08:32:56 UTC">30. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 22:58:09 UTC">6. septembar 2026.</span>
   </span>
 
     

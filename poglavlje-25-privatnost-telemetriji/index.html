@@ -1722,6 +1722,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#drugo-pitanje-o-istom-podatku-ne-ko-ga-vidi-nego-gde-fizicki-lezi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drugo pitanje o istom podatku: ne ko ga vidi, nego gde fizički leži
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2438,6 +2449,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#drugo-pitanje-o-istom-podatku-ne-ko-ga-vidi-nego-gde-fizicki-lezi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drugo pitanje o istom podatku: ne ko ga vidi, nego gde fizički leži
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2701,6 +2723,45 @@ higijena koja ima smisla za lozinku ovde bi samo unela operativnu štetu bez
 odgovarajuće bezbednosne dobiti — implementacija je to prepoznala umesto da
 mehanički primeni opšte pravilo na situaciju gde ono ne važi.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch25-rotacija-kljuca.png" data-desc-position="bottom"><img alt="Zašto rotacija pseudonimizacionog ključa ovde ne bi bila bezbednosna dobit, samo operativna šteta: ključ štiti vezu pseudonim↔email, ne sam sadržaj, i stabilan ključ ne otvara novi rizik koji bi rotacija zatvorila." src="../diagrams/ch25-rotacija-kljuca.png" width="80%"></a></p>
+<h3 id="drugo-pitanje-o-istom-podatku-ne-ko-ga-vidi-nego-gde-fizicki-lezi">Drugo pitanje o istom podatku: ne ko ga vidi, nego gde fizički leži</h3>
+<p>Sve dosad opisano u ovom poglavlju — povezivanje trejsova, pseudonimizacija,
+ključem-zaštićena heš funkcija — odgovara na pitanje "ko može da poveže ovaj
+podatak sa konkretnom osobom". Odvojena provera, urađena posle te, otvorila
+je sasvim drugo pitanje o istom podatku, koje prva provera ni ne dodiruje: u
+kojoj se zemlji taj podatak fizički obrađuje, bez obzira na to ko ga vidi.</p>
+<p>Telemetrija implementacije, uključujući i podatke koji se odnose na korisnike
+iz Evropske unije, obrađuje se isključivo u regionu pružaoca usluge za
+posmatranje smeštenom u Sjedinjenim Državama — jedan region za sav promet,
+bez obzira odakle korisnik zapravo dolazi. Sam taj podatak — koji je korisnik
+odakle — nije ni postojao kao evidentirana činjenica nigde u sistemu; da bi
+se uopšte saznalo koji su korisnici stvarno iz EU, moralo se ručno proći kroz
+uzorak stvarnog produkcionog pristupnog loga i proveriti kojim organizacijama
+pripadaju domeni prijavljenih korisnika. Rezultat te provere: najmanje dva
+korisnika su sa sigurnošću potvrđena kao organizacije sa sedištem u EU, dok
+je za nekoliko drugih domena rezidentnost ostala nepoznata i posle provere —
+sam čin utvrđivanja "ko je iz EU" pokazao se iznenađujuće netrivijalnim kad
+sistem tu činjenicu nigde ne beleži kao prvorazrednu.</p>
+<p>Ovo otvara pravno pitanje koje je potpuno odvojeno od svega ranije u
+poglavlju. Prenos ličnih podataka u zemlju koju Evropska unija nije
+proglasila adekvatnom destinacijom zahteva formalnu zaštitnu meru — u ovom
+slučaju standardne ugovorne klauzule unutar potpisanog ugovora o obradi
+podataka sa pružaocem usluge, procenu uticaja samog prenosa koja dokumentuje
+stvaran rizik, i jasno obaveštenje u politici privatnosti da se podaci
+povezani sa korisnicima obrađuju u toj zemlji. U trenutku ove provere, nijedna
+od te tri stavke nije mogla da se potvrdi kao već sprovedena — ne zato što je
+neko svesno odlučio da ih preskoči, nego zato što niko do tog trenutka nije
+ni postavio pitanje. Čistije rešenje, identifikovano ali još nesprovedeno, je
+jednostavno u principu: usmeriti sav promet koji se može pripisati korisniku
+iz EU ka regionu pružaoca usluge koji se nalazi unutar EU, umesto ka
+jedinstvenom regionu u SAD koji danas prima sve.</p>
+<p>Vredna lekcija ovde nije tehnička nego strukturna: "privatnost" u telemetriji
+nije jedan problem sa jednim rešenjem. Curenje identiteta kroz povezivanje
+trejsova i prekogranični prenos podataka su dve potpuno različite obaveze
+unutar iste regulative, sa dva potpuno različita leka — jedna se rešava
+pseudonimizacijom na izvoru, druga isključivo izborom <strong>gde</strong> infrastruktura
+fizički radi. Popraviti jednu ne pomera iglu na drugoj ni za milimetar, i tim
+koji je stao posle prve popravke, uveren da je "privatnost sređena", bi i
+dalje ostavio drugu, potpuno neotvorenu.</p>
 <h2 id="253-analiticki-deo-poznat-obrazac-curenja-sa-preciznim-imenom">25.3 Analitički deo — poznat obrazac curenja, sa preciznim imenom</h2>
 <h3 id="pseudonimizacija-ostaje-licni-podatak-i-to-menja-obavezu">Pseudonimizacija ostaje lični podatak — i to menja obavezu</h3>
 <p>Zvanična smernica o pseudonimizaciji je nedvosmislena: pseudonimizovan
@@ -2789,6 +2850,10 @@ sastati.</p>
   ključa) na novu situaciju, proveri da li dobit tog pravila stvarno važi
   ovde — rotacija koja kida longitudinalnu analizu bez odgovarajuće
   bezbednosne dobiti je šteta obučena kao higijena.</li>
+<li>Ne izjednačavaj "rešio sam ko može da poveže podatak sa osobom" sa
+  "rešio sam privatnost" — proveri odvojeno i gde se taj podatak fizički
+  obrađuje, jer prekogranični prenos ličnih podataka nosi sopstvenu,
+  potpuno nezavisnu obavezu koju nijedna mera protiv povezivanja ne dodiruje.</li>
 </ul>
 <h2 id="255-vezba-za-citaoca">25.5 Vežba za čitaoca</h2>
 <p>Pronađi jedan identifikator u tvom sistemu koji je pseudonimizovan na
@@ -2827,7 +2892,7 @@ kao u ovom poglavlju.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 11:37:17 UTC">31. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 23:01:44 UTC">6. septembar 2026.</span>
   </span>
 
     

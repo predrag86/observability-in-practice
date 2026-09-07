@@ -1577,6 +1577,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#popravka-redosleda-koja-nema-svoj-cuvar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Popravka redosleda koja nema svoj čuvar
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2438,6 +2449,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#popravka-redosleda-koja-nema-svoj-cuvar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Popravka redosleda koja nema svoj čuvar
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2698,6 +2720,36 @@ pokrivenosti, ne kao skriven propust — jasno imenovana granica onoga što
 je urađeno u odnosu na ostatak arhitekture.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch23-model-potpunosti.png" data-desc-position="bottom"><img alt="Model potpunosti za batch/ETL zadatke: da li je zadatak pokrenut, da li je proizveo izlaz, i zašto nije ako nije — sa posebnim naglaskom na &quot;uspešno završeno, ali prazno&quot; kao poseban, lako propušten oblik kvara." src="../diagrams/ch23-model-potpunosti.png" width="90%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-completeness.png" data-desc-position="bottom"><img alt="Trideset dana izvršavanja jednog zakazanog zadatka: dva dana kad zadatak nije ni pokrenut, i tri dana kad se uredno završio, ali proizveo nula redova — oba oblika kvara nevidljiva golom oku bez posebne provere." src="../diagrams/dashboard-completeness.png" width="95%"></a></p>
+<h3 id="popravka-redosleda-koja-nema-svoj-cuvar">Popravka redosleda koja nema svoj čuvar</h3>
+<p>Promena redosleda opisana u prethodnom odeljku — koja izvor kapaciteta
+dobija prvenstvo — rešila je stvaran problem jednom, ali sama ta promena
+danas ne postoji nigde u kodu infrastrukture. Red čekanja i izvori
+kapaciteta za ovu flotu se i dalje menjaju isključivo direktnom komandom
+ili kroz konzolu, van sistema koji upravlja ostatkom infrastrukture kao
+kodom. Praktična posledica: bilo ko sa pristupom konzoli može, namerno ili
+slučajno, vratiti jeftiniji, manje pouzdan izvor na prvo mesto — i ništa u
+sistemu to neće primetiti kao odstupanje, jer ne postoji zapisano, željeno
+stanje sa kojim bi se trenutno stanje moglo uporediti.</p>
+<p>Ovo je vredno postaviti pored sličnog obrasca ranije u knjizi (drift
+revizije definicije zadatka) — ali sa jednom bitnom razlikom koja ovu
+prazninu čini opasnijom, ne manje: tamo je bar postojalo nešto snimljeno
+(revizija definicije) čiji se identitet mogao proveriti i uporediti.
+Ovde nema ni toga — sam redosled izvora kapaciteta ne postoji zapisan van
+trenutnog, živog stanja same usluge za izvršavanje zadataka. Regresija bi
+se prvi put primetila tek posredno, kroz opšti alarm na neuspeh opisan
+malopre u ovom poglavlju — a taj alarm hvata <strong>posledicu</strong> (zadatak
+otkazao na nepouzdanom izvoru), ne <strong>uzrok</strong> (neko je promenio redosled).
+Vreme između te dve stvari može biti dani, dovoljno da neko zaboravi da je
+uopšte dirao redosled kad prvi izveštaj o otkazu konačno stigne.</p>
+<p>Popravka nije komplikovana u principu — uvesti ove resurse u isti sistem
+za infrastrukturu kao kod koji već upravlja ostatkom flote, tako da
+željeno stanje postane nešto što se može pročitati i uporediti, ne samo
+nešto što trenutno postoji u glavi osobe koja je poslednja dirala
+konzolu. Vredno je zabeležiti i zašto to još nije urađeno: sami resursi za
+izvršavanje ove flote nikad nisu ni uvedeni u taj sistem, ni pre ove
+popravke — što znači da ovo nije regresija nečega što je nekad bilo
+zaštićeno, nego praznina koja je postojala od početka i koju je stvaran
+incident tek učinio vidljivom.</p>
 <h2 id="233-analiticki-deo-poznat-kontrast-sa-standardnim-metodom-za-servise">23.3 Analitički deo — poznat kontrast sa standardnim metodom za servise</h2>
 <h3 id="red-metod-je-namenjen-drugacijem-obliku-opterecenja"><abbr title="Rate, Errors, Duration — standardni okvir za servise koji stalno primaju saobraćaj.">RED metod</abbr> je namenjen drugačijem obliku opterećenja</h3>
 <p>Standardni metod za instrumentaciju servisa — stopa zahteva, greške,
@@ -2771,12 +2823,21 @@ pekar koji sazna tek ujutru, od mušterija, da police stoje prazne.</p>
 <li>Beleži poznate praznine u pokrivenosti eksplicitno — na primer, koji deo
   flote još nije uključen u glavni cevovod za telemetriju — umesto da
   praznina ostane skrivena dok je neko slučajno ne otkrije.</li>
-<li>Proveri da li zadaci u tvojoj floti dele infrastrukturu izvršavanja sa
+<li>
+<p>Proveri da li zadaci u tvojoj floti dele infrastrukturu izvršavanja sa
   ostatkom sistema — ako je dele, opšti alarm na izlazni kod već
   pokriva flotu besplatno, i poseban, namenski mehanizam za istu stvar
   je nepotreban rizik od tihog zastarevanja. Periodično revidiraj
   postojeće alarme da proveriš da nijedan nije godinama u istom,
-  nepromenjenom stanju bez da iko primeti.</li>
+  nepromenjenom stanju bez da iko primeti.</p>
+</li>
+<li>
+<p>Kad popravku sprovedeš promenom redosleda ili konfiguracije direktno na
+  živom resursu, a taj resurs nije pod sistemom za infrastrukturu kao kod,
+  ta popravka nema čuvara — bilo ko sa pristupom konzoli je može tiho
+  vratiti, i regresija će se prvi put primetiti tek posredno, kroz
+  posledicu, ne kroz sam uzrok.</p>
+</li>
 </ul>
 <h2 id="235-vezba-za-citaoca">23.5 Vežba za čitaoca</h2>
 <p>Pronađi jedan zakazan zadatak u tvom sistemu koji se trenutno prati samo
@@ -2813,7 +2874,7 @@ i ako da, postoji li trenutno ijedan alarm koji bi tu situaciju uhvatio?</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="5. septembar 2026. 14:49:53 UTC">5. septembar 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 22:49:45 UTC">6. septembar 2026.</span>
   </span>
 
     

@@ -1454,6 +1454,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#alarm-koji-cuva-popravku-moze-i-sam-otkazati-tacno-kad-zatreba" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alarm koji čuva popravku može i sam otkazati tačno kad zatreba
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2416,6 +2427,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#alarm-koji-cuva-popravku-moze-i-sam-otkazati-tacno-kad-zatreba" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alarm koji čuva popravku može i sam otkazati tačno kad zatreba
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2698,6 +2720,57 @@ klasteru pre nego što je iko stigao da ga ograniči — otkriveno tek kad je
 mesečni račun za metrike skočio, ne pre.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch19-trostruki-signal.png" data-desc-position="bottom"><img alt="Trostruki signal po čvoru u samostalno upravljanom klasteru, sa redosledom uvođenja promena poređanim po radijusu dejstva — izvršni čvorovi prvi, koordinacioni poslednji." src="../diagrams/ch19-trostruki-signal.png" width="90%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-rightsizing.png" data-desc-position="bottom"><img alt="Sedmodnevni grafik upita u toku: prag &quot;stvarno neaktivno&quot; nije dostignut nijednom kroz celu nedelju — merenje, ne pretpostavka, je pokazalo da automatsko gašenje ovde ne bi imalo pravi prozor u kom bi radilo." src="../diagrams/dashboard-rightsizing.png" width="95%"></a></p>
+<h3 id="alarm-koji-cuva-popravku-moze-i-sam-otkazati-tacno-kad-zatreba">Alarm koji čuva popravku može i sam otkazati tačno kad zatreba</h3>
+<p>Popravka opisana ranije u poglavlju — trimovanje presitnih, po-fragmentu
+zapisa iz log sloja, uneta ručno na svaki čvor — dobila je i sopstveni,
+namenski par alarmi koji prati baš njenu regresiju: prvi, precizniji broji
+koliko puta se u prozoru pojavljuje tekst tačno onih zapisa koji treba da
+budu utišani (zdravo stanje je striktno nula), drugi, grublji, prati ukupan
+broj bajtova log sloja kao rezervnu proveru ako prvi ikad zataji.</p>
+<p>Kad je taj par prvi put stvarno okinuo, uzrok nije bila regresija same
+popravke — ona je proverena kao netaknuta pre, tokom i posle događaja.
+Uzrok je bio potpuno nezavisan bag na strani aplikacije koja klasteru šalje
+upite: aplikacija je u jedan upit ubacila datumski niz u pogrešnom, golom
+tekstualnom obliku; pokušaj klastera da taj niz automatski protumači kao
+datum je otkazivao <strong>po fragmentu izvršavanja</strong>, a svaki neuspeh je u log
+zapisivao pun trag greške. Upit je i pored toga završavao uspešno i vraćao
+rezultat pozivaocu — aplikacija koja ga je poslala nije imala nikakav znak
+da nešto nije u redu. Za nekoliko sati, obrazac se ponovio dovoljno puta da
+podigne dnevni volumen log sloja na višestruko od uobičajenog.</p>
+<p>Grublji, rezervni alarm je okinuo ispravno. Ali precizniji, primarni alarm
+— baš onaj čiji je posao da imenuje koji je zapis odgovoran — u tom trenutku
+nije prijavio ni uspeh ni neuspeh, nego je sam otkazao: njegova pretraga
+teksta preko višesatnog prozora nije stigla da završi pre isteka vremena,
+jer je prozor sad nosio višestruko više podataka nego kad je alarm
+projektovan. Ovo je greška čiji je obrazac vredan imenovanja: alarm je
+otkazao <strong>tačno u onom uslovu zbog kog postoji</strong> — što je veći volumen koji
+treba prijaviti, to je manja šansa da alarm stigne da ga izmeri. Da je
+umesto toga otkazao mirno, niko ne bi ni primetio da je nešto pošlo naopako
+sa samim alarmom, ne samo sa sistemom koji posmatra.</p>
+<p>Bilo je i gore od toga: pošto je stanje greške i dalje koristilo isti
+tekstualni šablon za obaveštenje kao i uspešno merenje, poruka koja je
+stigla nije jasno govorila "nisam stigao da proverim" — izgledala je kao
+merenje, sa brojem koji nedostaje umesto vrednosti. Popravka nije bila
+učiniti pretragu bržom po svaku cenu (kraći prozor je dovoljan, jer je
+zdravo stanje strogo nula i nema šta da se izgladi usrednjavanjem), nego
+i eksplicitno razdvojiti obaveštenje za stanje greške od obaveštenja za
+stvarno merenje, tako da alarm koji nije stigao da proveri to i kaže,
+umesto da oponaša merenje koje nije napravio.</p>
+<p>Vredi zabeležiti i treću grešku, unazad: kad je rezervni, grublji alarm
+prvi put podešavan, njegov prag je opravdan tvrdnjom da bi svaka regresija
+bila teško razlučiva od običnog radnog dana — jer su, tvrdilo se, oba
+obrasca slična po veličini. Ta tvrdnja je bila zasnovana na merenju
+uzetom u prozoru koji je sam još uvek nosio ostatke volumena od pre
+popravke, ne na stvarnom mirnom stanju posle nje. Kad je mirno stanje
+kasnije izmereno posebno, izolovano od tog prelaznog perioda, pokazalo se
+da je stvarna razlika između regresije i normalnog dana <strong>red veličine
+veća</strong> nego što je prvobitna procena tvrdila — prag je, ispostavilo se,
+mogao biti mnogo osetljiviji nego što se mislilo. Ovo je ista disciplina
+"izmeri, ne pretpostavi" koja je ranije u poglavlju odlučila pitanje
+automatskog gašenja, primenjena sad na podešavanje praga alarma — i pokazuje
+da čak i tim koji meri može izmeriti pogrešan prozor i izvući preuveličan
+zaključak, ako se prozor merenja ne izoluje pažljivo od prelaznog stanja
+koje meri.</p>
 <h2 id="193-analiticki-deo-zasto-standardna-poluga-ovde-ne-radi">19.3 Analitički deo — zašto standardna poluga ovde ne radi</h2>
 <h3 id="finops-standard-porea-poluge-ali-i-sam-upozorava-na-granice">FinOps standard poređa poluge, ali i sam upozorava na granice</h3>
 <p>Zvanična FinOps preporuka za kontrolu troška računarskih resursa poređa
@@ -2781,7 +2854,8 @@ mu stvarno treba, ni manje ni više, i da ostane sastavljen.</p>
 <li>Proceni koliko novih vremenskih serija donosi svaki novi izvor metrika
   pre nego što ga uključiš, posebno za JMX/Dropwizard porodice — one mogu
   udvostručiti ukupnu kardinalnost pre nego što iko stigne da to primeti.</li>
-<li>Kad volumen zapisa (i račun za njih) poraste, ne seci naslepo — prvo
+<li>
+<p>Kad volumen zapisa (i račun za njih) poraste, ne seci naslepo — prvo
   izmeri koji tok i koje polje unutar njega zapravo nosi najveći deo
   volumena (u jednom stvarnom slučaju, jedan tok je nosio većinu dnevnog
   volumena cele flote, a jedno slobodno-tekstualno polje unutar njega
@@ -2791,7 +2865,14 @@ mu stvarno treba, ni manje ni više, i da ostane sastavljen.</p>
   polja netaknuta, jer bi njihovo naivno sečenje pravilom zasnovanim na
   tekstu lako proizvelo nevalidnu strukturu i srušilo čitanje sa greškom
   umesto da tiho izostavi jedno polje, obarajući odjednom svaki panel koji
-  čita taj izvor.</li>
+  čita taj izvor.</p>
+</li>
+<li>
+<p>Kad gradiš alarm koji čuva neku popravku od regresije, proveri i da li
+  sam alarm može otkazati tačno pod opterećenjem koje ta regresija
+  izaziva — i nikad ne dozvoli da stanje "nisam stigao da proverim"
+  izgleda kao izmerena vrednost u istom obaveštenju.</p>
+</li>
 </ul>
 <h2 id="195-vezba-za-citaoca">19.5 Vežba za čitaoca</h2>
 <p>Pronađi jedan sistem u svom okruženju koji trenutno ima automatsko gašenje
@@ -2829,7 +2910,7 @@ postoji, dovoljno dugačak da opravda gašenje — ili je pretpostavka o
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 20:09:59 UTC">30. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 22:38:28 UTC">6. septembar 2026.</span>
   </span>
 
     

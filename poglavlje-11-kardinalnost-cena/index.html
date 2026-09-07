@@ -1063,6 +1063,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#citanje-ima-sopstveni-racun-nezavisan-od-pisanja" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Čitanje ima sopstveni račun, nezavisan od pisanja
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2416,6 +2427,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#citanje-ima-sopstveni-racun-nezavisan-od-pisanja" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Čitanje ima sopstveni račun, nezavisan od pisanja
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2731,6 +2753,80 @@ učestalost upisa. Za sistem gde nekoliko izvora šalje podatke češće nego
 što je stvarno potrebno, taj lever ume da bude i veći i jeftiniji za
 primenu od bilo koje pojedinačne mere protiv kardinalnosti, jer ne zahteva
 da se bilo šta odluči o tome koji je atribut "dovoljno koristan" da ostane.</p>
+<h3 id="citanje-ima-sopstveni-racun-nezavisan-od-pisanja">Čitanje ima sopstveni račun, nezavisan od pisanja</h3>
+<p>Sve dosadašnje mere u ovom poglavlju — nativni histogrami, agregacija na
+gateway-u, keep-liste, učestalost upisa — smanjuju jednu stranu računa:
+koliko se piše. Platforma za logove koju sistem koristi naplaćuje i drugu,
+potpuno nezavisnu stranu: koliko se <strong>čita</strong>, mereno u gigabajtima
+skeniranim po upitu, bez ikakve uključene besplatne kvote. Broj aktivnih
+serija i broj upisa u minuti mogu biti savršeno pod kontrolom, a račun za
+čitanje i dalje raste — jer to je drugi metar, ne isti metar viđen iz
+drugog ugla.</p>
+<p>Kad je taj deo računa narastao do desetak procenata ukupnog mesečnog
+troška, prva provera nije bila nagađanje nego merenje: platforma sama
+beleži svaki upit koji posluži, sa brojem skeniranih bajtova i izvorom
+upita. Rezultat merenja preko sedam dana: <strong>70% skeniranih bajtova nije
+poticalo od živih dashboard-a koje neko gleda</strong>, nego od zakazanih
+recording pravila koja periodično presnimavaju iste brojeve iz sirovih
+logova u metrike — a od toga, dvanaest pravila namenjenih izvršnom
+dashboard-u za korišćenje platforme nosilo je <strong>60% ukupnog skeniranja</strong>,
+samo ta pravila.</p>
+<p>Tri jeftina popravka su predložena, i sva tri su, pri proveri, propala —
+svaki na svoj način poučan:</p>
+<ol>
+<li><strong>Preusmeri panele izvršnog dashboard-a da čitaju već postojeće
+   metrike iz Mimir-a, umesto da ponovo skeniraju logove.</strong> Izgleda
+   besplatno — brojevi već postoje na jeftinijem skladištu. Problem:
+   metrike u Mimir-u namerno ne nose labelu po pojedinačnom korisniku, jer
+   bi ta labela značila da se email adrese upisuju kao vrednost labele u
+   sistemu za metrike — već ranije odbijeno iz razloga privatnosti, i
+   upravo razlog zašto su te metrike izgrađene da čuvaju samo agregate.
+   Preusmeravanje panela bi ućutkalo filtere na dashboard-u tiho, bez
+   greške — filter za "korisnika" bi i dalje postojao vizuelno, ali ne bi
+   više ništa menjao. Gori ishod od ne diranja ničega.</li>
+<li><strong>Ukloni duplo skeniranje u "delta" panelima</strong> (oni koji prikazuju
+   promenu u odnosu na prethodni period — trenutna vrednost minus ista
+   vrednost pomerena unazad). Svaki takav panel piše upit koji referencira
+   isti vremenski prozor dvaput: jednom direktno, jednom pomeren. Mereno
+   na identičnom prozoru od sat vremena: dvostruko skeniranje potrošilo je
+   <strong>2,80 puta</strong> više bajtova nego jedno skeniranje. Popravka je čista i
+   ne gubi nijedan filter — ali ušteda je bila ispod dolara mesečno, na
+   dashboard-u čiji je export format već tri puta do sada, pri
+   objavljivanju, pretvorio svaki panel u "No data" zbog placeholder-a
+   koji se razrešava samo kroz tačno određen put objave. Rizik od diranja
+   nije bio opravdan uštedom — ostavljeno za trenutak kad se taj
+   dashboard bude menjao iz nekog drugog razloga.</li>
+<li><strong>Zameni jedno sedmodnevno recording pravilo jeftinijim zbirom dnevnog
+   pravila preko sedam dana</strong> (<code>sum_over_time</code> preko sedmodnevnog prozora
+   umesto direktnog sedmodnevnog izračunavanja). Ovde je provera otkrila
+   nešto ozbiljnije od "nije vredno" — <strong>vrednosti se nisu slagale, dva
+   puta veća razlika.</strong> Uzrok: <code>sum_over_time</code> preko recording pravila
+   broji <strong>uzorke</strong>, ne dane, a učestalost evaluacije tog pravila je u
+   međuvremenu promenjena sa dvanaest na dvadeset četiri sata. Sedmodnevni
+   prozor koji obuhvata i period pre i period posle te promene tiho
+   udvostručuje deo dana. Prenosivo pravilo: <strong>nikad ne agregiraj
+   recording pravilo sa <code>sum_over_time</code> preko prozora koji može da
+   obuhvati promenu intervala evaluacije</strong> — čak ni kad je razlika u
+   intervalu izgledala kao sitna operativna izmena u trenutku kad je
+   urađena.</li>
+</ol>
+<p>Sva tri predloga su odbačena posle merenja, ne pre njega — i to je poenta
+vredna ponavljanja iz prethodnih poglavlja. Ono što je ostalo posle
+odbacivanja sva tri nije "još jedna optimizacija" nego stvarna redizajn
+odluka: da li dashboard za rukovodstvo zaista treba da omogući filtriranje
+po pojedinačnom korisniku, ili agregat po danu i domenu dovoljno služi
+svrsi. To pitanje nema tehnički odgovor — nosi proizvodnu odluku unutar
+sebe, i zato je ostavljeno neodlučeno, eksplicitno, umesto da se prikrije
+lošim tehničkim kompromisom.</p>
+<p>Lekcija za čitaoca: kardinalnost i učestalost upisa, obrađene ranije u
+ovom poglavlju, kontrolišu koliko se <strong>piše</strong>. Ni jedna mera protiv njih
+ne skida nijedan bajt sa računa za <strong>čitanje</strong> — to je odvojen metar, sa
+sopstvenim uzrocima (zakazana pravila češće nego dashboard-i koje ljudi
+zaista gledaju) i sopstvenim zamkama (agregati koji tiho brišu filter,
+dupliranje u delta obrascu, <code>sum_over_time</code> preko promene intervala).
+Meriti samo jednu stranu računa i pretpostaviti da je time cela slika
+pokrivena je ista greška u drugom ruhu kao meriti broj serija i
+pretpostaviti da je time obuhvaćena i učestalost upisa.</p>
 <h2 id="113-analiticki-deo-zasto-kardinalnost-nije-detalj-skladistenja">11.3 Analitički deo — zašto kardinalnost nije "detalj skladištenja"</h2>
 <h3 id="zvanicna-preporuka-nativni-histogrami-kao-strukturno-resenje">Zvanična preporuka: nativni histogrami kao strukturno rešenje</h3>
 <p>Prometheus zajednica (uključujući i sopstvenu dokumentaciju o praksama
@@ -2799,10 +2895,24 @@ odjednom.</strong></p>
   kardinalnosti, proveri da li više od jednog procesa piše u istu seriju bez
   njega — kumulativni brojači sa spojenim identitetom daju netačnu, ne samo
   manje detaljnu, stopu.</li>
-<li>Meri i učestalost upisa po seriji, ne samo broj serija — platforma
+<li>
+<p>Meri i učestalost upisa po seriji, ne samo broj serija — platforma
   naplaćuje njihov proizvod, i podešavanje intervala prikupljanja ume da
   bude veći i jeftiniji lever od bilo koje pojedinačne mere protiv
-  kardinalnosti.</li>
+  kardinalnosti.</p>
+</li>
+<li>
+<p>Trošak čitanja (upita) je poseban metar od troška pisanja (unosa) — mere
+  protiv kardinalnosti i učestalosti upisa ne diraju nijedan bajt skeniran pri
+  izvršavanju upita; meri obe strane računa odvojeno.</p>
+</li>
+<li>Pre nego što preusmeriš dashboard panel da čita jeftiniju, već agregiranu
+  metriku umesto sirovih podataka, proveri da li agregat nosi iste labele koje
+  filteri na panelu očekuju — tih labela često nema namerno (najčešće iz
+  razloga privatnosti), i preusmeravanje bi ućutkalo filter bez greške.</li>
+<li>Nikad ne agregiraj recording pravilo sa <code>sum_over_time</code> preko prozora koji
+  može da obuhvati promenu intervala evaluacije tog pravila — broji se uzorak,
+  ne vremenska jedinica, i promena intervala tiho menja rezultat.</li>
 </ul>
 <h2 id="115-vezba-za-citaoca">11.5 Vežba za čitaoca</h2>
 <p>Pokreni <code>count by (__name__)({__name__=~".+"})</code> (ili ekvivalentnu proveru u
@@ -2840,7 +2950,7 @@ neplanirani skok u računu.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 12:50:53 UTC">31. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 21:58:57 UTC">6. septembar 2026.</span>
   </span>
 
     

@@ -786,6 +786,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#kontrola-nad-hostom-nije-isto-sto-i-trajnost-instalacije" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kontrola nad hostom nije isto što i trajnost instalacije
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cena-povlacenja-se-meri-po-pozivu-ne-po-tacki-podataka" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2285,6 +2296,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#kontrola-nad-hostom-nije-isto-sto-i-trajnost-instalacije" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kontrola nad hostom nije isto što i trajnost instalacije
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cena-povlacenja-se-meri-po-pozivu-ne-po-tacki-podataka" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2506,6 +2528,57 @@ zahtevaju potpuno različit odgovor. Ovaj obrazac je toliko bogat sopstvenim
 zamkama (strukturno kašnjenje reda veličine sat-dva, cena upita nad
 sistemskim pogledima, razlika između "watcher je mrtav" i "posmatrani sistem
 je mrtav") da dobija sopstvenu, punu studiju slučaja u Poglavlju 24.</p>
+<h3 id="kontrola-nad-hostom-nije-isto-sto-i-trajnost-instalacije">Kontrola nad hostom nije isto što i trajnost instalacije</h3>
+<p>Obrazac "agent po čvoru", opisan iznad za samostalno upravljan klaster,
+oslanja se na jednu prednost koju upravljana baza nikad ne nudi: tim ima
+puno pravo da instalira šta god treba na host. Ta ista prednost nosi
+posledicu koja se lako previdi dok se prvi put uvodi agent: <strong>pravo da
+se nešto instalira nije isto što i garancija da će ta instalacija tu i
+ostati.</strong> Agent instaliran ručno na konkretan host preživljava tačno
+onoliko dugo koliko preživi taj konkretan host — a bilo koji događaj koji
+zameni instancu ispod njega (migracija na drugu arhitekturu procesora,
+redovna zamena instance, čak i nadogradnja same klasterovane aplikacije
+kroz zamenu čvorova) briše svaku ručno instaliranu komponentu, tiho, jer
+nijedna od njih nikad nije bila deo onoga što se automatski postavlja pri
+kreiranju instance.</p>
+<p>Konkretno, na svakoj zameni instance nestaju <strong>tri</strong> odvojene stvari
+odjednom, ne jedna: sam agent koji prikuplja host i log signal; jedna
+linija podešavanja unutar konfiguracije same klasterovane aplikacije koja
+uključuje njen JVM/metrike endpoint; i mala zakazana usluga za čišćenje
+lokalnih logova aplikacije, da disk ne bi napunio sam sebe. Naivan oporavak
+— samo reinstaliranje agenta — vraća <strong>jednu od te tri</strong> stvari, i ništa
+na dashboard-u ne čini taj propust očiglednim: host-nivo signal može
+ponovo početi da teče normalno, dok JVM-nivo signal (i čišćenje logova uz
+njega) ostaju tiho odsutni, neprimećeni dok neko eksplicitno ne proveri
+sve tri komponente pojedinačno.</p>
+<p>Popravka, jednom kad se obrazac ponovio dovoljno puta da opravda
+automatizaciju, nije bila "zapamti da uradiš sve tri stvari sledeći put"
+— bila je jedan idempotentan skript oporavka koji vraća sve tri komponente
+odjednom, u jednom prolazu, i koji sam izvodi identitet čvora (koju ulogu
+taj čvor igra u klasteru) direktno sa hosta, umesto iz ručno održavane
+mape — tako da se sme bezbedno pokrenuti ponovo, nezavisno od toga koji je
+tačno host u pitanju. Bitno: taj skript namerno <strong>ne restartuje</strong> samu
+klasterovanu aplikaciju — restart te aplikacije nosi sopstveno pravilo
+redosleda (čvor koji igra ulogu koordinatora restartuje se poslednji i
+samo u prozoru za održavanje, jer njegov restart obara svaki upit u toku
+kroz ceo klaster) i ostaje odvojen, ručno pokrenut korak.</p>
+<p>Prateća zamka, vredna sopstvene linije: provera da je JVM metrike endpoint
+zaista ponovo aktivan ne sme ići preko svakodnevnog alata za "da li nešto
+sluša na ovom portu" — provera tabele soketa je jednom prijavila da port
+"ne sluša", dok je isti endpoint u tom istom trenutku ispravno odgovarao
+na običan HTTP zahtev. Uzrok: JVM je bio vezan za oblik loopback adrese
+koji alat za listanje soketa ne prikazuje podrazumevano. Da se poverovalo
+proveri soketa umesto stvarnom zahtevu, to bi izazvalo nepotreban dodatni
+restart uloge koordinatora — najrazorniju moguću operaciju u celom
+klasteru, pokrenutu na osnovu lažnog signala.</p>
+<p>Ovo se vezuje direktno za princip kontrole sa početka poglavlja: puna
+kontrola nad hostom znači da tim <strong>sme</strong> da instalira šta god treba — ali
+ne znači da ta instalacija <strong>traje</strong> sama od sebe, na način na koji signal
+upravljane baze traje bez ičije intervencije. Spoljašnja ravan RDS-a iz
+ovog poglavlja dobija svoj signal "besplatno" upravo zato što nije ručno
+instalirana; agent-po-čvoru dobija bogatiji signal upravo zato što <strong>jeste</strong>
+ručno instaliran — a ta bogatost dolazi sa eksplicitnom, trajnom obavezom
+održavanja koju obrazac upravljane baze nikad ne nosi.</p>
 <p>Sva tri obrasca dele jedan princip, dovoljno bitan da se izdvoji kao pravilo
 knjige: <strong>watcher koji posmatra kritičnu putanju ne sme da zavisi od
 infrastrukture koju posmatra.</strong> Spoljašnja ravan RDS-a ne zavisi od konekcije
@@ -2633,10 +2706,23 @@ te zaslepeo.</strong></p>
   promenila — drži spisak izvora statičkim umesto auto-otkrivanja, i kad
   cena postane neproporcionalna vrednosti, prvo proširi interval, tek onda
   razmatraj brisanje metrike.</li>
-<li>Kad je prozor upita jednak podrazumevanoj granularnosti izvora, sistem koji
+<li>
+<p>Kad je prozor upita jednak podrazumevanoj granularnosti izvora, sistem koji
   pitaš možda još nije objavio vrednost — puštač to čita kao "serija ne
   postoji", ne kao "još nije stigla". Proširi prozor upita dobro iznad
-  nominalne granularnosti izvora umesto da menjaš sam izvor.</li>
+  nominalne granularnosti izvora umesto da menjaš sam izvor.</p>
+</li>
+<li>
+<p>Za svaki ručno instaliran agent na hostu koji potpuno kontrolišeš, tretiraj
+  zamenu instance (migracija, redovna zamena, nadogradnja kroz zamenu čvorova)
+  kao izvesnost, ne rubni slučaj — nabroj svaku komponentu od koje ta
+  instalacija zavisi (agent, linija podešavanja, prateće zakazane usluge) i
+  napravi oporavak svih odjednom, u jednom koraku, umesto da se propust otkriva
+  naknadno kroz dashboard koji ćuti o tome šta konkretno nedostaje. I nikad ne
+  proveravaj da je mrežni endpoint ponovo aktivan preko stanja soketa — proveri
+  stvarnim zahtevom; soket može tvrditi da ništa ne sluša dok endpoint ispravno
+  odgovara.</p>
+</li>
 </ul>
 <h2 id="75-vezba-za-citaoca">7.5 Vežba za čitaoca</h2>
 <p>Napravi listu svih izvora telemetrije u svom sistemu nad kojima nemaš
@@ -2675,7 +2761,7 @@ redundantne, nezavisne ravni.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 06:30:10 UTC">31. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 22:10:46 UTC">6. septembar 2026.</span>
   </span>
 
     

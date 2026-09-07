@@ -1538,6 +1538,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#alat-koji-obecava-da-pokrije-vise-ravni-odjednom-i-zasto-to-ovde-ne-vazi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alat koji obećava da pokrije više ravni odjednom — i zašto to ovde ne važi
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2405,6 +2416,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#alat-koji-obecava-da-pokrije-vise-ravni-odjednom-i-zasto-to-ovde-ne-vazi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alat koji obećava da pokrije više ravni odjednom — i zašto to ovde ne važi
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2645,6 +2667,40 @@ nestati, i eksplicitno mu se doda podrazumevana nula-vrednost, umesto da
 se ta zaštita doda tek pošto nešto konkretno stvarno nestane.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch22-devet-ravni.png" data-desc-position="bottom"><img alt="Devet ravni mrežne infrastrukture grupisane po tome koliko vidljivo javljaju o sopstvenom kvaru — najgora grupa je slepa i istovremeno predstavlja put kojim prolazi telemetrija svih ostalih ravni." src="../diagrams/ch22-devet-ravni.png" width="90%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-natdiff.png" data-desc-position="bottom"><img alt="Ulazni i izlazni tok bajtova kroz izlazni prolaz, čitani u paru: razilaženje između dve linije, ne bilo koja linija pojedinačno, je ono što otkriva gubitak saobraćaja." src="../diagrams/dashboard-natdiff.png" width="95%"></a></p>
+<h3 id="alat-koji-obecava-da-pokrije-vise-ravni-odjednom-i-zasto-to-ovde-ne-vazi">Alat koji obećava da pokrije više ravni odjednom — i zašto to ovde ne važi</h3>
+<p>Postoji tehnologija koja obećava tačno ono što ravan mrežnog interfejsa po
+instanci traži: podatke o protoku direktno iz kernela, bez ijedne izmene
+aplikacije i bez agenta koji treba posebno instalirati na svaki servis.
+Zvuči kao prečica koja bi mogla da zameni deo posla opisanog iznad.
+Implementacija ju je razmotrila — i odbila, za veliku većinu flote, iz
+jednog strukturnog razloga: ovakav alat čita direktno iz Linux kernela
+hosta, a najveći deo flote ne izvršava se na hostu kojim implementacija
+upravlja, nego na upravljanom, bez-serverskom izračunavanju bez pristupa
+kernelu uopšte. Nezavisan istraživački izvor posvećen posmatranju sistema
+je ovo potvrdio eksplicitno, van sopstvenog konteksta implementacije: alati
+ove porodice "neće raditi sa serverless tehnologijama," i većina rešenja u
+toj kategoriji pretpostavlja Kubernetes klaster koji implementacija uopšte
+ne vodi.</p>
+<p>Ali odluka nije bila jednostavno "da" ili "ne" za ceo alat — jedan
+konkretan proizvod iz iste porodice je promovisan iz "odbijeno" u
+"odloženo", ne "prihvaćeno", kad se ispostavilo da je tehnički drugačiji
+od ostalih: radi kao prvoklasna komponenta unutar kolektora koji flota već
+koristi, pa ne zahteva nov agent na hostovima koji kernel pristup stvarno
+imaju. Za tu malu manjinu hostova, ovaj alat bi doneo podatke o protoku po
+paru izvor-odredište bez oslanjanja na flow-logove. Zašto onda i tu ostaje
+odložen, ne uveden: cena bi bila u kardinalnosti — podaci po paru
+izvor/odredište eksplodiraju broj serija na način koji Poglavlje 11 već
+upozorava da se meri pre uvođenja, ne posle — a pitanje koje bi ovaj alat
+prvi rešio (odbacivanje paketa zbog ograničenja broja DNS zahteva po
+mrežnom interfejsu) već ima jeftiniji, postojeći odgovor: jedan alat za
+očitavanje same mrežne kartice, koji već radi na tim istim hostovima, po
+ceni bliskoj nuli.</p>
+<p>Pouka nije "ovakvi alati ne valjaju" — pouka je da alat čija najveća
+prednost (rad bez agenta, na nivou kernela) tačno onemogućava upotrebu na
+većini flote koja radi bez sopstvenog kernela, i da čak i tamo gde uslov
+za upotrebu postoji, redosled pitanja mora biti "koji problem ovo rešava,
+i da li već imamo jeftiniji odgovor na baš taj problem" — ne "da li je
+ovo tehnički moguće ovde."</p>
 <h2 id="223-analiticki-deo-princip-poznat-u-dva-odvojena-zvanicna-oblika">22.3 Analitički deo — princip poznat u dva odvojena zvanična oblika</h2>
 <h3 id="zvanicna-dokumentacija-vec-koristi-diferencijalni-obrazac-i-to-eksplicitno">Zvanična dokumentacija već koristi diferencijalni obrazac, i to eksplicitno</h3>
 <p>Zvanična dokumentacija provajdera za metrike izlaznog prolaza već
@@ -2727,6 +2783,11 @@ javi uopšte može da progovori.</p>
   proveru uživo — provera upita dokazuje da panel nije mrtav, ne da je
   ispravno prikazan; za greške u prikazu (odsečen tekst, dupla vrednost
   na mestu gde treba jedna) potreban je pogled na sam iscrtani panel.</li>
+<li>Kad razmatraš alat koji obećava da pokrije više ravni odjednom (npr.
+  onaj koji čita direktno iz kernela hosta), prvo proveri da li tvoja
+  flota uopšte ima kernel kome bi taj alat mogao da priđe — najveća
+  prednost ovakvog alata je često tačno ono što ga isključuje iz najvećeg
+  dela flote koja radi bez sopstvenog servera.</li>
 </ul>
 <h2 id="225-vezba-za-citaoca">22.5 Vežba za čitaoca</h2>
 <p>Nabroj mrežne slojeve kroz koje prolazi jedan tipičan zahtev u tvom
@@ -2744,6 +2805,8 @@ slojevima? Pronađi barem jedan sloj koji je trenutno potpuno slep.</p>
 <li><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-resolver-with-cloudwatch.html">Monitoring Route 53 Resolver endpoints with CloudWatch</a></li>
 <li><a href="https://aws.amazon.com/blogs/mt/manage-amazon-ec2-instance-clock-accuracy-using-amazon-time-sync-service-and-amazon-cloudwatch-part-2/">Manage Amazon EC2 instance clock accuracy using Amazon Time Sync Service and CloudWatch — AWS Cloud Operations Blog</a></li>
 <li><a href="https://www.kentik.com/kentipedia/synthetic-monitoring-vs-real-user-monitoring/">Synthetic Monitoring vs Real User Monitoring — Kentik</a></li>
+<li><a href="https://observability-360.com/article/viewarticle?id=ebpf-in-observability">The State of eBPF in Observability — Observability 360</a></li>
+<li><a href="https://grafana.com/oss/beyla-ebpf/">Grafana Beyla — eBPF-based auto-instrumentation</a></li>
 </ul>
 
 
@@ -2765,7 +2828,7 @@ slojevima? Pronađi barem jedan sloj koji je trenutno potpuno slep.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="30. avgust 2026. 20:22:40 UTC">30. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 21:49:48 UTC">6. septembar 2026.</span>
   </span>
 
     

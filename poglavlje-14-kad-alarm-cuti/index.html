@@ -1214,6 +1214,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#peta-studija-slucaja-svaki-kod-put-mora-da-prijavi-sta-je-uradio-ne-samo-da-li-je-nesto-prijavio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Peta studija slučaja: svaki kod-put mora da prijavi šta je uradio, ne samo da li je nešto prijavio
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2372,6 +2383,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#peta-studija-slucaja-svaki-kod-put-mora-da-prijavi-sta-je-uradio-ne-samo-da-li-je-nesto-prijavio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Peta studija slučaja: svaki kod-put mora da prijavi šta je uradio, ne samo da li je nešto prijavio
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2628,6 +2650,55 @@ rešenja kao rezervni kanal iznad, samo primenjena na jedan nivo unutra: kad
 god mehanizam namerno ćuti dok je sve u redu, mora postojati odvojen signal
 koji dokazuje da je taj mehanizam uopšte živ — jer sam mehanizam, po
 dizajnu, ne može da posvedoči za sebe u trenutku kad je mrtav.</p>
+<h3 id="peta-studija-slucaja-svaki-kod-put-mora-da-prijavi-sta-je-uradio-ne-samo-da-li-je-nesto-prijavio">Peta studija slučaja: svaki kod-put mora da prijavi šta je uradio, ne samo da li je nešto prijavio</h3>
+<p>Prve četiri studije slučaja u ovom poglavlju otkrivaju tišinu <strong>spolja</strong> —
+neko primeti prazan kanal, pa istražuje unazad. Peti slučaj gradi nešto
+drugačije: mehanizam koji tišinu otkriva <strong>iznutra</strong>, automatski, u
+trenutku kad neko doda novi kod, pre nego što bilo ko mora da primeti bilo
+šta na dashboard-u.</p>
+<p>Mehanizam koji odlučuje šta da radi sa svakim otkrivenim otkazom — pošalji,
+potisni jer je unutar prozora za sprečavanje ponavljanja, potisni jer je
+poznat duplikat, potisni jer je porodica na tihom nivou, potisni jer je
+dostigla novi prag po klasi izuzetka, ili pokušaj slanja koji je sam pao —
+emituje, na svakoj takvoj odluci, tačno <strong>jedan</strong> ishod iz malog, zatvorenog
+skupa. Bitno: ovaj signal se emituje na samoj tački odluke, nikad iza ijedne
+kapije — ista disciplina koju ovo poglavlje već zahteva od sirovog brojača
+otkaza (mora se beležiti pre bilo kakve odluke o slanju, ne posle).</p>
+<p>Pošto su ti ishodi, po konstrukciji, <strong>potpuni i međusobno isključivi</strong> —
+svaka odluka pripada tačno jednoj kategoriji, nikad nuli, nikad dvema —
+postaje moguća jedna jednostavna, samoproverljiva invarijanta: zbir svih
+ishoda za porodicu u nekom prozoru vremena mora biti <strong>tačno jednak</strong> broju
+otkrivenih otkaza te iste porodice u istom prozoru. Ako se ne poklapa,
+dogodilo se jedno od dvoje — ili je neko dodao novu granu odluke u kod
+(novi razlog za potiskivanje, na primer) a zaboravio da uz nju doda i
+odgovarajuću emisiju ishoda, ili sam prenos tiho gubi deo signala. U oba
+slučaja, <strong>sam neslaganje brojeva je alarm</strong> — niko ne mora unapred da se
+seti da testira baš tu novu granu koda; provera je ugrađena u sam oblik
+podataka, ne u nečije sećanje da je doda naknadno.</p>
+<p>Motivišući slučaj, izmeren pre nego što je ova invarijanta uopšte postojala:
+pitanje "da li je iko zaista obavešten" za konkretnu porodicu zadataka
+moglo je da se odgovori samo ručnim čitanjem sirovih linija loga. Jedna
+porodica je na taj način otkrivena kako šalje samo deo svojih alarma dok
+tiho potiskuje ostatak — nedeljama, neprimećeno, jer niko nije brojao
+poslate naspram potisnutih naspram stvarno otkrivenih otkaza jedne prema
+drugoj.</p>
+<p>Ovo se direktno vezuje za lekciju iz prve studije slučaja: invarijanta ne
+sprečava nekog da napiše novo, previše agresivno pravilo za potiskivanje —
+ta odluka i dalje zahteva pregled, isto kao mehanizam iz prvog slučaja.
+Ono što invarijanta garantuje je nešto uže ali podjednako vredno: šta god
+kod nameravao da uradi, mora to da <strong>kaže naglas</strong>, u obliku koji se
+automatski proverava naspram stvarnosti — umesto da se veruje da će svaki
+budući saradnik zapamtiti da ažurira dokumentaciju ili doda poziv za
+emitovanje na pravom mestu.</p>
+<p>Ista šema je, jednom kad se pokazala vrednom, ponovo iskorišćena na drugom,
+srodnom mehanizmu (ponovno pokretanje neuspelih zadataka na jedan klik) —
+tamo sa osam mogućih ishoda umesto šest, ista pravilo: nova grana koda u
+logici odlučivanja <strong>mora</strong> da emituje jedan od ishoda, ili se
+usklađivanje prestaje da poklapa. Opšta pouka nadilazi konkretan mehanizam:
+kad god sistem odlučuje između više mogućih ishoda za isti događaj, i kad
+je lako dodati novu granu odluke a zaboraviti računovodstvo uz nju, vredi
+potražiti sledeće mesto u sopstvenom sistemu gde isti oblik problema važi —
+ovaj obrazac se retko koristi samo jednom kad se jednom pokaže koristan.</p>
 <h2 id="143-analiticki-deo-zasto-ovo-retko-pise-iko-drugi">14.3 Analitički deo — zašto ovo retko piše iko drugi</h2>
 <h3 id="mehanizam-za-sprecavanje-spam-a-kodira-pretpostavku-o-obliku-greske">Mehanizam za sprečavanje spam-a kodira pretpostavku o obliku greške</h3>
 <p>Vredi imenovati ono što obe studije slučaja zapravo pokazuju: svaki
@@ -2688,10 +2759,20 @@ izgleda sumnjivo, dok ispravan-ali-pogrešno-kalibrisan izgleda kao mir.</strong
   prestane da radi — ako je odgovor "nigde", dodaj rezervni put vezan
   isključivo za alarme čije paljenje znači da je primarni kanal pao, ne
   za svaki alarm (to bi samo dupliralo sve, ne dodalo zaštitu).</li>
-<li>Kad mehanizam namerno ćuti dok je sve u redu (izveštaj koji šalje poruku
+<li>
+<p>Kad mehanizam namerno ćuti dok je sve u redu (izveštaj koji šalje poruku
   samo kad nešto pronađe), dodaj odvojen signal koji dokazuje da je sam
   mehanizam živ — tišina zbog "sve je čisto" i tišina zbog "provera je
-  pukla" izgledaju identično spolja.</li>
+  pukla" izgledaju identično spolja.</p>
+</li>
+<li>
+<p>Kad mehanizam odlučuje između više mogućih ishoda za isti događaj (pošalji /
+  potisni iz razloga X / potisni iz razloga Y / slanje palo), učini te ishode
+  potpunim i međusobno isključivim, i emituj tačno jedan po odluci,
+  bezuslovno. Zbir svih ishoda mora biti jednak broju sirovih događaja — ta
+  invarijanta sama otkriva kad je nova grana koda dodata bez odgovarajuće
+  emisije, bez oslanjanja na nečije sećanje da to proveri ručno.</p>
+</li>
 </ul>
 <h2 id="145-vezba-za-citaoca">14.5 Vežba za čitaoca</h2>
 <p>Pronađi u svom sistemu bilo koji mehanizam koji potiskuje ponovljene
@@ -2728,7 +2809,7 @@ ga sistem sam prijavi.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 10:26:52 UTC">31. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 22:18:43 UTC">6. septembar 2026.</span>
   </span>
 
     

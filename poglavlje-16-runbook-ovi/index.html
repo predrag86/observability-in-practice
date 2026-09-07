@@ -1259,6 +1259,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kad-runbook-postane-dugme-koje-izvrsava-kod-ne-covek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad runbook postane dugme koje izvršava kod, ne čovek
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2350,6 +2361,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kad-runbook-postane-dugme-koje-izvrsava-kod-ne-covek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kad runbook postane dugme koje izvršava kod, ne čovek
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2578,6 +2600,49 @@ prečicu — ako je neka prečica već jednom dokazano opasna, njeno namerno
 izostavljanje je jednako vredna informacija kao i korak koji <strong>jeste</strong>
 uključen, i vredi je zapisati zajedno sa razlogom, ne samo prećutno
 izostaviti.</p>
+<h3 id="kad-runbook-postane-dugme-koje-izvrsava-kod-ne-covek">Kad runbook postane dugme koje izvršava kod, ne čovek</h3>
+<p>Sve dosad opisano u ovom poglavlju pretpostavlja čoveka koji čita korake i
+sam ih sprovodi. Isti alarm sada nosi i doslovno dugme — <strong>"Ponovo pokreni
+ovaj zadatak"</strong> — koje poslednji korak izvršava umesto dežurnog inženjera.
+Vredi ga posmatrati kao runbook doveden do krajnosti: otisak simptoma sveden
+na tačno jedan konkretan neuspeli zadatak, toliko uzak da cela procedura
+staje u jedan klik. Upravo zato isti zahtevi koji važe za tekstualni runbook
+ovde važe strože — kod nema priliku da zastane i posumnja pre nego što
+izvrši korak.</p>
+<p><strong>Trenutak snimanja je odlučio da li uputstvo uopšte može da postoji.</strong> ECS
+drži opis zaustavljenog zadatka dostupnim samo oko sat vremena; alarm
+pročitan sledećeg jutra ne bi mogao da se rekonstruiše iz samog ID-ja
+zadatka. Zato se tačna revizija definicije zadatka i tačan override komande
+snimaju u trenutku slanja alarma, ne u trenutku klika na dugme — isti
+princip na kome počiva runbook uopšte (znanje pripremljeno <strong>unapred</strong>, dok
+još postoji, jer ga neće biti kad zatreba), ovde primenjen na stanje
+sistema umesto na proceduru koju čovek pamti.</p>
+<p><strong>Ponovo pokrenut zadatak nije isto što i ponovo pokrenut raspored.</strong>
+Override komande nosi konkretan posao (koji resurs treba obraditi);
+podrazumevana komanda same definicije zadatka je sasvim drugi posao, i
+pokreće se <strong>bez greške</strong>. To je ista vrsta opasnosti kao grubo grananje po
+otisku simptoma opisano ranije u poglavlju: pogrešna akcija ne izgleda kao
+otkaz, izgleda kao uspeh, i ništa je ne bi uhvatilo da override nije snimljen
+zajedno sa revizijom, u istom trenutku.</p>
+<p>Ishod svakog pokušaja — pokrenut, blokiran (isteklo, neprihvatljiva
+porodica, definicija zadatka neaktivna, već pokrenut, već u toku,
+ograničenje učestalosti) ili neuspeo — beleži se kao jedan od tačno osam
+mogućih ishoda, po istom principu iscrpnog i međusobno isključivog skupa
+uvedenom u prethodnom poglavlju za sam alarm: svaki nov povratak iz koda
+koji izvršava pokušaj mora prijaviti ishod, ili bilans prema ukupnom broju
+zahteva tiho prestaje da se slaže. Ko dobija dugme takođe nije spisak
+imena nego strukturno pravilo — usluge kojima upravlja sam ECS, poslovi na
+Batch-u, infrastrukturni servisi i porodice bez alarma unapred su isključeni
+po svojstvu, ne po imenu upisanom u listu — ista odluka, primenjena i
+ranije u ovoj knjizi, da flota koja raste automatski nasledi ponašanje
+umesto da neko mora ručno da je upiše.</p>
+<p>Ograničenje na svega nekoliko ponovnih pokretanja po porodici u toku jednog
+dana postoji iz istog razloga kao i odsustvo grupnog pokretanja opisano
+malopre: porodici kojoj treba četvrto ponovno pokretanje istog dana ne
+treba još jedan pokušaj, nego popravka. Da je to ograničenje pre svega
+princip dobrog dizajna oporavka, a ne osobenost ovog tima, potvrđuje i
+spoljašnja preporuka za automatizovan oporavak radnih zadataka koja govori
+istim rečnikom: ograniči broj pokušaja i <strong>beleži ishod svakog</strong>.</p>
 <h2 id="163-analiticki-deo-zasto-struktura-runbook-a-nije-stilski-izbor">16.3 Analitički deo — zašto struktura runbook-a nije stilski izbor</h2>
 <h3 id="zvanicna-preporuka-orijentacija-pre-instrukcije">Zvanična preporuka: orijentacija pre instrukcije</h3>
 <p>Nezavisan pregled prakse pisanja runbook-a dosledno navodi da dobar runbook
@@ -2638,9 +2703,17 @@ sekundi, i ništa više.</strong></p>
   različitih uzroka, ne dodaj još jednu granu unutar istog runbook-a —
   dodaj nov, uzak otisak i sopstveni runbook; pogrešno usmereno poverenje
   je opasnije od otvorenog priznanja da runbook ne postoji.</li>
-<li>Ako neka prečica u runbook-u već jednom dokazano izazove veću štetu nego
+<li>
+<p>Ako neka prečica u runbook-u već jednom dokazano izazove veću štetu nego
   korist, zapiši njeno namerno izostavljanje i razlog — ne oslanjaj se da
-  će je čitalac pod pritiskom sam izbeći.</li>
+  će je čitalac pod pritiskom sam izbeći.</p>
+</li>
+<li>
+<p>Kad runbook postane automatizovan (dugme, skripta), primeni na njega iste
+  zahteve kao na tekstualni runbook — precizan otisak, stanje snimljeno
+  unapred umesto rekonstruisano naknadno, iscrpan i međusobno isključiv
+  skup ishoda za svaki pokušaj, i eksplicitno ograničenje broja pokušaja.</p>
+</li>
 </ul>
 <h2 id="165-vezba-za-citaoca">16.5 Vežba za čitaoca</h2>
 <p>Uzmi bilo koji dokument u svom sistemu koji zoveš "runbook" i proveri prvih
@@ -2677,7 +2750,7 @@ ga razdvojiti pre nego što neko pokuša da ga koristi u tri ujutru.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="31. avgust 2026. 10:32:18 UTC">31. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 22:29:31 UTC">6. septembar 2026.</span>
   </span>
 
     
