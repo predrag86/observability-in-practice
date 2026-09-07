@@ -235,3 +235,43 @@ Originalne (pre rekonstrukcije) slike su sačuvane radi poređenja u
 
 Svi dijagrami u knjizi su sada rekonstruisani (sr + en) — nema više
 statičkih slika bez izvora.
+
+### Dodatni dijagrami dodati u kasnijim rundama (poglavlja 1-31)
+
+Osim gornjih 43, tokom rundi 3-8 (dopune sadržaja po poglavljima) dodato je
+31 dodatnih, ručno nacrtanih dijagrama — bez originalnog izvora — koji NISU
+bili deo gornje rekonstrukcije i ostali su bez engleske verzije sve dok
+nije urađen ovaj prolaz. Za sve njih sada postoji `scripts/diagrams/<ime>.py`
+i `<ime>.en.png`; `<ime>.png` (sr) ostaje originalna, ručno napravljena
+slika — `sr` grana ovih skripti postoji samo radi dokumentacije/budućeg
+ponovnog generisanja i NIJE pokretana (njen render ne bi bio bajtski
+identičan već objavljenoj sr slici).
+
+Dve dodatne paleta-porodice, obe u istom plavo-lavandulastom stilu kao
+originalne "stacked box flow" slike (ne mešati sa Graphviz/dashboard
+paletama iznad):
+
+- **`_boxflow.py`** — deljeni matplotlib renderer za proste, vertikalno
+  naslagane 2-3-kutije dijagrame sa opcionom napomenom na strelici između
+  njih. Koriste ga: `ch01_tri_uzroka.py`, `ch02_dokaz_ne_vreme.py`,
+  `ch03_alarm_pre_racuna.py`, `ch05_pseudonimizacija_preko_granice.py`,
+  `ch06_flush_prozor.py`, `ch07_prozor_kasnjenje.py`,
+  `ch08_tiha_praznina.py`, `ch09_slojevi_otkaza.py`,
+  `ch10_limiter_zaobilazak.py`, `ch11_identitet_brojaca.py`,
+  `ch12_prag_troska.py`, `ch13_zamrznut_gauge.py`, `ch14_slack_spof.py`,
+  `ch15_dva_ugla.py`, `ch16_pogresno_usmeravanje.py`, `ch17_469_dana.py`,
+  `ch25_rotacija_kljuca.py`, `ch26_lanac_ovlascenja.py`,
+  `ch27_domet_stete.py`, `ch28_lazni_uspeh.py`, `ch30_preskocen_korak.py`,
+  `ch31_kratak_prozor.py` (22 dijagrama).
+- **`_graphflow.py`** — deljeni matplotlib renderer sa slobodnim
+  koordinatama (kontejneri, konvergentne/dotted strelice, cilindri za
+  baze) za dijagrame koji ne staju u prost vertikalni stek. Koriste ga:
+  `ch18_deljeni_kolektor.py`, `ch19_dve_faze.py`,
+  `ch20_mehanizam_signala.py`, `ch21_redosled_vracanja.py`,
+  `ch22_nezavisna_ruta.py`, `ch23_zivotni_ciklus.py`,
+  `ch24_mehanizam_prikupljanja.py` (7 dijagrama).
+
+Dva dijagrama iz ove grupe (`ch04-identitet-popuni-ako-nedostaje.png` i
+`ch06-pinovi-driftuju.png`) su izuzetak — za njih je već postojala
+Graphviz skripta (`ch4_identitet.py`, `ch6_taskdef_drift.py`) sa potpunim
+sr+en `TEXT` rečnikom; trebalo je samo pokrenuti `en` granu.
