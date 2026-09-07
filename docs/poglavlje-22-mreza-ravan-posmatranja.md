@@ -167,6 +167,38 @@ za upotrebu postoji, redosled pitanja mora biti "koji problem ovo rešava,
 i da li već imamo jeftiniji odgovor na baš taj problem" — ne "da li je
 ovo tehnički moguće ovde."
 
+### Tri naizgled nepovezana kvara, jedan deljeni prag na istom mrežnom interfejsu
+
+Tri manje očigledne ravni iz prethodnog odeljka — razrešavanje imena,
+metapodaci instance, sinhronizacija sata — dele nešto što nijedna od njih,
+posmatrana pojedinačno, otkriva: sav saobraćaj ka tim uslugama prolazi
+kroz isti uskogrudi, deljeni prag paketa u sekundi na mrežnom interfejsu
+same instance. Prag nije po usluzi, nego zajednički za sve tri — što znači
+da jedan pričljiv potrošač može da izgladni preostale dve, čak i dok,
+posmatran sam za sebe, ostaje ispod sopstvene zamišljene granice. Rezultat
+u praksi izgleda kao tri potpuno nepovezana kvara: povremeno razrešavanje
+imena ne uspeva, obnavljanje pristupnih akreditiva otkazuje sa greškom
+autentifikacije, i sat počne da odstupa dovoljno da pokvari validaciju
+sertifikata i usklađivanje logova — sve na istoj mašini, u isto vreme, iz
+istog uzroka koji nijedan od tri simptoma pojedinačno ne otkriva.
+
+Očigledan alat za dijagnozu ovde ne pomaže. Uključivanje detaljnog
+zapisivanja DNS upita zvuči kao prirodan prvi korak — ali ograničavanje se
+dešava **na samom mrežnom interfejsu, pre nego što je upit uopšte
+zapisan**, pa ograničen upit nikad ne stigne do loga koji bi ga zabeležio.
+Detaljnije zapisivanje ne bi pronašlo ništa, koliko god dugo se ostavilo
+uključeno.
+
+Postoji tačno jedan brojač koji ovu klasu kvara uopšte otkriva, i on je
+gotovo besplatan — ali je ožičen samo na manjini instanci, onima pod
+direktnim nadzorom na nivou hosta. Radno opterećenje najsklonije da samo
+izazove ovaj kvar — ono koje razrešava ime ili osvežava akreditive po
+svakom pojedinačnom zahtevu, bez keširanja — tipično radi na upravljanom
+izračunavanju bez pristupa tom nivou nadzora, što znači da je baš tamo
+gde je kvar najverovatniji i najmanje vidljiv. Tišina tog jedinog brojača
+na ostatku flote ne dokazuje da problema nema — dokazuje samo da ga niko
+tamo ne meri.
+
 ## 22.3 Analitički deo — princip poznat u dva odvojena zvanična oblika
 
 ### Zvanična dokumentacija već koristi diferencijalni obrazac, i to eksplicitno
@@ -250,6 +282,11 @@ javi uopšte može da progovori.
 - Ne zaboravi DNS, servis metapodataka instance, i sinhronizaciju sata —
   sva tri su dokumentovano zapostavljena, bez podrazumevane detaljne
   telemetrije, uprkos direktnom uticaju na TLS, logove i praćenje.
+- Ako DNS, metapodaci instance i sat dele isti mrežni interfejs, pretpostavi
+  da dele i isti prag propusnosti — jedan pričljiv potrošač može izgladniti
+  preostala dva bez da ijedan pojedinačno pređe sopstvenu zamišljenu
+  granicu, i uobičajen alat poput detaljnog DNS-logovanja to neće otkriti
+  ako se ograničavanje dešava pre nego što je upit uopšte zapisan.
 - Razdvoji šačicu najkritičnijih mrežnih alarma u posebnu grupu koja čita
   direktno iz izvora nezavisnog od deljenog kolektora — ako sva pravila
   evaluiraju nad istim cevovodom koji nose, pad tog cevovoda utihne baš
