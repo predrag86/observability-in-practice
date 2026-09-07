@@ -192,6 +192,108 @@ didn't fix them.
 
 ![When the collector dies, the freshness gauge freezes while time keeps passing — without conditioning on a separate collector-health metric, this looks identical to a real catastrophe on a completely healthy system.](diagrams/dashboard-snowflake.png){: width="95%" }
 
+### Fixing attribution isn't fixing identity — and that was a deliberate choice
+
+The finding about shared identity from the previous section opens an
+obvious question: why wasn't it fixed right away? The answer is that the
+real fix — splitting one shared account into a separate identity for
+each environment — isn't something that can be changed from this side,
+outside the owner of that account, and isn't something done overnight.
+While that fix waits, an unanswered question remains: how to distinguish
+one environment's traffic from another's in the meantime at all, when
+all three write identical queries under the same username?
+
+The answer that was applied doesn't touch identity at all. The
+connection string the application uses to connect to the external
+service carries parameters the service itself doesn't recognize — and it
+turned out that the driver silently turns such an unrecognized parameter
+into a session parameter, instead of rejecting the connection. That
+means it's enough to add one such parameter with a value that identifies
+the environment ("this is test," "this is production") for every query
+that session executes from then on to carry that tag in the service's
+usage history — without a single line of code, without a new release,
+just an environment variable change and a restart.
+
+The same driver property that made this safe to try has a flip side, and
+both matter equally:
+
+- **Safe:** a wrong parameter name can't bring down the connection at
+  startup — trying it carries no risk of stopping the application.
+- **Dangerous:** a wrong parameter name **silently does nothing at
+  all**. The connection succeeds, the application keeps running,
+  everything looks completely normal — and not a single query carries
+  the new tag, and nothing at that moment reports it.
+
+The consequence is a discipline that runs through this book in
+different forms: that a connection succeeded, or that an environment
+reported healthy again after a restart, proves nothing about whether the
+change actually worked. The only reliable proof is looking at the
+**effect** — in this case, a query straight against the service's usage
+history that counts how many queries actually carry each environment's
+tag over the last few hours. Rolling out this parameter really was done
+gradually, environment by environment, and right at one of the
+intermediate steps a useful near-incident happened: that environment
+reported seriously degraded health for a few minutes during the change
+itself. It turned out the cause wasn't the service parameter at all but
+a perfectly ordinary, expected artifact of the platform the application
+runs on — old instances being retired during a routine restart
+rotation, while the remaining ones kept serving traffic cleanly without
+a single error. Had the check stopped at the status color, instead of
+looking at actual traffic, the near-incident could easily have been
+misread as a harmless parameter change having broken something.
+
+Production was deliberately left untouched by this quick, manual change
+entirely — the tag was put into production only through the regular code
+delivery path, with the system owner's approval. The reason isn't
+caution for caution's sake: a more complete replacement of the same
+mechanism — a tag per individual request, not just per environment — was
+already in progress through that same delivery path, and a manual change
+to production would be work the next regular release would immediately
+overwrite. A quick manual fix makes sense where nothing better is
+already on the way; when something better is already coming through the
+same channel, the manual shortcut becomes work someone else will erase.
+
+### When a threshold was tuned for someone else's job, your own traffic becomes invisible
+
+Per-environment tagging solves the question of "whose query is this." It
+doesn't solve a different, separate question: whether that query even
+shows up on the slowest-queries dashboard from earlier in this chapter.
+Here a finding turned up that deserves its own paragraph, because it
+looks like a broken tag while actually being something else entirely.
+
+The slowest-queries dashboard selects queries that run at least sixty
+seconds — a threshold that made sense for a job that periodically loads
+large volumes of data, and that regularly crosses that threshold. The
+main application, which uses this same external service for an entirely
+different purpose — quickly serving individual user requests — executes
+tens of thousands of queries a day against that same service, and **not
+a single one** of them crosses that sixty-second threshold. The
+consequence: every row that dashboard has ever shown comes from the
+data-loading job, never from the main application — a dashboard that's
+supposed to cover the whole service is, in practice, a dashboard for
+only one of its consumers.
+
+When the per-environment tag was rolled out, it was naturally expected
+that a new column on that same dashboard would immediately show the main
+application's traffic by environment. That column stayed empty — and
+this is the moment where the difference between two explanations matters
+most. An empty column *looks* like proof the tag isn't working, the same
+failure described in the previous section. It isn't: the tag works
+correctly and is written onto every query; the queries it's written onto
+simply never cross the threshold that would bring them onto this
+particular dashboard. This is a variant of the same pattern seen earlier
+in the book (Chapter 20, logins counted as zero not because there are
+none, but because the selector looks at the wrong event type) — a
+measurement that looks like "nothing is happening" while the real cause
+lies in where the boundary is drawn, not in whether anything is actually
+happening. The only way to tell these two explanations apart is to check
+directly against the usage history, bypassing the dashboard and the
+threshold, whether the tag really is present on the main application's
+queries — and it is. The right fix isn't "check whether the tag is
+broken," but a separate, lower threshold for this particular service
+consumer — an acknowledged, not-yet-implemented item on the improvement
+list, not something any change to the tag itself could fix.
+
 ## 24.3 Analytical section — observability without infrastructure access as a distinct problem
 
 ### The service itself distinguishes between two different forms of its own observability
@@ -249,6 +351,36 @@ scheduled, periodic job — where there's no benefit from a warm cache
 between runs hours apart — isn't arbitrary, but aligned with the workload's
 own logic.
 
+### Same change, two warehouses, opposite sign — measurement decides, not a rule
+
+A concrete measurement on two different Snowflake warehouses in the same
+system goes a step beyond the general principle above: it shows that an
+identical change — a shortened minimum activation time — isn't just a
+question of "how short," but a question with an **opposite** sign
+depending on the warehouse.
+
+On the warehouse dedicated to the periodic, scheduled job, shortening
+the minimum activation time was the single best cost fix in the entire
+system — measurement showed that most of the gaps between queries are
+longer than the existing minimum, so a shorter minimum translates
+directly into savings with no lost benefit from cache warmth (which
+doesn't exist there anyway). On the other, neighboring warehouse that
+serves interactive, frequent traffic, the exact same change would make
+the cost **worse**, not better — measurement showed the opposite
+distribution: most of the gaps between queries are shorter than the
+existing minimum, so shortening it would just multiply the number of
+times the warehouse restarts and pays its own per-startup billing
+minimum, instead of simply waiting out that gap.
+
+The decisive data point isn't the type of workload, nor an intuition
+about "this warehouse looks busier" — the decisive factor is the actual
+distribution of gap lengths between queries, per warehouse, invisible
+without cost attribution down to the level of an individual query. The
+rule that follows: a change to the minimum activation time is never
+copied from one warehouse to another as "best practice" — every
+warehouse carries its own distribution of gaps, and that distribution,
+measured, is the answer.
+
 ### Counterfactual scenario: what would have stayed invisible without this work
 
 Imagine the decision had been "we don't have infrastructure access, so
@@ -297,6 +429,22 @@ else's delayed report.
   problems that have nothing to do with observability itself — forgotten
   resources, shared credentials — because no one before had a reason, or a
   tool, to go looking for them.
+- When identity can't be fixed right away, look for a lighter, reverse
+  fix for attribution instead — but check whether the mechanism that
+  makes that possible (e.g., an unrecognized connection parameter the
+  driver silently accepts) has a flip side too: the same property that
+  makes a trial safe makes a typo completely invisible. Always verify
+  the effect, never just that the connection or the environment stayed
+  healthy.
+- An empty column or a zero value after a rollout isn't automatically
+  proof the change doesn't work — check whether a threshold or filter
+  structurally excludes exactly that traffic before concluding the
+  change itself is broken.
+- Don't copy a minimum activation time setting from one warehouse to
+  another as "best practice" — the same change can save on one and cost
+  more on another, depending on the distribution of gaps between queries
+  specific to that warehouse. Measure per warehouse, never generalize
+  from a single case.
 - When a direct, interactive connection to an external service isn't
   available for free (and the paid variant isn't in the budget), check
   whether the external service already keeps its own usage history that

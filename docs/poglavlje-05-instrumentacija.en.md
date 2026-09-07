@@ -85,7 +85,7 @@ on *every* request, a query like "which user hit this slow endpoint" or "how
 many errors are coming from this specific API key" becomes a trivial filter
 in Grafana Cloud — without it, that data would exist only in application
 logs, out of reach of traces and the metrics derived from them (span
-metrics, covered in Chapter 6).
+metrics, covered in Chapter 11).
 
 ![Auto-instrumentation (Java agent, Python SDK+shim) covers everything structurally visible from known libraries; the only manual point is extracting caller identity in the shared middleware layer, regardless of which of the three channels the identity arrived through.](diagrams/ch5-instrumentation.png){: width="92%" }
 

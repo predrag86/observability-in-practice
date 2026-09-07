@@ -67,39 +67,49 @@ uses.
 
 ### A derived pseudonym, not a bare hash
 
-The solution the implementation designed doesn't use a plain hash of the
-email address — because the space of possible email addresses is small
-and predictable enough that a bare hash would be trivially broken with a
-precomputed table. Instead, the pseudonym is derived through a keyed hash
-function: the same email address always produces the same pseudonym
-(which preserves the ability to track the same user over time, useful for
-dashboards), but no one without the secret key can work backward from the
-pseudonym to the real identity. On top of that, the implementation keeps
-one, strictly controlled way to resolve backward — an administrative
-endpoint that, only for an authorized role and with full audit logging of
-who resolved whom and when, returns the real identity behind the
-pseudonym for the rare cases where that's genuinely operationally
-necessary.
+The proposal the team put together deliberately doesn't use a plain hash
+of the email address — because the space of possible email addresses is
+small and predictable enough that a bare hash would be trivially broken
+with a precomputed table. Instead, the proposal derives the pseudonym
+through a keyed hash function: the same email address would always
+produce the same pseudonym (which would preserve the ability to track
+the same user over time, useful for dashboards), and no one without the
+secret key would be able to work backward from the pseudonym to the real
+identity. The proposal also includes one, strictly controlled way to
+resolve backward — an administrative endpoint that would, only for an
+authorized role and with full audit logging of who resolved whom and
+when, return the real identity behind the pseudonym for the rare cases
+where that's genuinely operationally necessary.
+
+It's worth saying this explicitly, not just assuming it: at the time of
+writing this is a design on paper, not a shipped change. The proposal
+carries a "not started" status, with several decisions still waiting for
+someone with authority to make before any of this lands in code —
+including the exact key-rotation question from the next section. The
+discovery from a moment ago (71 of 98 linked spans) is real and
+confirmed; the fix described here is a proposal for how to close that
+discovery, not a description of something that has already happened.
 
 ### What the fix doesn't solve — and why that's fine
 
-The implementation is explicitly aware of the limits of its own fix:
-historical telemetry, already recorded before the change, stays in raw
-form — pseudonymization isn't retroactive, and the old records simply age
-out through the normal retention policy. This isn't an oversight but a
-sober judgment call: retroactively rewriting data already recorded would
-be disproportionately expensive relative to the benefit, given that the
-retention period will delete those records soon enough anyway. The
-implementation also draws a clear, documented distinction between
-identifiers of a **person** (which are never recorded in the new fields)
-and identifiers of the **asset/resource the query was run against** (which
-are deliberately still recorded, because they identify what was queried,
-not who queried it) — a distinction that keeps pseudonymization from being
-over-applied where it's neither needed nor useful.
+The proposal explicitly acknowledges the limits of its own scope, up
+front: historical telemetry, already recorded before any change, would
+stay in raw form — pseudonymization would not be retroactive, and old
+records would simply expire through the normal retention policy. This
+isn't an oversight but a sober judgment call made in advance:
+retroactively rewriting data already recorded would be disproportionately
+expensive relative to the benefit, given that the retention period will
+delete those records soon enough anyway. The proposal also draws a clear
+distinction between identifiers of a **person** (which would not be
+recorded in the new fields) and identifiers of the **asset/resource the
+query was run against** (which would deliberately still be recorded,
+because they identify what was queried, not who queried it) — a
+distinction that would keep pseudonymization from being over-applied
+where it's neither needed nor useful.
 
 ![The same trace links the pseudonymous identifier from the browser side with the real identity from the backend side — pseudonymity holds only until the two halves of the same trace are joined.](diagrams/ch25-linkage.png){: width="90%" }
 
-![The same session in the debugging panel, before and after: when both ends write the same form of keyed-hash pseudonym, joining by trace still works for diagnostics, but no longer reveals the real name and email.](diagrams/dashboard-pseudonymization.png){: width="95%" }
+![An illustration of the same session in the debugging panel, today versus the proposed state: if both ends wrote the same form of keyed-hash pseudonym, joining by trace would still work for diagnostics, but would no longer reveal the real name and email.](diagrams/dashboard-pseudonymization.png){: width="95%" }
 
 ### Parameter type as proof, not just a naming rule
 
@@ -129,30 +139,85 @@ the log record itself. Two different guarantees for two different
 categories of parameters — one structural (type), one operational
 (encoding) — applied exactly where each makes sense.
 
-### Why the pseudonymization key deliberately never rotates
+### Why the proposal recommends the pseudonymization key never rotate
 
 Standard security hygiene calls for periodic rotation of secret keys — a
 rule that holds for passwords, API tokens, encryption keys. For the key
-driving the hash function behind pseudonyms, the implementation
-deliberately decided the **opposite**: the key stays stable, with no
-planned rotation. The reason isn't negligence but an explicit trade-off
-analysis. Rotating the key changes **every** pseudonym at once — every
-user gets a new pseudonym at the same instant, which breaks longitudinal
-analysis (a dashboard tracking the same user over time suddenly sees a
-"new" user) and requires reconciling the internal mapping table that ties
-pseudonyms to emails. By contrast, the benefit of rotation here is
-unusually small: the key doesn't protect the content itself (the email
-stays readable in the mapping table regardless of the key) — it only
-protects the **link** between the pseudonym and the email for anyone who
-sees the pseudonym without access to that table. If the mapping table is
-already compromised, rotating the key fixes nothing; if it isn't, a stable
-key opens no new risk that rotation would close. Security hygiene that
-makes sense for a password would here only introduce operational damage
-with no corresponding security benefit — the implementation recognized
-this instead of mechanically applying a general rule to a situation where
-it doesn't hold.
+that would drive the hash function behind pseudonyms, the proposal
+deliberately goes **against** the usual rule: it recommends that the key
+stay stable, with no planned rotation. But this is exactly the place to
+be precise about what has been decided versus what is only proposed —
+this is a recommendation that, at the time of writing, still awaits
+official confirmation from someone with authority, not an already-adopted
+rule. The reasoning behind the recommendation itself isn't negligence but
+an explicit trade-off analysis made in advance. Rotating the key would
+change **every** pseudonym at once — every user would get a new
+pseudonym at the same instant, which would break longitudinal analysis (a
+dashboard tracking the same user over time would suddenly see a "new"
+user) and would require reconciling the internal mapping table that ties
+pseudonyms to emails. By contrast, the benefit of rotation here would be
+unusually small: the key wouldn't protect the content itself (the email
+would stay readable in the mapping table regardless of the key) — it
+would only protect the **link** between the pseudonym and the email for
+anyone who sees the pseudonym without access to that table. If the
+mapping table were already compromised, rotating the key would fix
+nothing; if it weren't, a stable key wouldn't open a new risk that
+rotation would close. Security hygiene that makes sense for a password
+would here only introduce operational damage with no corresponding
+security benefit — which is an argument FOR the recommendation, not proof
+that the question is closed. Until someone with authority officially
+confirms it, key rotation remains an open item on the list of decisions
+the proposal is waiting on, not a finished story.
 
 ![Why rotating the pseudonymization key wouldn't be a security gain here, only operational damage: the key protects the pseudonym↔email link, not the content itself, and a stable key opens no new risk that rotation would close.](diagrams/ch25-rotacija-kljuca.png){: width="80%" }
+
+### A second question about the same data: not who can see it, but where it physically sits
+
+Everything described so far in this chapter — trace linking,
+pseudonymization, the keyed hash function — answers the question "who
+can link this data to a specific person." A separate check, done after
+that one, opened up an entirely different question about the same data,
+one the first check doesn't even touch: which country that data is
+physically processed in, regardless of who can see it.
+
+The implementation's telemetry, including data relating to users from
+the European Union, is processed exclusively in the observability
+provider's region located in the United States — one region for all
+traffic, regardless of where the user actually comes from. This fact
+itself — which country a user is from — didn't exist as a recorded fact
+anywhere in the system at all; finding out which users are actually from
+the EU at all required manually going through a sample of real
+production access logs and checking which organizations the domains of
+logged-in users belong to. The result of that check: at least two users
+are confirmed with certainty as organizations headquartered in the EU,
+while for several other domains residency stayed unknown even after
+checking — the very act of determining "who is from the EU" turned out
+to be surprisingly non-trivial when the system doesn't record that fact
+anywhere as a first-class one.
+
+This opens a legal question entirely separate from everything earlier in
+the chapter. Transferring personal data to a country the European Union
+hasn't declared an adequate destination requires a formal safeguard — in
+this case, standard contractual clauses inside a signed data processing
+agreement with the provider, a transfer impact assessment documenting
+the actual risk, and a clear notice in the privacy policy that data
+linked to users is processed in that country. At the time of this check,
+none of those three items could be confirmed as already in place — not
+because someone consciously decided to skip them, but because no one had
+even asked the question until that point. A cleaner solution, identified
+but not yet implemented, is simple in principle: route all traffic
+attributable to an EU user to the provider's region located inside the
+EU, instead of the single US region that receives everything today.
+
+The valuable lesson here isn't technical but structural: "privacy" in
+telemetry isn't one problem with one solution. Identity leakage through
+trace linking and cross-border data transfer are two entirely different
+obligations within the same regulation, with two entirely different
+remedies — one is solved by pseudonymization at the source, the other
+solely by choosing **where** the infrastructure physically runs. Fixing
+one doesn't move the needle on the other by a millimeter, and a team
+that stopped after the first fix, convinced that "privacy is handled,"
+would still leave the second one entirely untouched.
 
 ## 25.3 Analytical section — a known leakage pattern, with a precise name
 
@@ -162,10 +227,11 @@ The official guidance on pseudonymization is unambiguous: pseudonymized
 data **remains** personal data in the full legal sense, because
 re-identification is still possible in principle — the distinction from
 fully anonymized data (which drops out of the obligation entirely) is
-sharp and deliberate. This means the implementation's pseudonymization
-didn't "solve" the legal obligation — it reduced risk and tightened
-minimization, but the data still demands the same care as any other
-personal data, just with lower risk to the individual if a leak occurs.
+sharp and deliberate. This means that the proposed pseudonymization, even once
+implemented, won't fully "solve" the legal obligation — it will reduce
+risk and tighten minimization, but the data will still demand the same
+care as any other personal data, just with lower risk to the individual
+if a leak occurs.
 
 ### What happened has a precise name in the literature: a linkage attack
 
@@ -178,10 +244,12 @@ source. The official pseudonymization guidance goes a step further and
 names exactly this mechanism as the reason it recommends **transactional**
 pseudonyms (different for every interaction) over **personal** pseudonyms
 (stable, reused everywhere) — because it's precisely a stable, shared
-identifier that makes linkage easy. The implementation deliberately kept a
+identifier that makes linkage easy. The proposal deliberately chooses to keep a
 stable pseudonym (for the sake of longitudinal per-user analysis) with
-full awareness of this trade-off — a reasonable decision, but one that has
-to stay visible, not assumed.
+full awareness of this trade-off — a reasonable choice, but one that has
+to stay visible, not assumed, and one that, as the previous section
+showed, is still only a recommendation awaiting confirmation, not a
+decision already made.
 
 ### A keyed hash function is the officially recommended choice, not an arbitrary one
 
@@ -194,8 +262,8 @@ the same literature, directly relevant here: using the **same** key
 across two different systems reintroduces the possibility of linkage — if
 two services hash the same email address with the same key, their outputs
 match and can be joined, defeating the purpose of isolation. The
-implementation addresses this by keeping the key singular and internal,
-stored separately from any external system.
+proposal addresses this by having the key remain singular and
+internal, stored separately from any external system.
 
 ### The right to erasure collides with the architecture of telemetry systems
 
@@ -257,6 +325,11 @@ last place where two signals can meet.
   a new situation, check whether that rule's benefit actually applies
   here — rotation that breaks longitudinal analysis with no corresponding
   security gain is damage dressed up as hygiene.
+- Don't equate "I solved who can link this data to a person" with "I
+  solved privacy" — check separately where that data is physically
+  processed too, because cross-border transfer of personal data carries
+  its own, entirely independent obligation that no anti-linkage measure
+  touches.
 
 ## 25.5 Exercise for the reader
 

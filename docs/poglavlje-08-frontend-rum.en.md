@@ -176,6 +176,120 @@ absolute truth, without asking "how many points was this computed from," is
 a mistake that stays invisible until the first false alarm gets
 investigated all the way through and turns out to rest on a single session.
 
+### Session-level sampling — binary, not gradual
+
+The RUM SDK samples at the level of the **entire session**, not at the
+level of an individual signal: a session is either sampled — in which
+case it sends absolutely everything (Core Web Vitals, errors, traces) —
+or it isn't, in which case it sends nothing at all. Since RUM is billed
+per session, this sampling is the single biggest lever for cost, and for
+most systems it would be natural to bring it down below 100%.
+
+The implementation this book follows keeps the rate at **1.0** —
+deliberately, not from failing to consider a cheaper option. Two reasons,
+both measurable: first, at this tool's traffic volume (a couple thousand
+sessions a day) the cost of the full rate is negligible. Second, and more
+important for this chapter specifically: a rate below 1.0 wouldn't just
+cheaply reduce the data volume — it would silently break the exact
+property this chapter exists to describe in the first place. Sampling is
+binary at the session level, which means an unsampled session never
+injects a trace-context header into its API call — the "same trace ID
+all the way through" property from 8.2 holds only for the portion of
+traffic the sampler kept, not for all traffic. Lowering the rate wouldn't
+be wrong in itself, but it would require that boundary to be explicitly
+acknowledged and communicated — "trace connected all the way through"
+would stop meaning "every click" and start meaning "every click that
+chance happened to have the sampler keep."
+
+This ties directly back to the percentile trap from the previous
+section: the alert that already requires a minimum number of points in
+the window before it even considers firing counts that number on
+**sampled** sessions, not on actual traffic. If the rate ever dropped
+below 1.0, that same minimum threshold would suddenly represent a much
+larger percentage of actual traffic than was intended when the threshold
+was set — two separate settings (the sampling rate and the alert's
+minimum threshold) that have to stay in sync, not be changed
+independently of one another.
+
+### Sourcemaps: the error is caught, but not readable
+
+JavaScript errors, described in 8.2, arrive regularly and reliably — but
+the stack trace they carry is a stack trace of the **minified, bundled**
+code that was actually sent to the browser, not the original source
+code. Translating a minified stack trace back into readable lines of
+source code requires the build process to upload its own sourcemap files
+to the RUM collector at build time — that step, at the time of writing,
+isn't wired up yet.
+
+The practical consequence: someone opening an investigation based on a
+JS error gets a stack trace pointing at one single, enormous line of
+bundled code — the error **is** caught, exactly as described earlier in
+the chapter, but it isn't usable without reconstructing it manually,
+locally, or reading the minified source by hand, line by line, until the
+right spot turns up.
+
+This is the same kind of honesty with the reader that Chapter 5 already
+showed elsewhere: an identified fix that hasn't been implemented yet at
+the time of writing gets recorded as an open gap, not swept under the rug
+because admitting unfinished work might look like a flaw in the
+implementation. The value for the reader isn't that every example in the
+book be finished — it's that every example be accurate to what actually
+exists at that moment, including what's known to be missing.
+
+### The vendor silently changed a setting no one on the team ever set
+
+The third source of legally sensitive data in the RUM pipeline doesn't
+come from the application's code, nor from what the browser collects on
+its own — it comes from a setting that the **hosted platform receiving
+the RUM data** keeps about every application, outside any file the team
+keeps under version control.
+
+The concrete case: both frontend applications had an explicit, written
+decision — coarse geolocation turned off, because this is an
+authenticated, internal tool with a known user base in the EU, and the
+goal is to minimize collection of personal data. The platform silently
+flipped that value to on, at city-level precision (not just continent or
+country — a far more precise level than the phrase "coarse geolocation"
+suggests), and did so on both applications simultaneously, through a
+setting that doesn't appear in any file the team maintains. The
+configuration's own version history confirms this wasn't a human
+change — the only recorded entry was the original one, which set the
+value to off. The change came from the platform's side, outside any
+action by the team. Upper bound on the exposure window: about two
+months — from the last infrastructure-as-code deployment to discovery,
+which only happened when the periodic drift check between desired and
+actual state first ran. Nothing in runtime monitoring would have noticed
+this on its own.
+
+The fix carried its own trap: the infrastructure-as-code tool reported a
+successful apply **twice** in a row, and the actual state didn't change
+either time. The reason was a second, undocumented switch at the
+whole-platform level — geolocation can't be turned on through a single
+application's setting if it's off at that higher level, but it *can* be
+turned off from there downward without any obstacle. "Apply successful"
+was thus only proof that the command had been sent, not that the setting
+had actually changed — the only reliable proof was the next plan run
+immediately after the apply, comparing the desired state against the
+refreshed, actual state.
+
+One last twist: when the team started looking into what to do about the
+discovered change, it turned out that the original decision itself —
+"geolocation off" — was stale, written down with no date, and that a
+newer, informal decision existed to actually **want** geolocation, at
+exactly the city-level precision the platform had silently turned on.
+The reflexive first move, reverting the setting back to the old, written
+decision, would have been the wrong move — not because it's wrong to
+honor a written policy, but because that policy no longer held, and
+nothing in it carried a date that would have revealed that. The final
+fix wasn't "revert to the old value" but "write down the new decision
+explicitly, with a reason and a date, so that the next time something
+changes — whether from the platform's side or the team's — it's clear
+which decision is currently in force." Still an open question,
+deliberately left outside the scope of this chapter: whether there's a
+legal basis (user consent, for instance) for collecting location at this
+level of precision — that's a decision this team doesn't get to make on
+its own.
+
 ## 8.3 Analytical section — why a direct connection isn't a compromise but a requirement, and what it means when "one filter" isn't enough
 
 ### Why the standard RUM architecture almost always goes directly to the cloud
@@ -264,6 +378,26 @@ and does each one of them have its own, explicit check."**
   points went into computing it — at low traffic, a single session can
   shift p75 from the "good" range into the "bad" range with no real change
   in the system.
+
+- Session-level sampling is binary, not gradual — a rate below 1.0 doesn't
+  just reduce cost, it silently restricts "same trace ID all the way
+  through" to only the portion of traffic the sampler kept. If you ever
+  lower the rate, explicitly acknowledge that boundary and re-align alert
+  minimum thresholds that count sampled, not actual, sessions.
+- Catching an error and being able to understand it aren't the same
+  thing — verifying that JS errors are arriving doesn't mean the stack
+  traces are readable; without uploading sourcemaps, the error is caught,
+  but the investigation still starts from zero.
+- Settings a hosted platform keeps about your application (not code you
+  write) are still part of your risk surface — check them with a periodic
+  drift check, not just once at rollout.
+- "Apply successful" proves the command was sent, not that the actual
+  state changed — when a hidden, higher-level switch might exist, the only
+  real proof is the next plan run after the apply, against refreshed
+  state.
+- A written decision with no date is indistinguishable from a permanent
+  truth — when you revert to it because "that's what it says," first
+  check whether it still holds, not just whether it's written down.
 
 ## 8.5 Exercise for the reader
 

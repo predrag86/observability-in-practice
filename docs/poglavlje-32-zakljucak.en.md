@@ -106,6 +106,10 @@ made, not reading material for beforehand.
   exactly to the point where specific insight into your particular system
   is needed — a context layer, not tool access, is what separates a correct
   answer from a confidently wrong one.
+- Two configurations that should be identical (two revisions, two
+  environments) silently diverge when nothing compares them continuously —
+  a periodic hourly or weekly check is a step toward continuous
+  reconciliation, not a replacement for it.
 - Rollout order into production follows blast radius, not technical
   convenience — the most critical part of the system goes last, as a policy
   written down in advance, not a case-by-case exception.

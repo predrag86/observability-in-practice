@@ -154,6 +154,73 @@ revisits them later.
 
 ![Why an imported shared dashboard typically stops working: the wrong data source, a missing collector that breaks template variables, a mismatched naming schema, and aggregation that silently strips labels — four separate causes, the same "no data" symptom.](diagrams/ch21-cetiri-uzroka.png){: width="90%" }
 
+### A third, entirely independent layer: a view from outside the box
+
+Everything described so far in this chapter — the custom metric set,
+threshold calibration, separating utilization from saturation — shares
+one common trait: all of it reads a signal that the **agent running on
+the host itself** collects and pushes toward the observability collector.
+That means this entire layer shares fate with everything that could break
+that path — the agent itself, the collector, or the observability
+platform. An alert that watches for "the host has stopped reporting"
+cannot by itself distinguish two entirely different states: the host is
+actually dead, or just the pipe through which the host reports has
+stopped working. The question that alert leaves open — "dead box or dead
+agent?" — the infrastructure provider already knows the answer to, for
+free, because it measures that entirely outside the machine the agent
+even runs on.
+
+This third layer reads the instance's status directly from the
+provider's side — whether the guest operating system responds at all,
+and whether the infrastructure underneath the instance itself is
+healthy — and deliberately does **not** go through the same path as the
+rest of the host layer's observability, but is instead read directly at
+the moment of the check. This is the same discipline named earlier in
+the book for a completely different component: **a watcher that observes
+a critical path must not depend on the infrastructure it observes** —
+applied here to hosts instead of jobs. The third layer survives exactly
+the failure that would silence the first two layers of this chapter.
+
+It also turned out that this layer's side benefit ends up mattering more
+than the original reason it was introduced: it is the **only** signal of
+health for machines that never received an agent described in this
+chapter — hosts deliberately excluded from this side of observability,
+for reasons that have nothing to do with their importance. Without a
+single change on those machines, they gained at least a basic,
+externally measured check of whether they're alive at all. It's worth
+stating the boundary immediately: this is not a replacement for the
+agent, only a supplement for its absence — a machine passes every such
+check even with an almost-full disk, because the check measures whether
+the machine is reachable, not whether it's well.
+
+Introducing this layer carried its own narrow, technical trap worth
+naming: the query must remain independent of the specific instance fleet
+(so it automatically covers every instance, not a pre-enumerated list),
+but the naive way to achieve that — an open wildcard instead of an exact
+identifier — doesn't work the way it looks: such a query doesn't limit
+itself to currently live instances, it covers **every instance ever
+seen**, including years of terminated and forgotten ones. The correct
+form is a query that discovers identities from a short, recent window
+itself, not from the entire history. A second, smaller but treacherous
+trap: the label name such a query returns is not the same name someone
+would expect from experience with the rest of the system, so a
+notification message that references it by the expected rather than the
+actual name silently comes out empty — a notification that says
+"instance " and nothing after it, instead of reporting an error.
+
+Finally, this layer is the first in the chapter whose cost rises with
+every individual measurement, not with the volume of data stored — every
+check is billed per call to the infrastructure provider, regardless of
+whether the same check was made a second earlier. The check frequency
+was therefore deliberately chosen not based on how quickly someone would
+like to learn about a problem, but based on a direct comparison: a more
+frequent check would cost several times more than everything saved by
+every other measure in this chapter combined. The same kind of
+calculation — that observation itself has its own cost, independent of
+what it observes — shows up here for the second time in the book, the
+first time applied to a check outside the agent rather than to storing
+and reading data inside the observability platform.
+
 ## 21.3 Analytical section — a known method, a documented cause of failure
 
 ### The USE method as a formal framework for what the implementation does intuitively
@@ -249,6 +316,13 @@ actually drive in.
   of importing someone else's bundle — one panel that exists because it
   answers a known question is worth more than ten panels that exist
   because they came in the package.
+- Keep at least one layer of host health checking that reads status
+  directly from the infrastructure provider, outside the path the agent
+  and the rest of observability take — that layer is the only one that
+  survives exactly the failure (agent down, collector down, platform
+  down) that silences every agent-based layer. When that layer bills per
+  call, choose its frequency by checking the bill, not by feel for how
+  fast you'd like to find out.
 - When restoring a label that automatic aggregation stripped, don't add
   a "keep it open" alert first — while the label is still aggregated,
   that alert can't bootstrap itself, because it hits the same silent-

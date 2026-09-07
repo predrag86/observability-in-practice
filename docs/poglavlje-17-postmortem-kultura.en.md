@@ -74,8 +74,9 @@ maintained list that was never automatically reconciled against the actual
 state of the fleet — which, looking back, had opened six separate,
 independent gaps in coverage over seven weeks, none of them noticed until
 someone happened to spot a discrepancy on a dashboard. A second, related
-case happened a day later, on the same type of job, but through an entirely
-different mechanism: two separate, individually correct low-severity
+case (the same incident told in detail in Chapter 14) happened a day
+later, on the same type of job, but through an entirely different
+mechanism: two separate, individually correct low-severity
 warnings that never added up into a clear picture that something serious
 was recurring. Neither of these two incidents took down a single service.
 Both were, by the written postmortem's own admission, more damaging to

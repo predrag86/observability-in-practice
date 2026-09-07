@@ -55,9 +55,8 @@ part of the fleet.** Two separate jobs live in this station:
 - **Redaction of sensitive attributes** (SQL text, connection strings) —
   applied only to the parts of the fleet where the debugging value of the
   full SQL text isn't needed. For the part of the fleet where the full SQL
-  text is still necessary for diagnosis (covered in Chapter 18), redaction
-  is deliberately **not** applied — a decision made explicitly, per
-  team/service, not globally.
+  text is still necessary for diagnosis, redaction is deliberately **not**
+  applied — a decision made explicitly, per team/service, not globally.
 - **Normalization of span names** — a span that would otherwise carry a
   variable date or ID in its name (e.g. `process-report-2026-08-21`) is
   normalized to a stable pattern (`process-report`) before moving on.
@@ -70,6 +69,38 @@ attributes (region, account, infrastructure type) **only where they're
 missing** — if the sender has already sent its own value, it's left alone.
 This is a deliberate decision: the sender always knows more about itself
 than the gateway can guess from the context in which it receives the data.
+
+### When the sender doesn't say anything, "fill in, don't overwrite" fills in the wrong identity
+
+"Fill in, don't overwrite" sounds reassuring, but it silently assumes the
+sender said anything at all. A real case discovered in production shows
+what happens when the sender doesn't set any of these attributes: the
+gateway doesn't leave the fields empty — it fills them in with its
+**own**, gateway identity — its own availability zone, its own task
+identity, its own infrastructure type. Nothing in the rule distinguishes
+between "the sender deliberately didn't set this field" and "the sender
+doesn't resemble the infrastructure the gateway assumes at all" — the
+empty field gets filled in regardless of whose telemetry it actually was.
+
+The measurable damage was concrete: the availability zone, as a filled-in
+attribute, gets promoted to a real metric label on telemetry from a sender
+that has nothing to do with that zone — so every time the **gateway
+itself** gets redeployed (not the sender), the label stuck onto someone
+else's telemetry changes, fragmenting its history: old series go stale,
+new ones start, and the rate-of-change calculation shows a gap exactly at
+the moment when nothing about the sender actually changed. A second,
+related effect: the process-identity data on that telemetry is unstable
+for the same reason, changing on every gateway redeploy, even though the
+process identity being described isn't the gateway at all.
+
+The fix that followed didn't just change the "fill in, don't overwrite"
+rule itself — it added a separate, narrow station, inserted right after
+`resourcedetection`, scoped only to the traffic from the sender where this
+pattern was discovered: it strips a handful of attributes established to
+describe the gateway, not the sender. The "fill in, don't overwrite" rule
+itself was never wrong as a mechanism — the gap was in the assumption that
+every sender would either set its own values, or wouldn't mind which
+values got filled in on its behalf.
 
 **5. `batch` — group before sending.** Instead of each individual record
 going out as a separate HTTP call to the cloud platform, this station groups
@@ -225,6 +256,10 @@ up at the station that got moved — it shows up at every station after it.
   you've wired all three signal types (metrics, logs, traces) into the next
   station's input — a missing connection doesn't crash the process, and no
   job-failure alert will catch it.
+- Don't assume "fill in, don't overwrite" means "safe for every sender" —
+  check what gets written when the sender sets nothing, because the empty
+  field then gets filled in with the identity of the very station doing the
+  filling, not left empty.
 
 ## 10.5 Exercise for the reader
 

@@ -74,6 +74,19 @@ ad-hoc prevod za termin koji će se ponoviti u kasnijim poglavljima.
 | RUM | RUM | ne prevodi se |
 | PII | PII | ne prevodi se |
 | Core Web Vitals | Core Web Vitals | ne prevodi se |
+| porodica zadataka (AWS ECS task family) | task family | dosledno kroz Poglavlja 6/23/29 |
+| bazen konekcija | connection pool | Poglavlje 18 |
+| fragment izvršavanja (Dremio) | execution fragment | uparen sa "izvršni čvor / koordinacioni čvor" iznad, Poglavlje 19 |
+| grubo nagađanje lozinke | password brute-forcing / brute-force | Poglavlje 20 |
+| punjenje akreditivima | credential stuffing | Poglavlje 20 |
+| nemoguće putovanje | impossible travel | Poglavlje 20 |
+| zamenski signal (jeftinija zamena za punu tehniku detekcije) | substitute signal | Poglavlje 20 |
+| standardne ugovorne klauzule | standard contractual clauses (SCC) | Poglavlje 25 |
+| procena uticaja prenosa (podataka) | transfer impact assessment (TIA) | Poglavlje 25 |
+| odluka o adekvatnosti / adekvatna destinacija | adequacy decision / adequate destination | Poglavlje 25 |
+| ugovor o obradi podataka | data processing agreement (DPA) | Poglavlje 25 |
+| rezidencija (osobe/organizacije, npr. "rezidencija u EU") | residency (of a person/org) | ne mešati sa "rezidencija podataka" → "data residency" iznad — ovo je rezidencija subjekta, ne podatka, Poglavlje 25 |
+| memorijski plafon | memory ceiling | Poglavlje 23/27 |
 
 ## Nazivi delova/poglavlja (za buduće interne linkove)
 

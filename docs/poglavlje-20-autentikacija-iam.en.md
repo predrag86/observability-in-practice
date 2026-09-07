@@ -123,9 +123,10 @@ answer both.
 
 Only once successful logins became visible in the standard log stream
 could the implementation build concrete queries for account-takeover
-patterns: comparing the geographic location of the current successful
-login against the last known location of the same user within a short
-time window (impossible travel), detecting the same token used from two
+patterns: counting how many distinct IP addresses a single user uses for
+successful logins within a short time window (a cheap substitute signal
+for impossible travel — more on why it's a substitute, not the full
+technique, in the next section), detecting the same token used from two
 different clients or IP addresses in an overlapping time period (a
 possible replay), and detecting an unusually large number of
 simultaneously active sessions for a single identity. None of these three
@@ -136,6 +137,121 @@ exist.
 ![The asymmetry in authentication logging: failure visible by default at the standard level, success below the visibility threshold — until this is fixed, an entire class of account-takeover security questions stays unanswerable.](diagrams/ch20-asimetrija.png){: width="90%" }
 
 ![Visible login events before and after raising the logging level: failures were always there, but successful logins — thousands per day — only become visible from the moment of the fix onward.](diagrams/dashboard-authgap.png){: width="95%" }
+
+### Two different attacks look like the same symptom until split by username
+
+There's another distinction worth naming within the same signal catalog:
+the raw count of failed logins by itself doesn't distinguish between two
+different attacks that call for different responses. **Password
+brute-forcing** is many attempts against **one** username from one IP
+address — Keycloak's own temporary account-lockout mechanism already
+catches and stops this on its own, with no need for an extra alert.
+**Credential stuffing** is the opposite pattern: one IP address trying
+many **different** usernames, each with just a couple of attempts — few
+enough per account that no individual lockout ever fires, while the
+aggregate pattern at the IP-address level stays clearly visible. The
+per-account mechanism is structurally blind to this second form: it
+counts attempts per user, not per source, so an attack spread across a
+thousand accounts looks like a thousand perfectly normal, isolated typos.
+
+Telling the two apart requires a query that groups by IP address and
+counts **distinct** usernames within the window, not just the total
+number of failures — the signal described earlier in this chapter as
+"brute-forcing or something more subtle" now has a concrete test that
+tells the two apart. A baseline worth recording: the normal failed-login
+rate in this system is 2-5%; anything above 15-20% deserves
+investigation, regardless of which of the two patterns it points to.
+
+The last signal in the same catalog looks after a successful breach, not
+before it: administrative and audit events — a password change, a role
+grant, regenerating a client secret — are what an attacker does **after**
+already taking over an account, not an attempt to get in. An alert on an
+unusual spike in these events catches the **consequence** of a successful
+takeover, not the attempt itself, and it's valuable as a last line of
+defense precisely because it doesn't depend on any earlier signal having
+noticed anything suspicious at all.
+
+### Raising the level is actually two independent switches, not one
+
+The asymmetry fix described above sounds like one change — "raise the
+visibility level of successful logins." In the implementation it's
+actually **two independent switches**, and both have to be set correctly
+for a successful login to reach the observability platform at all. The
+first is the level the authentication-events module itself uses when it
+records a successful login — lower by default than the level that gets
+forwarded at all. The second, completely separate switch is the
+threshold on the output path that decides which level of record the
+system forwards to the observability collector at all. Raising only one
+of the two doesn't produce an error, doesn't produce a warning — it
+produces silence that looks identical to the fix never having been
+attempted at all. Only once both switches are aligned does a successful
+login become visible with the full detail described earlier in the
+chapter.
+
+This is worth naming as a distinct pattern, not just an implementation
+detail: "raise the logging level" sounds like a single action with a
+single place it's carried out, but a system that separates **what the
+module decides to record** from **what actually gets shipped out of
+what's recorded** hides a second switch that no one assumes exists until
+the first time they have to check why the expected records still aren't
+arriving.
+
+An explicit cost comes with the same fix, and it's worth naming: the
+moment a successful login becomes visible with full detail, that detail
+by definition carries the user's identity and the request's origin —
+personal data the system hadn't stored in this form up to that point. The
+decision to fix the asymmetry has to come with a deliberate check of what
+this introduces into data retention, not just a check of whether the
+change is technically visible on a dashboard.
+
+### Zero hits isn't the same as "no failed logins"
+
+When the counter for successful and failed logins was first wired up to
+an alert and a dashboard, both were built on the assumption that a
+failure carries its own, separate event type in the counter. That
+assumption was wrong: the system doesn't record a failure as a distinct
+type — it records it as the **same** event type as a success,
+distinguished only by the presence of an error-reason field. A selector
+written against the original, incorrect assumption didn't return an
+error — it returned zero time series, quietly, and that alert and that
+dashboard sat "healthy" because they never had anything to report.
+
+The mistake was discovered only when someone deliberately triggered a
+real failed login in a test environment to check that the alert actually
+worked — the dashboard that should have shown a spike showed nothing. Had
+the test environment, at that moment, not had a single real failed
+login, there would have been no way to tell "the selector is wrong" apart
+from "there are currently no failed logins" — both look identical as
+zero. This is the same "known data gap that looks like a known-good
+state" pattern seen earlier in the book in other contexts, now at the
+very heart of a chapter that's specifically about the difference between
+success and failure: even an alert designed to catch exactly that
+difference can quietly miss both sides at once.
+
+### Two environments that don't behave the same, even though both carry the same system name
+
+The test and production environments of this system were, during the
+period observability was being introduced, running two different major
+versions — production on a version whose official support had ended,
+test on the current one. The difference wasn't cosmetic: only the newer
+version can natively push traces and structured logs; the older version
+simply doesn't have this, no matter how well it's configured. Any
+assumption that something verified on the test environment behaves
+identically in production was, during that period, wrong by definition
+of the version, not by a configuration mistake.
+
+There was also an additional trap that nearly produced a wrong
+conclusion: both environments write their startup report into the
+**same**, shared infrastructure log space, distinguished only by an
+environment field inside the record itself, not by a separate space. The
+first attempt to confirm which version production was actually running
+on, by reading that space without careful filtering, nearly attributed
+test environment's startup report to production — corrected only by
+checking the configuration actually applied on the image itself, not by
+reading the shared log report. The lesson isn't new, but it's concrete
+here: shared infrastructure between environments carries a risk of
+misattributing a record's identity, even when an environment field exists
+specifically to prevent that confusion.
 
 ## 20.3 Analytical section — a known class of gap, rarely named formally
 
@@ -154,19 +270,33 @@ invisible) is less common in the formal literature, but just as harmful
 when it happens, because the standard guidance calls for symmetry, not
 any particular direction of asymmetry.
 
-### Impossible travel as a well-documented but rarely implemented technique
+### Impossible travel as a well-documented technique — and the cheaper substitute that was actually implemented
 
 Identity system vendors document impossible-travel detection as a
 standard technique: comparing the geographic location of the current
 login attempt against the time and location of the previous one,
 checking whether physical travel between those two locations is even
-possible in that time gap. The minimal input data this technique
-requires is exactly what the asymmetry in this implementation blocked: a
-geographic location derived from the IP address, a timestamp, and a
-persistently stored record of the previous successful session's
-location. Without a reliable, persistent record of successful logins,
-this technique is impossible no matter how sophisticated the comparison
-logic is.
+possible in that time gap. The minimal input data this full technique
+requires — a geographic location derived from the IP address, a
+timestamp, a persistently stored record of the previous successful
+session's location — was exactly what the asymmetry in this
+implementation had previously blocked.
+
+It's worth being precise about what actually happened once the asymmetry
+was fixed: the implementation didn't immediately build the full
+geolocation technique, but a cheaper substitute that uses the same
+newly-available data in a simpler way — counting how many distinct IP
+addresses a single user uses for successful logins within a short time
+window, with no geolocation step at all. A handful of distinct IP
+addresses within ten minutes is already a rare enough pattern to justify
+an alert, even without knowing whether those addresses are geographically
+close or on opposite sides of the world — the cost of an error (a false
+positive for a user legitimately switching networks) is low compared to
+the cost of missing an actual account takeover. This is a live,
+production alert, not a prototype — but it's worth calling it by its
+correct name: a cheap substitute signal for impossible travel, not the
+technique itself. True geolocation stays explicitly recorded as a
+remaining backlog item, not something already implemented.
 
 ### Detecting token reuse is more weakly standardized
 
@@ -245,6 +375,30 @@ but because hidden inside the pile of successes is the one that isn't.
   per replica — don't rely on what the collector derives on its own from
   the address it scanned, because identical addresses across all replicas
   silently merge them all into one series.
+
+- When "raise the logging level" means aligning the module that decides
+  what gets recorded WITH the threshold that decides what actually gets
+  shipped from what's recorded, treat them as two independent switches —
+  raising only one produces silence that looks identical to nothing
+  having been done at all.
+- Never trust an alert or dashboard that "healthy, zero hits" means "no
+  problem" until you've tested it at least once with a deliberate, real
+  failure — a selector targeting the wrong data shape and a system that
+  currently has nothing to report look identical, both as zero.
+- Don't assume test and production environments behave the same just
+  because they share the system's name — check the actual version of
+  each separately, and never attribute a startup report to an
+  environment based on a shared log space without explicitly filtering
+  by the environment field.
+- Password brute-forcing (one account, many attempts) and credential
+  stuffing (one IP address, many accounts, a couple of attempts each)
+  call for different queries — the per-account lockout mechanism is
+  structurally blind to the second pattern, since it counts per user, not
+  per source.
+- Don't rely only on signals that precede a successful breach — an alert
+  on an unusual spike in sensitive administrative events (a password
+  change, a role grant) catches the consequence of an account takeover
+  independently of whether any earlier signal noticed anything.
 
 ## 20.5 Exercise for the reader
 

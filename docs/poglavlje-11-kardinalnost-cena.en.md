@@ -260,6 +260,88 @@ to apply than any individual measure against cardinality, because it
 requires no decision at all about which attribute is "useful enough" to
 keep.
 
+### Reading has its own bill, independent of writing
+
+Every measure so far in this chapter — native histograms, aggregation at
+the gateway, keep-lists, write frequency — reduces one side of the bill:
+how much gets written. The log platform the system uses bills a second,
+completely independent side too: how much gets **read**, measured in
+gigabytes scanned per query, with no included free quota at all. The
+number of active series and the number of writes per minute can be
+perfectly under control, and the read bill can still keep climbing —
+because that's a different meter, not the same meter seen from a
+different angle.
+
+Once this part of the bill had grown to about a tenth of total monthly
+cost, the first check wasn't a guess but a measurement: the platform
+itself logs every query it serves, along with the number of bytes scanned
+and the query's source. The result, measured over seven days: **70% of
+scanned bytes didn't come from live dashboards anyone actually looks
+at**, but from scheduled recording rules periodically re-computing the
+same numbers from raw logs into metrics — and of that, twelve rules
+feeding an executive platform-usage dashboard accounted for **60% of
+total scanning**, from those rules alone.
+
+Three cheap fixes were proposed, and all three, once checked, failed —
+each instructive in its own way:
+
+1. **Redirect the executive dashboard's panels to read already-existing
+   metrics from Mimir instead of re-scanning logs.** Looks free — the
+   numbers already exist in cheaper storage. The problem: metrics in
+   Mimir deliberately carry no per-user label, because that label would
+   mean writing email addresses in as a label value in the metrics
+   system — already rejected earlier on privacy grounds, and exactly the
+   reason those metrics were built to store only aggregates. Redirecting
+   the panels would have silently muted the dashboard's filters, with no
+   error — the "user" filter would still exist visually, but would no
+   longer change anything. A worse outcome than touching nothing at all.
+2. **Remove the double scanning in "delta" panels** (the ones that show
+   change relative to the previous period — current value minus the same
+   value shifted back). Every such panel writes a query that references
+   the same time window twice: once directly, once shifted. Measured on
+   an identical one-hour window: the double scan consumed **2.80 times**
+   more bytes than a single scan. The fix is clean and loses no filter —
+   but the saving was under a dollar a month, on a dashboard whose export
+   format has already, three times so far, turned every panel into "No
+   data" at publish time because of a placeholder that only resolves
+   through one exact publishing path. The risk of touching it wasn't
+   justified by the saving — left for the moment that dashboard gets
+   changed for some other reason anyway.
+3. **Replace one seven-day recording rule with a cheaper sum of a daily
+   rule over seven days** (`sum_over_time` over a seven-day window
+   instead of a direct seven-day calculation). Here the check uncovered
+   something more serious than "not worth it" — **the values didn't
+   match, off by a factor of two.** The cause: `sum_over_time` over a
+   recording rule counts **samples**, not days, and that rule's
+   evaluation interval had, in the meantime, changed from twelve hours to
+   twenty-four. A seven-day window spanning both before and after that
+   change silently double-counts part of a day. A transferable rule:
+   **never aggregate a recording rule with `sum_over_time` over a window
+   that can span a change in that rule's evaluation interval** — even
+   when the change in interval looked, at the time it was made, like a
+   minor operational tweak.
+
+All three proposals were rejected after measurement, not before it — and
+that's a point worth repeating from earlier chapters. What remained after
+rejecting all three isn't "yet another optimization" but a real redesign
+decision: whether the executive dashboard actually needs to allow
+filtering by individual user, or whether an aggregate by day and domain
+serves the purpose well enough. That question has no technical answer —
+it carries a product decision inside it, and so it was left undecided,
+explicitly, instead of being papered over with a poor technical
+compromise.
+
+The lesson for the reader: cardinality and write frequency, covered
+earlier in this chapter, control how much gets **written**. Not one
+measure against them shaves a single byte off the **read** bill — that's
+a separate meter, with its own causes (scheduled rules more than
+dashboards people actually look at) and its own traps (aggregates that
+silently drop a filter, duplication in the delta pattern, `sum_over_time`
+across an interval change). Measuring only one side of the bill and
+assuming that covers the whole picture is the same mistake in different
+clothes as measuring the series count and assuming that also covers write
+frequency.
+
 ## 11.3 Analytical section — why cardinality isn't a "storage detail"
 
 ### The official recommendation: native histograms as a structural solution
@@ -344,6 +426,20 @@ at once.**
   platform bills their product, and adjusting the collection interval can
   be a bigger and cheaper lever than any individual measure against
   cardinality.
+
+- The cost of reading (querying) is a separate meter from the cost of
+  writing (ingestion) — measures against cardinality and write frequency
+  don't touch a single byte scanned when a query runs; measure both sides
+  of the bill separately.
+- Before redirecting a dashboard panel to read a cheaper, already-aggregated
+  metric instead of raw data, check whether the aggregate carries the same
+  labels the panel's filters expect — those labels are often missing on
+  purpose (most often for privacy reasons), and redirecting would silently
+  mute the filter with no error.
+- Never aggregate a recording rule with `sum_over_time` over a window that
+  can span a change in that rule's evaluation interval — what gets counted
+  is a sample, not a unit of time, and a change in interval silently
+  changes the result.
 
 ## 11.5 Exercise for the reader
 

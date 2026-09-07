@@ -149,6 +149,131 @@ has been done relative to the rest of the architecture.
 
 ![Thirty days of runs for one scheduled job: two days when the job never even started, and three days when it finished cleanly but produced zero rows — both failure modes invisible to the naked eye without a dedicated check.](diagrams/dashboard-completeness.png){: width="95%" }
 
+### A reorder fix with no guardian
+
+The reordering fix described in the previous section — which gives
+capacity source priority — solved a real problem once, but that same
+change exists nowhere in infrastructure code today. The queue and
+capacity sources for this fleet still change only by direct command or
+through the console, outside the system that manages the rest of the
+infrastructure as code. The practical consequence: anyone with console
+access can, deliberately or by accident, put a cheaper, less reliable
+source back in first place — and nothing in the system will notice it as
+a deviation, because there is no recorded, desired state to compare the
+current state against.
+
+It's worth setting this next to a similar pattern earlier in the book
+(task definition revision drift) — but with one important difference
+that makes this gap more dangerous, not less: there, at least something
+was recorded (the revision) whose identity could be checked and
+compared. Here there isn't even that — the capacity source order itself
+doesn't exist recorded anywhere outside the current, live state of the
+job execution service itself. A regression would first be noticed only
+indirectly, through the general failure alert described earlier in this
+chapter — and that alert catches the **consequence** (a job failed on an
+unreliable source), not the **cause** (someone changed the order). The
+time between those two things can be days, long enough for someone to
+forget they ever touched the order at all by the time the first failure
+report finally arrives.
+
+The fix isn't complicated in principle — bring these resources into the
+same infrastructure-as-code system that already manages the rest of the
+fleet, so the desired state becomes something that can be read and
+compared, not just something that currently exists in the head of
+whoever last touched the console. It's also worth recording why this
+hasn't been done yet: the execution resources for this fleet were never
+brought into that system, not even before this fix — which means this
+isn't a regression of something that used to be protected, but a gap
+that existed from the start and that a real incident merely made
+visible.
+
+### Cutting CPU and cutting memory aren't the same savings, and the ceiling predicts failure
+
+A systematic pass through reservations across the whole fleet —
+comparing actual peak memory and CPU footprint against what's actually
+reserved — turned up two things that are easy to lose sight of when
+optimization is viewed only through "how much did we over-reserve."
+
+The first is that cutting CPU and cutting memory aren't interchangeable
+savings. For a job family whose work is memory-heavy but CPU-bound
+(using almost all its allocated CPU for the whole run), cutting the CPU
+reservation saves almost nothing — the job just takes longer on fewer
+cores, ending up with roughly the same number of vCPU-hours, while
+cutting memory, where a real surplus exists, saves linearly. For another
+family, the opposite: memory was right at the edge, while CPU had a
+surplus, so it was CPU cutting that delivered almost all the savings
+there. The rule that follows from this isn't "cut both resources
+equally" but "measure which resource is actually the bottleneck for this
+specific job, before deciding where to cut" — the same recipe applied to
+the wrong resource doesn't hurt, it just does nothing.
+
+The second, more serious thing: when all roughly fifty families in the
+fleet are grouped by memory utilization and compared against the failure
+count over the last thirty days, the difference between groups isn't
+small. Families at 90% utilization or higher fail on average **thirty
+times more often** than families in the 40-70% range — and those rare,
+near-ceiling families account for nearly half of all failures across the
+entire fleet. (The group below 40% has its own, larger failure count —
+but that's a separate cause, bugs in the application itself that memory
+wouldn't explain, not the same pattern in reverse.) This changes the
+priority order: a family close to its own memory ceiling deserves a fix
+before any cheaper, safer saving elsewhere in the fleet — expanded
+further in Chapter 27.
+
+Measuring this carries its own traps, each of which returned a
+plausible but wrong answer, not an error: a query shaped for services
+returns nothing for standalone, scheduled jobs with no ECS service
+behind them (a different attribute carries the identity), a metric that
+records the failure *event* (not a state) returns zero series if queried
+with the instantaneous value instead of a sum over time, and a
+metrics-listing tool silently returns only the first page of results if
+it isn't parsed with pagination support — all three look like "no data
+for this family," not like a bug in the query.
+
+### The alert that "needed to be built" already exists — paused, not absent
+
+When this same analysis was proposed as a recommendation: add a
+fleet-wide alert that tracks the ratio of used to reserved memory per
+job. Checking before building showed that such an alert **already
+existed** — live, managed as code, with exactly the expression asked
+for, two thresholds (warning and critical), and rich links to the
+dashboard and the log in the notification. The difference between "no
+alert exists" and "an alert exists, but is paused at the request of the
+team that receives it, because it was flooding the shared notification
+channel" looks the same from outside — in both cases the alert is silent
+— but these are two completely different problems, and only the second
+one is real. Had the alert been built again, the result would have been
+a duplicate expression double-notifying the exact channel that had asked
+for less noise.
+
+Two measurements worth recording before deciding what to do next with
+the paused alert. First: the utilization signal and the actual
+out-of-memory kill event **don't agree in either direction** — one
+family had ten kills and not a single utilization warning, another had
+nine warnings and not a single kill. Utilization and memory saturation
+measure different things, as an earlier chapter already distinguishes
+for hosts — here it's the same principle, just at the level of an
+individual job. Second, sharper: the utilization number itself is, in at
+least one confirmed case, provably a **lower bound**, not the actual
+value — a job was reading well below its own ceiling at the very moment
+it was actively being killed for lack of memory, because the utilization
+signal and the kill signal sample on different rhythms. An alert reading
+green doesn't mean the job wasn't, at that very moment, on the edge of
+being killed.
+
+One last thing makes re-arming the paused alert subtler than it looks:
+the rightsizing program that is itself part of this analysis
+**mechanically raises that same ratio** on unchanged real load — when
+memory is cut to save cost, the same absolute consumption now occupies a
+larger percentage of a smaller reservation. For families hit by an
+earlier round of savings, the utilization ratio in some cases has nearly
+doubled, even though the real load hasn't changed at all. None of them
+yet crosses the warning threshold — but every subsequent round of
+savings moves them closer to that line, and a noise estimate made before
+the cut no longer holds after it. The rule that follows isn't "don't
+alert on utilization" but "never reuse a noise estimate measured before
+a reservation change — measure it again, afterward."
+
 ## 23.3 Analytical section — a familiar contrast with the standard method for services
 
 ### The RED method is meant for a different shape of load
@@ -237,6 +362,24 @@ customers, that the shelves are empty.
   the fleet still isn't onboarded onto the main telemetry pipeline —
   instead of leaving the gap hidden until someone stumbles onto it by
   chance.
+- When you carry out a fix by changing order or configuration directly
+  on a live resource, and that resource isn't under an
+  infrastructure-as-code system, that fix has no guardian — anyone with
+  console access can quietly revert it, and the regression will first be
+  noticed only indirectly, through the consequence, not through the
+  cause itself.
+- Don't cut CPU and memory equally out of habit — measure which resource
+  is actually the bottleneck for that specific job (a CPU-bound job
+  saves almost nothing from cutting memory and vice versa), and treat a
+  family close to its own memory ceiling as a reliability priority, not
+  just a savings candidate.
+- Before building an alert that "obviously doesn't exist yet," check
+  whether it already exists, somewhere paused or redirected — the
+  absence of a signal and an existing, silenced signal look identical
+  from outside, but they have different fixes.
+- Never reuse one alert's noise estimate measured before a resource
+  reservation change — every round of reservation cuts mechanically
+  shifts that estimate on unchanged real load.
 - Check whether the jobs in your fleet share execution infrastructure
   with the rest of the system — if they do, a general alert on exit code
   already covers the fleet for free, and a separate, purpose-built

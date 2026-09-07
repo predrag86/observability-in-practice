@@ -135,6 +135,61 @@ has already been proven dangerous once, deliberately leaving it out is
 information just as valuable as a step that **is** included, and it's
 worth writing down along with the reason, not just silently omitted.
 
+### When the runbook becomes a button that runs code, not a human
+
+Everything described in this chapter so far assumes a human who reads the
+steps and carries them out. The same alert now also carries a literal
+button — **"Restart this task"** — which executes the last step in place
+of the on-call engineer. It's worth treating this as a runbook taken to
+its extreme: the symptom fingerprint narrowed down to exactly one specific
+failed task, narrow enough that the whole procedure fits into a single
+click. Precisely because of that, the same requirements that apply to a
+text runbook apply here more strictly — code doesn't get the chance to
+pause and have second thoughts before executing a step.
+
+**The moment of capture decided whether the instruction could exist at
+all.** ECS keeps the description of a stopped task available for only
+about an hour; an alert read the next morning couldn't be reconstructed
+from the task ID alone. That's why the exact task definition revision and
+the exact command override are captured at the moment the alert is sent,
+not at the moment the button is clicked — the same principle a runbook
+rests on in general (knowledge prepared **in advance**, while it still
+exists, because it won't be there when needed), applied here to system
+state instead of to a procedure a human remembers.
+
+**A restarted task isn't the same thing as a restarted schedule.** The
+command override carries a specific job (which resource needs
+processing); the task definition's default command is an entirely
+different job, and it starts **without error**. That's the same kind of
+danger as the coarse branching by symptom fingerprint described earlier
+in this chapter: the wrong action doesn't look like a failure, it looks
+like a success, and nothing would catch it if the override weren't
+captured together with the revision, at the same moment.
+
+The outcome of every attempt — launched, blocked (expired, ineligible
+family, task definition inactive, already running, already in progress,
+rate-limited) or failed — is recorded as one of exactly eight possible
+outcomes, following the same principle of an exhaustive, mutually
+exclusive outcome set introduced in the previous chapter for the alert
+itself: every new return from the code that executes an attempt must
+report an outcome, or the tally against the total number of requests
+quietly stops adding up. Who gets the button is likewise not a list of
+names but a structural rule — services managed by ECS itself, Batch jobs,
+infrastructure services, and families with no pre-existing alert are
+excluded upfront by property, not by name entered on a list — the same
+decision, applied earlier in this book too, that a growing fleet
+automatically inherits behavior instead of someone having to enter it by
+hand.
+
+The cap of just a few restarts per family within a single day exists for
+the same reason as the absence of bulk-restart described a moment ago: a
+family that needs a fourth restart on the same day doesn't need another
+attempt, it needs a fix. That this cap is above all a principle of good
+recovery design, not a quirk of this particular team, is confirmed by
+outside guidance on automated job recovery that speaks the same
+language: limit the number of attempts and **log the outcome of every
+one**.
+
 ## 16.3 Analytical section — why runbook structure isn't a stylistic choice
 
 ### The received wisdom: orientation before instruction
@@ -211,6 +266,12 @@ seconds, and nothing more.**
 - If a shortcut in a runbook has already been proven, once, to cause more
   harm than good, write down its deliberate omission and the reason —
   don't rely on a reader under pressure avoiding it on their own.
+
+- When a runbook becomes automated (a button, a script), apply the same
+  requirements to it as to a text runbook — a precise fingerprint, state
+  captured in advance instead of reconstructed after the fact, an
+  exhaustive and mutually exclusive outcome set for every attempt, and an
+  explicit cap on the number of attempts.
 
 ## 16.5 Exercise for the reader
 

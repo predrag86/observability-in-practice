@@ -240,12 +240,11 @@ source of truth." Every task crash would first have to be turned into a log
 line or a synthetic metric, then wait for the next PromQL evaluation cycle
 (latency a direct event would never have had), and the webhook itself would
 have to be configured on the cloud platform's side instead of in the
-infrastructure account — which means an outage of the cloud platform (the
-exact scenario Chapter 4 already cites as a reason for independence) could
-take down **both** paths at once, instead of Path A staying independent and
-continuing to work while Path B recovers. Consistency of the transport
-mechanism would be bought at the price of exactly the independence that
-makes the system resilient.
+infrastructure account — which means an outage of the observability cloud
+platform itself could take down **both** paths at once, instead of Path A
+staying independent and continuing to work while Path B recovers.
+Consistency of the transport mechanism would be bought at the price of
+exactly the independence that makes the system resilient.
 
 Return to the dispatch center from the start of this chapter. The dispatcher
 doesn't insist that the smoke detector "call by phone" so both calls look
