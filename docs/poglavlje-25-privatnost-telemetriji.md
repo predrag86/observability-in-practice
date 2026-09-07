@@ -65,35 +65,45 @@ oblik pseudonima koji frontend već koristi.
 
 ### Izvedeni pseudonim, ne goli heš
 
-Rešenje koje je implementacija projektovala ne koristi prost heš email
+Predlog koji je tim sastavio namerno ne koristi prost heš email
 adrese — jer je prostor mogućih email adresa dovoljno mali i predvidljiv
 da bi goli heš bio trivijalno razbijen unapred izračunatom tabelom.
-Umesto toga, pseudonim se izvodi kroz ključem-zaštićenu heš funkciju:
-ista email adresa uvek proizvodi isti pseudonim (što čuva mogućnost
-praćenja istog korisnika kroz vreme, korisno za dashboard-e), ali niko bez
-tajnog ključa ne može da krene unazad od pseudonima ka pravom identitetu.
-Uz to, implementacija drži jednu, strogo kontrolisanu mogućnost razrešenja
-unazad — administrativni endpoint koji, samo za ovlašćenu ulogu i uz
-potpuno audit-logovanje ko je koga razrešio i kada, vraća pravi identitet
-iza pseudonima za retke slučajeve kad je to stvarno operativno potrebno.
+Umesto toga, predlog izvodi pseudonim kroz ključem-zaštićenu heš funkciju:
+ista email adresa bi uvek proizvela isti pseudonim (što bi sačuvalo
+mogućnost praćenja istog korisnika kroz vreme, korisno za dashboard-e), a
+niko bez tajnog ključa ne bi mogao da krene unazad od pseudonima ka pravom
+identitetu. Predlog uključuje i jednu, strogo kontrolisanu mogućnost
+razrešenja unazad — administrativni endpoint koji bi, samo za ovlašćenu
+ulogu i uz potpuno audit-logovanje ko je koga razrešio i kada, vraćao pravi
+identitet iza pseudonima za retke slučajeve kad je to stvarno operativno
+potrebno.
+
+Vredno je reći ovo eksplicitno, ne samo podrazumevati: u trenutku pisanja
+ovo je dizajn na papiru, ne sprovedena promena. Predlog nosi status "nije
+započeto", sa nekoliko odluka koje osoba sa ovlašćenjem tek treba da
+donese pre nego što bilo šta od ovoga uđe u kod — uključujući i tačno
+pitanje rotacije ključa iz sledećeg odeljka. Otkriće od malopre (71 od 98
+povezanih raspona) jeste stvarno i potvrđeno; popravka opisana ovde je
+predlog kako da se to otkriće zatvori, ne opis nečega što se već desilo.
 
 ### Šta popravka ne rešava — i zašto je to u redu
 
-Implementacija je eksplicitno svesna granica sopstvene popravke: istorijska
-telemetrija, već zapisana pre promene, ostaje u sirovom obliku — pseudonimizacija
-nije retroaktivna, i stari zapisi jednostavno stare kroz redovnu politiku
-čuvanja. Ovo nije previd nego trezvena procena: retroaktivno prepisivanje
-već zapisanih podataka bi bilo nesrazmerno skupo u odnosu na korist, kad
-period čuvanja i onako uskoro obriše te zapise. Implementacija takođe
-pravi jasnu, dokumentovanu razliku između identifikatora **osobe** (koji se
-nikad ne beleže u novim poljima) i identifikatora **imovine/resursa nad
-kojim je upit izvršen** (koji se namerno i dalje beleže, jer identifikuju
-šta je upitano, ne ko je upitao) — razlika koja sprečava da se
-pseudonimizacija preterano primeni tamo gde nije ni potrebna ni korisna.
+Predlog eksplicitno priznaje granice sopstvenog dometa, unapred: istorijska
+telemetrija, već zapisana pre bilo kakve promene, ostala bi u sirovom obliku
+— pseudonimizacija ne bi bila retroaktivna, a stari zapisi bi jednostavno
+istekli kroz redovnu politiku čuvanja. Ovo nije previd nego trezvena
+procena unapred: retroaktivno prepisivanje već zapisanih podataka bilo bi
+nesrazmerno skupo u odnosu na korist, kad period čuvanja i onako uskoro
+briše te zapise. Predlog takođe pravi jasnu razliku između identifikatora
+**osobe** (koji se ne bi beležili u novim poljima) i identifikatora
+**imovine/resursa nad kojim je upit izvršen** (koji bi se namerno i dalje
+beležili, jer identifikuju šta je upitano, ne ko je upitao) — razlika koja
+bi sprečila da se pseudonimizacija preterano primeni tamo gde nije ni
+potrebna ni korisna.
 
 ![Isti trejs spaja pseudonimni identifikator sa strane pregledača i pravi identitet sa strane backend-a — pseudonimnost drži samo dok se dva dela istog trejsa ne povežu.](diagrams/ch25-linkage.png){: width="90%" }
 
-![Ista sesija u panelu za otklanjanje grešaka, pre i posle: kad oba kraja pišu isti oblik ključem-zaštićenog pseudonima, spajanje po trejsu i dalje radi za dijagnostiku, ali više ne otkriva pravo ime i email.](diagrams/dashboard-pseudonymization.png){: width="95%" }
+![Ilustracija iste sesije u panelu za otklanjanje grešaka, danas naspram predloženog stanja: kad bi oba kraja pisala isti oblik ključem-zaštićenog pseudonima, spajanje po trejsu bi i dalje radilo za dijagnostiku, ali više ne bi otkrivalo pravo ime i email.](diagrams/dashboard-pseudonymization.png){: width="95%" }
 
 ### Tip parametra kao dokaz, ne samo pravilo po nazivu
 
@@ -121,25 +131,31 @@ i naruši strukturu samog log zapisa. Dve različite garancije za dve različite
 kategorije parametara — jedna strukturna (tip), jedna operativna (enkodiranje)
 — primenjene tačno tamo gde svaka ima smisla.
 
-### Zašto se pseudonimizacioni ključ namerno nikad ne rotira
+### Zašto predlog preporučuje da se pseudonimizacioni ključ nikad ne rotira
 
 Uobičajena bezbednosna higijena nalaže periodičnu rotaciju tajnih ključeva —
 pravilo koje važi za lozinke, API tokene, enkripcione ključeve. Za ključ koji
-pokreće heš funkciju za pseudonime, implementacija je svesno odlučila
-**suprotno**: ključ ostaje stabilan, bez planirane rotacije. Razlog nije
-nemar nego eksplicitna analiza kompromisa. Rotacija ključa menja **svaki**
-pseudonim odjednom — svaki korisnik dobija novi pseudonim istog trenutka, što
-kida longitudinalnu analizu (dashboard koji prati istog korisnika kroz vreme
-odjednom vidi "novog" korisnika) i zahteva usklađivanje interne mapione
-tabele koja pseudonime vezuje za email. Nasuprot tome, dobit od rotacije je
-ovde neobično mala: ključ ne štiti sam sadržaj (email ostaje čitljiv u
-mapionoj tabeli bez obzira na ključ) — štiti samo **vezu** između pseudonima
-i emaila za svakog ko vidi pseudonim bez pristupa toj tabeli. Ako je mapiona
-tabela već kompromitovana, rotacija ključa ništa ne popravlja; ako nije,
-stabilan ključ ne otvara novi rizik koji rotacija zatvara. Bezbednosna
-higijena koja ima smisla za lozinku ovde bi samo unela operativnu štetu bez
-odgovarajuće bezbednosne dobiti — implementacija je to prepoznala umesto da
-mehanički primeni opšte pravilo na situaciju gde ono ne važi.
+bi pokretao heš funkciju za pseudonime, predlog ide svesno **suprotno**
+uobičajenom pravilu: preporučuje da ključ ostane stabilan, bez planirane
+rotacije. Ali ovo je tačno mesto gde treba biti precizan oko toga šta je
+odlučeno, a šta samo predloženo — ovo je preporuka koja u trenutku pisanja
+još čeka da je neko sa ovlašćenjem zvanično potvrdi, ne već doneto pravilo.
+Razlog iza same preporuke nije nemar nego eksplicitna analiza kompromisa
+unapred. Rotacija ključa bi promenila **svaki** pseudonim odjednom — svaki
+korisnik bi dobio novi pseudonim istog trenutka, što bi kidalo longitudinalnu
+analizu (dashboard koji prati istog korisnika kroz vreme odjednom bi video
+"novog" korisnika) i zahtevalo usklađivanje interne mapione tabele koja
+pseudonime vezuje za email. Nasuprot tome, dobit od rotacije bi ovde bila
+neobično mala: ključ ne bi štitio sam sadržaj (email bi ostao čitljiv u
+mapionoj tabeli bez obzira na ključ) — štitio bi samo **vezu** između
+pseudonima i emaila za svakog ko vidi pseudonim bez pristupa toj tabeli. Ako
+bi mapiona tabela već bila kompromitovana, rotacija ključa ništa ne bi
+popravila; ako ne bi bila, stabilan ključ ne bi otvarao novi rizik koji bi
+rotacija zatvorila. Bezbednosna higijena koja ima smisla za lozinku bi ovde
+samo unela operativnu štetu bez odgovarajuće bezbednosne dobiti — što je
+argument ZA preporuku, ne dokaz da je pitanje zatvoreno. Dok god je neko sa
+ovlašćenjem zvanično ne potvrdi, rotacija ključa ostaje otvorena stavka na
+spisku odluka koje predlog čeka, ne završena priča.
 
 ![Zašto rotacija pseudonimizacionog ključa ovde ne bi bila bezbednosna dobit, samo operativna šteta: ključ štiti vezu pseudonim↔email, ne sam sadržaj, i stabilan ključ ne otvara novi rizik koji bi rotacija zatvorila.](diagrams/ch25-rotacija-kljuca.png){: width="80%" }
 
@@ -195,10 +211,10 @@ Zvanična smernica o pseudonimizaciji je nedvosmislena: pseudonimizovan
 podatak **ostaje** lični podatak u punom pravnom smislu, jer je
 re-identifikacija i dalje moguća u principu — razlika prema potpuno
 anonimizovanom podatku (koji izlazi iz obaveze u potpunosti) je oštra i
-namerna. Ovo znači da pseudonimizacija implementacije nije "rešila"
-pravnu obavezu — smanjila je rizik i pooštrila minimizaciju, ali podatak
-i dalje zahteva istu pažnju kao svaki drugi lični podatak, samo sa manjim
-rizikom po pojedinca ako dođe do curenja.
+namerna. Ovo znači da predložena pseudonimizacija, čak i kad bude sprovedena, neće
+"rešiti" pravnu obavezu u potpunosti — smanjiće rizik i pooštriti
+minimizaciju, ali podatak će i dalje zahtevati istu pažnju kao svaki drugi
+lični podatak, samo sa manjim rizikom po pojedinca ako dođe do curenja.
 
 ### Ono što se dogodilo ima precizno ime u literaturi: napad povezivanjem
 
@@ -211,10 +227,11 @@ ili spoljnim izvorom. Zvanična smernica o pseudonimizaciji ide korak dalje
 i imenuje tačno ovaj mehanizam kao razlog zašto preporučuje **tranzakcione**
 pseudonime (drugačiji po svakoj interakciji) umesto **ličnih** pseudonima
 (stabilan, ponovo korišćen svuda) — jer je upravo stabilan, deljen
-identifikator ono što povezivanje čini lakim. Implementacija je svesno
-zadržala stabilan pseudonim (radi longitudinalne analize po korisniku) uz
-punu svest o ovom kompromisu — razumna odluka, ali odluka koja mora ostati
-vidljiva, ne podrazumevana.
+identifikator ono što povezivanje čini lakim. Predlog svesno bira da
+zadrži stabilan pseudonim (radi longitudinalne analize po korisniku) uz
+punu svest o ovom kompromisu — razuman izbor, ali izbor koji mora ostati
+vidljiv, ne podrazumevan, i koji je, kao što je prethodni odeljak pokazao,
+još uvek samo preporuka koja čeka potvrdu, ne doneta odluka.
 
 ### Ključem-zaštićena heš funkcija je zvanično preporučena, ne proizvoljna
 
@@ -226,8 +243,8 @@ dovoljno entropije u samom ključu. Dodatna, suptilnija napomena iz iste
 literature, direktno relevantna: **isti** ključ korišćen u dva različita
 sistema ponovo uvodi mogućnost povezivanja — ako dva servisa heš-uju istu
 email adresu istim ključem, njihovi izlazi se poklapaju i mogu se spojiti,
-poništavajući svrhu izolacije. Implementacija ovo rešava tako što ključ
-ostaje jedan, unutrašnji, čuva se odvojeno od bilo kog eksternog sistema.
+poništavajući svrhu izolacije. Predlog ovo rešava tako što bi ključ ostao jedan, unutrašnji, čuvan
+odvojeno od bilo kog eksternog sistema.
 
 ### Pravo na brisanje sudara se sa arhitekturom sistema za telemetriju
 
