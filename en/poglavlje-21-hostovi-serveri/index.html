@@ -1510,6 +1510,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#a-third-entirely-independent-layer-a-view-from-outside-the-box" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A third, entirely independent layer: a view from outside the box
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2416,6 +2427,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#a-third-entirely-independent-layer-a-view-from-outside-the-box" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A third, entirely independent layer: a view from outside the box
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2691,6 +2713,67 @@ far. This distinction prevents anyone later, looking only at a list of
 deliberate, considered decisions, with a recorded reason for whoever
 revisits them later.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch21-cetiri-uzroka.png" data-desc-position="bottom"><img alt="Why an imported shared dashboard typically stops working: the wrong data source, a missing collector that breaks template variables, a mismatched naming schema, and aggregation that silently strips labels — four separate causes, the same &quot;no data&quot; symptom." src="../diagrams/ch21-cetiri-uzroka.png" width="90%"></a></p>
+<h3 id="a-third-entirely-independent-layer-a-view-from-outside-the-box">A third, entirely independent layer: a view from outside the box</h3>
+<p>Everything described so far in this chapter — the custom metric set,
+threshold calibration, separating utilization from saturation — shares
+one common trait: all of it reads a signal that the <strong>agent running on
+the host itself</strong> collects and pushes toward the observability collector.
+That means this entire layer shares fate with everything that could break
+that path — the agent itself, the collector, or the observability
+platform. An alert that watches for "the host has stopped reporting"
+cannot by itself distinguish two entirely different states: the host is
+actually dead, or just the pipe through which the host reports has
+stopped working. The question that alert leaves open — "dead box or dead
+agent?" — the infrastructure provider already knows the answer to, for
+free, because it measures that entirely outside the machine the agent
+even runs on.</p>
+<p>This third layer reads the instance's status directly from the
+provider's side — whether the guest operating system responds at all,
+and whether the infrastructure underneath the instance itself is
+healthy — and deliberately does <strong>not</strong> go through the same path as the
+rest of the host layer's observability, but is instead read directly at
+the moment of the check. This is the same discipline named earlier in
+the book for a completely different component: <strong>a watcher that observes
+a critical path must not depend on the infrastructure it observes</strong> —
+applied here to hosts instead of jobs. The third layer survives exactly
+the failure that would silence the first two layers of this chapter.</p>
+<p>It also turned out that this layer's side benefit ends up mattering more
+than the original reason it was introduced: it is the <strong>only</strong> signal of
+health for machines that never received an agent described in this
+chapter — hosts deliberately excluded from this side of observability,
+for reasons that have nothing to do with their importance. Without a
+single change on those machines, they gained at least a basic,
+externally measured check of whether they're alive at all. It's worth
+stating the boundary immediately: this is not a replacement for the
+agent, only a supplement for its absence — a machine passes every such
+check even with an almost-full disk, because the check measures whether
+the machine is reachable, not whether it's well.</p>
+<p>Introducing this layer carried its own narrow, technical trap worth
+naming: the query must remain independent of the specific instance fleet
+(so it automatically covers every instance, not a pre-enumerated list),
+but the naive way to achieve that — an open wildcard instead of an exact
+identifier — doesn't work the way it looks: such a query doesn't limit
+itself to currently live instances, it covers <strong>every instance ever
+seen</strong>, including years of terminated and forgotten ones. The correct
+form is a query that discovers identities from a short, recent window
+itself, not from the entire history. A second, smaller but treacherous
+trap: the label name such a query returns is not the same name someone
+would expect from experience with the rest of the system, so a
+notification message that references it by the expected rather than the
+actual name silently comes out empty — a notification that says
+"instance " and nothing after it, instead of reporting an error.</p>
+<p>Finally, this layer is the first in the chapter whose cost rises with
+every individual measurement, not with the volume of data stored — every
+check is billed per call to the infrastructure provider, regardless of
+whether the same check was made a second earlier. The check frequency
+was therefore deliberately chosen not based on how quickly someone would
+like to learn about a problem, but based on a direct comparison: a more
+frequent check would cost several times more than everything saved by
+every other measure in this chapter combined. The same kind of
+calculation — that observation itself has its own cost, independent of
+what it observes — shows up here for the second time in the book, the
+first time applied to a check outside the agent rather than to storing
+and reading data inside the observability platform.</p>
 <h2 id="213-analytical-section-a-known-method-a-documented-cause-of-failure">21.3 Analytical section — a known method, a documented cause of failure</h2>
 <h3 id="the-use-method-as-a-formal-framework-for-what-the-implementation-does-intuitively">The <abbr title="Utilization, Saturation, Errors — a framework for observing resources (host, disk, network).">USE method</abbr> as a formal framework for what the implementation does intuitively</h3>
 <p>A formal method for diagnosing system resource performance known as USE
@@ -2774,6 +2857,13 @@ actually drive in.</p>
   of importing someone else's bundle — one panel that exists because it
   answers a known question is worth more than ten panels that exist
   because they came in the package.</li>
+<li>Keep at least one layer of host health checking that reads status
+  directly from the infrastructure provider, outside the path the agent
+  and the rest of observability take — that layer is the only one that
+  survives exactly the failure (agent down, collector down, platform
+  down) that silences every agent-based layer. When that layer bills per
+  call, choose its frequency by checking the bill, not by feel for how
+  fast you'd like to find out.</li>
 <li>When restoring a label that automatic aggregation stripped, don't add
   a "keep it open" alert first — while the label is still aggregated,
   that alert can't bootstrap itself, because it hits the same silent-
@@ -2821,7 +2911,7 @@ empty panel before deciding whether to fix it or remove it.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 30, 2026 20:50:18 UTC">August 30, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2026 20:30:29 UTC">September 7, 2026</span>
   </span>
 
     

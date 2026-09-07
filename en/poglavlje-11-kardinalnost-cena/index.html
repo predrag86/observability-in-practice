@@ -1063,6 +1063,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#reading-has-its-own-bill-independent-of-writing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading has its own bill, independent of writing
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2416,6 +2427,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#reading-has-its-own-bill-independent-of-writing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading has its own bill, independent of writing
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2751,6 +2773,83 @@ more often than actually needed, that lever can be both larger and cheaper
 to apply than any individual measure against cardinality, because it
 requires no decision at all about which attribute is "useful enough" to
 keep.</p>
+<h3 id="reading-has-its-own-bill-independent-of-writing">Reading has its own bill, independent of writing</h3>
+<p>Every measure so far in this chapter — native histograms, aggregation at
+the gateway, keep-lists, write frequency — reduces one side of the bill:
+how much gets written. The log platform the system uses bills a second,
+completely independent side too: how much gets <strong>read</strong>, measured in
+gigabytes scanned per query, with no included free quota at all. The
+number of <abbr title="Time series that are currently receiving data points.">active series</abbr> and the number of writes per minute can be
+perfectly under control, and the read bill can still keep climbing —
+because that's a different meter, not the same meter seen from a
+different angle.</p>
+<p>Once this part of the bill had grown to about a tenth of total monthly
+cost, the first check wasn't a guess but a measurement: the platform
+itself logs every query it serves, along with the number of bytes scanned
+and the query's source. The result, measured over seven days: <strong>70% of
+scanned bytes didn't come from live dashboards anyone actually looks
+at</strong>, but from scheduled recording rules periodically re-computing the
+same numbers from raw logs into metrics — and of that, twelve rules
+feeding an executive platform-usage dashboard accounted for <strong>60% of
+total scanning</strong>, from those rules alone.</p>
+<p>Three cheap fixes were proposed, and all three, once checked, failed —
+each instructive in its own way:</p>
+<ol>
+<li><strong>Redirect the executive dashboard's panels to read already-existing
+   metrics from Mimir instead of re-scanning logs.</strong> Looks free — the
+   numbers already exist in cheaper storage. The problem: metrics in
+   Mimir deliberately carry no per-user label, because that label would
+   mean writing email addresses in as a label value in the metrics
+   system — already rejected earlier on privacy grounds, and exactly the
+   reason those metrics were built to store only aggregates. Redirecting
+   the panels would have silently muted the dashboard's filters, with no
+   error — the "user" filter would still exist visually, but would no
+   longer change anything. A worse outcome than touching nothing at all.</li>
+<li><strong>Remove the double scanning in "delta" panels</strong> (the ones that show
+   change relative to the previous period — current value minus the same
+   value shifted back). Every such panel writes a query that references
+   the same time window twice: once directly, once shifted. Measured on
+   an identical one-hour window: the double scan consumed <strong>2.80 times</strong>
+   more bytes than a single scan. The fix is clean and loses no filter —
+   but the saving was under a dollar a month, on a dashboard whose export
+   format has already, three times so far, turned every panel into "No
+   data" at publish time because of a placeholder that only resolves
+   through one exact publishing path. The risk of touching it wasn't
+   justified by the saving — left for the moment that dashboard gets
+   changed for some other reason anyway.</li>
+<li><strong>Replace one seven-day recording rule with a cheaper sum of a daily
+   rule over seven days</strong> (<code>sum_over_time</code> over a seven-day window
+   instead of a direct seven-day calculation). Here the check uncovered
+   something more serious than "not worth it" — <strong>the values didn't
+   match, off by a factor of two.</strong> The cause: <code>sum_over_time</code> over a
+   recording rule counts <strong>samples</strong>, not days, and that rule's
+   evaluation interval had, in the meantime, changed from twelve hours to
+   twenty-four. A seven-day window spanning both before and after that
+   change silently double-counts part of a day. A transferable rule:
+   <strong>never aggregate a recording rule with <code>sum_over_time</code> over a window
+   that can span a change in that rule's evaluation interval</strong> — even
+   when the change in interval looked, at the time it was made, like a
+   minor operational tweak.</li>
+</ol>
+<p>All three proposals were rejected after measurement, not before it — and
+that's a point worth repeating from earlier chapters. What remained after
+rejecting all three isn't "yet another optimization" but a real redesign
+decision: whether the executive dashboard actually needs to allow
+filtering by individual user, or whether an aggregate by day and domain
+serves the purpose well enough. That question has no technical answer —
+it carries a product decision inside it, and so it was left undecided,
+explicitly, instead of being papered over with a poor technical
+compromise.</p>
+<p>The lesson for the reader: cardinality and write frequency, covered
+earlier in this chapter, control how much gets <strong>written</strong>. Not one
+measure against them shaves a single byte off the <strong>read</strong> bill — that's
+a separate meter, with its own causes (scheduled rules more than
+dashboards people actually look at) and its own traps (aggregates that
+silently drop a filter, duplication in the delta pattern, <code>sum_over_time</code>
+across an interval change). Measuring only one side of the bill and
+assuming that covers the whole picture is the same mistake in different
+clothes as measuring the series count and assuming that also covers write
+frequency.</p>
 <h2 id="113-analytical-section-why-cardinality-isnt-a-storage-detail">11.3 Analytical section — why cardinality isn't a "storage detail"</h2>
 <h3 id="the-official-recommendation-native-histograms-as-a-structural-solution">The official recommendation: native histograms as a structural solution</h3>
 <p>The Prometheus community (including its own documentation on histogram
@@ -2823,10 +2922,27 @@ at once.</strong></p>
   service to save on cardinality, check whether more than one process
   would write to the same series without it — cumulative counters with
   merged identity produce an inaccurate rate, not just a less detailed one.</li>
-<li>Measure write frequency per series too, not just the series count — the
+<li>
+<p>Measure write frequency per series too, not just the series count — the
   platform bills their product, and adjusting the collection interval can
   be a bigger and cheaper lever than any individual measure against
-  cardinality.</li>
+  cardinality.</p>
+</li>
+<li>
+<p>The cost of reading (querying) is a separate meter from the cost of
+  writing (ingestion) — measures against cardinality and write frequency
+  don't touch a single byte scanned when a query runs; measure both sides
+  of the bill separately.</p>
+</li>
+<li>Before redirecting a dashboard panel to read a cheaper, already-aggregated
+  metric instead of raw data, check whether the aggregate carries the same
+  labels the panel's filters expect — those labels are often missing on
+  purpose (most often for privacy reasons), and redirecting would silently
+  mute the filter with no error.</li>
+<li>Never aggregate a recording rule with <code>sum_over_time</code> over a window that
+  can span a change in that rule's evaluation interval — what gets counted
+  is a sample, not a unit of time, and a change in interval silently
+  changes the result.</li>
 </ul>
 <h2 id="115-exercise-for-the-reader">11.5 Exercise for the reader</h2>
 <p>Run <code>count by (__name__)({__name__=~".+"})</code> (or the equivalent check in the
@@ -2864,7 +2980,7 @@ your candidate for the next unplanned jump in the bill.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:32:48 UTC">August 31, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2026 20:29:56 UTC">September 7, 2026</span>
   </span>
 
     

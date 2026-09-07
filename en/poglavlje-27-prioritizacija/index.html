@@ -1724,6 +1724,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rollout-order-has-a-fourth-axis-how-fast-the-error-becomes-visible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollout order has a fourth axis: how fast the error becomes visible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#honorable-mention-as-a-formal-named-category" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1761,6 +1772,17 @@
     <span class="md-ellipsis">
       
         Blast radius is measured, not assumed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reliability-ahead-of-savings-when-the-measurement-says-so-and-why-the-automated-recommendation-lags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reliability ahead of savings when the measurement says so — and why the automated recommendation lags
       
     </span>
   </a>
@@ -2384,6 +2406,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rollout-order-has-a-fourth-axis-how-fast-the-error-becomes-visible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollout order has a fourth axis: how fast the error becomes visible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#honorable-mention-as-a-formal-named-category" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2421,6 +2454,17 @@
     <span class="md-ellipsis">
       
         Blast radius is measured, not assumed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reliability-ahead-of-savings-when-the-measurement-says-so-and-why-the-automated-recommendation-lags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reliability ahead of savings when the measurement says so — and why the automated recommendation lags
       
     </span>
   </a>
@@ -2623,6 +2667,30 @@ implementation deliberately merges them into a single, higher-ranked
 combined item — instead of counting them as two separate, lower-ranked
 problems. This prevents a situation where the ranking would be falsely low
 just because one cause happened to produce several individual symptoms.</p>
+<h3 id="rollout-order-has-a-fourth-axis-how-fast-the-error-becomes-visible">Rollout order has a fourth axis: how fast the error becomes visible</h3>
+<p>The three ranking axes above — reach, likelihood, cost of the fix —
+determine <strong>what</strong> to fix first. When two similar, independent changes
+are actually rolled out one after the other, a fifth question shows up
+that none of those three axes covers: in what order do you release them
+to production?</p>
+<p>A concrete case: two nearly identical resource-sizing changes were
+waiting in the rollout queue — one on the highest-severity family with a
+narrow margin, the other on a lower-severity family that runs once a
+week. The intuition of "riskiest last" would put the narrower, more
+severe change last, as the one where a mistake hurts the most. The actual
+order was the reverse, and deliberately so: the narrower change went out
+<strong>first</strong>, because its outcome would be confirmed or refuted within a
+couple of minutes (that family runs often), whereas an error on the
+weekly family would go unnoticed for days — the next run doesn't come
+until a week later. The cost of an error on the more sensitive change is
+higher, but the cost of the <strong>delay in detecting</strong> an error on the slower
+change was higher still.</p>
+<p>The rule that follows doesn't replace the three ranking axes — it adds
+rollout order to them as a separate question: <strong>order releases by how
+fast an error becomes visible, not only by how risky it looks.</strong> A change
+on a rarely-run job carries a hidden cost that its nominal "severity"
+doesn't capture — the cost of the time during which an error would sit
+quietly, waiting for someone to notice it.</p>
 <h3 id="honorable-mention-as-a-formal-named-category">"Honorable mention" as a formal, named category</h3>
 <p>Below the threshold for entering the main ranked list, the implementation
 keeps a separate, named section for items that are real but not ranked high
@@ -2689,6 +2757,51 @@ this alongside the finding: the estimated <abbr title="How many users, services,
 someone actually measured it, and that gap is a cheap lesson only because
 it was caught before an incident, not during one.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../diagrams/ch27-domet-stete.png" data-desc-position="bottom"><img alt="The same finding, the same fix — but the blast radius changed from &quot;auth goes down&quot; to &quot;the entire product goes down&quot; only once someone actually inventoried the dependencies instead of assuming them from the problem's title." src="../../diagrams/ch27-domet-stete.png" width="82%"></a></p>
+<h3 id="reliability-ahead-of-savings-when-the-measurement-says-so-and-why-the-automated-recommendation-lags">Reliability ahead of savings when the measurement says so — and why the automated recommendation lags</h3>
+<p>The first ranking axis — <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr> — doesn't have to come from a
+dedicated analysis built just for that purpose. The fleet-wide memory
+utilization measurement described in Chapter 23 started out as a check on
+resource waste, not a risk-ranking exercise, and yet it directly changed
+the order on this chapter's list: once it turned out that families near
+the memory ceiling fail <strong>thirty times more often</strong> than families in the
+mid-range, and that this handful of rare families accounts for nearly
+half of all failures across the entire fleet, fixing those families
+jumped ahead of every cheaper, safer savings item elsewhere in the fleet
+— even though that cheaper saving had been waiting longer, and even
+though it's always tempting to take the easy, safe win first. The order
+changed not because someone decided reliability "is worth more" on paper,
+but because the measurement directly showed that the <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr> of
+those rare families outweighed any saving that could have outranked them.
+This is the same principle as the auth-SPOF example above, applied to a
+fleet instead of a single finding: the cost of the fix doesn't change,
+but the <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr>, once it's actually measured, can jump a change past
+a whole run of cheaper items on the list.</p>
+<p>Automated savings-recommendation tools (Compute Optimizer and, through
+it, Cost Optimization Hub) don't rank by <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr> themselves — they
+rank by an estimate of how much would be saved, derived from a
+backward-looking measurement. That estimate carries its own, skewed flaw
+directly relevant to the ordering on this list: the measurement window is
+a fixed, sliding fourteen days back. When one public, always-on service
+had its resource reservation cut down, the tool kept showing the old,
+larger reservation as "current" and kept advertising a saving calculated
+against it — because eleven of the fourteen days in the window still
+preceded the change. The tool's own numbers gave this away: the reported
+running-hours figure matched only the old shape, not the new one. Most of
+the saving the tool advertised had, in fact, already been realized a week
+earlier; the small remainder was a step the team had knowingly declined,
+because cutting the reservation further would have removed the headroom
+for a short but predictable spike in consumption at every job start — a
+spike that recurs at every start and that the averaged, two-week picture
+hides completely.</p>
+<p>That same narrow window cuts both ways, which is why the order on this
+list can't take its ranking from the savings tool without checking: a
+window that lags behind a change upward also lags behind a change
+downward — a consumption spike that would make some other, already
+recommended saving unsafe can just as easily fall outside that same
+fourteen days and go unrecorded. The order on the savings list is
+therefore not evidence of the current state — it's evidence of the last
+two weeks, and the difference between the two is exactly what the
+ordering in this chapter has to check before accepting it as final.</p>
 <h3 id="deleted-only-once-measurement-confirms-it-not-once-code-lands-on-a-branch">Deleted only once measurement confirms it, not once code lands on a branch</h3>
 <p>The rule "delete an item once it's finished" from the previous section
 sounds simple, but the implementation showed, on one finding, exactly
@@ -2807,6 +2920,21 @@ reads.</p>
   the item only once that signal is measured, not once the code is merged
   into a branch; "merged" and "released to production" aren't the same as
   "finished."</li>
+<li>When two similar changes go out one after another, order their rollout
+  by how fast an error becomes visible too, not only by how risky it
+  looks — a change on a rarely-run job carries a hidden cost from delayed
+  detection that its nominal severity doesn't capture.</li>
+<li>When measurement shows that a narrow segment accounts for a
+  disproportionate share of the whole fleet's failures, fixing that
+  segment jumps ahead of cheaper, safer savings on the list — reliability
+  outranks savings once the <abbr title="How many users, services, or records would be affected if something goes wrong.">blast radius</abbr> is actually measured, not just
+  when it looks bigger on paper.</li>
+<li>Don't take a savings tool's automated ranking as evidence of current
+  state — a tool that estimates from a backward-sliding window can keep
+  advertising savings for a change that's already been made, and that
+  same window can just as easily hide a consumption spike that would make
+  some other item on the list unsafe; check the live configuration before
+  taking the order from the tool.</li>
 </ul>
 <h2 id="275-exercise-for-the-reader">27.5 Exercise for the reader</h2>
 <p>Look at your team's backlog of findings — security, performance, or any
@@ -2846,7 +2974,7 @@ existing list is maintained.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:40:23 UTC">August 31, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2026 20:30:48 UTC">September 7, 2026</span>
   </span>
 
     

@@ -835,6 +835,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#session-level-sampling-binary-not-gradual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session-level sampling — binary, not gradual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcemaps-the-error-is-caught-but-not-readable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sourcemaps: the error is caught, but not readable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-vendor-silently-changed-a-setting-no-one-on-the-team-ever-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The vendor silently changed a setting no one on the team ever set
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2306,6 +2339,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#session-level-sampling-binary-not-gradual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session-level sampling — binary, not gradual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcemaps-the-error-is-caught-but-not-readable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sourcemaps: the error is caught, but not readable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-vendor-silently-changed-a-setting-no-one-on-the-team-ever-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The vendor silently changed a setting no one on the team ever set
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2580,6 +2646,107 @@ artifact of too small a sample. Treating every percentile-based alert as
 absolute truth, without asking "how many points was this computed from," is
 a mistake that stays invisible until the first false alarm gets
 investigated all the way through and turns out to rest on a single session.</p>
+<h3 id="session-level-sampling-binary-not-gradual">Session-level sampling — binary, not gradual</h3>
+<p>The RUM SDK samples at the level of the <strong>entire session</strong>, not at the
+level of an individual signal: a session is either sampled — in which
+case it sends absolutely everything (Core Web Vitals, errors, traces) —
+or it isn't, in which case it sends nothing at all. Since RUM is billed
+per session, this sampling is the single biggest lever for cost, and for
+most systems it would be natural to bring it down below 100%.</p>
+<p>The implementation this book follows keeps the rate at <strong>1.0</strong> —
+deliberately, not from failing to consider a cheaper option. Two reasons,
+both measurable: first, at this tool's traffic volume (a couple thousand
+sessions a day) the cost of the full rate is negligible. Second, and more
+important for this chapter specifically: a rate below 1.0 wouldn't just
+cheaply reduce the data volume — it would silently break the exact
+property this chapter exists to describe in the first place. Sampling is
+binary at the session level, which means an unsampled session never
+injects a trace-context header into its API call — the "same trace ID
+all the way through" property from 8.2 holds only for the portion of
+traffic the sampler kept, not for all traffic. Lowering the rate wouldn't
+be wrong in itself, but it would require that boundary to be explicitly
+acknowledged and communicated — "trace connected all the way through"
+would stop meaning "every click" and start meaning "every click that
+chance happened to have the sampler keep."</p>
+<p>This ties directly back to the percentile trap from the previous
+section: the alert that already requires a minimum number of points in
+the window before it even considers firing counts that number on
+<strong>sampled</strong> sessions, not on actual traffic. If the rate ever dropped
+below 1.0, that same minimum threshold would suddenly represent a much
+larger percentage of actual traffic than was intended when the threshold
+was set — two separate settings (the sampling rate and the alert's
+minimum threshold) that have to stay in sync, not be changed
+independently of one another.</p>
+<h3 id="sourcemaps-the-error-is-caught-but-not-readable">Sourcemaps: the error is caught, but not readable</h3>
+<p>JavaScript errors, described in 8.2, arrive regularly and reliably — but
+the stack trace they carry is a stack trace of the <strong>minified, bundled</strong>
+code that was actually sent to the browser, not the original source
+code. Translating a minified stack trace back into readable lines of
+source code requires the build process to upload its own sourcemap files
+to the RUM collector at build time — that step, at the time of writing,
+isn't wired up yet.</p>
+<p>The practical consequence: someone opening an investigation based on a
+JS error gets a stack trace pointing at one single, enormous line of
+bundled code — the error <strong>is</strong> caught, exactly as described earlier in
+the chapter, but it isn't usable without reconstructing it manually,
+locally, or reading the minified source by hand, line by line, until the
+right spot turns up.</p>
+<p>This is the same kind of honesty with the reader that Chapter 5 already
+showed elsewhere: an identified fix that hasn't been implemented yet at
+the time of writing gets recorded as an open gap, not swept under the rug
+because admitting unfinished work might look like a flaw in the
+implementation. The value for the reader isn't that every example in the
+book be finished — it's that every example be accurate to what actually
+exists at that moment, including what's known to be missing.</p>
+<h3 id="the-vendor-silently-changed-a-setting-no-one-on-the-team-ever-set">The vendor silently changed a setting no one on the team ever set</h3>
+<p>The third source of legally sensitive data in the RUM pipeline doesn't
+come from the application's code, nor from what the browser collects on
+its own — it comes from a setting that the <strong>hosted platform receiving
+the RUM data</strong> keeps about every application, outside any file the team
+keeps under version control.</p>
+<p>The concrete case: both frontend applications had an explicit, written
+decision — coarse geolocation turned off, because this is an
+authenticated, internal tool with a known user base in the EU, and the
+goal is to minimize collection of personal data. The platform silently
+flipped that value to on, at city-level precision (not just continent or
+country — a far more precise level than the phrase "coarse geolocation"
+suggests), and did so on both applications simultaneously, through a
+setting that doesn't appear in any file the team maintains. The
+configuration's own version history confirms this wasn't a human
+change — the only recorded entry was the original one, which set the
+value to off. The change came from the platform's side, outside any
+action by the team. Upper bound on the exposure window: about two
+months — from the last infrastructure-as-code deployment to discovery,
+which only happened when the periodic drift check between desired and
+actual state first ran. Nothing in runtime monitoring would have noticed
+this on its own.</p>
+<p>The fix carried its own trap: the infrastructure-as-code tool reported a
+successful apply <strong>twice</strong> in a row, and the actual state didn't change
+either time. The reason was a second, undocumented switch at the
+whole-platform level — geolocation can't be turned on through a single
+application's setting if it's off at that higher level, but it <em>can</em> be
+turned off from there downward without any obstacle. "Apply successful"
+was thus only proof that the command had been sent, not that the setting
+had actually changed — the only reliable proof was the next plan run
+immediately after the apply, comparing the desired state against the
+refreshed, actual state.</p>
+<p>One last twist: when the team started looking into what to do about the
+discovered change, it turned out that the original decision itself —
+"geolocation off" — was stale, written down with no date, and that a
+newer, informal decision existed to actually <strong>want</strong> geolocation, at
+exactly the city-level precision the platform had silently turned on.
+The reflexive first move, reverting the setting back to the old, written
+decision, would have been the wrong move — not because it's wrong to
+honor a written policy, but because that policy no longer held, and
+nothing in it carried a date that would have revealed that. The final
+fix wasn't "revert to the old value" but "write down the new decision
+explicitly, with a reason and a date, so that the next time something
+changes — whether from the platform's side or the team's — it's clear
+which decision is currently in force." Still an open question,
+deliberately left outside the scope of this chapter: whether there's a
+legal basis (user consent, for instance) for collecting location at this
+level of precision — that's a decision this team doesn't get to make on
+its own.</p>
 <h2 id="83-analytical-section-why-a-direct-connection-isnt-a-compromise-but-a-requirement-and-what-it-means-when-one-filter-isnt-enough">8.3 Analytical section — why a direct connection isn't a compromise but a requirement, and what it means when "one filter" isn't enough</h2>
 <h3 id="why-the-standard-rum-architecture-almost-always-goes-directly-to-the-cloud">Why the standard RUM architecture almost always goes directly to the cloud</h3>
 <p>Independent overviews of RUM architecture consistently note that browser
@@ -2655,10 +2822,33 @@ and does each one of them have its own, explicit check."</strong></p>
   behavior) catches the absence of telemetry code — add an explicit check
   that looks at the shipped artifact itself or confirms the expected
   service shows up downstream.</li>
-<li>Before trusting a percentile-based alert as a real signal, check how many
+<li>
+<p>Before trusting a percentile-based alert as a real signal, check how many
   points went into computing it — at low traffic, a single session can
   shift p75 from the "good" range into the "bad" range with no real change
-  in the system.</li>
+  in the system.</p>
+</li>
+<li>
+<p>Session-level sampling is binary, not gradual — a rate below 1.0 doesn't
+  just reduce cost, it silently restricts "same trace ID all the way
+  through" to only the portion of traffic the sampler kept. If you ever
+  lower the rate, explicitly acknowledge that boundary and re-align alert
+  minimum thresholds that count sampled, not actual, sessions.</p>
+</li>
+<li>Catching an error and being able to understand it aren't the same
+  thing — verifying that JS errors are arriving doesn't mean the stack
+  traces are readable; without uploading sourcemaps, the error is caught,
+  but the investigation still starts from zero.</li>
+<li>Settings a hosted platform keeps about your application (not code you
+  write) are still part of your risk surface — check them with a periodic
+  drift check, not just once at rollout.</li>
+<li>"Apply successful" proves the command was sent, not that the actual
+  state changed — when a hidden, higher-level switch might exist, the only
+  real proof is the next plan run after the apply, against refreshed
+  state.</li>
+<li>A written decision with no date is indistinguishable from a permanent
+  truth — when you revert to it because "that's what it says," first
+  check whether it still holds, not just whether it's written down.</li>
 </ul>
 <h2 id="85-exercise-for-the-reader">8.5 Exercise for the reader</h2>
 <p>Take any library or SDK in your system that sends data to an external
@@ -2698,7 +2888,7 @@ of you.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 31, 2026 13:30:20 UTC">August 31, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2026 20:29:50 UTC">September 7, 2026</span>
   </span>
 
     
