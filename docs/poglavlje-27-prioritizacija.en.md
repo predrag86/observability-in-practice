@@ -51,6 +51,34 @@ combined item — instead of counting them as two separate, lower-ranked
 problems. This prevents a situation where the ranking would be falsely low
 just because one cause happened to produce several individual symptoms.
 
+### Rollout order has a fourth axis: how fast the error becomes visible
+
+The three ranking axes above — reach, likelihood, cost of the fix —
+determine **what** to fix first. When two similar, independent changes
+are actually rolled out one after the other, a fifth question shows up
+that none of those three axes covers: in what order do you release them
+to production?
+
+A concrete case: two nearly identical resource-sizing changes were
+waiting in the rollout queue — one on the highest-severity family with a
+narrow margin, the other on a lower-severity family that runs once a
+week. The intuition of "riskiest last" would put the narrower, more
+severe change last, as the one where a mistake hurts the most. The actual
+order was the reverse, and deliberately so: the narrower change went out
+**first**, because its outcome would be confirmed or refuted within a
+couple of minutes (that family runs often), whereas an error on the
+weekly family would go unnoticed for days — the next run doesn't come
+until a week later. The cost of an error on the more sensitive change is
+higher, but the cost of the **delay in detecting** an error on the slower
+change was higher still.
+
+The rule that follows doesn't replace the three ranking axes — it adds
+rollout order to them as a separate question: **order releases by how
+fast an error becomes visible, not only by how risky it looks.** A change
+on a rarely-run job carries a hidden cost that its nominal "severity"
+doesn't capture — the cost of the time during which an error would sit
+quietly, waiting for someone to notice it.
+
 ### "Honorable mention" as a formal, named category
 
 Below the threshold for entering the main ranked list, the implementation
@@ -128,6 +156,55 @@ someone actually measured it, and that gap is a cheap lesson only because
 it was caught before an incident, not during one.
 
 ![The same finding, the same fix — but the blast radius changed from "auth goes down" to "the entire product goes down" only once someone actually inventoried the dependencies instead of assuming them from the problem's title.](diagrams/ch27-domet-stete.png){: width="82%" }
+
+### Reliability ahead of savings when the measurement says so — and why the automated recommendation lags
+
+The first ranking axis — blast radius — doesn't have to come from a
+dedicated analysis built just for that purpose. The fleet-wide memory
+utilization measurement described in Chapter 23 started out as a check on
+resource waste, not a risk-ranking exercise, and yet it directly changed
+the order on this chapter's list: once it turned out that families near
+the memory ceiling fail **thirty times more often** than families in the
+mid-range, and that this handful of rare families accounts for nearly
+half of all failures across the entire fleet, fixing those families
+jumped ahead of every cheaper, safer savings item elsewhere in the fleet
+— even though that cheaper saving had been waiting longer, and even
+though it's always tempting to take the easy, safe win first. The order
+changed not because someone decided reliability "is worth more" on paper,
+but because the measurement directly showed that the blast radius of
+those rare families outweighed any saving that could have outranked them.
+This is the same principle as the auth-SPOF example above, applied to a
+fleet instead of a single finding: the cost of the fix doesn't change,
+but the blast radius, once it's actually measured, can jump a change past
+a whole run of cheaper items on the list.
+
+Automated savings-recommendation tools (Compute Optimizer and, through
+it, Cost Optimization Hub) don't rank by blast radius themselves — they
+rank by an estimate of how much would be saved, derived from a
+backward-looking measurement. That estimate carries its own, skewed flaw
+directly relevant to the ordering on this list: the measurement window is
+a fixed, sliding fourteen days back. When one public, always-on service
+had its resource reservation cut down, the tool kept showing the old,
+larger reservation as "current" and kept advertising a saving calculated
+against it — because eleven of the fourteen days in the window still
+preceded the change. The tool's own numbers gave this away: the reported
+running-hours figure matched only the old shape, not the new one. Most of
+the saving the tool advertised had, in fact, already been realized a week
+earlier; the small remainder was a step the team had knowingly declined,
+because cutting the reservation further would have removed the headroom
+for a short but predictable spike in consumption at every job start — a
+spike that recurs at every start and that the averaged, two-week picture
+hides completely.
+
+That same narrow window cuts both ways, which is why the order on this
+list can't take its ranking from the savings tool without checking: a
+window that lags behind a change upward also lags behind a change
+downward — a consumption spike that would make some other, already
+recommended saving unsafe can just as easily fall outside that same
+fourteen days and go unrecorded. The order on the savings list is
+therefore not evidence of the current state — it's evidence of the last
+two weeks, and the difference between the two is exactly what the
+ordering in this chapter has to check before accepting it as final.
 
 ### Deleted only once measurement confirms it, not once code lands on a branch
 
@@ -262,6 +339,21 @@ reads.
   the item only once that signal is measured, not once the code is merged
   into a branch; "merged" and "released to production" aren't the same as
   "finished."
+- When two similar changes go out one after another, order their rollout
+  by how fast an error becomes visible too, not only by how risky it
+  looks — a change on a rarely-run job carries a hidden cost from delayed
+  detection that its nominal severity doesn't capture.
+- When measurement shows that a narrow segment accounts for a
+  disproportionate share of the whole fleet's failures, fixing that
+  segment jumps ahead of cheaper, safer savings on the list — reliability
+  outranks savings once the blast radius is actually measured, not just
+  when it looks bigger on paper.
+- Don't take a savings tool's automated ranking as evidence of current
+  state — a tool that estimates from a backward-sliding window can keep
+  advertising savings for a change that's already been made, and that
+  same window can just as easily hide a consumption spike that would make
+  some other item on the list unsafe; check the live configuration before
+  taking the order from the tool.
 
 ## 27.5 Exercise for the reader
 
