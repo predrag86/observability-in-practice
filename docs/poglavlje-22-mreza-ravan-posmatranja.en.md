@@ -385,6 +385,5 @@ layer that is currently completely blind.
 - [AWS Fault Isolation Boundaries whitepaper — Control planes and data planes](https://docs.aws.amazon.com/whitepapers/latest/aws-fault-isolation-boundaries/control-planes-and-data-planes.html)
 - [Monitoring Route 53 Resolver endpoints with CloudWatch](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-resolver-with-cloudwatch.html)
 - [Manage Amazon EC2 instance clock accuracy using Amazon Time Sync Service and CloudWatch — AWS Cloud Operations Blog](https://aws.amazon.com/blogs/mt/manage-amazon-ec2-instance-clock-accuracy-using-amazon-time-sync-service-and-amazon-cloudwatch-part-2/)
-- [Synthetic Monitoring vs Real User Monitoring — Kentik](https://www.kentik.com/kentipedia/synthetic-monitoring-vs-real-user-monitoring/)
 - [The State of eBPF in Observability — Observability 360](https://observability-360.com/article/viewarticle?id=ebpf-in-observability)
 - [Grafana Beyla — eBPF-based auto-instrumentation](https://grafana.com/oss/beyla-ebpf/)

@@ -170,6 +170,45 @@ before.
 
 ![A seven-day graph of queries in flight: the "truly idle" threshold was never reached, not once across the whole week — measurement, not assumption, showed that automatic shutdown wouldn't have had a real window to operate in here.](diagrams/dashboard-rightsizing.en.png){: width="95%" }
 
+### Trimming overly granular, per-fragment records: when one field carries most of the volume
+
+The log layer described at the start of this chapter writes regardless of
+the application's health — which means that when a query starts failing
+partway through execution, that layer dutifully records it, once per
+individual execution fragment. The daily log volume for the whole cluster
+grew enough, over one stretch, to show up on the log-storage bill before
+anyone thought to ask why.
+
+A systematic, stream-by-stream measurement found that the growth wasn't
+evenly spread: a single stream carried most of the fleet's daily volume,
+and within that stream, one free-text field — the full exception message,
+repeated almost identically for each of hundreds of fragments of the same
+failed query — carried most of that stream's volume. The failure pattern
+the text described wasn't new or rare; it was known and long-standing, and
+its volume had simply outgrown what anyone expected when the log layer was
+first introduced.
+
+The fix wasn't to delete the stream or the field — a few existing panels
+still read it when someone is investigating that exact case, and deleting
+it would have removed that. The fix was to truncate just that one field,
+at the point of ingestion, to a reasonable length — enough for a panel to
+still show enough context to recognize which exception it is, not enough
+for each of the hundreds of repeated fragments to carry the full,
+identical text. The rule was entered by hand, on each node separately,
+outside the infrastructure-as-code system that carries the rest of the
+configuration.
+
+The decision deliberately stopped at that one field. The stream's other,
+structured and nested fields were left untouched, even though some of them
+also carry a fair amount of text — a naive rule that truncates text at a
+fixed length, applied to a structured field (a nested JSON blob, say),
+risks cutting in the middle of the structure itself and leaving an invalid
+shape. The consequence of that mistake isn't harmless: a parser that hits
+an invalid structure doesn't quietly drop just that one field — it rejects
+the whole record with an error, taking down every panel that reads that
+source at once, a worse outcome than the problem the fix was trying to
+solve.
+
 ### An alert that guards a fix can itself fail exactly when it's needed
 
 The fix described earlier in this chapter — trimming overly granular,

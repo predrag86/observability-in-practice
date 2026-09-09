@@ -162,6 +162,43 @@ mesečni račun za metrike skočio, ne pre.
 
 ![Sedmodnevni grafik upita u toku: prag "stvarno neaktivno" nije dostignut nijednom kroz celu nedelju — merenje, ne pretpostavka, je pokazalo da automatsko gašenje ovde ne bi imalo pravi prozor u kom bi radilo.](diagrams/dashboard-rightsizing.png){: width="95%" }
 
+### Presecanje presitnih, po-fragmentu zapisa: kad jedno polje nosi većinu volumena
+
+Log sloj opisan na početku poglavlja piše bez obzira na zdravlje aplikacije
+— što znači da, kad neki upit počne da otkazuje unutar samog izvršavanja,
+taj sloj to vredno beleži, po svakom pojedinačnom fragmentu izvršavanja
+posebno. Dnevni volumen log sloja cele flote je u jednom periodu porastao
+dovoljno da se to primeti na računu za skladištenje logova, pre nego što
+je iko stigao da posumnja zašto.
+
+Sistematsko merenje, tok po tok, otkrilo je da porast nije ravnomerno
+raspoređen: jedan jedini tok je nosio većinu dnevnog volumena cele flote,
+a unutar tog toka, jedno slobodno-tekstualno polje — pun tekst poruke
+izuzetka, ponovljen gotovo identično za svaki od stotina fragmenata istog
+neuspelog upita — nosio je većinu volumena tog toka. Obrazac otkaza koji
+je taj tekst opisivao nije bio nov niti redak; bio je poznat i dugo
+prisutan, samo je njegov volumen prerastao ono što je iko očekivao kad je
+log sloj prvi put uveden.
+
+Popravka nije bila obrisati taj tok niti to polje — nekoliko postojećih
+panela i dalje ga čita kad neko istražuje baš taj konkretan slučaj, i
+brisanje bi to onemogućilo. Popravka je bila skratiti baš to jedno polje,
+na samoj ulaznoj tački prikupljanja, na razumnu dužinu — dovoljno da panel
+i dalje pokaže dovoljno konteksta da se prepozna o kom izuzetku je reč,
+nedovoljno da svaki od stotina ponovljenih fragmenata nosi pun, identičan
+tekst. Pravilo je uneto ručno, na svaki čvor posebno, van sistema za
+infrastrukturu kao kod koji nosi ostatak konfiguracije.
+
+Odluka je namerno stala na tom jednom polju. Ostala, strukturisana i
+ugnježdena polja istog toka su ostavljena netaknuta, iako neka od njih
+takođe nose dosta teksta — naivno pravilo koje seče tekst na fiksnoj
+dužini, primenjeno na strukturisano polje (na primer, ugnježdeni JSON),
+rizikuje da preseče usred same strukture i ostavi nevalidan oblik.
+Posledica takve greške nije bezopasna: parser koji naiđe na nevalidnu
+strukturu ne izostavi tiho samo to jedno polje, nego odbije ceo zapis sa
+greškom — obarajući odjednom svaki panel koji čita taj izvor, gori ishod
+od samog problema koji se popravka trudila da reši.
+
 ### Alarm koji čuva popravku može i sam otkazati tačno kad zatreba
 
 Popravka opisana ranije u poglavlju — trimovanje presitnih, po-fragmentu
