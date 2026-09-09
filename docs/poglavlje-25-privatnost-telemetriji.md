@@ -26,6 +26,15 @@ rupu, ne samo na jednoj tački nego kroz ceo lanac?
 
 ### Otkriće: pseudonimno na jednoj strani, potpuno otkriveno na drugoj
 
+Ovaj isti obrazac — pseudonimni identitet na jednoj strani sistema, potpuno
+otkriven na drugoj — Poglavlje 5 je već pomenulo, u kontekstu
+instrumentacije, kao ilustraciju šta se dešava kad dva nezavisna mehanizma
+za pseudonimizaciju ne "znaju" jedno za drugo. Ovde se isti nalaz posmatra
+iz šire perspektive privatnosti: ne samo da li se identitet slučajno
+otkriva, nego i kako se ta rupa zatvara na izvoru, kroz koji oblik
+pseudonima, i koje se drugo, potpuno odvojeno pitanje o istoj telemetriji
+krije ispod površine.
+
 Frontend aplikacija implementacije koju knjiga prati je namerno projektovana
 da šalje samo pseudonimni identifikator korisnika — nasumični UUID iz
 autentikacionog sistema, nikad ime ili email. To je bila ispravna, promišljena
