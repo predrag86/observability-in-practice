@@ -327,7 +327,11 @@ Prometheus zajednica (uključujući i sopstvenu dokumentaciju o praksama
 histograma) sve više tretira nativne histograme kao podrazumevan izbor za
 nove instrumente, ne kao naprednu opciju za posebne slučajeve — upravo zato
 što klasičan bucket format ima cardinality trošak ugrađen u svoju definiciju,
-ne kao propust u implementaciji nego kao posledicu formata samog. Nezavisni
+ne kao propust u implementaciji nego kao posledicu formata samog. (Vredi
+dodati konkretnu prekretnicu: nativni histogrami su od Prometheus verzije
+3.8.0 zvanično **stabilna** funkcija, ne više eksperimentalna — iako
+uključivanje na strani scrape-a i remote write-a ostaje eksplicitan,
+opt-in korak, ne podrazumevano ponašanje.) Nezavisni
 materijal (uključujući analize sa Last9 i Logz.io) dosledno navodi relabeling
 (`labeldrop`/`labelkeep`), scrape-level granice (`sample_limit`,
 `label_limit`) i agregaciju kroz recording rules kao standardni prvi sloj
@@ -425,6 +429,7 @@ neplanirani skok u računu.
 ### Izvori korišćeni u analitičkom delu
 
 - [Histograms and summaries — Prometheus documentation](https://prometheus.io/docs/practices/histograms/)
+- [Native Histograms — Prometheus documentation](https://prometheus.io/docs/specs/native_histograms/)
 - [High Cardinality in Prometheus: How to Find and Fix It — Last9](https://last9.io/blog/how-to-manage-high-cardinality-metrics-in-prometheus/)
 - [Prometheus Metrics: What Native Histograms Change — Logz.io](https://logz.io/blog/prometheus-metrics-native-histograms/)
 - [Cardinality — Grafana Tempo documentation](https://grafana.com/docs/tempo/latest/metrics-from-traces/metrics-generator/cardinality/)

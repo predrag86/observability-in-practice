@@ -351,7 +351,10 @@ practices) increasingly treats native histograms as the default choice for
 new instruments, not as an advanced option for special cases — precisely
 because the classic bucket format has a cardinality cost built into its
 definition, not as an implementation oversight but as a consequence of the
-format itself. Independent material (including analyses from Last9 and
+format itself. (Worth adding a concrete milestone: native histograms have
+been an officially **stable** feature since Prometheus v3.8.0, no longer
+experimental — though enabling them on the scrape and remote-write sides
+remains an explicit opt-in step, not default behavior.) Independent material (including analyses from Last9 and
 Logz.io) consistently lists relabeling (`labeldrop`/`labelkeep`),
 scrape-level limits (`sample_limit`, `label_limit`), and aggregation through
 recording rules as the standard first line of defense — all measures that
@@ -455,6 +458,7 @@ your candidate for the next unplanned jump in the bill.
 ### Sources used in the analytical section
 
 - [Histograms and summaries — Prometheus documentation](https://prometheus.io/docs/practices/histograms/)
+- [Native Histograms — Prometheus documentation](https://prometheus.io/docs/specs/native_histograms/)
 - [High Cardinality in Prometheus: How to Find and Fix It — Last9](https://last9.io/blog/how-to-manage-high-cardinality-metrics-in-prometheus/)
 - [Prometheus Metrics: What Native Histograms Change — Logz.io](https://logz.io/blog/prometheus-metrics-native-histograms/)
 - [Cardinality — Grafana Tempo documentation](https://grafana.com/docs/tempo/latest/metrics-from-traces/metrics-generator/cardinality/)
