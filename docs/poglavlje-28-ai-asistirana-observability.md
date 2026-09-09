@@ -126,9 +126,11 @@ umesto zaboravljen.
 
 ### Lažni uspeh: kad agent kaže "urađeno" a ništa se nije desilo
 
-Implementacija je otkrila mehanizam koji je opasniji od agenta koji pogrešno
-dijagnostikuje — agent koji **iskreno** prenosi lažnu informaciju o
-sopstvenoj akciji, jer ni sam ne može da zna bolje. Alat koji agentu daje
+Ovaj slučaj stoji odvojeno od četiri replay-a iznad — nije peti incident,
+nego namerni test jedne granice. Implementacija je otkrila mehanizam koji
+je opasniji od agenta koji pogrešno dijagnostikuje — agent koji **iskreno**
+prenosi lažnu informaciju o sopstvenoj akciji, jer ni sam ne može da zna
+bolje. Alat koji agentu daje
 pristup platformi za telemetriju je namerno podešen kao samo-za-čitanje,
 sprovedeno kroz opseg dozvola samog pristupnog tokena, ne kroz obećanje ili
 uputstvo u promptu. Kad agent, u testu, pokuša da izbriše pravilo za
@@ -394,17 +396,17 @@ sloj konteksta oko njega ažuran, iskren, i dostupan u pravom trenutku.
 - Očekuj da će agent ponekad vratiti uspešan, verodostojan, ali pogrešan
   odgovor — ovo nije retka greška nego imenovana, dobro poznata klasa
   kvara specifična za agente koji rezonuju kroz više koraka.
-- Zadrži automatizovanu, kodom pisanu proveru deklarisane konfiguracije
-  odvojeno od agenta koji proverava posmatranu stvarnost — jedno ne
-  zamenjuje drugo, oboje su potrebni za klasu kvarova gde nešto nedostaje
-  umesto da javlja pogrešno.
+- **Klasa odsustva:** zadrži automatizovanu, kodom pisanu proveru
+  deklarisane konfiguracije odvojeno od agenta koji proverava posmatranu
+  stvarnost — jedno ne zamenjuje drugo, oboje su potrebni za klasu kvarova
+  gde nešto nedostaje umesto da javlja pogrešno.
 - Drži agenta savetodavnim za promene stanja sistema — neka predlaže i
   objašnjava, ne izvršava — dok se ne izgradi dovoljno poverenja i
   provere da autonomno delovanje bude opravdano.
-- Sprovedi granicu "samo-za-čitanje" na nivou opsega dozvola samog pristupa,
-  ne na nivou uputstva agentu — blokiran upis i stvaran upis mogu izgledati
-  identično u agentovom izveštaju, pa poverenje u taj izveštaj nije mesto
-  gde ta granica sme da počiva.
+- **Lažni uspeh:** sprovedi granicu "samo-za-čitanje" na nivou opsega
+  dozvola samog pristupa, ne na nivou uputstva agentu — blokiran upis i
+  stvaran upis mogu izgledati identično u agentovom izveštaju, pa
+  poverenje u taj izveštaj nije mesto gde ta granica sme da počiva.
 - Pre nego što poveruješ praznom ili ekstremnom rezultatu, proveri da li
   traženi tip događaja uopšte može da postoji u skladištu koje je upitano, i
   koliko zahteva stoji iza izvedene statistike poput percentila — obe zamke

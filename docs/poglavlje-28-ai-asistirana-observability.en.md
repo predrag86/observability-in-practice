@@ -132,9 +132,11 @@ of forgotten.
 
 ### False success: when the agent says "done" and nothing happened
 
-The implementation uncovered a mechanism more dangerous than an agent that
-misdiagnoses — an agent that **honestly** relays false information about
-its own action, because it has no way of knowing better itself. The tool
+This case sits apart from the four replays above — it isn't a fifth
+incident, but a deliberate test of a boundary. The implementation
+uncovered a mechanism more dangerous than an agent that misdiagnoses — an
+agent that **honestly** relays false information about its own action,
+because it has no way of knowing better itself. The tool
 that gives the agent access to the telemetry platform is deliberately
 configured read-only, enforced through the access token's own permission
 scope, not through a promise or an instruction in the prompt. When the
@@ -414,17 +416,18 @@ it is current, honest, and available at the right moment.
 - Expect that the agent will sometimes return a successful, plausible, but
   wrong answer — this isn't a rare mistake but a named, well-known failure
   class specific to agents that reason across multiple steps.
-- Keep an automated, code-written check of declared configuration separate
-  from the agent that checks observed reality — one doesn't replace the
-  other; both are needed for the class of failures where something is
-  missing rather than reporting incorrectly.
+- **Class of absence:** keep an automated, code-written check of declared
+  configuration separate from the agent that checks observed reality — one
+  doesn't replace the other; both are needed for the class of failures
+  where something is missing rather than reporting incorrectly.
 - Keep the agent advisory for changes to system state — let it propose and
   explain, not execute — until enough trust and verification has been
   built for autonomous action to be justified.
-- Enforce the "read-only" boundary at the level of the access permission
-  scope itself, not at the level of an instruction to the agent — a
-  blocked write and a real write can look identical in the agent's
-  report, so trust in that report is not where that boundary can rest.
+- **False success:** enforce the "read-only" boundary at the level of the
+  access permission scope itself, not at the level of an instruction to
+  the agent — a blocked write and a real write can look identical in the
+  agent's report, so trust in that report is not where that boundary can
+  rest.
 - Before trusting an empty or extreme result, check whether the requested
   event type could even exist in the store that was queried, and how many
   requests stand behind a derived statistic like a percentile — both
