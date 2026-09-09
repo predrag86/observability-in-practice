@@ -2803,9 +2803,11 @@ of forgotten.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch28-cetiri-replay.png" data-desc-position="bottom"><img alt="Four replayed incidents: two where the agent independently reached the correct diagnosis, one where a naive agent would have confidently gotten it wrong without the context layer, and one from the class of absence — where nothing reports incorrectly, but nothing reports at all." src="../diagrams/ch28-cetiri-replay.png" width="92%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-ebhealth-vs-5xx.png" data-desc-position="bottom"><img alt="A seductive but wrong signal: the derived 'environment unhealthiness' percentage looks like a serious outage, while the authoritative 5xx error rate from the load balancer shows that users barely felt anything at all — without this context, an agent would easily confirm the wrong diagnosis." src="../diagrams/dashboard-ebhealth-vs-5xx.png" width="95%"></a></p>
 <h3 id="false-success-when-the-agent-says-done-and-nothing-happened">False success: when the agent says "done" and nothing happened</h3>
-<p>The implementation uncovered a mechanism more dangerous than an agent that
-misdiagnoses — an agent that <strong>honestly</strong> relays false information about
-its own action, because it has no way of knowing better itself. The tool
+<p>This case sits apart from the four replays above — it isn't a fifth
+incident, but a deliberate test of a boundary. The implementation
+uncovered a mechanism more dangerous than an agent that misdiagnoses — an
+agent that <strong>honestly</strong> relays false information about its own action,
+because it has no way of knowing better itself. The tool
 that gives the agent access to the telemetry platform is deliberately
 configured read-only, enforced through the access token's own permission
 scope, not through a promise or an instruction in the prompt. When the
@@ -3054,17 +3056,18 @@ it is current, honest, and available at the right moment.</p>
 <li>Expect that the agent will sometimes return a successful, plausible, but
   wrong answer — this isn't a rare mistake but a named, well-known failure
   class specific to agents that reason across multiple steps.</li>
-<li>Keep an automated, code-written check of declared configuration separate
-  from the agent that checks observed reality — one doesn't replace the
-  other; both are needed for the class of failures where something is
-  missing rather than reporting incorrectly.</li>
+<li><strong>Class of absence:</strong> keep an automated, code-written check of declared
+  configuration separate from the agent that checks observed reality — one
+  doesn't replace the other; both are needed for the class of failures
+  where something is missing rather than reporting incorrectly.</li>
 <li>Keep the agent advisory for changes to system state — let it propose and
   explain, not execute — until enough trust and verification has been
   built for autonomous action to be justified.</li>
-<li>Enforce the "read-only" boundary at the level of the access permission
-  scope itself, not at the level of an instruction to the agent — a
-  blocked write and a real write can look identical in the agent's
-  report, so trust in that report is not where that boundary can rest.</li>
+<li><strong>False success:</strong> enforce the "read-only" boundary at the level of the
+  access permission scope itself, not at the level of an instruction to
+  the agent — a blocked write and a real write can look identical in the
+  agent's report, so trust in that report is not where that boundary can
+  rest.</li>
 <li>Before trusting an empty or extreme result, check whether the requested
   event type could even exist in the store that was queried, and how many
   requests stand behind a derived statistic like a percentile — both
@@ -3120,7 +3123,7 @@ written down, in advance, to stop it there?</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2026 21:20:42 UTC">September 7, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 9, 2026 19:59:19 UTC">September 9, 2026</span>
   </span>
 
     
