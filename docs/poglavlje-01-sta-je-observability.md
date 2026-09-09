@@ -307,7 +307,7 @@ zastarele podatke)? Ako postoji — to je tvoj kandidat za dodavanje atributa
 
 ### Izvori korišćeni u analitičkom delu
 
-- [Observability - A 3-Year Retrospective — Honeycomb](https://www.honeycomb.io/blog/observability-a-3-year-retrospective)
+- [Observability is a Many-Splendored Definition — charity.wtf (Charity Majors)](https://charity.wtf/2020/03/03/observability-is-a-many-splendored-thing/)
 - [Monitoring and Observability — Honeycomb blog / docs](https://www.honeycomb.io/blog)
 - [The RED Method: How to Instrument Your Services — Grafana Labs](https://grafana.com/blog/the-red-method-how-to-instrument-your-services/)
 - [The Four Golden Signals — Google SRE Book](https://sre.google/sre-book/monitoring-distributed-systems/)
