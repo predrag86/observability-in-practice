@@ -182,16 +182,24 @@ count "no collector at all") collector deployment patterns:
 4. **Gateway-only pattern** — senders go directly to the central gateway,
    with no local intermediary.
 
-The official recommendation for larger, production systems is
-**agent-to-gateway** (pattern #3) — that's what the OpenTelemetry
-documentation, Datadog's guide to choosing an architecture, and several
-independent analyses (SigNoz, OneUptime) describe as the "industry standard"
-for growing systems. The reason is concrete: a local agent provides a buffer
-if the central gateway fails, captures host-specific data (operating-system
+The **agent-to-gateway** pattern (#3) is officially documented and the most
+complex of the four — but neither the OpenTelemetry documentation itself nor
+Datadog's guide to choosing an architecture presents it as the default
+recommendation or the "industry standard" for every growing system. Quite the
+opposite: the official documentation today files it explicitly under "other
+patterns" and says it "adds operational complexity," to be used only when you
+need at least one of the specific capabilities it provides — for simpler
+cases, it recommends a plain agent or a plain gateway instead. Datadog's guide
+takes the same line: it presents the three patterns as a choice driven by a
+concrete need, not by system size. The reason the agent-to-gateway pattern
+exists at all remains concrete, though: a local agent provides a buffer if
+the central gateway fails, captures host-specific data (operating-system
 metrics, Kubernetes attributes) that nothing else naturally sees, and scales
 independently of the gateway layer — the number of agents tracks the number
 of nodes, the number of gateway instances tracks telemetry volume, and those
-two curves rarely grow together.
+two curves rarely grow together. So the question isn't whether this is "the
+standard" — it's whether your system has that specific need, which is
+exactly what the next section answers.
 
 ### Where we consciously took a different path
 
@@ -251,8 +259,9 @@ behind a load balancer, with a DNS name resilient to rebuilds), the marginal
 risk that an agent layer removes is small, while the operational cost —
 another artifact to build, version, and monitor for every service — is real
 and constant. This is a calculation that has to be made explicitly, not
-assumed: "industry standard" is a good starting point, not an automatic
-decision.
+assumed: a documented pattern is a good starting point for thinking, not an
+automatic decision — especially one the official documentation itself
+describes as added complexity, not a default recommendation.
 
 **3. Tail sampling — the main reason *for* the agent-to-gateway pattern in the
 official documentation — isn't in play here at all.** This is the most
