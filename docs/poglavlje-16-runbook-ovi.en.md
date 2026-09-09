@@ -170,7 +170,7 @@ The outcome of every attempt — launched, blocked (expired, ineligible
 family, task definition inactive, already running, already in progress,
 rate-limited) or failed — is recorded as one of exactly eight possible
 outcomes, following the same principle of an exhaustive, mutually
-exclusive outcome set introduced in the previous chapter for the alert
+exclusive outcome set introduced in Chapter 14 for the alert
 itself: every new return from the code that executes an attempt must
 report an outcome, or the tally against the total number of requests
 quietly stops adding up. Who gets the button is likewise not a list of
