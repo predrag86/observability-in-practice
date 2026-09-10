@@ -238,8 +238,8 @@ promene na sve manjem, pa sve većem delu saobraćaja — i Google-ov SRE
 Workbook idu korak dalje i kvantifikuju zašto: kvar koji pogodi 20% korisnika
 na samo 5% saobraćaja troši samo 1% budžeta greške, ne 20%. Microsoft-ov
 Azure Well-Architected Framework ovo pretvara u konkretno pravilo za
-redosled — interno testiranje → pilot → rani usvojioci → puna dostupnost,
-sa vremenom "odležavanja" između svakog kruga mereno u satima ili danima,
+redosled — sve veće grupe korisnika, od male probne grupe do cele
+populacije, sa vremenom "odležavanja" između svakog kruga mereno u satima ili danima,
 ne minutima, upravo zato što različiti obrasci korišćenja isplivaju samo
 uz dovoljno vremena. Redosled po riziku, ne po tome šta je tehnički lakše
 uraditi sledeće, jeste tačno princip koji je odredio da najkritičniji deo
@@ -335,11 +335,11 @@ sopstvenog sećanja?
 
 ---
 
-*Izvori korišćeni u analitičkom delu:*
+### Izvori korišćeni u analitičkom delu
 
-- *Google SRE Workbook — "Canarying Releases"*
-- *Martin Fowler — "CanaryRelease" (martinfowler.com)*
-- *Microsoft Azure Well-Architected Framework — "Safe deployment practices"*
-- *Google SRE Book — "Postmortem Culture: Learning from Failure"*
-- *Cynefin Framework (Snowden i Boone) — pregledi primene na odlučivanje*
-- *LogicMonitor — studija slučaja revizije alarma pre migracije*
+- [Google SRE Workbook — Canarying Releases](https://sre.google/workbook/canarying-releases/)
+- [Martin Fowler — CanaryRelease](https://martinfowler.com/bliki/CanaryRelease.html)
+- [Microsoft Azure Well-Architected Framework — Safe deployment practices](https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments)
+- [Google SRE Book — Postmortem Culture: Learning from Failure](https://sre.google/sre-book/postmortem-culture/)
+- [Cynefin Framework (Snowden i Boone) — A Leader's Framework for Decision Making, HBR](https://hbr.org/2007/11/a-leaders-framework-for-decision-making)
+- [LogicMonitor — studija slučaja revizije alarma pre migracije](https://www.logicmonitor.com/blog/one-enterprise-reduced-trap-alerts-saved-hours-during-migration)

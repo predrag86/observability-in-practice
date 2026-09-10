@@ -209,12 +209,14 @@ Google's SRE Book frames monitoring measurement around four golden signals
 (latency, traffic, errors, saturation), but the key point of that chapter
 isn't the list of signals — it's the position that an observability system
 should be judged by whether it supports fast detection and diagnosis, not
-by how much data it collects. Commercial maturity models (Grafana Labs and
-similar) turn this into measurable dimensions — coverage, the
-alert-to-incident ratio, time to detection, and time to recovery — and DORA
-metrics (Google Cloud) go further and treat recovery time and change
-failure rate as a direct proxy for how well the observability system
-actually works, not how much telemetry exists. The point that recurs
+by how much data it collects. Grafana Labs' Observability Journey Maturity
+Model turns this into a structured self-assessment across three lenses —
+access, analyze, and respond — and three maturity levels, from reactive to
+systematic; it's a qualitative assessment, not a ready-made set of hard
+numbers. DORA metrics (Google Cloud) take this a step further and treat
+recovery time and change failure rate as a direct, measurable proxy for
+how well the observability system actually works, not how much telemetry
+exists. The point that recurs
 across all of these models: maturity isn't measured by the volume of
 tooling, but by whether signals reliably translate into fast, accurate
 action.
@@ -223,9 +225,11 @@ For the question "is an alert that never rings a good sign," the most
 influential text is Rob Ewaschuk's internal Google document, "My
 Philosophy on Alerting" — the rule is explicit: "track your on-call, and
 all other alerts. If an alert fires and people just say 'I looked, nothing
-was wrong,' that's a strong signal to remove that alerting rule." The same
-document sets a quantitative threshold too: an alert that is correct less
-than 50% of the time is broken. This directly confirms a pattern from
+was wrong,' that's a strong signal to remove that alerting rule, demote
+it, or collect data in some other way." The same document sets a
+quantitative threshold too: an alert that is correct less than 50% of the
+time is broken — and even one that's a false positive just 10% of the
+time merits more consideration. This directly confirms a pattern from
 earlier chapters in this book — an alert that never rings deserves
 suspicion, not praise, until it's verified to ring correctly when it
 should. The same principle, applied in reverse to an alert that rings for
@@ -310,11 +314,11 @@ noticed had you not just checked?
 
 ---
 
-*Sources used in the analytical section:*
+### Sources used in the analytical section
 
-- *Google SRE Book — "Monitoring Distributed Systems" (četiri zlatna signala)*
-- *Grafana Labs — model zrelosti observability strategije*
-- *Google Cloud — DORA / Four Keys metrike*
-- *Rob Ewaschuk — "My Philosophy on Alerting"*
-- *NIST okvir za upravljanje rizikom — POA&M i formalno prihvatanje rizika*
-- *ACM — "Why SRE Documents Matter"*
+- [Google SRE Book — Monitoring Distributed Systems (the four golden signals)](https://sre.google/sre-book/monitoring-distributed-systems/)
+- [Grafana Labs — Observability Journey Maturity Model](https://grafana.com/blog/2024/01/29/how-to-improve-your-observability-strategy-introducing-the-observability-journey-maturity-model/)
+- [DORA / Google Cloud — Four Keys metrics](https://dora.dev/guides/dora-metrics-four-keys/)
+- [Rob Ewaschuk — My Philosophy on Alerting](https://docs.google.com/document/d/199PqyG3UsyXlwieHaqbGiWVa8eMWi8zzAn0YfcApr8Q/mobilebasic)
+- [NIST SP 800-37 Rev. 2 — POA&M and formal risk acceptance](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-37r2.pdf)
+- [ACM — Why SRE Documents Matter](https://cacm.acm.org/practice/why-sre-documents-matter)
