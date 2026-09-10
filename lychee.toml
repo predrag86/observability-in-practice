@@ -17,10 +17,12 @@ accept = ["200..=299", "429"]
 # localhost references some snippets use as a generic placeholder.
 #
 # The domains below return 200 to a normal browser but reject lychee's
-# automated request (403, or a connection-level reset/tunnel failure typical
-# of Cloudflare bot-fight mode -- confirmed manually, in each case, that the
-# page loads fine and has the cited content). Excluded rather than retried,
-# since retries would not change a bot-blocking policy.
+# automated request (403, a connection-level reset/tunnel failure typical of
+# Cloudflare bot-fight mode, or -- owasp.org -- a 404 that a WAF returns
+# in place of a block, to avoid disclosing the block -- confirmed manually,
+# in each case, that the page loads fine and has the cited content).
+# Excluded rather than retried, since retries would not change a
+# bot-blocking policy.
 exclude = [
   "^mailto:",
   "^https?://localhost",
@@ -32,4 +34,6 @@ exclude = [
   "^https?://(www\\.)?optivulnix\\.com/",
   "^https?://(www\\.)?nhimg\\.org/",
   "^https?://(www\\.)?projectmanagementacademy\\.net/",
+  "^https?://owasp\\.org/",
+  "^https?://cacm\\.acm\\.org/",
 ]
