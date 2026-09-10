@@ -2833,7 +2833,11 @@ pretpostaviti da je time obuhvaćena i učestalost upisa.</p>
 histograma) sve više tretira nativne histograme kao podrazumevan izbor za
 nove instrumente, ne kao naprednu opciju za posebne slučajeve — upravo zato
 što klasičan bucket format ima cardinality trošak ugrađen u svoju definiciju,
-ne kao propust u implementaciji nego kao posledicu formata samog. Nezavisni
+ne kao propust u implementaciji nego kao posledicu formata samog. (Vredi
+dodati konkretnu prekretnicu: nativni histogrami su od Prometheus verzije
+3.8.0 zvanično <strong>stabilna</strong> funkcija, ne više eksperimentalna — iako
+uključivanje na strani scrape-a i remote write-a ostaje eksplicitan,
+opt-in korak, ne podrazumevano ponašanje.) Nezavisni
 materijal (uključujući analize sa Last9 i Logz.io) dosledno navodi relabeling
 (<code>labeldrop</code>/<code>labelkeep</code>), scrape-level granice (<code>sample_limit</code>,
 <code>label_limit</code>) i agregaciju kroz recording rules kao standardni prvi sloj
@@ -2925,6 +2929,7 @@ neplanirani skok u računu.</p>
 <h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
 <ul>
 <li><a href="https://prometheus.io/docs/practices/histograms/">Histograms and summaries — Prometheus documentation</a></li>
+<li><a href="https://prometheus.io/docs/specs/native_histograms/">Native Histograms — Prometheus documentation</a></li>
 <li><a href="https://last9.io/blog/how-to-manage-high-cardinality-metrics-in-prometheus/">High Cardinality in Prometheus: How to Find and Fix It — Last9</a></li>
 <li><a href="https://logz.io/blog/prometheus-metrics-native-histograms/">Prometheus Metrics: What Native Histograms Change — Logz.io</a></li>
 <li><a href="https://grafana.com/docs/tempo/latest/metrics-from-traces/metrics-generator/cardinality/">Cardinality — Grafana Tempo documentation</a></li>
@@ -2950,7 +2955,7 @@ neplanirani skok u računu.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 21:58:57 UTC">6. septembar 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="9. septembar 2026. 21:01:35 UTC">9. septembar 2026.</span>
   </span>
 
     

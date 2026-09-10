@@ -1455,6 +1455,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#presecanje-presitnih-po-fragmentu-zapisa-kad-jedno-polje-nosi-vecinu-volumena" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Presecanje presitnih, po-fragmentu zapisa: kad jedno polje nosi većinu volumena
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#alarm-koji-cuva-popravku-moze-i-sam-otkazati-tacno-kad-zatreba" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2428,6 +2439,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#presecanje-presitnih-po-fragmentu-zapisa-kad-jedno-polje-nosi-vecinu-volumena" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Presecanje presitnih, po-fragmentu zapisa: kad jedno polje nosi većinu volumena
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#alarm-koji-cuva-popravku-moze-i-sam-otkazati-tacno-kad-zatreba" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2720,6 +2742,38 @@ klasteru pre nego što je iko stigao da ga ograniči — otkriveno tek kad je
 mesečni račun za metrike skočio, ne pre.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch19-trostruki-signal.png" data-desc-position="bottom"><img alt="Trostruki signal po čvoru u samostalno upravljanom klasteru, sa redosledom uvođenja promena poređanim po radijusu dejstva — izvršni čvorovi prvi, koordinacioni poslednji." src="../diagrams/ch19-trostruki-signal.png" width="90%"></a></p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/dashboard-rightsizing.png" data-desc-position="bottom"><img alt="Sedmodnevni grafik upita u toku: prag &quot;stvarno neaktivno&quot; nije dostignut nijednom kroz celu nedelju — merenje, ne pretpostavka, je pokazalo da automatsko gašenje ovde ne bi imalo pravi prozor u kom bi radilo." src="../diagrams/dashboard-rightsizing.png" width="95%"></a></p>
+<h3 id="presecanje-presitnih-po-fragmentu-zapisa-kad-jedno-polje-nosi-vecinu-volumena">Presecanje presitnih, po-fragmentu zapisa: kad jedno polje nosi većinu volumena</h3>
+<p>Log sloj opisan na početku poglavlja piše bez obzira na zdravlje aplikacije
+— što znači da, kad neki upit počne da otkazuje unutar samog izvršavanja,
+taj sloj to vredno beleži, po svakom pojedinačnom fragmentu izvršavanja
+posebno. Dnevni volumen log sloja cele flote je u jednom periodu porastao
+dovoljno da se to primeti na računu za skladištenje logova, pre nego što
+je iko stigao da posumnja zašto.</p>
+<p>Sistematsko merenje, tok po tok, otkrilo je da porast nije ravnomerno
+raspoređen: jedan jedini tok je nosio većinu dnevnog volumena cele flote,
+a unutar tog toka, jedno slobodno-tekstualno polje — pun tekst poruke
+izuzetka, ponovljen gotovo identično za svaki od stotina fragmenata istog
+neuspelog upita — nosio je većinu volumena tog toka. Obrazac otkaza koji
+je taj tekst opisivao nije bio nov niti redak; bio je poznat i dugo
+prisutan, samo je njegov volumen prerastao ono što je iko očekivao kad je
+log sloj prvi put uveden.</p>
+<p>Popravka nije bila obrisati taj tok niti to polje — nekoliko postojećih
+panela i dalje ga čita kad neko istražuje baš taj konkretan slučaj, i
+brisanje bi to onemogućilo. Popravka je bila skratiti baš to jedno polje,
+na samoj ulaznoj tački prikupljanja, na razumnu dužinu — dovoljno da panel
+i dalje pokaže dovoljno konteksta da se prepozna o kom izuzetku je reč,
+nedovoljno da svaki od stotina ponovljenih fragmenata nosi pun, identičan
+tekst. Pravilo je uneto ručno, na svaki čvor posebno, van sistema za
+infrastrukturu kao kod koji nosi ostatak konfiguracije.</p>
+<p>Odluka je namerno stala na tom jednom polju. Ostala, strukturisana i
+ugnježdena polja istog toka su ostavljena netaknuta, iako neka od njih
+takođe nose dosta teksta — naivno pravilo koje seče tekst na fiksnoj
+dužini, primenjeno na strukturisano polje (na primer, ugnježdeni JSON),
+rizikuje da preseče usred same strukture i ostavi nevalidan oblik.
+Posledica takve greške nije bezopasna: parser koji naiđe na nevalidnu
+strukturu ne izostavi tiho samo to jedno polje, nego odbije ceo zapis sa
+greškom — obarajući odjednom svaki panel koji čita taj izvor, gori ishod
+od samog problema koji se popravka trudila da reši.</p>
 <h3 id="alarm-koji-cuva-popravku-moze-i-sam-otkazati-tacno-kad-zatreba">Alarm koji čuva popravku može i sam otkazati tačno kad zatreba</h3>
 <p>Popravka opisana ranije u poglavlju — trimovanje presitnih, po-fragmentu
 zapisa iz log sloja, uneta ručno na svaki čvor — dobila je i sopstveni,
@@ -2910,7 +2964,7 @@ postoji, dovoljno dugačak da opravda gašenje — ili je pretpostavka o
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="6. septembar 2026. 22:38:28 UTC">6. septembar 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="9. septembar 2026. 21:22:28 UTC">9. septembar 2026.</span>
   </span>
 
     

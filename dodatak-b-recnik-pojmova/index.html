@@ -2120,7 +2120,10 @@ kardinalnost na osnovu razlike ova dva broja bez direktnog merenja.</p>
 uzorkovanja raspona (traces) gde platforma za posmatranje, ne kolektor,
 odlučuje šta zadržava, na osnovu politika koje se mogu menjati bez
 redeploy-a pošiljaoca. Ključna razlika od uzorkovanja na strani kolektora:
-politike se primenjuju REDOSLEDOM, prva koja se poklopi pobeđuje.</p>
+politika za ODBACIVANJE uvek pobeđuje nad politikom za ZADRŽAVANJE, bez
+izuzetka; među politikama za zadržavanje, evaluacija staje na prvom
+poklapanju, ali sam redosled evaluacije NIJE zagarantovan (ne prati nužno
+redosled iz konfiguracije).</p>
 <p><strong>Attribute / Label (atribut / labela)</strong> — par ključ-vrednost zakačen za
 metriku, log ili raspon, koji kaže ČIJI je podatak i u kom kontekstu (npr.
 <code>service.name</code>, <code>http.response.status_code</code>). Resource attribute (vidi
@@ -2132,7 +2135,7 @@ rollout-a (najmanji radijus prvi) i za prioritizaciju rizika (radijus ×
 verovatnoća × trošak popravke).</p>
 <p><strong>Burn-rate (stopa sagorevanja budžeta)</strong> — koliko brzo se troši budžet
 greške <abbr title="Service Level Objective — ciljna vrednost signala kroz vreme, npr. 99.9%.">SLO</abbr>-a, izraženo kao višekratnik normalne stope. Multi-window
-multi-<abbr title="Koliko brzo se troši budžet greške SLO-a, izraženo kao višekratnik normalne stope.">burn-rate</abbr> dizajn (npr. 14.4×/6×/3× pragova) balansira brzo
+multi-<abbr title="Koliko brzo se troši budžet greške SLO-a, izraženo kao višekratnik normalne stope.">burn-rate</abbr> dizajn (npr. 14.4×/6×/1× pragova) balansira brzo
 otkrivanje ozbiljnih kvarova sa otpornošću na kratkotrajne fleksije.</p>
 <p><strong>Cardinality (kardinalnost)</strong> — broj JEDINSTVENIH kombinacija oznaka
 (labela) koje jedna metrika proizvodi. Svaka nova jedinstvena kombinacija
@@ -2194,7 +2197,8 @@ sebi ne kaže KOJI zahtev ili KOJI korisnik stoji iza tog broja.</p>
 <p><strong>Native histogram</strong> — format histograma gde se raspodela po kantama
 (bucket) šalje kompaktnije nego kod klasičnog histograma sa unapred
 fiksnim granicama kanti; utiče na naplativu kardinalnost drugačije od
-običnih serija (kante se često naplaćuju sa umanjenim koeficijentom).</p>
+običnih serija (svaka aktivna kanta se naplaćuje sa koeficijentom 0.25
+u odnosu na punu seriju, prema zvaničnoj Grafana Cloud tarifi).</p>
 <p><strong>Observability (posmatranje sistema)</strong> — sposobnost da se postavi
 pitanje koje NIJE bilo predviđeno unapred, o incidentu koji se tek
 dogodio, i dobije odgovor iz već prikupljenih podataka — za razliku od
@@ -2279,7 +2283,7 @@ upravo u trenutku kad je najpotrebniji, i on je nem.</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="29. avgust 2026. 10:15:51 UTC">29. avgust 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="10. septembar 2026. 06:53:00 UTC">10. septembar 2026.</span>
   </span>
 
     

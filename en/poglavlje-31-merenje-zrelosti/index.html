@@ -2065,6 +2065,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="31.5 Exercise for the reader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources used in the analytical section
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2496,6 +2513,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="31.5 Exercise for the reader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sources-used-in-the-analytical-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources used in the analytical section
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2700,12 +2734,14 @@ it's exactly the place that should be raising an alarm about itself.</p>
 (latency, traffic, errors, saturation), but the key point of that chapter
 isn't the list of signals — it's the position that an observability system
 should be judged by whether it supports fast detection and diagnosis, not
-by how much data it collects. Commercial maturity models (Grafana Labs and
-similar) turn this into measurable dimensions — coverage, the
-alert-to-incident ratio, time to detection, and time to recovery — and DORA
-metrics (Google Cloud) go further and treat recovery time and change
-failure rate as a direct proxy for how well the observability system
-actually works, not how much telemetry exists. The point that recurs
+by how much data it collects. Grafana Labs' Observability Journey Maturity
+Model turns this into a structured self-assessment across three lenses —
+access, analyze, and respond — and three maturity levels, from reactive to
+systematic; it's a qualitative assessment, not a ready-made set of hard
+numbers. DORA metrics (Google Cloud) take this a step further and treat
+recovery time and change failure rate as a direct, measurable proxy for
+how well the observability system actually works, not how much telemetry
+exists. The point that recurs
 across all of these models: maturity isn't measured by the volume of
 tooling, but by whether signals reliably translate into fast, accurate
 action.</p>
@@ -2713,9 +2749,11 @@ action.</p>
 influential text is Rob Ewaschuk's internal Google document, "My
 Philosophy on Alerting" — the rule is explicit: "track your on-call, and
 all other alerts. If an alert fires and people just say 'I looked, nothing
-was wrong,' that's a strong signal to remove that alerting rule." The same
-document sets a quantitative threshold too: an alert that is correct less
-than 50% of the time is broken. This directly confirms a pattern from
+was wrong,' that's a strong signal to remove that alerting rule, demote
+it, or collect data in some other way." The same document sets a
+quantitative threshold too: an alert that is correct less than 50% of the
+time is broken — and even one that's a false positive just 10% of the
+time merits more consideration. This directly confirms a pattern from
 earlier chapters in this book — an alert that never rings deserves
 suspicion, not praise, until it's verified to ring correctly when it
 should. The same principle, applied in reverse to an alert that rings for
@@ -2791,14 +2829,14 @@ month ago. Pick three concrete numbers from it and verify them right now,
 against living reality. Do they still hold? If not, would anyone have
 noticed had you not just checked?</p>
 <hr>
-<p><em>Sources used in the analytical section:</em></p>
+<h3 id="sources-used-in-the-analytical-section">Sources used in the analytical section</h3>
 <ul>
-<li><em>Google SRE Book — "Monitoring Distributed Systems" (četiri zlatna signala)</em></li>
-<li><em>Grafana Labs — model zrelosti observability strategije</em></li>
-<li><em>Google Cloud — DORA / Four Keys metrike</em></li>
-<li><em>Rob Ewaschuk — "My Philosophy on Alerting"</em></li>
-<li><em>NIST okvir za upravljanje rizikom — <abbr title="Plan of Action and Milestones — an item not yet resolved but actively tracked toward resolution.">POA&amp;M</abbr> i formalno prihvatanje rizika</em></li>
-<li><em>ACM — "Why SRE Documents Matter"</em></li>
+<li><a href="https://sre.google/sre-book/monitoring-distributed-systems/">Google SRE Book — Monitoring Distributed Systems (the four <abbr title="Latency, traffic, errors, saturation — the core four dimensions for judging a service's health.">golden signals</abbr>)</a></li>
+<li><a href="https://grafana.com/blog/2024/01/29/how-to-improve-your-observability-strategy-introducing-the-observability-journey-maturity-model/">Grafana Labs — Observability Journey Maturity Model</a></li>
+<li><a href="https://dora.dev/guides/dora-metrics-four-keys/">DORA / Google Cloud — Four Keys metrics</a></li>
+<li><a href="https://docs.google.com/document/d/199PqyG3UsyXlwieHaqbGiWVa8eMWi8zzAn0YfcApr8Q/mobilebasic">Rob Ewaschuk — My Philosophy on Alerting</a></li>
+<li><a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-37r2.pdf">NIST SP 800-37 Rev. 2 — <abbr title="Plan of Action and Milestones — an item not yet resolved but actively tracked toward resolution.">POA&amp;M</abbr> and formal <abbr title="A documented decision to knowingly not resolve a risk, with a rationale and a date.">risk acceptance</abbr></a></li>
+<li><a href="https://cacm.acm.org/practice/why-sre-documents-matter">ACM — Why SRE Documents Matter</a></li>
 </ul>
 
 
@@ -2820,7 +2858,7 @@ noticed had you not just checked?</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2026 21:20:42 UTC">September 7, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 10, 2026 05:18:08 UTC">September 10, 2026</span>
   </span>
 
     

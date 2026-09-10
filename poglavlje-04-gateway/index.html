@@ -2598,15 +2598,23 @@ drži razdvojenim dok i dalje ograničava kardinalnost.</p>
 <li><strong>Gateway-only obrazac</strong> — pošiljaoci idu direktno na centralni gateway,
    bez lokalnog posrednika.</li>
 </ol>
-<p>Zvanična preporuka za veće, produkcione sisteme je <strong>agent-to-gateway</strong>
-(obrazac #3) — to je ono što OpenTelemetry dokumentacija, Datadog-ov vodič za
-izbor arhitekture i više nezavisnih analiza (SigNoz, OneUptime) navode kao
-"industrijski standard" za sisteme koji rastu. Razlog je konkretan: lokalni
-agent daje bafer ako centralni gateway zakaže, hvata podatke specifične za host
-(metrike operativnog sistema, Kubernetes atribute) koje ništa drugo prirodno ne
-vidi, i skalira se nezavisno od gateway sloja — broj agenata prati broj
-čvorova, broj gateway instanci prati zapreminu telemetrije, i te dve krive
-retko rastu zajedno.</p>
+<p>Obrazac <strong>agent-to-gateway</strong> (#3) je zvanično dokumentovan i najsloženiji od
+četiri — ali ni sama OpenTelemetry dokumentacija, ni Datadog-ov vodič za izbor
+arhitekture ga ne predstavljaju kao podrazumevanu preporuku ili "industrijski
+standard" za svaki sistem koji raste. Naprotiv: zvanična dokumentacija ga
+danas eksplicitno svrstava pod "ostale obrasce" (<em>other patterns</em>) i kaže da
+"dodaje operativnu kompleksnost" i da ga treba koristiti samo kad postoji bar
+jedna od konkretnih sposobnosti koje nosi — a za jednostavnije slučajeve
+preporučuje čist agent ili čist gateway. Datadog-ov vodič ide istim putem:
+predstavlja tri obrasca kao izbor prema konkretnoj potrebi, ne prema veličini
+sistema. Razlog zašto agent-to-gateway uopšte postoji kao obrazac ostaje
+konkretan: lokalni agent daje bafer ako centralni gateway zakaže, hvata
+podatke specifične za host (metrike operativnog sistema, Kubernetes atribute)
+koje ništa drugo prirodno ne vidi, i skalira se nezavisno od gateway sloja —
+broj agenata prati broj čvorova, broj gateway instanci prati zapreminu
+telemetrije, i te dve krive retko rastu zajedno. Pitanje, dakle, nije da li je
+ovo "standard" — pitanje je da li tvoj sistem ima baš tu konkretnu potrebu, i
+to je tačno pitanje na koje sledeći odeljak odgovara.</p>
 <h3 id="gde-smo-svesno-otisli-drugacijim-putem">Gde smo svesno otišli drugačijim putem</h3>
 <p>Implementacija koju analiziramo <strong>nema opšti agent sloj</strong>. Većina pošiljalaca
 ide direktno na gateway — što je, po gornjoj taksonomiji, bliže obrascu #4
@@ -2655,8 +2663,10 @@ instanci, ne hiljade), a gateway je već u HA (dve nezavisne instance iza load
 balansera sa DNS otpornim na rebuild), granularni rizik koji agent sloj
 uklanja je mali, dok je operativna cena — još jedan artefakt da se gradi,
 verzioniše i prati za svaki servis — realna i konstantna. Ovo je račun koji se
-mora raditi eksplicitno, ne pretpostaviti: "industrijski standard" je dobra
-polazna tačka, ne automatska odluka.</p>
+mora raditi eksplicitno, ne pretpostaviti: dokumentovan obrazac je dobra
+polazna tačka za razmišljanje, ne automatska odluka — pogotovo obrazac koji
+zvanična dokumentacija sama opisuje kao dodatnu kompleksnost, ne podrazumevanu
+preporuku.</p>
 <p><strong>3. Tail sampling — glavni razlog <em>za</em> agent-to-gateway šablon u zvaničnoj
 dokumentaciji — ovde uopšte nije u igri.</strong> Ovo je najvredniji nalaz ovog
 poređenja. Zvanični agent-to-gateway obrazac dobija najviše smisla kada gateway
@@ -2812,7 +2822,7 @@ radi. Ako je odgovor na (3) "niko, dok neko ne primeti da nešto drugo ne
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7. septembar 2026. 19:19:32 UTC">7. septembar 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="9. septembar 2026. 21:00:10 UTC">9. septembar 2026.</span>
   </span>
 
     

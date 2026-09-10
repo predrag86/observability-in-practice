@@ -2119,8 +2119,10 @@ gap between these two numbers without measuring it directly.</p>
 <p><strong><abbr title="Trace sampling where the observability platform, not the collector, decides what to keep, based on ordered policies.">Adaptive Traces</abbr> / platform-side adaptive sampling</strong> — a form of trace
 sampling where the observability platform, not the collector, decides
 what to keep, based on policies that can be changed without redeploying
-the sender. The key difference from collector-side sampling: policies
-are applied IN ORDER, and the first one that matches wins.</p>
+the sender. The key difference from collector-side sampling: a DROP
+policy always wins over a KEEP policy, with no exception; among keep
+policies, evaluation stops at the first match, but the evaluation order
+itself is NOT guaranteed to follow the configured order.</p>
 <p><strong>Attribute / Label</strong> — a key-value pair attached to a metric, log, or
 span, saying WHOSE data this is and in what context (e.g.
 <code>service.name</code>, <code>http.response.status_code</code>). A <abbr title="A key-value pair describing the source of telemetry, e.g. service.name.">resource attribute</abbr> (see
@@ -2132,7 +2134,7 @@ radius first) and to prioritize risk (radius × probability × cost to
 fix).</p>
 <p><strong>Burn-rate</strong> — how fast an <abbr title="Service Level Objective — a target value for a signal over time, e.g. 99.9%.">SLO</abbr>'s <abbr title="The allowed amount of &quot;bad&quot; behavior before an SLO is breached.">error budget</abbr> is being consumed,
 expressed as a multiple of the normal rate. A multi-window,
-multi-<abbr title="How fast an SLO's error budget is being consumed, expressed as a multiple of the normal rate.">burn-rate</abbr> design (e.g. 14.4×/6×/3× thresholds) balances fast
+multi-<abbr title="How fast an SLO's error budget is being consumed, expressed as a multiple of the normal rate.">burn-rate</abbr> design (e.g. 14.4×/6×/1× thresholds) balances fast
 detection of severe failures against resilience to short-lived blips.</p>
 <p><strong>Cardinality</strong> — the number of UNIQUE label combinations a single
 metric produces. Every new unique combination is a new time series —
@@ -2191,8 +2193,9 @@ say WHICH request or WHICH user is behind that number.</p>
 <p><strong>Native histogram</strong> — a histogram format where the distribution across
 buckets is sent more compactly than in a classic histogram with
 fixed, predefined bucket boundaries; it affects billable cardinality
-differently from ordinary series (buckets are often billed at a
-reduced rate).</p>
+differently from ordinary series (each active bucket is billed at a
+0.25 coefficient relative to a full series, per Grafana Cloud's official
+pricing).</p>
 <p><strong>Observability</strong> — the ability to ask a question that WASN'T
 anticipated in advance, about an incident that just happened, and get
 an answer from data already collected — as opposed to monitoring,
@@ -2279,7 +2282,7 @@ at exactly the moment it's needed most, it too is mute.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 29, 2026 10:27:52 UTC">August 29, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 10, 2026 06:53:00 UTC">September 10, 2026</span>
   </span>
 
     

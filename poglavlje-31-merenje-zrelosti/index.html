@@ -2065,6 +2065,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="31.5 Vežba za čitaoca">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Izvori korišćeni u analitičkom delu
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2496,6 +2513,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="31.5 Vežba za čitaoca">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#izvori-korisceni-u-analitickom-delu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Izvori korišćeni u analitičkom delu
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2690,12 +2724,14 @@ trebalo da javi alarm na samog sebe.</p>
 (kašnjenje, saobraćaj, greške, zasićenje), ali ključna poenta tog
 poglavlja nije lista signala — nego stav da se sistem posmatranja
 ocenjuje po tome da li podržava brzo otkrivanje i dijagnozu, ne po tome
-koliko podataka prikuplja. Komercijalni modeli zrelosti (Grafana Labs i
-slični) ovo pretvaraju u merljive dimenzije — pokrivenost, odnos
-alarm-prema-incidentu, vreme do otkrivanja i vreme do oporavka — a DORA
-metrike (Google Cloud) idu dalje i tretiraju vreme oporavka i stopu
-neuspešnih promena kao direktan zamenski pokazatelj za to koliko dobro
-sistem posmatranja zaista radi, ne koliko telemetrije postoji. Poenta
+koliko podataka prikuplja. Grafana Labs-ov model zrelosti observability
+strategije ovo pretvara u strukturisanu samoprocenu kroz tri sočiva —
+pristup, analizu i reagovanje — i tri nivoa zrelosti, od reaktivnog do
+sistematičnog; to je kvalitativna procena, ne gotov skup tvrdih brojki. DORA
+metrike (Google Cloud) idu korak dalje u tom pravcu i tretiraju vreme
+oporavka i stopu neuspešnih promena kao direktan, merljiv zamenski
+pokazatelj za to koliko dobro sistem posmatranja zaista radi, ne koliko
+telemetrije postoji. Poenta
 koja se ponavlja kroz sve ove modele: zrelost se ne meri obimom alata,
 nego time da li signali pouzdano prevode u brzu, tačnu akciju.</p>
 <p>Za pitanje "da li je alarm koji nikad ne zvoni dobar znak", najuticajniji
@@ -2703,8 +2739,10 @@ tekst je interni Google dokument Roba Ewaschuka, "My Philosophy on
 Alerting" — pravilo je eksplicitno: "prati svoje pozive na dužnost, i sve
 ostale alarme. Ako se alarm oglasi i ljudi samo kažu 'pogledao sam, ništa
 nije bilo u redu', to je jak signal da treba ukloniti to pravilo
-alarmiranja." Isti dokument postavlja i kvantitativan prag: alarm koji je
-tačan manje od 50% vremena je pokvaren. Ovo direktno potvrđuje obrazac iz
+alarmiranja, degradirati ga, ili na neki drugi način prikupljati podatke."
+Isti dokument postavlja i kvantitativan prag: alarm koji je tačan manje od
+50% vremena je pokvaren — a čak i alarm koji je lažno pozitivan samo 10%
+vremena zaslužuje dodatno razmatranje. Ovo direktno potvrđuje obrazac iz
 prethodnih poglavlja ove knjige — alarm koji nikad ne zvoni zaslužuje
 sumnju, ne pohvalu, dok se ne proveri da li zvoni ispravno kad treba. Isti
 princip, primenjen unazad na alarm koji zvoni deset nedelja bez
@@ -2778,14 +2816,14 @@ napisao pre više od mesec dana. Izaberi tri konkretne brojke iz njega i
 proveri ih upravo sada, protiv žive stvarnosti. Da li se i dalje slažu?
 Ako ne, da li bi to neko primetio da nisi upravo proverio?</p>
 <hr>
-<p><em>Izvori korišćeni u analitičkom delu:</em></p>
+<h3 id="izvori-korisceni-u-analitickom-delu">Izvori korišćeni u analitičkom delu</h3>
 <ul>
-<li><em>Google SRE Book — "Monitoring Distributed Systems" (četiri zlatna signala)</em></li>
-<li><em>Grafana Labs — model zrelosti observability strategije</em></li>
-<li><em>Google Cloud — DORA / Four Keys metrike</em></li>
-<li><em>Rob Ewaschuk — "My Philosophy on Alerting"</em></li>
-<li><em>NIST okvir za upravljanje rizikom — <abbr title="Plan of Action and Milestones — stavka koja još nije rešena, ali se aktivno prati ka rešenju.">POA&amp;M</abbr> i <abbr title="Dokumentovana odluka da se rizik svesno ne rešava, sa obrazloženjem i datumom.">formalno prihvatanje rizika</abbr></em></li>
-<li><em>ACM — "Why SRE Documents Matter"</em></li>
+<li><a href="https://sre.google/sre-book/monitoring-distributed-systems/">Google SRE Book — Monitoring Distributed Systems (četiri zlatna signala)</a></li>
+<li><a href="https://grafana.com/blog/2024/01/29/how-to-improve-your-observability-strategy-introducing-the-observability-journey-maturity-model/">Grafana Labs — Observability Journey Maturity Model</a></li>
+<li><a href="https://dora.dev/guides/dora-metrics-four-keys/">DORA / Google Cloud — Four Keys metrike</a></li>
+<li><a href="https://docs.google.com/document/d/199PqyG3UsyXlwieHaqbGiWVa8eMWi8zzAn0YfcApr8Q/mobilebasic">Rob Ewaschuk — My Philosophy on Alerting</a></li>
+<li><a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-37r2.pdf">NIST SP 800-37 Rev. 2 — <abbr title="Plan of Action and Milestones — stavka koja još nije rešena, ali se aktivno prati ka rešenju.">POA&amp;M</abbr> i <abbr title="Dokumentovana odluka da se rizik svesno ne rešava, sa obrazloženjem i datumom.">formalno prihvatanje rizika</abbr></a></li>
+<li><a href="https://cacm.acm.org/practice/why-sre-documents-matter">ACM — Why SRE Documents Matter</a></li>
 </ul>
 
 
@@ -2807,7 +2845,7 @@ Ako ne, da li bi to neko primetio da nisi upravo proverio?</p>
     <span class="md-icon" title="Ažurirano">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="7. septembar 2026. 19:24:05 UTC">7. septembar 2026.</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="10. septembar 2026. 05:18:08 UTC">10. septembar 2026.</span>
   </span>
 
     
