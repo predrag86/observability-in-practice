@@ -20,7 +20,10 @@ kardinalnost na osnovu razlike ova dva broja bez direktnog merenja.
 uzorkovanja raspona (traces) gde platforma za posmatranje, ne kolektor,
 odlučuje šta zadržava, na osnovu politika koje se mogu menjati bez
 redeploy-a pošiljaoca. Ključna razlika od uzorkovanja na strani kolektora:
-politike se primenjuju REDOSLEDOM, prva koja se poklopi pobeđuje.
+politika za ODBACIVANJE uvek pobeđuje nad politikom za ZADRŽAVANJE, bez
+izuzetka; među politikama za zadržavanje, evaluacija staje na prvom
+poklapanju, ali sam redosled evaluacije NIJE zagarantovan (ne prati nužno
+redosled iz konfiguracije).
 
 **Attribute / Label (atribut / labela)** — par ključ-vrednost zakačen za
 metriku, log ili raspon, koji kaže ČIJI je podatak i u kom kontekstu (npr.
@@ -35,7 +38,7 @@ verovatnoća × trošak popravke).
 
 **Burn-rate (stopa sagorevanja budžeta)** — koliko brzo se troši budžet
 greške SLO-a, izraženo kao višekratnik normalne stope. Multi-window
-multi-burn-rate dizajn (npr. 14.4×/6×/3× pragova) balansira brzo
+multi-burn-rate dizajn (npr. 14.4×/6×/1× pragova) balansira brzo
 otkrivanje ozbiljnih kvarova sa otpornošću na kratkotrajne fleksije.
 
 **Cardinality (kardinalnost)** — broj JEDINSTVENIH kombinacija oznaka
@@ -114,7 +117,8 @@ sebi ne kaže KOJI zahtev ili KOJI korisnik stoji iza tog broja.
 **Native histogram** — format histograma gde se raspodela po kantama
 (bucket) šalje kompaktnije nego kod klasičnog histograma sa unapred
 fiksnim granicama kanti; utiče na naplativu kardinalnost drugačije od
-običnih serija (kante se često naplaćuju sa umanjenim koeficijentom).
+običnih serija (svaka aktivna kanta se naplaćuje sa koeficijentom 0.25
+u odnosu na punu seriju, prema zvaničnoj Grafana Cloud tarifi).
 
 **Observability (posmatranje sistema)** — sposobnost da se postavi
 pitanje koje NIJE bilo predviđeno unapred, o incidentu koji se tek

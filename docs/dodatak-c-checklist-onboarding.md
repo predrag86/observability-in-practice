@@ -81,7 +81,7 @@ ovaj spisak ne predviđa. Koristi je kao polaznu tačku, ne kao ugovor.
 ## Faza 6 — Periodična provera (ne jednokratna)
 
 - [ ] Ovaj servis ulazi u sledeću periodičnu reviziju programa (Poglavlje
-  30) kao i svaki drugi — nema "jednom onboardovan, zauvek gotov".
+  31) kao i svaki drugi — nema "jednom onboardovan, zauvek gotov".
 - [ ] Ako je alarm ovog servisa ikad tih duže od očekivanog perioda
   aktivnosti, to je razlog za proveru, ne razlog za spokoj (Dodatak B —
   dead man's switch).

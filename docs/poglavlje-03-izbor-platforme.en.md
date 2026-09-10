@@ -160,7 +160,7 @@ offer; check the official price list before making any decision:
 | **Grafana Cloud** (Pro) | Platform + per seat + per volume | $19/month platform + $8/active user (3 free) + $6.50 per 1,000 active metric series above 10K free + ~$0.45/GB for logs and traces (processing + ingestion) + $0.10/GB/month retention |
 | **Datadog** | Per host + per feature + per volume | $15/host/month (infra, annual) + $31/host/month (APM) + $0.10/GB indexed logs + $1.27 per million ingested log events + $1.70 per million indexed spans |
 | **New Relic** | Per volume + per seat | 100 GB/month free, then $0.40/GB; $49/seat (Core) up to $99–349/seat (Full Platform, depending on tier) |
-| **ServiceNow Cloud Observability** (formerly Lightstep) | Not publicly published | No price list available without talking to sales — which itself says something about the target buyer (a large enterprise procurement, not a self-serve team of a few engineers) |
+| **ServiceNow Cloud Observability** (formerly Lightstep, **discontinued 2026**) | Not publicly published | No price list available without talking to sales — which itself says something about the target buyer (a large enterprise procurement, not a self-serve team of a few engineers) |
 
 **A first, often overlooked line item: Grafana Cloud also charges per seat,
 not just by data volume.** A team that budgets purely on expected
@@ -182,6 +182,14 @@ per-seat price climbs fast once the team outgrows a few people on the Full
 Platform tier. ServiceNow's unpublished price is, paradoxically,
 information in itself: platforms that require "contact sales" before showing
 a single number tend to target budgets a small team doesn't have.
+
+**Note on this table:** ServiceNow has since officially announced that it is winding down
+this product — Cloud Observability is being retired on March 1, 2026, or at the end of the
+current subscription term, whichever comes later, with no direct successor on ServiceNow's
+own platform. The comparison above remains valid as a snapshot of the moment this decision
+was made, but a reader choosing a platform today no longer has that specific option — worth
+swapping in one of the still-active alternatives (Elastic Observability, Honeycomb,
+Chronosphere) if redoing the comparison.
 
 ### Self-hosted OSS: where leasing stops paying off
 

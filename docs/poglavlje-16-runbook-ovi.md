@@ -157,7 +157,7 @@ Ishod svakog pokušaja — pokrenut, blokiran (isteklo, neprihvatljiva
 porodica, definicija zadatka neaktivna, već pokrenut, već u toku,
 ograničenje učestalosti) ili neuspeo — beleži se kao jedan od tačno osam
 mogućih ishoda, po istom principu iscrpnog i međusobno isključivog skupa
-uvedenom u prethodnom poglavlju za sam alarm: svaki nov povratak iz koda
+uvedenom u Poglavlju 14 za sam alarm: svaki nov povratak iz koda
 koji izvršava pokušaj mora prijaviti ishod, ili bilans prema ukupnom broju
 zahteva tiho prestaje da se slaže. Ko dobija dugme takođe nije spisak
 imena nego strukturno pravilo — usluge kojima upravlja sam ECS, poslovi na

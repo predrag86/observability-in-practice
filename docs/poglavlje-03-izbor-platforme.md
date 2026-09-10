@@ -158,7 +158,7 @@ cenovnik pre bilo koje odluke:
 | **Grafana Cloud** (Pro) | Platforma + po korisniku + po zapremini | $19/mesec platforma + $8/aktivni korisnik (3 besplatna) + $6.50 po 1.000 aktivnih serija metrika iznad 10K besplatnih + ~$0.45/GB za logove i trejsove (obrada + upis) + $0.10/GB/mesec zadržavanje |
 | **Datadog** | Po hostu + po funkciji + po zapremini | $15/host/mesec (infra, godišnje) + $31/host/mesec (APM) + $0.10/GB indeksiran log + $1.27 po milion unetih log događaja + $1.70 po milion indeksiranih spanova |
 | **New Relic** | Po zapremini + po korisniku | 100 GB/mesec besplatno, zatim $0.40/GB; $49/korisnik (Core) do $99–349/korisnik (Full Platform, zavisno od nivoa) |
-| **ServiceNow Cloud Observability** (bivši Lightstep) | Nije javno objavljeno | Cenovnik nije dostupan bez razgovora sa prodajom — samo po sebi govori ko je ciljni kupac (velika enterprise nabavka, ne samoposlužni tim od par inženjera) |
+| **ServiceNow Cloud Observability** (bivši Lightstep, **ugašen 2026.**) | Nije javno objavljeno | Cenovnik nije dostupan bez razgovora sa prodajom — samo po sebi govori ko je ciljni kupac (velika enterprise nabavka, ne samoposlužni tim od par inženjera) |
 
 **Prva, često zanemarena stavka: Grafana Cloud se naplaćuje i po korisniku, ne
 samo po zapremini podataka.** Tim koji planira budžet isključivo na osnovu
@@ -179,6 +179,14 @@ preraste par ljudi na Full Platform nivou. ServiceNow-ova neobjavljena cena je,
 paradoksalno, sama po sebi informacija: platforme koje traže "kontaktirajte
 prodaju" pre nego što pokažu ijedan broj, po pravilu ciljaju budžete koje mali
 tim nema.
+
+**Napomena uz ovu tabelu:** u međuvremenu je ServiceNow zvanično najavio gašenje ovog
+proizvoda — Cloud Observability se povlači 1. marta 2026. ili na kraju tekuće pretplate,
+šta god nastupi kasnije, bez direktnog naslednika na sopstvenoj platformi. Poređenje iznad
+ostaje validno kao snimak stanja u trenutku kad je ova odluka doneta, ali čitalac koji danas
+bira platformu tu konkretnu opciju više nema na raspolaganju — vredi je zameniti nekom od
+aktivnih alternativa (Elastic Observability, Honeycomb, Chronosphere) ako se poređenje radi
+iznova.
 
 ### Self-hosted OSS: kad se iznajmljivanje prestaje isplatiti
 

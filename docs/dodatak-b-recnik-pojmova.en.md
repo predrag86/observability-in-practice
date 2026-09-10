@@ -19,8 +19,10 @@ gap between these two numbers without measuring it directly.
 **Adaptive Traces / platform-side adaptive sampling** — a form of trace
 sampling where the observability platform, not the collector, decides
 what to keep, based on policies that can be changed without redeploying
-the sender. The key difference from collector-side sampling: policies
-are applied IN ORDER, and the first one that matches wins.
+the sender. The key difference from collector-side sampling: a DROP
+policy always wins over a KEEP policy, with no exception; among keep
+policies, evaluation stops at the first match, but the evaluation order
+itself is NOT guaranteed to follow the configured order.
 
 **Attribute / Label** — a key-value pair attached to a metric, log, or
 span, saying WHOSE data this is and in what context (e.g.
@@ -35,7 +37,7 @@ fix).
 
 **Burn-rate** — how fast an SLO's error budget is being consumed,
 expressed as a multiple of the normal rate. A multi-window,
-multi-burn-rate design (e.g. 14.4×/6×/3× thresholds) balances fast
+multi-burn-rate design (e.g. 14.4×/6×/1× thresholds) balances fast
 detection of severe failures against resilience to short-lived blips.
 
 **Cardinality** — the number of UNIQUE label combinations a single
@@ -111,8 +113,9 @@ say WHICH request or WHICH user is behind that number.
 **Native histogram** — a histogram format where the distribution across
 buckets is sent more compactly than in a classic histogram with
 fixed, predefined bucket boundaries; it affects billable cardinality
-differently from ordinary series (buckets are often billed at a
-reduced rate).
+differently from ordinary series (each active bucket is billed at a
+0.25 coefficient relative to a full series, per Grafana Cloud's official
+pricing).
 
 **Observability** — the ability to ask a question that WASN'T
 anticipated in advance, about an incident that just happened, and get

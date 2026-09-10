@@ -200,6 +200,16 @@ from Chapter 4, not any individual application's job — exactly the way
 changing which port a ship docks at doesn't require the cargo inside the
 container to be repacked.
 
+Worth adding where that project stands today: on May 21, 2026, OpenTelemetry
+reached **CNCF Graduated** status — the highest maturity level CNCF grants,
+reserved for projects judged stable, widely adopted, and production-ready.
+At that point the project counted over 12,000 contributors from more than
+2,800 companies, with the second-highest development velocity of all 240+
+CNCF projects (behind only Kubernetes). This isn't a cosmetic detail: it's
+independent confirmation that the OTLP and semantic conventions described
+below aren't one vendor's bet, but a standard the whole industry actively
+maintains and uses.
+
 ### Semantic conventions: a vocabulary, not an implementation
 
 Semantic conventions are, per the official OpenTelemetry documentation, an
@@ -260,6 +270,22 @@ that doesn't suit it. When a standard leaves something open, it's worth
 checking whether that's space deliberately left for a local decision, before
 reading it as a gap in the standard.
 
+**A note on a third option that's emerging:** what this chapter presents as
+a choice between two mechanisms — an auto-instrumentation agent (Java) or
+explicit SDK setup (Python) — has since gained a third variant that
+sidesteps both. **OpenTelemetry eBPF Instrumentation (OBI)**, born out of
+Grafana Beyla and now an official part of the OpenTelemetry project,
+instruments the application at the operating-system level, through eBPF
+probes in the kernel — with zero lines of code, no agent attaching to the
+runtime, and none of the monkey-patching that makes the Python approach
+fragile. It works across a wide range of languages (Java, .NET, Go, Python,
+Ruby, Node.js, C, C++, Rust) using the same mechanism for all of them. This
+book doesn't change its recommendation based on OBI — the project is still
+early-stage at the time of writing (version 0.12.x, not 1.0) — but it's
+worth keeping on the radar as a direction "zero-code" instrumentation is
+heading next, past language-specific tricks toward one language-independent
+mechanism.
+
 ## 2.4 Rules collected from this chapter
 
 - Choose the instrumentation mechanism (auto-instrumentation agent vs.
@@ -307,3 +333,5 @@ you try to build across both services.
 - [OpenTelemetry Java Agent — Zero-code instrumentation](https://opentelemetry.io/docs/zero-code/java/agent/)
 - [OpenTelemetry Python — Zero-code instrumentation](https://opentelemetry.io/docs/zero-code/python/)
 - [History of OpenTelemetry — CNCF](https://opentelemetry.io/docs/what-is-opentelemetry/)
+- [OpenTelemetry Graduates — CNCF Announcement (2026)](https://www.cncf.io/announcements/2026/05/21/cloud-native-computing-foundation-announces-opentelemetrys-graduation-solidifying-status-as-the-de-facto-observability-standard/)
+- [OpenTelemetry eBPF Instrumentation (OBI)](https://opentelemetry.io/docs/zero-code/obi/)

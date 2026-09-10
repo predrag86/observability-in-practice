@@ -351,4 +351,3 @@ empty panel before deciding whether to fix it or remove it.
 - [Comparing node_exporter and OpenTelemetry Collector host metrics receiver](https://luppeng.wordpress.com/2025/07/26/comparing-the-key-hardware-and-os-metris-exposed-by-prometheus-node-exporter-and-opentelemetry-collectors-host-metrics-receiver/)
 - [opentelemetry-collector-contrib issue #22067 — naming differences node_exporter vs OTel](https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/22067)
 - [Grafana Cloud — Troubleshoot your aggregated metrics query (Adaptive Metrics)](https://grafana.com/docs/grafana-cloud/adaptive-telemetry/adaptive-metrics/troubleshoot-your-aggregated-metrics-query/)
-- [Google SRE Workbook — Alerting on SLOs](https://sre.google/workbook/alerting-on-slos/)

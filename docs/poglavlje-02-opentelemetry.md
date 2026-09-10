@@ -189,6 +189,16 @@ došlo) posao gateway sloja iz Poglavlja 4, ne posao ijedne pojedinačne
 aplikacije — tačno onako kako promena luke u koju brod pristaje ne zahteva da
 se roba u kontejneru prepakuje.
 
+Vredi dodati i gde je taj projekat danas: OpenTelemetry je 21. maja 2026.
+dostigao status **CNCF Graduated** — najviši nivo zrelosti koji CNCF
+dodeljuje, rezervisan za projekte ocenjene kao stabilni, široko usvojeni i
+spremni za produkciju. U tom trenutku projekat je brojao preko 12.000
+kontributora iz više od 2.800 kompanija, sa drugom najvećom brzinom razvoja
+od svih 240+ CNCF projekata (iza jedino Kubernetes-a). Ovo nije kozmetički
+detalj: to je nezavisna potvrda da OTLP i semantičke konvencije opisane
+ispod nisu opklada jednog dobavljača, nego standard koji cela industrija
+aktivno održava i koristi.
+
 ### Semantičke konvencije: rečnik, ne implementacija
 
 Semantičke konvencije su, po zvaničnoj OpenTelemetry dokumentaciji, dogovoren
@@ -243,6 +253,21 @@ implementacionu tehniku koja mu ne odgovara. Kada standard ostavlja nešto
 otvoreno, vredi proveriti da li je to prostor namerno ostavljen za lokalnu
 odluku, pre nego što se protumači kao nedostatak standarda.
 
+**Napomena o trećoj opciji koja se pojavljuje:** ono što ovo poglavlje
+predstavlja kao izbor između dva mehanizma — auto-instrumentacioni agent
+(Java) ili eksplicitan SDK setup (Python) — u međuvremenu dobija i treću
+varijantu, koja zaobilazi oba. **OpenTelemetry eBPF Instrumentation (OBI)**,
+nastala iz Grafana Beyla-e i sada zvaničan deo OpenTelemetry projekta,
+instrumentira aplikaciju na nivou operativnog sistema, kroz eBPF probe u
+kernelu — bez ijedne linije koda, bez agenta koji se kači na runtime, i bez
+monkey-patchinga koji Python pristup čini krhkim. Radi preko širokog
+spektra jezika (Java, .NET, Go, Python, Ruby, Node.js, C, C++, Rust) istim
+mehanizmom za sve njih. Ova knjiga ne menja preporuku iz ovog poglavlja na
+osnovu OBI-ja — projekat je u trenutku pisanja još u ranoj fazi (verzija
+0.12.x, ne 1.0) — ali vredi ga imati na radaru kao pravac u kome "zero-code"
+pristup ide dalje od jezično-specifičnih trikova, ka jednom mehanizmu
+nezavisnom od jezika.
+
 ## 2.4 Skupljena pravila iz ovog poglavlja
 
 - Odaberi mehanizam instrumentacije (auto-instrumentacioni agent naspram
@@ -288,3 +313,5 @@ plaća sledeći dashboard koji pokušaš da napraviš preko oba servisa.
 - [OpenTelemetry Java Agent — Zero-code instrumentation](https://opentelemetry.io/docs/zero-code/java/agent/)
 - [OpenTelemetry Python — Zero-code instrumentation](https://opentelemetry.io/docs/zero-code/python/)
 - [History of OpenTelemetry — CNCF](https://opentelemetry.io/docs/what-is-opentelemetry/)
+- [OpenTelemetry Graduates — CNCF Announcement (2026)](https://www.cncf.io/announcements/2026/05/21/cloud-native-computing-foundation-announces-opentelemetrys-graduation-solidifying-status-as-the-de-facto-observability-standard/)
+- [OpenTelemetry eBPF Instrumentation (OBI)](https://opentelemetry.io/docs/zero-code/obi/)

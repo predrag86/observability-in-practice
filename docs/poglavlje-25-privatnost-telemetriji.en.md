@@ -26,6 +26,15 @@ close that gap — not at one point, but across the whole chain?
 
 ### The discovery: pseudonymous on one side, fully exposed on the other
 
+This same pattern — a pseudonymous identity on one side of the system,
+fully exposed on the other — was already mentioned in Chapter 5, in the
+context of instrumentation, as an illustration of what happens when two
+independent pseudonymization mechanisms don't "know" about each other.
+Here the same finding is examined from the broader angle of privacy: not
+just whether the identity leaks by accident, but how that gap gets closed
+at the source, through which form of pseudonym, and what other, entirely
+separate question about the same telemetry lies underneath.
+
 The frontend application of the implementation this book follows was
 deliberately designed to send only a pseudonymous user identifier — a
 random UUID from the authentication system, never a name or email. That

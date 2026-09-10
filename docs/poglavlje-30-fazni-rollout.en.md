@@ -209,9 +209,9 @@ change out gradually to an ever-smaller, then ever-larger, slice of
 traffic — and Google's SRE Workbook go a step further and quantify why: a
 bug that hits 20% of users on only 5% of traffic burns just 1% of the error
 budget, not 20%. Microsoft's Azure Well-Architected Framework turns this
-into a concrete rule for ordering — internal testing → pilot → early
-adopters → general availability — with "bake time" between each round
-measured in hours or days, not minutes, precisely because different usage
+into a concrete rule for ordering — ever-larger groups of users, from a
+small trial group up to the full population — with "bake time" between
+each round measured in hours or days, not minutes, precisely because different usage
 patterns only surface given enough time. Sequencing by risk, not by what's
 technically easiest to do next, is exactly the principle that determined
 the most critical part of the fleet would come last in this program — not
@@ -308,11 +308,11 @@ your own memory?
 
 ---
 
-*Sources used in the analytical section:*
+### Sources used in the analytical section
 
-- *Google SRE Workbook — "Canarying Releases"*
-- *Martin Fowler — "CanaryRelease" (martinfowler.com)*
-- *Microsoft Azure Well-Architected Framework — "Safe deployment practices"*
-- *Google SRE Book — "Postmortem Culture: Learning from Failure"*
-- *Cynefin Framework (Snowden i Boone) — pregledi primene na odlučivanje*
-- *LogicMonitor — studija slučaja revizije alarma pre migracije*
+- [Google SRE Workbook — Canarying Releases](https://sre.google/workbook/canarying-releases/)
+- [Martin Fowler — CanaryRelease](https://martinfowler.com/bliki/CanaryRelease.html)
+- [Microsoft Azure Well-Architected Framework — Safe deployment practices](https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments)
+- [Google SRE Book — Postmortem Culture: Learning from Failure](https://sre.google/sre-book/postmortem-culture/)
+- [Cynefin Framework (Snowden and Boone) — A Leader's Framework for Decision Making, HBR](https://hbr.org/2007/11/a-leaders-framework-for-decision-making)
+- [LogicMonitor — case study on auditing alerts before a migration](https://www.logicmonitor.com/blog/one-enterprise-reduced-trap-alerts-saved-hours-during-migration)

@@ -172,15 +172,23 @@ OpenTelemetry projekat ima zvanično opisana tri (u praksi četiri, ako se ubroj
 4. **Gateway-only obrazac** — pošiljaoci idu direktno na centralni gateway,
    bez lokalnog posrednika.
 
-Zvanična preporuka za veće, produkcione sisteme je **agent-to-gateway**
-(obrazac #3) — to je ono što OpenTelemetry dokumentacija, Datadog-ov vodič za
-izbor arhitekture i više nezavisnih analiza (SigNoz, OneUptime) navode kao
-"industrijski standard" za sisteme koji rastu. Razlog je konkretan: lokalni
-agent daje bafer ako centralni gateway zakaže, hvata podatke specifične za host
-(metrike operativnog sistema, Kubernetes atribute) koje ništa drugo prirodno ne
-vidi, i skalira se nezavisno od gateway sloja — broj agenata prati broj
-čvorova, broj gateway instanci prati zapreminu telemetrije, i te dve krive
-retko rastu zajedno.
+Obrazac **agent-to-gateway** (#3) je zvanično dokumentovan i najsloženiji od
+četiri — ali ni sama OpenTelemetry dokumentacija, ni Datadog-ov vodič za izbor
+arhitekture ga ne predstavljaju kao podrazumevanu preporuku ili "industrijski
+standard" za svaki sistem koji raste. Naprotiv: zvanična dokumentacija ga
+danas eksplicitno svrstava pod "ostale obrasce" (*other patterns*) i kaže da
+"dodaje operativnu kompleksnost" i da ga treba koristiti samo kad postoji bar
+jedna od konkretnih sposobnosti koje nosi — a za jednostavnije slučajeve
+preporučuje čist agent ili čist gateway. Datadog-ov vodič ide istim putem:
+predstavlja tri obrasca kao izbor prema konkretnoj potrebi, ne prema veličini
+sistema. Razlog zašto agent-to-gateway uopšte postoji kao obrazac ostaje
+konkretan: lokalni agent daje bafer ako centralni gateway zakaže, hvata
+podatke specifične za host (metrike operativnog sistema, Kubernetes atribute)
+koje ništa drugo prirodno ne vidi, i skalira se nezavisno od gateway sloja —
+broj agenata prati broj čvorova, broj gateway instanci prati zapreminu
+telemetrije, i te dve krive retko rastu zajedno. Pitanje, dakle, nije da li je
+ovo "standard" — pitanje je da li tvoj sistem ima baš tu konkretnu potrebu, i
+to je tačno pitanje na koje sledeći odeljak odgovara.
 
 ### Gde smo svesno otišli drugačijim putem
 
@@ -235,8 +243,10 @@ instanci, ne hiljade), a gateway je već u HA (dve nezavisne instance iza load
 balansera sa DNS otpornim na rebuild), granularni rizik koji agent sloj
 uklanja je mali, dok je operativna cena — još jedan artefakt da se gradi,
 verzioniše i prati za svaki servis — realna i konstantna. Ovo je račun koji se
-mora raditi eksplicitno, ne pretpostaviti: "industrijski standard" je dobra
-polazna tačka, ne automatska odluka.
+mora raditi eksplicitno, ne pretpostaviti: dokumentovan obrazac je dobra
+polazna tačka za razmišljanje, ne automatska odluka — pogotovo obrazac koji
+zvanična dokumentacija sama opisuje kao dodatnu kompleksnost, ne podrazumevanu
+preporuku.
 
 **3. Tail sampling — glavni razlog *za* agent-to-gateway šablon u zvaničnoj
 dokumentaciji — ovde uopšte nije u igri.** Ovo je najvredniji nalaz ovog

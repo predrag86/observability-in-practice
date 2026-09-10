@@ -199,12 +199,14 @@ Google-ov SRE Book uvodi merenje monitoringa oko četiri zlatna signala
 (kašnjenje, saobraćaj, greške, zasićenje), ali ključna poenta tog
 poglavlja nije lista signala — nego stav da se sistem posmatranja
 ocenjuje po tome da li podržava brzo otkrivanje i dijagnozu, ne po tome
-koliko podataka prikuplja. Komercijalni modeli zrelosti (Grafana Labs i
-slični) ovo pretvaraju u merljive dimenzije — pokrivenost, odnos
-alarm-prema-incidentu, vreme do otkrivanja i vreme do oporavka — a DORA
-metrike (Google Cloud) idu dalje i tretiraju vreme oporavka i stopu
-neuspešnih promena kao direktan zamenski pokazatelj za to koliko dobro
-sistem posmatranja zaista radi, ne koliko telemetrije postoji. Poenta
+koliko podataka prikuplja. Grafana Labs-ov model zrelosti observability
+strategije ovo pretvara u strukturisanu samoprocenu kroz tri sočiva —
+pristup, analizu i reagovanje — i tri nivoa zrelosti, od reaktivnog do
+sistematičnog; to je kvalitativna procena, ne gotov skup tvrdih brojki. DORA
+metrike (Google Cloud) idu korak dalje u tom pravcu i tretiraju vreme
+oporavka i stopu neuspešnih promena kao direktan, merljiv zamenski
+pokazatelj za to koliko dobro sistem posmatranja zaista radi, ne koliko
+telemetrije postoji. Poenta
 koja se ponavlja kroz sve ove modele: zrelost se ne meri obimom alata,
 nego time da li signali pouzdano prevode u brzu, tačnu akciju.
 
@@ -213,8 +215,10 @@ tekst je interni Google dokument Roba Ewaschuka, "My Philosophy on
 Alerting" — pravilo je eksplicitno: "prati svoje pozive na dužnost, i sve
 ostale alarme. Ako se alarm oglasi i ljudi samo kažu 'pogledao sam, ništa
 nije bilo u redu', to je jak signal da treba ukloniti to pravilo
-alarmiranja." Isti dokument postavlja i kvantitativan prag: alarm koji je
-tačan manje od 50% vremena je pokvaren. Ovo direktno potvrđuje obrazac iz
+alarmiranja, degradirati ga, ili na neki drugi način prikupljati podatke."
+Isti dokument postavlja i kvantitativan prag: alarm koji je tačan manje od
+50% vremena je pokvaren — a čak i alarm koji je lažno pozitivan samo 10%
+vremena zaslužuje dodatno razmatranje. Ovo direktno potvrđuje obrazac iz
 prethodnih poglavlja ove knjige — alarm koji nikad ne zvoni zaslužuje
 sumnju, ne pohvalu, dok se ne proveri da li zvoni ispravno kad treba. Isti
 princip, primenjen unazad na alarm koji zvoni deset nedelja bez
@@ -297,11 +301,11 @@ Ako ne, da li bi to neko primetio da nisi upravo proverio?
 
 ---
 
-*Izvori korišćeni u analitičkom delu:*
+### Izvori korišćeni u analitičkom delu
 
-- *Google SRE Book — "Monitoring Distributed Systems" (četiri zlatna signala)*
-- *Grafana Labs — model zrelosti observability strategije*
-- *Google Cloud — DORA / Four Keys metrike*
-- *Rob Ewaschuk — "My Philosophy on Alerting"*
-- *NIST okvir za upravljanje rizikom — POA&M i formalno prihvatanje rizika*
-- *ACM — "Why SRE Documents Matter"*
+- [Google SRE Book — Monitoring Distributed Systems (četiri zlatna signala)](https://sre.google/sre-book/monitoring-distributed-systems/)
+- [Grafana Labs — Observability Journey Maturity Model](https://grafana.com/blog/2024/01/29/how-to-improve-your-observability-strategy-introducing-the-observability-journey-maturity-model/)
+- [DORA / Google Cloud — Four Keys metrike](https://dora.dev/guides/dora-metrics-four-keys/)
+- [Rob Ewaschuk — My Philosophy on Alerting](https://docs.google.com/document/d/199PqyG3UsyXlwieHaqbGiWVa8eMWi8zzAn0YfcApr8Q/mobilebasic)
+- [NIST SP 800-37 Rev. 2 — POA&M i formalno prihvatanje rizika](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-37r2.pdf)
+- [ACM — Why SRE Documents Matter](https://cacm.acm.org/practice/why-sre-documents-matter)
