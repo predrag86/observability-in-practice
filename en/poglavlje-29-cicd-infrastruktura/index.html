@@ -1845,6 +1845,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#two-months-later-prevention-shipped-on-a-different-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two months later: prevention shipped — on a different system
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-same-trap-caught-at-plan-time-this-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The same trap, caught at plan time this time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-still-hasnt-shipped-on-the-system-where-it-happened" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What still hasn't shipped — on the system where it happened
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2449,6 +2482,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#two-months-later-prevention-shipped-on-a-different-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two months later: prevention shipped — on a different system
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-same-trap-caught-at-plan-time-this-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The same trap, caught at plan time this time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-still-hasnt-shipped-on-the-system-where-it-happened" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What still hasn't shipped — on the system where it happened
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2658,6 +2724,12 @@ broken revision and move on, spending the incident's one real asset — the fact
 fresh, concrete, and already has a willing sponsor — on nothing. An incident that's still
 raw, that still has a name and a date attached to it, is a far more persuasive argument for
 a process change than an abstract proposal to "add CI for infrastructure someday."</p>
+<p>One clarification keeps this honest. The broken revision itself did not stay broken: three
+days after detection a new revision was registered, built forward from the LARGE variant
+with the sidecar added, and the launcher was pointed at it. What stayed open was the
+incident — the question of why nothing had prevented this — not the telemetry gap. Keeping
+a production path dark for weeks to make a point would have been a different, worse
+decision.</p>
 <h3 id="the-table-what-happened-what-would-have-prevented-it">The table: what happened → what would have prevented it</h3>
 <p>Every row of this table maps one concrete failure point to one concrete control —
 deliberately built as a working document, not a postmortem afterthought:</p>
@@ -2733,7 +2805,8 @@ incident, part of that table became reality, not just intent:</p>
 <p>It's worth being honest about what hasn't shipped, too: event-driven detection (the
 table's fifth row) hadn't replaced the weekly sweep as of writing. This isn't a tidy,
 closed case study with a perfect ending — it's a live, ongoing process, and saying so
-plainly is more honest than polishing it.</p>
+plainly is more honest than polishing it. A later section returns to this ledger two
+months in.</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch29-pre-posle-cevovod.png" data-desc-position="bottom"><img alt="Before: a hand-maintained JSON registered straight to production, with no diff and no CI. After: the change goes through a PR, a plan-time check that the image exists, review, and only then merge and apply — from CI alone." src="../diagrams/ch29-pre-posle-cevovod.png" width="92%"></a></p>
 <h3 id="nine-days-later-the-same-kind-of-error-one-layer-up">Nine days later: the same kind of error, one layer up</h3>
 <p>The part that makes this chapter worth a second look instead of a one-time close: nine
@@ -2810,6 +2883,72 @@ which one is "correct."</p>
 necessarily know which side is wrong.</strong> The direction of an automatically suggested fix
 deserves the same suspicion as the finding itself — especially when the finding originated
 from copying, where it's easier to copy an error than to notice it.</p>
+<h3 id="two-months-later-prevention-shipped-on-a-different-system">Two months later: prevention shipped — on a different system</h3>
+<p>Two months after the incident the picture had changed again, and not in the way the table
+predicted.</p>
+<p>The controls from the table did get built, almost all of them — but for a system that
+didn't exist when the incident happened. In the meantime the main API and the web
+application were moved onto containers, and that platform was built to be kept: everything
+in Terraform, every deploy through the pipeline, no manual steps. Concretely:</p>
+<ul>
+<li><strong>The task definition lives in the repository</strong>, as code, and a change to it is a pull
+  request with a readable diff — the first and fourth rows of the table.</li>
+<li><strong>An image is built once and promoted by digest.</strong> Environments are folders on one
+  branch, and a deploy to any of them is a one-line change to that environment's digest
+  file. The development environment deploys on merge; the test environment through a
+  promotion pull request that a person merges — the third row.</li>
+<li><strong>A bad release rolls itself back.</strong> The orchestrator's circuit breaker was rehearsed
+  with a release that could not start, rather than merely switched on, and the previous
+  version kept serving throughout. In the test environment a deployment alarm also watches
+  the server-error rate through a ten-minute bake after each release, while a check
+  exercises the service. Rollback and promotion are the same operation — the previous
+  digest goes through the same pipeline — so there is no separate rollback path to
+  discover broken on the day it's needed.</li>
+</ul>
+<p>One limit is worth stating right next to that: the bake only sees what the check
+exercises. A release that breaks a route the check never calls still bakes in silence.</p>
+<h3 id="the-same-trap-caught-at-plan-time-this-time">The same trap, caught at plan time this time</h3>
+<p>The move reproduced this chapter's incident almost exactly — and that is its most useful
+part. The old environment resolved a few dozen configuration variables at start-up. The
+plan for the migration said, in as many words, that this was a migration and not a
+deletion: every variable must reappear, or the service starts misconfigured. The warning
+was written down, read, agreed with — and violated the same afternoon. The first task
+definition for the new platform was missing two variables entirely, and carried three more
+set to an empty string.</p>
+<p>The empty ones were the worse class. A missing variable stops the service at start-up,
+where the failure is loud and names itself. An empty one is accepted without complaint,
+and the failure moves to the first query — where it reads as a database connectivity
+problem, not a configuration one. Only one of the five would have announced itself.</p>
+<p>The fix was not the five values. It was the sixth row of the table, finally applied: the
+full list of required variables became part of the configuration, with two preconditions
+that turn a dropped variable, or an empty value, into a failed plan instead of a runtime
+discovery. Both were then proven to fire — by deliberately removing one variable and
+blanking another — before being trusted. A documented hazard became an asserted test, two
+months and one repeat after this chapter's own incident first said it should.</p>
+<h3 id="what-still-hasnt-shipped-on-the-system-where-it-happened">What still hasn't shipped — on the system where it happened</h3>
+<p>This is the uncomfortable half. On the batch fleet where the sidecar was dropped, almost
+none of the above exists yet:</p>
+<ul>
+<li>Of well over a hundred task-definition families that existed when this was last
+  counted, <strong>exactly one</strong> — and not a batch job — had its task definition in any
+  repository. For the rest, "what is deployed" can still only be answered by asking the
+  cloud provider.</li>
+<li>"One file per task: edit it, commit, and the change deploys" exists as a <strong>written
+  proposal awaiting review</strong>, with a prerequisite that makes it untrue until fixed: the
+  launchers pin exact revision numbers, so registering a new revision changes nothing
+  until someone re-pins it by hand.</li>
+<li>The deploy role for that fleet exists and its boundary has been tested adversarially,
+  but it <strong>holds no permissions yet</strong> — it can prove it is the only way in, and it cannot
+  yet deploy anything.</li>
+<li>The build-time sidecar check and the event-driven detector are <strong>still not built</strong>. The
+  weekly sweep that caught the incident four days late is still the only thing standing
+  between that fleet and a repeat.</li>
+</ul>
+<p>So the honest summary is not "the pipeline was rebuilt." It is that prevention arrived
+first where a system was being built anyway, because there it is nearly free, and that
+retrofitting the same controls onto an existing fleet is slower and has real prerequisites
+of its own. Until that catches up, the detective control carries the old fleet alone — and
+saying so out loud is part of the control.</p>
 <h2 id="293-analytical-section-the-principle-missing-here-already-has-a-name">29.3 Analytical section — the principle missing here already has a name</h2>
 <h3 id="continuous-reconciliation-not-periodic-comparison">Continuous reconciliation, not periodic comparison</h3>
 <p>What this incident actually needed — a mechanism that continuously compares declared state
@@ -2891,6 +3030,15 @@ the difference this incident makes concrete instead of abstract.</p>
   — check the direction of an automatically suggested fix by measurement, just as much as
   you check the finding itself, especially when the finding's cause is cloning (cloning
   carries over errors too, not just structure).</li>
+<li>Keep the incident open, not the gap — fix the broken thing itself forward right away,
+  and hold open only the question of why nothing prevented it.</li>
+<li>An empty value is worse than a missing one — a missing setting fails loudly at start-up,
+  an empty one fails later and somewhere else. Make both a failed plan, and prove the
+  check fires before you trust it.</li>
+<li>Count where a postmortem's controls actually landed. Prevention gets built first on the
+  system under construction; the system the incident happened on may still be guarded
+  only by the detective check that caught it. Say that plainly instead of calling the
+  case closed.</li>
 </ul>
 <h2 id="295-exercise-for-the-reader">29.5 Exercise for the reader</h2>
 <p>Find one resource in your own system that has a "variant" — a different size, a different
@@ -2898,6 +3046,8 @@ region, a different version — maintained separately from the main configuratio
 don't assume: does that variant carry the same set of capabilities (instrumentation,
 security policies, network rules) as the main one? If there's no automated check that
 would catch it diverging tomorrow, that's your version of this story — just not told yet.</p>
+<p>Then take the last postmortem that proposed new controls and check where each of them
+exists today: on the system the incident happened on, or only on a newer one built since?</p>
 <hr>
 <h3 id="sources-used-in-the-analytical-section">Sources used in the analytical section</h3>
 <ul>
@@ -2926,7 +3076,7 @@ would catch it diverging tomorrow, that's your version of this story — just no
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2026 20:30:55 UTC">September 7, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 3, 2026 20:20:05 UTC">October 3, 2026</span>
   </span>
 
     
