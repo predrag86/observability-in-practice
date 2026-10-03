@@ -3,7 +3,7 @@
   "private": true,
   "description": "Dev tooling for linting the book's Markdown content (not a published package).",
   "devDependencies": {
-    "markdownlint-cli2": "^0.23.2",
+    "markdownlint-cli2": "^0.23.3",
     "mkdocs-material-linter": "^1.5.3"
   }
 }
