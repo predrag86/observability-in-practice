@@ -2807,7 +2807,6 @@ table's fifth row) hadn't replaced the weekly sweep as of writing. This isn't a 
 closed case study with a perfect ending — it's a live, ongoing process, and saying so
 plainly is more honest than polishing it. A later section returns to this ledger two
 months in.</p>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch29-pre-posle-cevovod.png" data-desc-position="bottom"><img alt="Before: a hand-maintained JSON registered straight to production, with no diff and no CI. After: the change goes through a PR, a plan-time check that the image exists, review, and only then merge and apply — from CI alone." src="../diagrams/ch29-pre-posle-cevovod.png" width="92%"></a></p>
 <h3 id="nine-days-later-the-same-kind-of-error-one-layer-up">Nine days later: the same kind of error, one layer up</h3>
 <p>The part that makes this chapter worth a second look instead of a one-time close: nine
 days after the review above, the exact same pattern repeated itself — not in the
@@ -2907,6 +2906,7 @@ in Terraform, every deploy through the pipeline, no manual steps. Concretely:</p
 </ul>
 <p>One limit is worth stating right next to that: the bake only sees what the check
 exercises. A release that breaks a route the check never calls still bakes in silence.</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../diagrams/ch29-pre-posle-cevovod.png" data-desc-position="bottom"><img alt="Before: a hand-maintained JSON registered straight to production, with no diff and no CI — the path the fleet where the incident happened still takes. After, on the new platform: the task definition changes in a pull request, plan-time checks confirm the image exists and every required variable is present and non-empty, the plan is reviewed and merged, the apply runs from CI alone, and a bake follows with automatic rollback." src="../diagrams/ch29-pre-posle-cevovod.png" width="92%"></a></p>
 <h3 id="the-same-trap-caught-at-plan-time-this-time">The same trap, caught at plan time this time</h3>
 <p>The move reproduced this chapter's incident almost exactly — and that is its most useful
 part. The old environment resolved a few dozen configuration variables at start-up. The
@@ -3076,7 +3076,7 @@ exists today: on the system the incident happened on, or only on a newer one bui
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 3, 2026 20:20:05 UTC">October 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 3, 2026 20:29:45 UTC">October 3, 2026</span>
   </span>
 
     
