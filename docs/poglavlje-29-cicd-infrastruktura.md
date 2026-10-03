@@ -158,8 +158,6 @@ zatvorena studija slučaja sa savršenim krajem — to je živ, tekući proces, 
 reći direktno nego uglancati. Jedan od narednih odeljaka vraća se ovom bilansu posle dva
 meseca.
 
-![Pre: ručno održavan JSON registrovan direktno u produkciju, bez diff-a i CI-ja. Posle: izmena ide kroz PR, plan-time proveru postojanja image-a, review, i tek onda merge i apply — samo iz CI-ja.](diagrams/ch29-pre-posle-cevovod.png){: width="92%" }
-
 ### Devet dana kasnije: ista vrsta greške, jedan sloj iznad
 
 Deo koji ovo poglavlje čini vrednim ponovnog pogleda umesto jednokratnog zatvaranja:
@@ -274,6 +272,8 @@ ručnih koraka. Konkretno:
 
 Uz to vredi odmah navesti i jednu granicu: period posmatranja vidi samo ono što provera
 poziva. Izdanje koje pokvari rutu koju provera nikad ne pozove i dalje prolazi u tišini.
+
+![Pre: ručno održavan JSON registrovan direktno u produkciju, bez diff-a i CI-ja — put kojim flota na kojoj se incident desio i dalje ide. Posle, na novoj platformi: task definicija se menja u pull request-u, provere u fazi plana potvrđuju da image postoji i da je svaka obavezna promenljiva prisutna i neprazna, plan se pregleda i spaja, apply ide samo iz CI-ja, a zatim sledi period posmatranja sa automatskim rollback-om.](diagrams/ch29-pre-posle-cevovod.png){: width="92%" }
 
 ### Ista zamka, ovog puta uhvaćena u fazi plana
 

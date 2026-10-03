@@ -46,14 +46,16 @@ TEXT = {
         },
         "pipeline": {
             "title_before": "PRE",
-            "title_after": "POSLE",
+            "title_after": "POSLE — na novoj platformi",
             "b1": "Ručno održavan\nJSON na laptopu",
             "b2": "aws ecs\nregister-task-definition",
             "b3": "Direktno u produkciju\n— nema diff-a, nema\nrevizije, nema CI-ja",
-            "a1": "Izmena u\nTerraform PR-u",
-            "a2": "CI: plan-time provera\n— image + sidecar\npostoje pre plana",
-            "a3": "PR review\n(\"− otel-sidecar\"\nje jedna vidljiva linija)",
-            "a4": "Merge → apply\n(samo iz CI-ja)",
+            "a1": "Izmena task definicije\nu pull request-u",
+            "a2": "Provere u fazi plana\n— image postoji, svaka obavezna\npromenljiva prisutna i neprazna",
+            "a3": "Plan pregledan,\npull request spojen",
+            "a4": "Apply\n(samo iz CI-ja)",
+            "a5": "Period posmatranja\nsa automatskim rollback-om",
+            "note": "Flota na kojoj se incident\ndesio i dalje ide ovim putem",
         },
     },
     "en": {
@@ -68,14 +70,16 @@ TEXT = {
         },
         "pipeline": {
             "title_before": "BEFORE",
-            "title_after": "AFTER",
+            "title_after": "AFTER — on the new platform",
             "b1": "Hand-maintained\nJSON on a laptop",
             "b2": "aws ecs\nregister-task-definition",
             "b3": "Straight to production\n— no diff, no review,\nno CI",
-            "a1": "Change in a\nTerraform PR",
-            "a2": "CI: plan-time check\n— image + sidecar\nexist before the plan",
-            "a3": "PR review\n(\"− otel-sidecar\"\nis one visible line)",
-            "a4": "Merge → apply\n(from CI only)",
+            "a1": "Task definition changed\nin a pull request",
+            "a2": "Plan-time checks\n— image exists, every required\nvariable present and non-empty",
+            "a3": "Plan reviewed,\npull request merged",
+            "a4": "Apply\n(from CI only)",
+            "a5": "Bake with\nautomatic rollback",
+            "note": "The fleet where the incident\nhappened still ships this way",
         },
     },
 }
@@ -124,8 +128,11 @@ def render_pipeline(lang: str):
         c.node("b1", t["b1"], fillcolor=FILL_BAD, color=LINE_BAD)
         c.node("b2", t["b2"], fillcolor=FILL_BAD, color=LINE_BAD)
         c.node("b3", t["b3"], fillcolor=FILL_BAD, color=LINE_BAD)
+        c.node("bnote", t["note"], shape="note", fillcolor=FILL_NOTE, color=LINE_NOTE,
+               fontsize="12")
         c.edge("b1", "b2")
         c.edge("b2", "b3")
+        c.edge("b3", "bnote", style="dashed", arrowhead="none")
 
     with g.subgraph(name="cluster_after") as c:
         c.attr(label=t["title_after"], style="rounded", color=LINE_GOOD,
@@ -136,7 +143,9 @@ def render_pipeline(lang: str):
         c.node("a4", t["a4"], fillcolor=FILL_GOOD, color=LINE_GOOD)
         c.edge("a1", "a2")
         c.edge("a2", "a3")
+        c.node("a5", t["a5"], fillcolor=FILL_GOOD, color=LINE_GOOD)
         c.edge("a3", "a4")
+        c.edge("a4", "a5")
 
     out_path = OUT_DIR / f"ch29-pre-posle-cevovod{suffix}.png"
     out_path.parent.mkdir(parents=True, exist_ok=True)
