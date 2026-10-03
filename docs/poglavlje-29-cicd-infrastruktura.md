@@ -99,6 +99,12 @@ da je svež, konkretan, i da već ima sponzora voljnog da ga rešava — ni na �
 je i dalje bolan, i dalje ima ime i datum, mnogo je ubedljiviji argument za promenu procesa
 od apstraktnog predloga "trebalo bi da uvedemo CI za infrastrukturu."
 
+Jedno pojašnjenje čuva ovo poštenim. Sama pokvarena revizija nije ostala pokvarena: tri
+dana posle otkrivanja registrovana je nova revizija, izgrađena unapred od velike varijante
+uz dodat sidecar, i launcher je prebačen na nju. Otvoren je ostao incident — pitanje zašto
+ovo ništa nije sprečilo — a ne rupa u telemetriji. Držati produkcijsku putanju u mraku
+nedeljama da bi se nešto dokazalo bila bi drugačija, lošija odluka.
+
 ### Tabela: šta se desilo → šta bi to sprečilo
 
 Svaki red ove tabele preslikava jednu konkretnu tačku kvara u jednu konkretnu kontrolu —
@@ -149,7 +155,8 @@ deo te tabele je zaista postao stvarnost, ne samo namera:
 Vredi biti iskren i o onome što još nije sprovedeno: detekcija vođena događajem (peti red
 tabele) u trenutku pisanja još uvek nije zamenila nedeljni sweep. Ovo nije uredna,
 zatvorena studija slučaja sa savršenim krajem — to je živ, tekući proces, i to je poštenije
-reći direktno nego uglancati.
+reći direktno nego uglancati. Jedan od narednih odeljaka vraća se ovom bilansu posle dva
+meseca.
 
 ![Pre: ručno održavan JSON registrovan direktno u produkciju, bez diff-a i CI-ja. Posle: izmena ide kroz PR, plan-time proveru postojanja image-a, review, i tek onda merge i apply — samo iz CI-ja.](diagrams/ch29-pre-posle-cevovod.png){: width="92%" }
 
@@ -241,6 +248,80 @@ tačno da zna i koja strana greši.** Smer automatski predložene popravke zaslu
 istu sumnju kao i sam nalaz — pogotovo kad je nalaz nastao kopiranjem, gde je
 lakše kopirati grešku nego je primetiti.
 
+### Dva meseca kasnije: prevencija je stigla — na drugom sistemu
+
+Dva meseca posle incidenta slika se ponovo promenila, i to ne onako kako je tabela
+predviđala.
+
+Kontrole iz tabele jesu izgrađene, gotovo sve — ali za sistem koji u trenutku incidenta
+nije ni postojao. U međuvremenu su glavni API i web aplikacija prebačeni na kontejnere, a
+ta platforma je građena da ostane: sve u Terraform-u, svaka isporuka kroz cevovod, bez
+ručnih koraka. Konkretno:
+
+- **Task definicija živi u repozitorijumu**, kao kod, i svaka njena izmena je pull request
+  sa čitljivim diff-om — prvi i četvrti red tabele.
+- **Image se gradi jednom i promoviše po digest-u.** Okruženja su direktorijumi na jednoj
+  grani, a isporuka u bilo koje od njih je izmena jednog reda u fajlu sa digest-om tog
+  okruženja. Razvojno okruženje se isporučuje na merge; testno kroz pull request za
+  promociju koji spaja čovek — treći red.
+- **Loše izdanje samo sebe vraća.** Alarm za isporuku prati stopu serverskih grešaka tokom
+  desetominutnog perioda posmatranja posle svakog izdanja, dok provera za to vreme poziva
+  servis, a ugrađeni circuit breaker orkestratora je uvežban namerno pokvarenim izdanjem,
+  ne samo uključen. Rollback i promocija su ista operacija — prethodni digest prolazi kroz
+  isti pull request — pa ne postoji zasebna putanja za rollback za koju bi se tek na dan
+  kad zatreba otkrilo da ne radi.
+
+Uz to vredi odmah navesti i jednu granicu: period posmatranja vidi samo ono što provera
+poziva. Izdanje koje pokvari rutu koju provera nikad ne pozove i dalje prolazi u tišini.
+
+### Ista zamka, ovog puta uhvaćena u fazi plana
+
+Selidba je gotovo doslovno ponovila incident iz ovog poglavlja — i to je njen najkorisniji
+deo. Staro okruženje je pri pokretanju razrešavalo nekoliko desetina konfiguracionih
+promenljivih. Plan selidbe je doslovno govorio da je ovo migracija, a ne brisanje: svaka
+promenljiva mora ponovo da se pojavi, inače servis kreće pogrešno konfigurisan. Upozorenje
+je bilo zapisano, pročitano, prihvaćeno — i prekršeno istog popodneva. Prva task definicija
+za novu platformu nije imala dve promenljive uopšte, a još tri je nosila postavljene na
+prazan string.
+
+Prazne su bile gora klasa. Promenljiva koja nedostaje zaustavlja servis pri pokretanju,
+gde je greška glasna i sama sebe imenuje. Prazna se prihvata bez prigovora, a greška se
+seli na prvi upit — gde se čita kao problem sa konekcijom ka bazi, a ne kao problem
+konfiguracije. Samo jedna od pet bi se sama najavila.
+
+Ispravka nije bila tih pet vrednosti. Bio je to šesti red tabele, konačno primenjen:
+potpun spisak obaveznih promenljivih postao je deo konfiguracije, uz dva preduslova koja
+izostavljenu promenljivu, ili praznu vrednost, pretvaraju u neuspeo plan umesto u otkriće
+u radu. Oba su zatim dokazana da okidaju — namernim uklanjanjem jedne promenljive i
+pražnjenjem druge — pre nego što im se poverovalo. Dokumentovana zamka je postala test koji
+se proverava, dva meseca i jedno ponavljanje nakon što je incident iz ovog poglavlja prvi
+put rekao da treba.
+
+### Šta i dalje nije sprovedeno — na sistemu gde se incident desio
+
+Ovo je neprijatna polovina. Na floti batch poslova, tamo gde je sidecar izostavljen, gotovo
+ništa od navedenog još ne postoji:
+
+- Od znatno više od stotinu familija task definicija u toj floti, **tačno jedna** ima svoju
+  task definiciju u nekom repozitorijumu. Za ostale se na pitanje "šta je isporučeno" i
+  dalje može odgovoriti samo upitom ka cloud provajderu.
+- "Jedan fajl po tasku: izmeni ga, komituj, i izmena se isporuči" postoji kao **pisani
+  predlog koji čeka pregled**, sa preduslovom zbog kog je to neistinito dok se ne reši:
+  launcher-i pinuju tačne brojeve revizija, pa registrovanje nove revizije ne menja ništa
+  dok je neko ručno ne prepinuje.
+- Uloga za isporuku za tu flotu postoji i njena granica je testirana suprotstavljeno, ali
+  **još nema nikakve dozvole** — može da dokaže da je jedini ulaz, a još ne može ništa da
+  isporuči.
+- Provera sidecar-a u fazi build-a i detektor vođen događajem **i dalje nisu izgrađeni**.
+  Nedeljni sweep koji je incident uhvatio sa četiri dana zakašnjenja i dalje je jedino što
+  stoji između te flote i ponavljanja.
+
+Zato pošten sažetak nije "cevovod je ponovo izgrađen". Sažetak je da je prevencija prvo
+stigla tamo gde se sistem ionako gradio, jer je tamo gotovo besplatna, a da je naknadno
+uvođenje istih kontrola u postojeću flotu sporije i ima sopstvene, stvarne preduslove. Dok
+to ne sustigne, staru flotu čuva samo detektivska kontrola — i reći to naglas je deo te
+kontrole.
+
 ## 29.3 Analitički deo — princip koji je ovde nedostajao već ima ime
 
 ### Kontinuirana rekoncilijacija, ne periodično poređenje
@@ -328,6 +409,15 @@ opipljivom, umesto apstraktnom.
   — proveri smer automatski predložene popravke merenjem, isto koliko proveravaš i sam
   nalaz, pogotovo kad je uzrok nalaza kopiranje (kloniranje prenosi i greške, ne samo
   strukturu).
+- Drži otvoren incident, a ne rupu — samu pokvarenu stvar ispravi unapred odmah, a
+  otvorenim ostavi samo pitanje zašto je ništa nije sprečilo.
+- Prazna vrednost je gora od one koja nedostaje — podešavanje koje nedostaje pada glasno
+  pri pokretanju, prazno pada kasnije i na drugom mestu. Učini da oba obore plan, i dokaži
+  da provera okida pre nego što joj poveruješ.
+- Prebroj gde su kontrole iz postmortema zaista završile. Prevencija se prvo izgradi na
+  sistemu koji se tek gradi; sistem na kom se incident desio možda i dalje čuva samo
+  detektivska provera koja ga je uhvatila. Reci to otvoreno umesto da slučaj proglasiš
+  zatvorenim.
 
 ## 29.5 Vežba za čitaoca
 
@@ -336,6 +426,10 @@ drugu verziju — održavanu odvojeno od glavne konfiguracije. Proveri, ne pretp
 ta varijanta ima isti skup mogućnosti (instrumentaciju, bezbednosna pravila, mrežne
 politike) kao glavna? Ako ne postoji automatizovana provera koja bi to uhvatila da
 divergira sutra, to je tvoja verzija ove priče, samo još neispričana.
+
+Zatim uzmi poslednji postmortem koji je predložio nove kontrole i proveri gde svaka od
+njih danas postoji: na sistemu na kom se incident desio, ili samo na novijem, izgrađenom
+u međuvremenu?
 
 ---
 

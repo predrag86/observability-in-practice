@@ -97,6 +97,13 @@ fresh, concrete, and already has a willing sponsor — on nothing. An incident t
 raw, that still has a name and a date attached to it, is a far more persuasive argument for
 a process change than an abstract proposal to "add CI for infrastructure someday."
 
+One clarification keeps this honest. The broken revision itself did not stay broken: three
+days after detection a new revision was registered, built forward from the large variant
+with the sidecar added, and the launcher was pointed at it. What stayed open was the
+incident — the question of why nothing had prevented this — not the telemetry gap. Keeping
+a production path dark for weeks to make a point would have been a different, worse
+decision.
+
 ### The table: what happened → what would have prevented it
 
 Every row of this table maps one concrete failure point to one concrete control —
@@ -147,7 +154,8 @@ incident, part of that table became reality, not just intent:
 It's worth being honest about what hasn't shipped, too: event-driven detection (the
 table's fifth row) hadn't replaced the weekly sweep as of writing. This isn't a tidy,
 closed case study with a perfect ending — it's a live, ongoing process, and saying so
-plainly is more honest than polishing it.
+plainly is more honest than polishing it. A later section returns to this ledger two
+months in.
 
 ![Before: a hand-maintained JSON registered straight to production, with no diff and no CI. After: the change goes through a PR, a plan-time check that the image exists, review, and only then merge and apply — from CI alone.](diagrams/ch29-pre-posle-cevovod.en.png){: width="92%" }
 
@@ -237,6 +245,79 @@ The rule that remains: **a tool that correctly finds that a mismatch exists does
 necessarily know which side is wrong.** The direction of an automatically suggested fix
 deserves the same suspicion as the finding itself — especially when the finding originated
 from copying, where it's easier to copy an error than to notice it.
+
+### Two months later: prevention shipped — on a different system
+
+Two months after the incident the picture had changed again, and not in the way the table
+predicted.
+
+The controls from the table did get built, almost all of them — but for a system that
+didn't exist when the incident happened. In the meantime the main API and the web
+application were moved onto containers, and that platform was built to be kept: everything
+in Terraform, every deploy through the pipeline, no manual steps. Concretely:
+
+- **The task definition lives in the repository**, as code, and a change to it is a pull
+  request with a readable diff — the first and fourth rows of the table.
+- **An image is built once and promoted by digest.** Environments are folders on one
+  branch, and a deploy to any of them is a one-line change to that environment's digest
+  file. The development environment deploys on merge; the test environment through a
+  promotion pull request that a person merges — the third row.
+- **A bad release rolls itself back.** A deployment alarm watches the server-error rate
+  through a ten-minute bake after each release while a check exercises the service, and
+  the orchestrator's own circuit breaker was rehearsed with a deliberately broken release
+  rather than merely switched on. Rollback and promotion are the same operation — the
+  previous digest goes through the same pull request — so there is no separate rollback
+  path to discover broken on the day it's needed.
+
+One limit is worth stating right next to that: the bake only sees what the check
+exercises. A release that breaks a route the check never calls still bakes in silence.
+
+### The same trap, caught at plan time this time
+
+The move reproduced this chapter's incident almost exactly — and that is its most useful
+part. The old environment resolved a few dozen configuration variables at start-up. The
+plan for the migration said, in as many words, that this was a migration and not a
+deletion: every variable must reappear, or the service starts misconfigured. The warning
+was written down, read, agreed with — and violated the same afternoon. The first task
+definition for the new platform was missing two variables entirely, and carried three more
+set to an empty string.
+
+The empty ones were the worse class. A missing variable stops the service at start-up,
+where the failure is loud and names itself. An empty one is accepted without complaint,
+and the failure moves to the first query — where it reads as a database connectivity
+problem, not a configuration one. Only one of the five would have announced itself.
+
+The fix was not the five values. It was the sixth row of the table, finally applied: the
+full list of required variables became part of the configuration, with two preconditions
+that turn a dropped variable, or an empty value, into a failed plan instead of a runtime
+discovery. Both were then proven to fire — by deliberately removing one variable and
+blanking another — before being trusted. A documented hazard became an asserted test, two
+months and one repeat after this chapter's own incident first said it should.
+
+### What still hasn't shipped — on the system where it happened
+
+This is the uncomfortable half. On the batch fleet where the sidecar was dropped, almost
+none of the above exists yet:
+
+- Of well over a hundred task-definition families in that fleet, **exactly one** has its
+  task definition in any repository. For the rest, "what is deployed" can still only be
+  answered by asking the cloud provider.
+- "One file per task: edit it, commit, and the change deploys" exists as a **written
+  proposal awaiting review**, with a prerequisite that makes it untrue until fixed: the
+  launchers pin exact revision numbers, so registering a new revision changes nothing
+  until someone re-pins it by hand.
+- The deploy role for that fleet exists and its boundary has been tested adversarially,
+  but it **holds no permissions yet** — it can prove it is the only way in, and it cannot
+  yet deploy anything.
+- The build-time sidecar check and the event-driven detector are **still not built**. The
+  weekly sweep that caught the incident four days late is still the only thing standing
+  between that fleet and a repeat.
+
+So the honest summary is not "the pipeline was rebuilt." It is that prevention arrived
+first where a system was being built anyway, because there it is nearly free, and that
+retrofitting the same controls onto an existing fleet is slower and has real prerequisites
+of its own. Until that catches up, the detective control carries the old fleet alone — and
+saying so out loud is part of the control.
 
 ## 29.3 Analytical section — the principle missing here already has a name
 
@@ -328,6 +409,15 @@ the difference this incident makes concrete instead of abstract.
   — check the direction of an automatically suggested fix by measurement, just as much as
   you check the finding itself, especially when the finding's cause is cloning (cloning
   carries over errors too, not just structure).
+- Keep the incident open, not the gap — fix the broken thing itself forward right away,
+  and hold open only the question of why nothing prevented it.
+- An empty value is worse than a missing one — a missing setting fails loudly at start-up,
+  an empty one fails later and somewhere else. Make both a failed plan, and prove the
+  check fires before you trust it.
+- Count where a postmortem's controls actually landed. Prevention gets built first on the
+  system under construction; the system the incident happened on may still be guarded
+  only by the detective check that caught it. Say that plainly instead of calling the
+  case closed.
 
 ## 29.5 Exercise for the reader
 
@@ -336,6 +426,9 @@ region, a different version — maintained separately from the main configuratio
 don't assume: does that variant carry the same set of capabilities (instrumentation,
 security policies, network rules) as the main one? If there's no automated check that
 would catch it diverging tomorrow, that's your version of this story — just not told yet.
+
+Then take the last postmortem that proposed new controls and check where each of them
+exists today: on the system the incident happened on, or only on a newer one built since?
 
 ---
 
