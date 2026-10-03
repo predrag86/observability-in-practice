@@ -157,8 +157,6 @@ closed case study with a perfect ending — it's a live, ongoing process, and sa
 plainly is more honest than polishing it. A later section returns to this ledger two
 months in.
 
-![Before: a hand-maintained JSON registered straight to production, with no diff and no CI. After: the change goes through a PR, a plan-time check that the image exists, review, and only then merge and apply — from CI alone.](diagrams/ch29-pre-posle-cevovod.en.png){: width="92%" }
-
 ### Nine days later: the same kind of error, one layer up
 
 The part that makes this chapter worth a second look instead of a one-time close: nine
@@ -272,6 +270,8 @@ in Terraform, every deploy through the pipeline, no manual steps. Concretely:
 
 One limit is worth stating right next to that: the bake only sees what the check
 exercises. A release that breaks a route the check never calls still bakes in silence.
+
+![Before: a hand-maintained JSON registered straight to production, with no diff and no CI — the path the fleet where the incident happened still takes. After, on the new platform: the task definition changes in a pull request, plan-time checks confirm the image exists and every required variable is present and non-empty, the plan is reviewed and merged, the apply runs from CI alone, and a bake follows with automatic rollback.](diagrams/ch29-pre-posle-cevovod.en.png){: width="92%" }
 
 ### The same trap, caught at plan time this time
 
