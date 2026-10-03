@@ -98,7 +98,7 @@ raw, that still has a name and a date attached to it, is a far more persuasive a
 a process change than an abstract proposal to "add CI for infrastructure someday."
 
 One clarification keeps this honest. The broken revision itself did not stay broken: three
-days after detection a new revision was registered, built forward from the large variant
+days after detection a new revision was registered, built forward from the LARGE variant
 with the sidecar added, and the launcher was pointed at it. What stayed open was the
 incident — the question of why nothing had prevented this — not the telemetry gap. Keeping
 a production path dark for weeks to make a point would have been a different, worse
@@ -262,12 +262,13 @@ in Terraform, every deploy through the pipeline, no manual steps. Concretely:
   branch, and a deploy to any of them is a one-line change to that environment's digest
   file. The development environment deploys on merge; the test environment through a
   promotion pull request that a person merges — the third row.
-- **A bad release rolls itself back.** A deployment alarm watches the server-error rate
-  through a ten-minute bake after each release while a check exercises the service, and
-  the orchestrator's own circuit breaker was rehearsed with a deliberately broken release
-  rather than merely switched on. Rollback and promotion are the same operation — the
-  previous digest goes through the same pull request — so there is no separate rollback
-  path to discover broken on the day it's needed.
+- **A bad release rolls itself back.** The orchestrator's circuit breaker was rehearsed
+  with a release that could not start, rather than merely switched on, and the previous
+  version kept serving throughout. In the test environment a deployment alarm also watches
+  the server-error rate through a ten-minute bake after each release, while a check
+  exercises the service. Rollback and promotion are the same operation — the previous
+  digest goes through the same pipeline — so there is no separate rollback path to
+  discover broken on the day it's needed.
 
 One limit is worth stating right next to that: the bake only sees what the check
 exercises. A release that breaks a route the check never calls still bakes in silence.
@@ -299,9 +300,10 @@ months and one repeat after this chapter's own incident first said it should.
 This is the uncomfortable half. On the batch fleet where the sidecar was dropped, almost
 none of the above exists yet:
 
-- Of well over a hundred task-definition families in that fleet, **exactly one** has its
-  task definition in any repository. For the rest, "what is deployed" can still only be
-  answered by asking the cloud provider.
+- Of well over a hundred task-definition families that existed when this was last
+  counted, **exactly one** — and not a batch job — had its task definition in any
+  repository. For the rest, "what is deployed" can still only be answered by asking the
+  cloud provider.
 - "One file per task: edit it, commit, and the change deploys" exists as a **written
   proposal awaiting review**, with a prerequisite that makes it untrue until fixed: the
   launchers pin exact revision numbers, so registering a new revision changes nothing

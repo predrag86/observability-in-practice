@@ -100,7 +100,7 @@ je i dalje bolan, i dalje ima ime i datum, mnogo je ubedljiviji argument za prom
 od apstraktnog predloga "trebalo bi da uvedemo CI za infrastrukturu."
 
 Jedno pojašnjenje čuva ovo poštenim. Sama pokvarena revizija nije ostala pokvarena: tri
-dana posle otkrivanja registrovana je nova revizija, izgrađena unapred od velike varijante
+dana posle otkrivanja registrovana je nova revizija, izgrađena unapred od LARGE varijante
 uz dodat sidecar, i launcher je prebačen na nju. Otvoren je ostao incident — pitanje zašto
 ovo ništa nije sprečilo — a ne rupa u telemetriji. Držati produkcijsku putanju u mraku
 nedeljama da bi se nešto dokazalo bila bi drugačija, lošija odluka.
@@ -264,12 +264,13 @@ ručnih koraka. Konkretno:
   grani, a isporuka u bilo koje od njih je izmena jednog reda u fajlu sa digest-om tog
   okruženja. Razvojno okruženje se isporučuje na merge; testno kroz pull request za
   promociju koji spaja čovek — treći red.
-- **Loše izdanje samo sebe vraća.** Alarm za isporuku prati stopu serverskih grešaka tokom
-  desetominutnog perioda posmatranja posle svakog izdanja, dok provera za to vreme poziva
-  servis, a ugrađeni circuit breaker orkestratora je uvežban namerno pokvarenim izdanjem,
-  ne samo uključen. Rollback i promocija su ista operacija — prethodni digest prolazi kroz
-  isti pull request — pa ne postoji zasebna putanja za rollback za koju bi se tek na dan
-  kad zatreba otkrilo da ne radi.
+- **Loše izdanje samo sebe vraća.** Ugrađeni circuit breaker orkestratora je uvežban
+  izdanjem koje nije moglo da se pokrene, ne samo uključen, a prethodna verzija je sve
+  vreme nastavila da služi zahteve. U testnom okruženju alarm za isporuku uz to prati
+  stopu serverskih grešaka tokom desetominutnog perioda posmatranja posle svakog izdanja,
+  dok provera za to vreme poziva servis. Rollback i promocija su ista operacija —
+  prethodni digest prolazi kroz isti cevovod — pa ne postoji zasebna putanja za rollback
+  za koju bi se tek na dan kad zatreba otkrilo da ne radi.
 
 Uz to vredi odmah navesti i jednu granicu: period posmatranja vidi samo ono što provera
 poziva. Izdanje koje pokvari rutu koju provera nikad ne pozove i dalje prolazi u tišini.
@@ -302,9 +303,10 @@ put rekao da treba.
 Ovo je neprijatna polovina. Na floti batch poslova, tamo gde je sidecar izostavljen, gotovo
 ništa od navedenog još ne postoji:
 
-- Od znatno više od stotinu familija task definicija u toj floti, **tačno jedna** ima svoju
-  task definiciju u nekom repozitorijumu. Za ostale se na pitanje "šta je isporučeno" i
-  dalje može odgovoriti samo upitom ka cloud provajderu.
+- Od znatno više od stotinu familija task definicija koje su postojale kad je ovo
+  poslednji put prebrojano, **tačno jedna** — i to ne batch posao — imala je svoju task
+  definiciju u nekom repozitorijumu. Za ostale se na pitanje "šta je isporučeno" i dalje
+  može odgovoriti samo upitom ka cloud provajderu.
 - "Jedan fajl po tasku: izmeni ga, komituj, i izmena se isporuči" postoji kao **pisani
   predlog koji čeka pregled**, sa preduslovom zbog kog je to neistinito dok se ne reši:
   launcher-i pinuju tačne brojeve revizija, pa registrovanje nove revizije ne menja ništa
